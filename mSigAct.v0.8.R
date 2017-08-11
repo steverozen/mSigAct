@@ -14,18 +14,22 @@
 # mutational signature activities and for testing whether a given signature is
 # needed to explain a spectrum
 
+# Check R version and dependencies 
+if (!(R.version$major >= "3")) stop('mSigAct only works with R 3.2 or newer')
+
+if (! (R.version$minor >= '3.2')) stop('mSigAct only works with R 3.2 or newer') 
+
 # Dependencies
-stopifnot(R.version$major >= 3)
-stopifnot(R.version$minor >= '3.2')
-require(nloptr)
-require(sets)
-require(parallel)
+library(nloptr)
+library(sets)
+library(parallel)
 
 # Helper function, given signatures (sigs) and exposures (exp), return a
 # *proportional* reconstruction; in general, it is *not necessarily* scaled to
 # the actual spectrum counts.
 prop.reconstruct <- function(sigs, exp) {
   stopifnot(length(exp) == ncol(sigs))
+  
   as.matrix(sigs) %*% exp
 }
 
@@ -68,7 +72,7 @@ obj.fun.nbinom.maxlh <-function(exp, spectrum, sigs,
                       log=T)
     loglh <-loglh + nbinom
   }
-  stopifnot(mode(loglh) == 'numeric')
+  stopifnot(mode(loglh) == 'numeric' )
   -loglh
 }
 
@@ -145,7 +149,7 @@ one.lh.and.exp <- function(spect, sigs, trace,
 
 ## Assign activities and test whether signature activities can be removed
 
-## Beadth-first first search down to fixed number of levels
+## Breadth-first first search down to fixed number of levels
 
 # Helper function: is the set 'probe' a superset of any set in 'background'?
 is.superset.of.any <- function(probe, background) {
@@ -252,6 +256,7 @@ sparse.assign.activity <- function(spect, sigs,
         paste(names(start.exp)[best.subset], collapse=','),
         '\n')
   }
+  browser()
   stopifnot(abs(sum(out.exp) - sum(spect)) < 2)
   out.exp
 }
@@ -322,14 +327,14 @@ plot.recon.and.loglh <- function(spect, sigs, ex, range,
                                  obj.fun,
                                  nbinom.size) {
   plot.reconstruction(signatures      = sigs,
-                      exposures.mat   = ex[ , range],
-                      input.genomes   = spect[ , range],
+                      exposures.mat   = ex[ , range, drop=F],
+                      input.genomes   = spect[ , range, drop=F],
                       normalize.recon = T)
 
 
 
-  neg.ll <- compute.all.neg.log.lh(spect[ ,range], sigs=sigs,
-                                   exp = ex[ , range],
+  neg.ll <- compute.all.neg.log.lh(spect[ ,range,drop=F], sigs=sigs,
+                                   exp = ex[ , range, drop=F],
                                    obj.fun=obj.fun,
                                    nbinom.size=nbinom.size)
   s.names <- names(neg.ll)
@@ -384,7 +389,7 @@ process.one.group <- function(spectra, sigs, target.sig.name,
                               nbinom.size,
                               trace=0,
                               col=NULL,
-                              mc.cores=1) {
+                              mc.cores=190) {
 
   target.sig.index <- which(colnames(sigs) == target.sig.name)
 
@@ -412,13 +417,15 @@ process.one.group <- function(spectra, sigs, target.sig.name,
   if (length(low.pval) > 0) {
     # Have to wrap column-wise index of s.spectra in as.matrix in case
     # length(low.pval) == 1, in which case indexing returns a vector
-    check.w.sig <- as.matrix(s.spectra[, low.pval])
+    
+    check.w.sig <- s.spectra[, low.pval, drop=F]
     # The column names are lost if length(low.pval) == 1
     colnames(check.w.sig) = colnames(s.spectra)[low.pval]
     spec.path <- paste(path.root, 'check.with.sig.pdf', sep='.')
     pdf.mut.sig.profile(path=spec.path, check.w.sig)
 
   }
+  
 
   out.exp <-
       mclapply(

@@ -13,8 +13,8 @@
 # https://www.gnu.org/licenses/gpl-3.0.en.html
 
 # Dependencies
-require(stringi)
-require('lsa') # for cosine()
+library(stringi)
+library('lsa') # for cosine()
 
 revc <- function(seq) {
 
@@ -404,10 +404,6 @@ t.plot.spectra = function(counts.data.frame,
     display.name = spectrum.name
     if (trace) cat('\rplotting', display.name, '\n')
 
-    
- 
-    
-    
     # get counts per (unstranded) mutation class (6 classes)
     Ref.A = counts.data.frame$Ref=='A'
     Ref.C = counts.data.frame$Ref=='C'
@@ -426,7 +422,6 @@ t.plot.spectra = function(counts.data.frame,
       "T>G"=sum(counts.data.frame[(Ref.A & Var.C)|(Ref.T & Var.G), which.col])
     )
 
-    
      
     if (trace) print(unstranded.counts)
     percents = rep(0, num.classes)
@@ -817,6 +812,7 @@ plot.reconstruction <-
     axis(4, ylim=c(0, eu.max), col.axis='red', las=1)
     
   }
+
 
 flat.64.opportunity = function() {
   # don't weight - set all to 1
