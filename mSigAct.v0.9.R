@@ -1,9 +1,9 @@
 #
 # mSigAct.R
 #
-# v 0.8
+# v 0.9
 #
-# 2017 07 14
+# 2017 08 11
 #
 # Copyright 2017 by Alvin Wei Tian Ng, Steven G. Rozen
 #
