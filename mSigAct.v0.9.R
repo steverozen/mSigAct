@@ -255,7 +255,6 @@ sparse.assign.activity <- function(spect, sigs,
         paste(names(start.exp)[best.subset], collapse=','),
         '\n')
   }
-  browser()
   stopifnot(abs(sum(out.exp) - sum(spect)) < 2)
   out.exp
 }
