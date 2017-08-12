@@ -1,7 +1,7 @@
 #
 # mSigTools
 #
-# v0.9
+# v0.8
 #
 # An alpha version
 #
