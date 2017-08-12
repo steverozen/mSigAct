@@ -29,7 +29,6 @@ library(parallel)
 # the actual spectrum counts.
 prop.reconstruct <- function(sigs, exp) {
   stopifnot(length(exp) == ncol(sigs))
-  
   as.matrix(sigs) %*% exp
 }
 
