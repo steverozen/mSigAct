@@ -1,11 +1,11 @@
 #
 # mSigTools
 #
-# v0.7
+# v0.9
 #
 # An alpha version
 #
-# 2017 07 28
+# 2017 08 11
 #
 # Copyright 2017 by Alvin Wei Tian Ng, Steven G. Rozen
 #
@@ -289,11 +289,18 @@ transform.96.sig.op1.op2 <- function(input.sig.mat, in.op, out.op) {
   out3
 }
 
-### Get COSMIC mutational signatures and transform to whole-exome signatures
-get.COSMIC.signatures <- function(exome.op, debug=F) {
+### Get mutational signatures specified as proportions based on
+### human WGS (whole genome sequence) count in file 
+### signature.file.
+###
+### Return a list of three signature matrices: WGS, WES, and "flat".
+###
+### IMPORTANT: this replaces get.COSMIC.signatures and now requires the
+### name of the signature file.
+get.signatures <- function(exome.op, signature.file, debug=F) {
 
-  # Read the COSMIC mutational signatures in genome frequencies
-  cosmic <- read.96.duke.nus.format('COSMIC_plus_W6.tsv')
+  # Read the mutational signatures in genome frequencies
+  cosmic <- read.96.duke.nus.format(signature.file)
 
   wgs.op <- .h19.96.WGS.op
   wes.op <- exome.op
