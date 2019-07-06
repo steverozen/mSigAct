@@ -1,11 +1,11 @@
 #
 # mSigAct.R
 #
-# v 0.10
+# v 0.11
 #
-# 2018 06 27
+# 2018 12 30
 #
-# Copyright 2017 by Alvin Wei Tian Ng, Steven G. Rozen
+# Copyright 2017, 2018 by Alvin Wei Tian Ng, Steven G. Rozen
 #
 # The code is released under GPL-3
 # https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -42,7 +42,7 @@ prop.reconstruct <- function(sigs, exp) {
 #             binomial distribution; smaller is more dispersed
 #
 # The result is
-# -1 * the log(likelihood(spectrum | reconstruction))
+# -1 * log(likelihood(spectrum | reconstruction))
 # (nloptr minimizes the objective function.)
 #
 # The lower the objective function, the better
@@ -78,7 +78,7 @@ obj.fun.nbinom.maxlh <-function(exp, spectrum, sigs,
 
 # Use nloptr (numerical non-linear optimization) to find an assignmeent of
 # signature activites for one tumor. The nlpotr algorithm and the objective
-# function are arguments.
+# function are arguments. We have not tested with other algorithms.
 nloptr.one.tumor <- function(spectrum, sigs,
                              algorithm='NLOPT_LN_COBYLA',
                              maxeval=1000, print_level=0,
