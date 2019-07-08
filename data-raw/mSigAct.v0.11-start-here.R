@@ -46,7 +46,7 @@ prop.reconstruct <- function(sigs, exp) {
 # (nloptr minimizes the objective function.)
 #
 # The lower the objective function, the better
-obj.fun.nbinom.maxlh <-function(exp, spectrum, sigs,
+PARTLY.ICORPORATEDobj.fun.nbinom.maxlh <-function(exp, spectrum, sigs,
                                 nbinom.size) {
 
   if (any(is.na(exp))) return(Inf)
