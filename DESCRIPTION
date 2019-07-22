@@ -1,6 +1,6 @@
 Package: mSigAct
 Title: What the Package Does (One Line, Title Case)
-Version: 1.0.0.9000
+Version: 1.0.0.9001
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description: Analysis of the "activities" of mutational signatures in mutational spectra.
@@ -12,5 +12,9 @@ LazyData: true
 Language: en-US
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
+Imports:
+    ICAMS,
+    nloptr,
+    stats
 Suggests: 
-    testthat
+    testthat (>= 2.1.0)
