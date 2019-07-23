@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{NegLLHOfSignature}
 \alias{NegLLHOfSignature}
-\title{Objective function for nloptr for estimating a signature.}
+\title{Objective function for nloptr for estimating a background signature.}
 \usage{
 NegLLHOfSignature(sig.and.nbinom.size, spectra)
 }

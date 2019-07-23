@@ -4,7 +4,7 @@
 \alias{MakeHepG2BackgroundPart2}
 \title{Read the specified spectra file and estimate the HepG2 background signature}
 \usage{
-MakeHepG2BackgroundPart2()
+MakeHepG2BackgroundPart2(maxeval)
 }
 \description{
 Read the specified spectra file and estimate the HepG2 background signature

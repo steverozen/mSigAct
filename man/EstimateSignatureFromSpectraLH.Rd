@@ -5,7 +5,8 @@
 \title{Build a signature for background extraction from a matrix of spectra.}
 \usage{
 EstimateSignatureFromSpectraLH(spectra, algorithm = "NLOPT_LN_COBYLA",
-  maxeval = 1000, print_level = 0, xtol_rel = 0.001)
+  maxeval = 1000, print_level = 0, xtol_rel = 0.001,
+  xtol_abs = 1e-04)
 }
 \arguments{
 \item{spectra}{An \code{\link[ICAMS]{ICAMS}} \code{catalog} with 
@@ -18,6 +19,8 @@ EstimateSignatureFromSpectraLH(spectra, algorithm = "NLOPT_LN_COBYLA",
 \item{print_level}{See \code{link[nloptr]{nloptr}}.}
 
 \item{xtol_rel}{See \code{link[nloptr]{nloptr}}.}
+
+\item{xtol_abs}{See \code{link[nloptr]{nloptr}}.}
 }
 \value{
 A list with the elements 
