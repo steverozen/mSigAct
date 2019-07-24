@@ -153,6 +153,7 @@ EstimateSignatureFromSpectraLH <-
   {
     # Maybe this is excessively "realistic"; maybe
     # just take mean of spectra.
+    # It turns out that the result signature is exactly the mean
     # 
     # But this can estimate the negative binomial dispersion
     # parameter too, so perhaps useful
@@ -169,7 +170,7 @@ EstimateSignatureFromSpectraLH <-
       mean.sig,
       ref.genome   = attr(spectra, "ref.genome",   exact = TRUE),
       region       = attr(spectra, "region",       exact = TRUE),
-      catalog.type = attr(spectra, "catalog.type", exact = TRUE))
+      catalog.type = "counts.signature")
 
     x0.sig.and.size <- c(x0.sig.vec, 200)
     
@@ -187,11 +188,12 @@ EstimateSignatureFromSpectraLH <-
     len <- nrow(spectra)
     sig <- matrix(ret$solution[1:len], ncol = 1)
     rownames(sig) <- ICAMS::catalog.row.order$SBS96
+    sig <- sig / sum(sig)
     sig <- ICAMS::as.catalog(
       sig,
       region = attr(spectra.as.sigs, "region", exact = TRUE),
       ref.genome = attr(spectra.as.sigs,"ref.genome", exact = TRUE),
-      catalog.type = attr(spectra.as.sigs,"catalog.type", exact = TRUE))
+      catalog.type = "counts.signature")
     
     nbinom.size <- ret$solution[len + 1]
     
@@ -256,8 +258,10 @@ MakeHepG2BackgroundPart2 <- function(maxeval) {
 #' Let the input spectra be s1, s2, ...
 #' 
 #' Fig target.sig that maximize the likelihoods
-#' max_(b1, target.sig){s1 | b1, target.sig, background.sig, background.sig.nbinom.size, background.sig.count.mu,
-#'      background.sig.count.nbinom.size)
+#' max_(b1, target.sig){s1 | 
+#'             b1, target.sig, background.sig, 
+#'             background.sig.nbinom.size, background.sig.count.mu,
+#'      background.sig.count.nbinom.size}
 #' b1 * background.sig + (total-mut1 - b1) * target.sig * prob(b1), \cr
 #' b2 * background.sig + (total-mut2 - b2) * target.sig * prob(b2), \cr
 #' ... \cr
@@ -275,11 +279,172 @@ MakeHepG2BackgroundPart2 <- function(maxeval) {
 #' 
 #' @keywords internal
 
-ThisObjFn <- function(
-  est.target.sig.and.total.mut.and.b, # Parameters to optimize
-  target.spectra, # Matrix of s1, s2, ....
-  background.sig.info # E.g. HepG2.background.info
+ObjFn1 <- function(
+  est.target.sig.and.b, # Parameters to optimize
+  obs.spectra,     
+  bg.sig.info   # E.g. HepG2.background.info
 ) {
-  return(NULL)
+  bg.sig.profile <- bg.sig.info$background.sig
+  len.sig <- nrow(bg.sig.profile)
+  est.target.sig <- est.target.sig.and.b[1:len.sig]
+  b <- est.target.sig.and.b[(1 + len.sig):length(est.target.sig.and.b)]
+
+  loglh <- 0
+  for (i in 1:ncol(obs.spectra)) {
+    obs.spectrum <- obs.spectra[ , i, drop = FALSE]
+    total.obs.count <- sum(obs.spectrum)
+    expected.counts <- 
+      (bg.sig.profile * b[i]) + (est.target.sig * (total.obs.count - b[i]))
+    loglh1.i <- LLHSpectrumNegBinom(
+      spectrum        = obs.spectrum,
+      expected.counts = expected.counts,
+      nbinom.size     = 10)
+        # bg.sig.info$sig.nbinom.size) # TODO(Steve) need to test different values as hyperparameter
+    
+    loglh2.i <- dnbinom(x    = round(b[i]), 
+                        mu   = bg.sig.info$count.nbinom.mu,
+                        size = bg.sig.info$count.nbinom.size,
+                        log  = TRUE)
+    
+    loglh <- loglh + loglh1.i + loglh2.i
+  }
   
+  return(-1 * loglh)
+}
+
+FindSignatureMinusBackground <-
+  function(spectra,
+           bg.sig.info,
+           algorithm='NLOPT_LN_COBYLA',
+           maxeval=1000, 
+           print_level=0,
+           xtol_rel=0.001,  # 0.0001,)
+           xtol_abs=0.0001,
+           start.b.fraction = 0.1) {
+  
+  uniform.sig <- rep(1, nrow(spectra)) / nrow(spectra)
+  b.x0        <- start.b.fraction * colSums(spectra)
+  est.target.sig.and.b.x0 <- c(uniform.sig, b.x0)
+  
+  ret <- nloptr::nloptr(
+    x0          = est.target.sig.and.b.x0,
+    eval_f      = ObjFn1,
+    lb          = rep(0, length(est.target.sig.and.b.x0)),
+    ub          = c(rep(1, nrow(spectra)), # Each element of the singature <= 1
+                    colSums(spectra)),     # The contribution of the background 
+                                           # should not exceed the total count (not sure if this exactly correct)
+    opts        = list(algorithm   = algorithm,
+                       xtol_rel    = xtol_rel,
+                       print_level = print_level,
+                       maxeval     = maxeval),
+    obs.spectra = spectra,     
+    bg.sig.info = bg.sig.info)
+  
+  return(ret)    
+  }
+
+
+#' Null test
+#' @keywords internal
+Test0 <- function(start.b.fraction = 0.9) {
+  
+  spectra <- ICAMS::ReadCatalog(
+    system.file(
+      "data-raw/spectra.for.background.signatures/HepG2.background.96.csv",
+      package = "mSigAct"))
+    
+  res <- FindSignatureMinusBackground(
+    spectra = spectra,
+    bg.sig.info = mSigAct::HepG2.background.info,
+    maxeval=10000, 
+    print_level=1,
+    start.b.fraction = start.b.fraction)
+  
+  return(res)
+  
+}
+
+MakeCisplatinCatalogs <- function() {
+  files <- dir("tests/testthat/test.data/HepG2_Cis/", full.names = TRUE)
+  cats <- ICAMS::StrelkaSBSVCFFilesToCatalog(
+    files = files,
+    ref.genome = "hg19",
+    trans.ranges = 
+      ICAMS::trans.ranges.GRCh37,
+    region = "genome")
+  ICAMS::WriteCatalog(cats$catSBS96, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS96.csv")
+  ICAMS::WriteCatalog(cats$catSBS192, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS192.csv")
+  ICAMS::WriteCatalog(cats$catDBS78, 
+                      file = "tests/testthat/test.data/HepG2_Cis/DBS78.csv")
+  ICAMS::PlotCatalogToPdf(cats$catSBS96, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS96.pdf")
+  ICAMS::PlotCatalogToPdf(cats$catSBS192, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS192.pdf")
+  ICAMS::PlotCatalogToPdf(cats$catDBS78, 
+                      file = "tests/testthat/test.data/HepG2_Cis/DBS78.pdf")
+  
+  return(cats)
+}
+
+SolutionToSignature <- function(solution, 
+                                sig.number = 96,
+                                ref.genome = "hg19",
+                                region = "genome") {
+  sig <- matrix(solution[1:sig.number], ncol = 1)
+  sig <- sig / sum(sig)
+  rownames(sig) <- ICAMS::catalog.row.order$SBS96
+  sig <- ICAMS::as.catalog(
+    sig, ref.genome = ref.genome,
+    region = region,
+    catalog.type = "counts.signature"
+  )
+  return(sig)
+}
+
+PlotFactorizations <- function(spectra,
+                               bg.sig.info,
+                               solution,
+                               sig.number = 96,
+                               ref.genome = "hg19",
+                               region = "genome")
+{
+  sig <- SolutionToSignature(solution,
+                             sig.number,
+                             ref.genome,
+                             region)
+  
+  b <- solution[(sig.number + 1):length(solution)]
+  stopifnot(length(b) == ncol(spectra))
+  total.counts <- colSums(spectra)
+  for (i in 1:ncol(spectra)) {
+    bg.counts <- round(b[i] * mSigAct::HepG2.background.info$background.sig)
+    attr(bg.counts, "catalog.type") <- "counts"
+    sig.counts <- round((total.counts[i] - b[i]) * sig)
+    attr(sig, "catalog.type") <- "counts"
+    tmp <- cbind(spectra[ , i, drop = FALSE],
+                 bg.counts,
+                 sig.counts,
+                 spectra[ , i, drop = FALSE] - bg.counts)
+    
+    # TODO(Steve) average the spectra minus the counts and see
+    # what they look like
+    # TODO(get the pcawg signatures and add them in at different
+    # concentrations, with and without noise)
+    name <- colnames(spectra)[i]
+    colnames(tmp) <- c("Orig", "BG", "Exp*Sig", "Orig-BG")
+    ICAMS::PlotCatalogToPdf(tmp, paste0("data-raw/", name, ".pdf"))
+  }
+}
+
+Test1 <- function(start.b.fraction = 0.1, maxeval = 10000) {
+  res <- FindSignatureMinusBackground(
+    spectra = mSigAct::cisplatin.exposed.HepG2.96,
+    bg.sig.info = mSigAct::HepG2.background.info,
+    maxeval=maxeval, 
+    print_level=1,
+    start.b.fraction = start.b.fraction)
+  
+  return(res)
 }
