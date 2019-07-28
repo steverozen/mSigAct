@@ -28,3 +28,10 @@
 #' @examples 
 #' # XXXX
 "HepG2.background.spectra"
+
+#' SigProfiler 96 SBS signatures
+#' @format XXXXXXX
+#' 
+#' @examples 
+#' # XXXXX
+"sp.sigs"
