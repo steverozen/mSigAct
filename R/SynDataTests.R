@@ -20,7 +20,11 @@ TestEstimateBackground <-
   # to have different background levels based
   # on distribution of intensities, and then
   # one level of non-background? Or a range of
+<<<<<<< HEAD
   # non background signatures? Probably the second. 
+=======
+  # non background signatures? Probably the second
+>>>>>>> cf69dddfed0f856ab8ffac78c6d8a718a8b0cca4
     
   # Maybe don't run, just put in 3D array of spectra?
   
