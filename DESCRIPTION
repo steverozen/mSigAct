@@ -5,8 +5,8 @@ Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description: Analysis of the "activities" of mutational signatures in mutational spectra.
 License: GPL-3
-URL: https://github.com/steverozen/mSig
-BugReports: https://github.com/steverozen/mSig/issues
+URL: https://github.com/steverozen/mSigAct
+BugReports: https://github.com/steverozen/mSigAct/issues
 Encoding: UTF-8
 LazyData: true
 Language: en-US
@@ -15,6 +15,7 @@ RoxygenNote: 6.1.1
 Imports:
     ICAMS,
     nloptr,
-    stats
+    stats,
+    lsa
 Suggests: 
     testthat (>= 2.1.0)
