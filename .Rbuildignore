@@ -1,4 +1,5 @@
 ^mSigAct\.Rproj$
+^mSig\.Rproj$
 ^\.Rproj\.user$
 data-raw
 README.Rmd
