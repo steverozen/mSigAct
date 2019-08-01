@@ -58,3 +58,12 @@
 #' @examples 
 #' # XXXXX
 "sp.sigs"
+
+#' Tests of HepG2 background subtraction
+#' 
+#' @format A data table
+#' 
+#' @examples 
+#' 
+#' HepG2.bg.tests.no.noise[1:2, 1:10]
+"HepG2.bg.tests.no.noise"

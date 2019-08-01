@@ -22,7 +22,7 @@ the components of \code{background.sig}.
 of total counts due to \code{background.sig} across
 replicate exposed clones.
 
-#' \item \code{count.nbinom.size} The \code{size} argument
+\item \code{count.nbinom.size} The \code{size} argument
  for
 \code{\link[stats]{dnbinom}} for the distribution
 of total counts due to \code{background.sig} across
