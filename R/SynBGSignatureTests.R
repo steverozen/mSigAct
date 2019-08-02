@@ -172,7 +172,8 @@ RunTests <- function(test.table,
                      maxeval = 1000,
                      xtol_rel=0.001/2,  # 0.0001,)
                      xtol_abs=0.000/2,
-                     print_level = 0) {
+                     print_level = 0,
+                     verbose = FALSE) {
   
   if (!dir.exists(out.dir)) {
     if (!dir.create(out.dir, recursive = TRUE))
@@ -195,6 +196,8 @@ RunTests <- function(test.table,
   
   Run1Test <- function(test.name) {
 
+    if (verbose) message(test.name)
+    
     spectra <- test.input.list[[test.name]][["spectra"]]
     
     retval <-
@@ -236,14 +239,15 @@ SaveTestOuput <- function(test.output) {
 
 RunRunTests <- function(maxeval = 10000) {
   output <- RunTests(
-    test.table = mSigAct::HepG2.bg.tests.no.noise[1:40, ],
+    test.table = mSigAct::HepG2.bg.tests.no.noise, # [1:120, ],
     num.replicates = 1,
     num.spectra.per.replicate = 2,
     bg.info = mSigAct::HepG2.background.info,
     out.dir = "data-raw/big-test-output",
     mc.cores = 10,
     maxeval = maxeval,
-    print_level = 0
+    print_level = 0,
+    verbose = TRUE
   )
   invisible(output)
 }
