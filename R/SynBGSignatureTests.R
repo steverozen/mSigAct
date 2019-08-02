@@ -150,13 +150,14 @@ TestTable2TestInput <- function(test.table,
         test.table[test.table$target.sig == sig &
                      test.table$bg.contribution == cont, ]
       # Temporary, only one replicate
+      s.range <- 1:num.spectra.per.replicate
       spectra <-
-        t(sub.table[1:num.spectra.per.replicate,
-                  9:ncol(sub.table)])
+        t(sub.table[s.range, 9:ncol(sub.table)])
       spectra <-
         ICAMS::as.catalog(spectra, region = "genome",
                           catalog.type = "counts")
-      output[[paste0(sig, "_", cont, "_", 1)]] <- spectra
+      output[[paste0(sig, "_", cont, "_", paste(s.range, collapse = ","))]] <- 
+        list(spectra = spectra, test.rows = sub.table[s.range, ])
     }
   }
   return(output)
@@ -169,6 +170,8 @@ RunTests <- function(test.table,
                      out.dir,
                      mc.cores = 10,
                      maxeval = 1000,
+                     xtol_rel=0.001/2,  # 0.0001,)
+                     xtol_abs=0.000/2,
                      print_level = 0) {
   
   if (!dir.exists(out.dir)) {
@@ -185,38 +188,53 @@ RunTests <- function(test.table,
   
   message("Using ", mc.cores, " cores\n")
   
-  
   test.input.list <-
     TestTable2TestInput(test.table,
                         num.replicates,
                         num.spectra.per.replicate)
   
   Run1Test <- function(test.name) {
-    mydir <- file.path(out.dir, test.name)
-    if (!dir.exists(mydir)) {
-      if (!dir.create(mydir, recursive = TRUE)) {
-        stop("Cannot create ", mydir)
-      }
-    }
-    spectra <- test.input.list[[test.name]]
+
+    spectra <- test.input.list[[test.name]][["spectra"]]
     
     retval <-
       FindSignatureMinusBackground(spectra,
                                    bg.sig.info = bg.info,
                                    maxeval = maxeval, 
                                    print_level = print_level,
-                                   xtol_rel=0.001,  # 0.0001,)
-                                   xtol_abs=0.0001,
+                                   xtol_rel=xtol_rel,  # 0.0001,)
+                                   xtol_abs=xtol_abs,
                                    start.b.fraction = 0.1)
+    
+    return(list(nloptr.retval = retval, 
+                test.name = test.name, 
+                input = test.input.list[[test.name]]))
   } # function Run1Test
   
   output <- parallel::mclapply(
     X = names(test.input.list), FUN = Run1Test, mc.cores = mc.cores)
+  names(output) <- names(test.input.list)
   
   return(output)
 }
 
-RunRunTests <- function() {
+SaveTestOuput <- function(test.output) {
+
+  for (i in 1:length(test.output)) {
+    test.name <- test.output[[i]][["test.name"]]
+    mydir <- file.path(out.dir, test.name)
+    if (!dir.exists(mydir)) {
+      if (!dir.create(mydir, recursive = TRUE)) {
+        stop("Cannot create ", mydir)
+      }
+    }
+    nloptr.retval <- test.output[[i]][["nloptr.retval"]]
+    
+    
+  }
+}
+
+RunRunTests <- function(maxeval = 10000) {
   output <- RunTests(
     test.table = mSigAct::HepG2.bg.tests.no.noise[1:40, ],
     num.replicates = 1,
@@ -224,7 +242,7 @@ RunRunTests <- function() {
     bg.info = mSigAct::HepG2.background.info,
     out.dir = "data-raw/big-test-output",
     mc.cores = 10,
-    maxeval = 1000,
+    maxeval = maxeval,
     print_level = 0
   )
   invisible(output)

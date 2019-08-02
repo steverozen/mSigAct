@@ -406,6 +406,11 @@ SolutionToSignature <- function(solution,
   return(sig)
 }
 
+GetBGMutationCounts <- function(nlopt.retval, sig.number = 96) {
+  solution <- nlopt.retval$solution
+  return(solution[(sig.number + 1):length(solution)])
+}
+
 PlotFactorizations <- function(out.dir,
                                spectra,
                                bg.sig.info,
