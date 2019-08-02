@@ -5,7 +5,7 @@
 #'  
 #' @param spectrum An observed spectrum (a numeric vector)
 #' 
-#' @param expected.counts A vector of expected mutation counts, one
+#' @param expected.counts A vector of (integer) expected mutation counts, one
 #' expected count for each mutation type. We want to know the 
 #' likelihood that this model generated the observed 
 #' spectrum, assuming each mutational types generates counts according to
@@ -344,9 +344,9 @@ FindSignatureMinusBackground <-
   }
 
 
-#' Null test
+#' Test \code{FindSignatureMinusBackground} on background-only spectra.
 #' @keywords internal
-Test0 <- function(start.b.fraction = 0.9) {
+Test0 <- function(start.b.fraction = 0.9, maxeval = 10000) {
   
   spectra <- ICAMS::ReadCatalog(
     system.file(
@@ -356,7 +356,7 @@ Test0 <- function(start.b.fraction = 0.9) {
   res <- FindSignatureMinusBackground(
     spectra = spectra,
     bg.sig.info = mSigAct::HepG2.background.info,
-    maxeval=10000, 
+    maxeval=maxeval, 
     print_level=1,
     start.b.fraction = start.b.fraction)
   
@@ -364,6 +364,9 @@ Test0 <- function(start.b.fraction = 0.9) {
   
 }
 
+#' Make spectrum catalog from VCFs from cisplatin exposed HepG2
+#' @keywords internal
+#' @return The catalog
 MakeCisplatinCatalogs <- function() {
   files <- dir("tests/testthat/test.data/HepG2_Cis/", full.names = TRUE)
   cats <- ICAMS::StrelkaSBSVCFFilesToCatalog(
@@ -403,20 +406,30 @@ SolutionToSignature <- function(solution,
   return(sig)
 }
 
-PlotFactorizations <- function(spectra,
+PlotFactorizations <- function(out.dir,
+                               spectra,
                                bg.sig.info,
                                solution,
                                sig.number = 96,
-                               ref.genome = "hg19",
+                               ref.genome = NULL,
                                region = "genome")
 {
+  if (!dir.exists(out.dir)) {
+    if (!dir.create(out.dir, recursive = TRUE)) {
+      stop("Cannot create ", out.dir)
+    }
+  }
   sig <- SolutionToSignature(solution,
                              sig.number,
                              ref.genome,
                              region)
   
   b <- solution[(sig.number + 1):length(solution)]
-  stopifnot(length(b) == ncol(spectra))
+  if (length(b) != ncol(spectra)) {
+    stop("The number of estimates of the contribution of the target sequence (",
+         length(b), ")\n",
+         "does not match the number of input spectra (", ncol(spectra), ")")
+  }
   total.counts <- colSums(spectra)
   for (i in 1:ncol(spectra)) {
     bg.counts <- round(b[i] * mSigAct::HepG2.background.info$background.sig)
@@ -434,8 +447,19 @@ PlotFactorizations <- function(spectra,
     # concentrations, with and without noise)
     name <- colnames(spectra)[i]
     colnames(tmp) <- c("Orig", "BG", "Exp*Sig", "Orig-BG")
-    ICAMS::PlotCatalogToPdf(tmp, paste0("data-raw/", name, ".pdf"))
+    ICAMS::PlotCatalogToPdf(tmp, paste0(out.dir, "/", name, ".pdf"))
   }
+  return(data.frame(sample = colnames(spectra),
+                    spectrum.count = total.counts,
+                    bg.count  = b,
+                    target.sig.count = total.counts - b))
+}
+
+PlotTest0 <- function(out.dir, retval)  {
+  PlotFactorizations(out.dir,
+                     spectra = mSigAct::HepG2.background.spectra,
+                     bg.sig.info = mSigAct::HepG2.background.info,
+                     solution = retval$solution)
 }
 
 Test1 <- function(start.b.fraction = 0.1, maxeval = 10000) {
@@ -447,4 +471,11 @@ Test1 <- function(start.b.fraction = 0.1, maxeval = 10000) {
     start.b.fraction = start.b.fraction)
   
   return(res)
+}
+
+PlotTest1 <- function(out.dir, test1.retval)  {
+  PlotFactorizations(out.dir,
+                     spectra = mSigAct::cisplatin.exposed.HepG2.96,
+                     bg.sig.info = mSigAct::HepG2.background.info,
+                     solution = test1.retval$solution)
 }

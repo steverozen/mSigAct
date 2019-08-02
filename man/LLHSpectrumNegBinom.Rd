@@ -12,7 +12,7 @@ LLHSpectrumNegBinom(spectrum, expected.counts, nbinom.size)
 \arguments{
 \item{spectrum}{An observed spectrum (a numeric vector)}
 
-\item{expected.counts}{A vector of expected mutation counts, one
+\item{expected.counts}{A vector of (integer) expected mutation counts, one
 expected count for each mutation type. We want to know the 
 likelihood that this model generated the observed 
 spectrum, assuming each mutational types generates counts according to

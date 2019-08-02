@@ -2,11 +2,11 @@
 % Please edit documentation in R/mSigAct.R
 \name{Test0}
 \alias{Test0}
-\title{Null test}
+\title{Test \code{FindSignatureMinusBackground} on background-only spectra.}
 \usage{
-Test0(start.b.fraction = 0.9)
+Test0(start.b.fraction = 0.9, maxeval = 10000)
 }
 \description{
-Null test
+Test \code{FindSignatureMinusBackground} on background-only spectra.
 }
 \keyword{internal}

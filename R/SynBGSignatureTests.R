@@ -52,6 +52,8 @@ MakeTest <- function(replicate,
   spectrum <-
     bg.count * bg.sig.info$background.sig + target.count * ref.sig
   
+  spectrum <- round(spectrum)
+  
   return(cbind(data.frame(target.sig.name = target.sig.name),
                matrix(c( dist.to.bg      = dist.to.bg,
                          bg.contribution = bg.contribution,
@@ -62,13 +64,6 @@ MakeTest <- function(replicate,
                          target.count    = target.count,
                          spectrum        = spectrum),
                       nrow = 1)))
-}
-
-TestMakeTest <- function() {
-  r1 <- MakeTest(1, HepG2.background.info, 0.1, "SBS6")
-  r2 <- MakeTest(2, HepG2.background.info, 0.1, "SBS6")
-  rx <- rbind(r1, r2)
-  return(rx)
 }
 
 # Note: https://www.r-bloggers.com/populating-data-frame-cells-with-more-than-one-value/
@@ -95,7 +90,8 @@ MakeSynTestGrid <-
   # check that this works -- otherwise clusterSetRNGStream
   
   ncol <- 104
-  output <- cbind(data.frame("dummy"), matrix(rep(0, ncol - 1), nrow = 1))
+  output <- cbind(data.frame("dummy", stringsAsFactors = FALSE),
+                  matrix(rep(0, ncol - 1), nrow = 1))
   # Each row is a synthetic spectrum.
   # We will have 104 columns
   colnames(output) <- c("target.sig",
@@ -129,7 +125,7 @@ MakeSynTestGrid <-
   return(output)
 }
 
-MakeAndSaveHepG2Tests <- function(num.replicates = 10) {
+MakeAndSaveHepG2Tests <- function(num.replicates = 20) {
 
     sig.names.to.test <- c("SBS40", "SBS4", "SBS58", "SBS6")
     contribution <- c(0.1, 0.5, 0.9)
@@ -137,7 +133,99 @@ MakeAndSaveHepG2Tests <- function(num.replicates = 10) {
     HepG2.bg.tests.no.noise <-
       MakeSynTestGrid(sig.names.to.test = sig.names.to.test,
                       contribution      = contribution,
-                      bg.sig.info       = HepG2.background.info,
+                      bg.sig.info       = mSigAct::HepG2.background.info,
                       num.replicates    = num.replicates)
     usethis::use_data(HepG2.bg.tests.no.noise, overwrite = TRUE)
+}
+
+TestTable2TestInput <- function(test.table, 
+                                num.replicates,
+                                num.spectra.per.replicate) {
+  sig.names <- unique(test.table$target.sig)
+  contributions <- unique(test.table$bg.contribution)
+  output <- list()
+  for (sig in sig.names) {
+    for (cont in contributions) {
+      sub.table <-
+        test.table[test.table$target.sig == sig &
+                     test.table$bg.contribution == cont, ]
+      # Temporary, only one replicate
+      spectra <-
+        t(sub.table[1:num.spectra.per.replicate,
+                  9:ncol(sub.table)])
+      spectra <-
+        ICAMS::as.catalog(spectra, region = "genome",
+                          catalog.type = "counts")
+      output[[paste0(sig, "_", cont, "_", 1)]] <- spectra
+    }
+  }
+  return(output)
+}
+
+RunTests <- function(test.table, 
+                     num.replicates,
+                     num.spectra.per.replicate,
+                     bg.info,
+                     out.dir,
+                     mc.cores = 10,
+                     maxeval = 1000,
+                     print_level = 0) {
+  
+  if (!dir.exists(out.dir)) {
+    if (!dir.create(out.dir, recursive = TRUE))
+      stop("Cannot create ", out.dir)
+  }
+  
+
+  if (Sys.info()["sysname"] == "Windows" &&
+      mc.cores > 1) {
+    message("On Windows, changing mc.cores from ", mc.cores, " to 1")
+    mc.cores <- 1
+  }
+  
+  message("Using ", mc.cores, " cores\n")
+  
+  
+  test.input.list <-
+    TestTable2TestInput(test.table,
+                        num.replicates,
+                        num.spectra.per.replicate)
+  
+  Run1Test <- function(test.name) {
+    mydir <- file.path(out.dir, test.name)
+    if (!dir.exists(mydir)) {
+      if (!dir.create(mydir, recursive = TRUE)) {
+        stop("Cannot create ", mydir)
+      }
+    }
+    spectra <- test.input.list[[test.name]]
+    
+    retval <-
+      FindSignatureMinusBackground(spectra,
+                                   bg.sig.info = bg.info,
+                                   maxeval = maxeval, 
+                                   print_level = print_level,
+                                   xtol_rel=0.001,  # 0.0001,)
+                                   xtol_abs=0.0001,
+                                   start.b.fraction = 0.1)
+  } # function Run1Test
+  
+  output <- parallel::mclapply(
+    X = names(test.input.list), FUN = Run1Test, mc.cores = mc.cores)
+  
+  return(output)
+}
+
+RunRunTests <- function() {
+  output <- RunTests(
+    test.table = mSigAct::HepG2.bg.tests.no.noise[1:40, ],
+    num.replicates = 1,
+    num.spectra.per.replicate = 2,
+    bg.info = mSigAct::HepG2.background.info,
+    out.dir = "data-raw/big-test-output",
+    mc.cores = 10,
+    maxeval = 1000,
+    print_level = 0
+  )
+  invisible(output)
 }
