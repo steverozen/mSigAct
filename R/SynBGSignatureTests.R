@@ -285,19 +285,12 @@ EvalOneTest <- function(test.output, bg.info) {
     colnames(input.spectra.based.sigs) <- 
       paste0(colnames(input.spectra.based.sigs), "-sub-spec-sig")
     
-    mean.spectra.based.sig <- apply(X = input.spectra.based.sigs,
-                                     MARGIN = 1, mean)
-    mean.cos.sim <- 
-      lsa::cosine(ground.truth.sig[ , 1], mean.spectra.based.sig)
-    
-    mean.spectra.based.sig <- matrix(mean.spectra.based.sig, ncol=1)
-    rownames(mean.spectra.based.sig) <- ICAMS::catalog.row.order[["SBS96"]]
-        
     mean.spectra.based.sig <- 
-      ICAMS::as.catalog(mean.spectra.based.sig,
-                        catalog.type = "counts.signature",
-                        region = "genome")
-
+      MeanOfSpectraAsSig(input.spectra.minus.inferred.bg)
+    
+    mean.cos.sim <- 
+      lsa::cosine(ground.truth.sig[ , 1], mean.spectra.based.sig[ , 1])
+    
     colnames(mean.spectra.based.sig) <-
       paste0("mean.spectra.based.sig_",
              round(mean.cos.sim, digits = 3))

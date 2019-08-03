@@ -311,6 +311,32 @@ ObjFn1 <- function(
   return(-1 * loglh)
 }
 
+MeanOfSpectraAsSig <- function(spectra) {
+  ctype <- attr(spectra, "catalog.type", exact = TRUE)
+  if (ctype == "counts") {
+    tctype <- "counts.signature"
+  } else if (ctype == "density") {
+    tctype <- "density.signature"
+  } else {
+    stop("Cannot run MeanOfSpectraAsSig when catalog.type is ", ctype)
+  }
+  
+  sigs <- ICAMS::TransformCatalog(spectra, target.catalog.type = tctype)
+  
+  mean.sig <- apply(X = sigs, MARGIN = 1, mean)
+
+  mean.sig <- matrix(mean.sig, ncol=1)
+  rownames(mean.sig) <- ICAMS::catalog.row.order[["SBS96"]]
+  
+  mean.sig <- 
+    ICAMS::as.catalog(mean.sig, catalog.type = tctype, region = "genome")
+  
+  colnames(mean.sig) <- "mean.spectra.based.sig"
+  
+  return(mean.sig)
+}
+
+
 FindSignatureMinusBackground <-
   function(spectra,
            bg.sig.info,
@@ -321,9 +347,13 @@ FindSignatureMinusBackground <-
            xtol_abs=0.0001,
            start.b.fraction = 0.1) {
   
-  uniform.sig <- rep(1, nrow(spectra)) / nrow(spectra)
-  b.x0        <- start.b.fraction * colSums(spectra)
-  est.target.sig.and.b.x0 <- c(uniform.sig, b.x0)
+  sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
+  
+  # Test
+  sig0 <- MeanOfSpectraAsSig(spectra)
+  
+  b.x0 <- start.b.fraction * colSums(spectra)
+  est.target.sig.and.b.x0 <- c(sig0, b.x0)
   
   ret <- nloptr::nloptr(
     x0          = est.target.sig.and.b.x0,
