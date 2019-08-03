@@ -12,6 +12,7 @@ LazyData: true
 Language: en-US
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
+biocViews:
 Imports:
     ICAMS,
     nloptr,
@@ -19,4 +20,5 @@ Imports:
     lsa
 Suggests: 
     testthat (>= 2.1.0),
-    usethis
+    usethis,
+    utils

@@ -211,7 +211,6 @@ MakeHepG2BackgroundPart1 <- function() {
       file = system.file(
         "data-raw/spectra.for.background.signatures/HepG2_SC2_background.txt",
         package = "mSigAct"),
-      ref.genome = "hg19",
       catalog.type = "counts",
       region = "unknown")$cat96
   ICAMS::WriteCatalog(
@@ -221,6 +220,7 @@ MakeHepG2BackgroundPart1 <- function() {
       package = "mSigAct")
   )
 }
+
 
 #' Read the specified spectra file and estimate the HepG2 background signature
 #' 
@@ -232,7 +232,6 @@ MakeHepG2BackgroundPart2 <- function(maxeval) {
     system.file(
       "data-raw/spectra.for.background.signatures/HepG2.background.96.csv",
       package = "mSigAct"),
-    ref.genome = "hg19",
     region = "genome",
     catalog.type = "counts")
 
@@ -391,13 +390,19 @@ MakeCisplatinCatalogs <- function() {
   return(cats)
 }
 
-SolutionToSignature <- function(solution, 
+Solution2SigVec <- function(solution, sig.number = 96) {
+  sig.vec <- solution[1:sig.number]
+  return(sig.vec / sum(sig.vec))
+}
+
+
+Solution2Signature <- function(solution, 
                                 sig.number = 96,
-                                ref.genome = "hg19",
+                                ref.genome = NULL,
                                 region = "genome") {
-  sig <- matrix(solution[1:sig.number], ncol = 1)
-  sig <- sig / sum(sig)
-  rownames(sig) <- ICAMS::catalog.row.order$SBS96
+  sig <- matrix(Solution2SigVec(solution), ncol = 1)
+  rownames(sig) <- ICAMS::catalog.row.order[["SBS96"]]
+  colnames(sig) <- "Inferred.sig"
   sig <- ICAMS::as.catalog(
     sig, ref.genome = ref.genome,
     region = region,
@@ -406,10 +411,17 @@ SolutionToSignature <- function(solution,
   return(sig)
 }
 
-GetBGMutationCounts <- function(nlopt.retval, sig.number = 96) {
-  solution <- nlopt.retval$solution
+
+Nloptr2BGMutationCounts <- function(nloptr.retval, sig.number = 96) {
+  solution <- nloptr.retval$solution
   return(solution[(sig.number + 1):length(solution)])
 }
+
+
+Nloptr2Signature <- function(nloptr.retval, sig.number = 96) {
+  return(Solution2Signature(nloptr.retval$solution, sig.number))
+}
+
 
 PlotFactorizations <- function(out.dir,
                                spectra,
@@ -424,7 +436,7 @@ PlotFactorizations <- function(out.dir,
       stop("Cannot create ", out.dir)
     }
   }
-  sig <- SolutionToSignature(solution,
+  sig <- Solution2Signature(solution,
                              sig.number,
                              ref.genome,
                              region)

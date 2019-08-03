@@ -67,3 +67,12 @@
 #' 
 #' HepG2.bg.tests.no.noise[1:2, 1:10]
 "HepG2.bg.tests.no.noise"
+
+#' Temporary test data
+#' 
+#' @format Complicated
+#' 
+#' @examples 
+#' # XXXXXX
+#' 
+"simple.40000.HepG2.tests"

@@ -170,8 +170,8 @@ RunTests <- function(test.table,
                      out.dir,
                      mc.cores = 10,
                      maxeval = 1000,
-                     xtol_rel=0.001/2,  # 0.0001,)
-                     xtol_abs=0.000/2,
+                     xtol_rel=0.001/10,  # 0.0001,)
+                     xtol_abs=0.0001/10,
                      print_level = 0,
                      verbose = FALSE) {
   
@@ -214,27 +214,13 @@ RunTests <- function(test.table,
                 input = test.input.list[[test.name]]))
   } # function Run1Test
   
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(411411)
   output <- parallel::mclapply(
     X = names(test.input.list), FUN = Run1Test, mc.cores = mc.cores)
   names(output) <- names(test.input.list)
   
   return(output)
-}
-
-SaveTestOuput <- function(test.output) {
-
-  for (i in 1:length(test.output)) {
-    test.name <- test.output[[i]][["test.name"]]
-    mydir <- file.path(out.dir, test.name)
-    if (!dir.exists(mydir)) {
-      if (!dir.create(mydir, recursive = TRUE)) {
-        stop("Cannot create ", mydir)
-      }
-    }
-    nloptr.retval <- test.output[[i]][["nloptr.retval"]]
-    
-    
-  }
 }
 
 RunRunTests <- function(maxeval = 10000) {
@@ -251,3 +237,128 @@ RunRunTests <- function(maxeval = 10000) {
   )
   invisible(output)
 }
+
+
+
+TestOutput2TestRows <- function(test.output.item) {
+  return(test.output.item[["input"]][["test.rows"]])
+}
+
+TestOutput2GroundTruthSignature <- function(test.output.item) {
+  test.rows <- TestOutput2TestRows(test.output.item)
+  sig.names <- test.rows[ , "target.sig"]
+  sig.name <- unique(sig.names)
+  stopifnot(length(sig.name) == 1)
+  return(mSigAct::sp.sigs[ , sig.name, drop = FALSE])
+}
+
+
+EvalOneTest <- function(test.output, bg.info) {
+    nloptr.retval <- test.output[["nloptr.retval"]]
+    iterations <- nloptr.retval$iterations
+    inferred.sig <- Nloptr2Signature(nloptr.retval)
+    
+    ground.truth.sig <- TestOutput2GroundTruthSignature(test.output)
+    
+    cos.sim <- lsa::cosine(inferred.sig[ , 1], ground.truth.sig[ , 1])
+    colnames(inferred.sig) <- 
+      paste(colnames(inferred.sig), round(cos.sim, digits = 3), sep = "_")  
+    
+    # Compare background and inferred target signature counts 
+    # to ground truth
+    test.rows <- TestOutput2TestRows(test.output)
+    inferred.bg.count <- Nloptr2BGMutationCounts(nloptr.retval)
+    precis <- test.rows[ , c(1,3,4,6,8)]
+    precis$inferred.bg.count <- inferred.bg.count
+    precis$cos.sim           <- rep(cos.sim, nrow(precis))
+    precis$nloptr.iterations <- rep(iterations, nrow(precis))
+    input.spectra <- t(as.matrix(test.rows[ , 9:ncol(test.rows)]))
+    input.spectra <- ICAMS::as.catalog(input.spectra,
+                                       region = "genome",
+                                       catalog.type = "counts")
+    bg.sig <- bg.info$background.sig
+    to.subtract <- bg.sig %*% inferred.bg.count
+    input.spectra.minus.inferred.bg <- input.spectra - to.subtract
+    input.spectra.based.sigs <-
+      ICAMS::TransformCatalog(input.spectra.minus.inferred.bg,
+                              target.catalog.type = "counts.signature")
+    colnames(input.spectra.based.sigs) <- 
+      paste0(colnames(input.spectra.based.sigs), "-sub-spec-sig")
+    
+    mean.spectra.based.sig <- apply(X = input.spectra.based.sigs,
+                                     MARGIN = 1, mean)
+    mean.cos.sim <- 
+      lsa::cosine(ground.truth.sig[ , 1], mean.spectra.based.sig)
+    
+    mean.spectra.based.sig <- matrix(mean.spectra.based.sig, ncol=1)
+    rownames(mean.spectra.based.sig) <- ICAMS::catalog.row.order[["SBS96"]]
+        
+    mean.spectra.based.sig <- 
+      ICAMS::as.catalog(mean.spectra.based.sig,
+                        catalog.type = "counts.signature",
+                        region = "genome")
+
+    colnames(mean.spectra.based.sig) <-
+      paste0("mean.spectra.based.sig_",
+             round(mean.cos.sim, digits = 3))
+    
+    message("TODO, try just taking the average of the orignal spectra")
+
+    return(
+      list(
+        cos.sim = cos.sim, 
+        inferred.sig = inferred.sig,
+        ground.truth.sig = ground.truth.sig,
+        bg.sig  = bg.sig,
+        precis = precis,
+        input.spectra                   = input.spectra,
+        input.spectra.minus.inferred.bg = input.spectra.minus.inferred.bg,
+        input.spectra.based.sigs        = input.spectra.based.sigs,
+        mean.spectra.based.sig          = mean.spectra.based.sig,
+        mean.cos.sim                    = mean.cos.sim))
+}
+
+
+# We need to get the ground truth sig from the test output
+EvalMultiTest <- function(test.output, bg.info) {
+  stopifnot(!is.null(bg.info))
+  retval <- lapply(X = test.output, 
+                   FUN = EvalOneTest, 
+                   bg.info = bg.info)
+  return(retval)
+  
+}
+
+SaveEvaluatedOuput <- function(out.dir, ev.output) {
+  
+  for (i in 1:length(ev.output)) {
+    test.name <- names(ev.output)[i]
+    mydir <- file.path(out.dir, test.name)
+    if (!dir.exists(mydir)) {
+      if (!dir.create(mydir, recursive = TRUE)) {
+        stop("Cannot create ", mydir)
+      }
+    }
+    ev <- ev.output[[i]]
+    sigs <- cbind(ev$bg.sig,
+                  ev$ground.truth.sig, 
+                  ev$inferred.sig,
+                  ev$mean.spectra.based.sig,
+                  ev$input.spectra.based.sigs)
+    
+
+    ICAMS::PlotCatalogToPdf(sigs, file.path(mydir, "sigs.pdf"))
+    
+    spectra <-
+      cbind(ev$input.spectra, ev$input.spectra.minus.inferred.bg)
+    ICAMS::PlotCatalogToPdf(spectra, file.path(mydir, "spectra.pdf"))
+    
+    utils::write.csv(ev$precis, file.path(mydir, "precis.csv"))
+    
+    
+  }
+}
+
+# mfoo <- EvalMultiTest(simple.40000.HepG2.tests, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev", mfoo)
+
