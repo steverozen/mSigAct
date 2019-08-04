@@ -269,6 +269,7 @@ EvalOneTest <- function(test.output, bg.info) {
     test.rows <- TestOutput2TestRows(test.output)
     inferred.bg.count <- Nloptr2BGMutationCounts(nloptr.retval)
     precis <- test.rows[ , c(1,3,4,6,8)]
+    precis <- cbind(row.name = row.names(precis), precis)
     precis$inferred.bg.count <- inferred.bg.count
     precis$cos.sim           <- rep(cos.sim, nrow(precis))
     precis$nloptr.iterations <- rep(iterations, nrow(precis))
@@ -290,6 +291,8 @@ EvalOneTest <- function(test.output, bg.info) {
     
     mean.cos.sim <- 
       lsa::cosine(ground.truth.sig[ , 1], mean.spectra.based.sig[ , 1])
+    
+    precis$cos.sim.of.mean.sig <- rep(mean.cos.sim, nrow(precis))
     
     colnames(mean.spectra.based.sig) <-
       paste0("mean.spectra.based.sig_",
@@ -324,34 +327,47 @@ EvalMultiTest <- function(test.output, bg.info) {
 
 SaveEvaluatedOuput <- function(out.dir, ev.output) {
   
+  if (!dir.exists(out.dir)) {
+    if (!dir.create(out.dir, recursive = TRUE)) {
+      stop("Cannot create ", out.dir)
+    }
+  }
+
+  csv.append <- FALSE
+  csv.colnames <- TRUE
   for (i in 1:length(ev.output)) {
     test.name <- names(ev.output)[i]
-    mydir <- file.path(out.dir, test.name)
-    if (!dir.exists(mydir)) {
-      if (!dir.create(mydir, recursive = TRUE)) {
-        stop("Cannot create ", mydir)
-      }
-    }
+    # mydir <- file.path(out.dir, test.name)
+    
+
     ev <- ev.output[[i]]
     sigs <- cbind(ev$bg.sig,
                   ev$ground.truth.sig, 
                   ev$inferred.sig,
                   ev$mean.spectra.based.sig,
                   ev$input.spectra.based.sigs)
+    attr(sigs, "catalog.type") <- "counts.signature"
     
-
-    ICAMS::PlotCatalogToPdf(sigs, file.path(mydir, "sigs.pdf"))
+    sigs.file <- paste0(out.dir, "/", test.name, ".sigs.pdf" )
+    ICAMS::PlotCatalogToPdf(sigs, sigs.file)
     
     spectra <-
       cbind(ev$input.spectra, ev$input.spectra.minus.inferred.bg)
-    ICAMS::PlotCatalogToPdf(spectra, file.path(mydir, "spectra.pdf"))
     
-    utils::write.csv(ev$precis, file.path(mydir, "precis.csv"))
+    spectra.file <- paste0(out.dir, "/", test.name, ".spectra.pdf")
+    ICAMS::PlotCatalogToPdf(spectra, spectra.file)
     
-    
+    utils::write.table(ev$precis, 
+                      file.path(out.dir, "precis.csv"),
+                      col.names = csv.colnames,
+                      append    = csv.append,
+                      sep       = ",",
+                      row.names = FALSE)
+    csv.append <- TRUE
+    csv.colnames <- FALSE
   }
 }
 
 # mfoo <- EvalMultiTest(simple.40000.HepG2.tests, HepG2.background.info)
-# SaveEvaluatedOuput("data-raw/ev", mfoo)
+# SaveEvaluatedOuput("data-raw/ev2", mfoo)
 
