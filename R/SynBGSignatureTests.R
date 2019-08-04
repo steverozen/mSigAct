@@ -389,6 +389,6 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
 # SaveEvaluatedOuput("data-raw/ev.remainder", foo.remainder)
 
 # simple.100000.NLOPT_GN_DIRECT_L <- RunRunTests(maxeval = 100000)
-# usethis::use_data(simple.40000.NLOPT_GN_DIRECT_L)
-# foo.NLOPT_GN_DIRECT_L <- EvalMultiTest(simple.40000.NLOPT_GN_DIRECT_L, HepG2.background.info)
-# SaveEvaluatedOuput("data-raw/ev.NLOPT_GN_DIRECT_L", foo.NLOPT_GN_DIRECT_L)
+# usethis::use_data(simple.100000.NLOPT_GN_DIRECT_L)
+# foo.NLOPT_GN_DIRECT_L <- EvalMultiTest(simple.100000.NLOPT_GN_DIRECT_L, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.100000.NLOPT_GN_DIRECT_L", foo.NLOPT_GN_DIRECT_L)
