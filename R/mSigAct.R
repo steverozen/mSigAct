@@ -145,7 +145,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 
 EstimateSignatureFromSpectraLH <-
   function(spectra,
-           algorithm='NLOPT_LN_COBYLA',
+           algorithm="NLOPT_LN_COBYLA",
            maxeval=1000, 
            print_level=0,
            xtol_rel=0.001,  # 0.0001,)
@@ -352,6 +352,16 @@ FindSignatureMinusBackground <-
   # Test
   sig0 <- MeanOfSpectraAsSig(spectra)
   
+  # Test 2 was not good ?
+  if (FALSE) {
+  what.to.subtract <-
+    bg.sig.info$count.nbinom.mu * bg.sig.info$background.sig
+  sub2 <- matrix(rep(what.to.subtract, ncol(spectra)), ncol = ncol(spectra))
+  spectra.remain <- spectra - sub2 
+  sig0 <- MeanOfSpectraAsSig(spectra.remain)[ , 1]
+  sig0[sig0 < 0] <- 0
+  }
+  
   b.x0 <- start.b.fraction * colSums(spectra)
   est.target.sig.and.b.x0 <- c(sig0, b.x0)
   
@@ -452,6 +462,9 @@ Nloptr2Signature <- function(nloptr.retval, sig.number = 96) {
   return(Solution2Signature(nloptr.retval$solution, sig.number))
 }
 
+Nloptr2ObjFnValue <- function(nloptr.retval) {
+  return(nloptr.retval$objective)
+}
 
 PlotFactorizations <- function(out.dir,
                                spectra,

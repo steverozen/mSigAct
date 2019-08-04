@@ -76,3 +76,21 @@
 #' # XXXXXX
 #' 
 "simple.40000.HepG2.tests"
+
+
+#' Temporary test data
+#' 
+#' @format Complicated
+#' 
+#' @examples 
+#' # XXXXXX
+#' 
+"simple.40000.new.sig0"
+
+#' Temporary test data
+#' 
+#' @format Complicated
+#' 
+#' @examples 
+#' # XXXXXX
+"simple.40000.remainder"

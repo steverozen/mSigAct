@@ -173,6 +173,8 @@ RunTests <- function(test.table,
                      xtol_rel=0.001/10,  # 0.0001,)
                      xtol_abs=0.0001/10,
                      print_level = 0,
+                     # algorithm = "NLOPT_LN_COBYLA", #
+                     algorithm = "NLOPT_GN_DIRECT_L", #
                      verbose = FALSE) {
   
   if (!dir.exists(out.dir)) {
@@ -207,10 +209,12 @@ RunTests <- function(test.table,
                                    print_level = print_level,
                                    xtol_rel=xtol_rel,  # 0.0001,)
                                    xtol_abs=xtol_abs,
+                                   algorithm = algorithm,
                                    start.b.fraction = 0.1)
     
     return(list(nloptr.retval = retval, 
                 test.name = test.name, 
+                algorithm = algorithm,
                 input = test.input.list[[test.name]]))
   } # function Run1Test
   
@@ -233,7 +237,8 @@ RunRunTests <- function(maxeval = 10000) {
     mc.cores = 10,
     maxeval = maxeval,
     print_level = 0,
-    verbose = TRUE
+    verbose = TRUE,
+    algorithm = 
   )
   invisible(output)
 }
@@ -255,6 +260,8 @@ TestOutput2GroundTruthSignature <- function(test.output.item) {
 
 EvalOneTest <- function(test.output, bg.info) {
     nloptr.retval <- test.output[["nloptr.retval"]]
+    algorithm     <- test.output$algorithm
+    if (is.null(algorithm)) algorithm <- "NULL"
     iterations <- nloptr.retval$iterations
     inferred.sig <- Nloptr2Signature(nloptr.retval)
     
@@ -273,6 +280,9 @@ EvalOneTest <- function(test.output, bg.info) {
     precis$inferred.bg.count <- inferred.bg.count
     precis$cos.sim           <- rep(cos.sim, nrow(precis))
     precis$nloptr.iterations <- rep(iterations, nrow(precis))
+    precis$nloptr.obj.fn.valaue <-
+      rep(Nloptr2ObjFnValue(nloptr.retval), nrow(precis))
+    precis$algoritm <- rep(algorithm, nrow(precis))
     input.spectra <- t(as.matrix(test.rows[ , 9:ncol(test.rows)]))
     input.spectra <- ICAMS::as.catalog(input.spectra,
                                        region = "genome",
@@ -369,5 +379,16 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
 }
 
 # mfoo <- EvalMultiTest(simple.40000.HepG2.tests, HepG2.background.info)
-# SaveEvaluatedOuput("data-raw/ev2", mfoo)
+# SaveEvaluatedOuput("data-raw/ev3", mfoo)
 
+# foo2X <- EvalMultiTest(simple.40000.new.sig0, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.new.sig0x", foo2X)
+
+# simple.40000.remainder <- RunRunTests(maxeval = 40000)
+# foo.remainder <- EvalMultiTest(simple.40000.remainder, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.remainder", foo.remainder)
+
+# simple.100000.NLOPT_GN_DIRECT_L <- RunRunTests(maxeval = 100000)
+# usethis::use_data(simple.40000.NLOPT_GN_DIRECT_L)
+# foo.NLOPT_GN_DIRECT_L <- EvalMultiTest(simple.40000.NLOPT_GN_DIRECT_L, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.NLOPT_GN_DIRECT_L", foo.NLOPT_GN_DIRECT_L)
