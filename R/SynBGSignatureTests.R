@@ -390,3 +390,10 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
 # usethis::use_data(simple.100000.NLOPT_LN_COBYLA)
 # foo <- EvalMultiTest(simple.100000.NLOPT_LN_COBYLA, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/simple.100000.NLOPT_LN_COBYLA", foo)
+
+
+# simple.200000.NLOPT_GN_DIRECT <- RunRunTests(maxeval = 200000, algorithm = "NLOPT_GN_DIRECT")
+# usethis::use_data(simple.200000.NLOPT_GN_DIRECT)
+# foo.NLOPT_GN_DIRECT <- EvalMultiTest(simple.200000.NLOPT_GN_DIRECT, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.200000.NLOPT_GN_DIRECT", foo.NLOPT_GN_DIRECT)
+
