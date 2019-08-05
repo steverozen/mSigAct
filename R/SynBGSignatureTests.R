@@ -173,8 +173,8 @@ RunTests <- function(test.table,
                      xtol_rel=0.001/10,  # 0.0001,)
                      xtol_abs=0.0001/10,
                      print_level = 0,
-                     # algorithm = "NLOPT_LN_COBYLA", #
-                     algorithm = "NLOPT_GN_DIRECT_L", #
+                     algorithm = "NLOPT_LN_COBYLA", #
+                     # algorithm = "NLOPT_GN_DIRECT_L", #
                      verbose = FALSE) {
   
   if (!dir.exists(out.dir)) {
@@ -227,7 +227,7 @@ RunTests <- function(test.table,
   return(output)
 }
 
-RunRunTests <- function(maxeval = 10000) {
+RunRunTests <- function(maxeval = 10000, algorithm) {
   output <- RunTests(
     test.table = mSigAct::HepG2.bg.tests.no.noise, # [1:120, ],
     num.replicates = 1,
@@ -238,7 +238,7 @@ RunRunTests <- function(maxeval = 10000) {
     maxeval = maxeval,
     print_level = 0,
     verbose = TRUE,
-    algorithm = 
+    algorithm = algoritm
   )
   invisible(output)
 }
@@ -388,7 +388,10 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
 # foo.remainder <- EvalMultiTest(simple.40000.remainder, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev.remainder", foo.remainder)
 
-# simple.200000.NLOPT_GN_DIRECT_L <- RunRunTests(maxeval = 100000)
+# simple.200000.NLOPT_GN_DIRECT_L <- RunRunTests(maxeval = 200000)
 # usethis::use_data(simple.200000.NLOPT_GN_DIRECT_L)
 # foo.NLOPT_GN_DIRECT_L <- EvalMultiTest(simple.200000.NLOPT_GN_DIRECT_L, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev.200000.NLOPT_GN_DIRECT_L", foo.NLOPT_GN_DIRECT_L)
+
+# simple.100000.NLOPT_LN_COBYLA <- RunRunTests(maxeval = 100000, algorithm = "NLOPT_LN_COBYLA")
+# usethis::use_data(simple.100000.NLOPT_LN_COBYLA)
