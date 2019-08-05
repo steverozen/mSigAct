@@ -177,12 +177,6 @@ RunTests <- function(test.table,
                      # algorithm = "NLOPT_GN_DIRECT_L", #
                      verbose = FALSE) {
   
-  if (!dir.exists(out.dir)) {
-    if (!dir.create(out.dir, recursive = TRUE))
-      stop("Cannot create ", out.dir)
-  }
-  
-
   if (Sys.info()["sysname"] == "Windows" &&
       mc.cores > 1) {
     message("On Windows, changing mc.cores from ", mc.cores, " to 1")
@@ -227,14 +221,13 @@ RunTests <- function(test.table,
   return(output)
 }
 
-RunRunTests <- function(maxeval = 10000, algorithm) {
+RunRunTests <- function(maxeval = 10000, algorithm, mc.cores = 10) {
   output <- RunTests(
     test.table = mSigAct::HepG2.bg.tests.no.noise, # [1:120, ],
     num.replicates = 1,
     num.spectra.per.replicate = 2,
     bg.info = mSigAct::HepG2.background.info,
-    out.dir = "data-raw/big-test-output",
-    mc.cores = 10,
+    mc.cores = mc.cores,
     maxeval = maxeval,
     print_level = 0,
     verbose = TRUE,
@@ -395,3 +388,5 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
 
 # simple.100000.NLOPT_LN_COBYLA <- RunRunTests(maxeval = 100000, algorithm = "NLOPT_LN_COBYLA")
 # usethis::use_data(simple.100000.NLOPT_LN_COBYLA)
+# foo <- EvalMultiTest(simple.100000.NLOPT_LN_COBYLA, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/simple.100000.NLOPT_LN_COBYLA", foo)
