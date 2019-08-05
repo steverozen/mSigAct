@@ -238,7 +238,7 @@ RunRunTests <- function(maxeval = 10000, algorithm) {
     maxeval = maxeval,
     print_level = 0,
     verbose = TRUE,
-    algorithm = algoritm
+    algorithm = algorithm
   )
   invisible(output)
 }
