@@ -1,0 +1,13 @@
+Strand	Mutation	Sample.Name	N	sum	targetfeature
+-1	C>A	Control	324	3134	-1
+-1	C>G	Control	324	345	-1
+-1	C>T	Control	324	1425	-1
+-1	T>A	Control	324	761	-1
+-1	T>C	Control	324	430	-1
+-1	T>G	Control	324	121	-1
+1	C>A	Control	324	1627	1
+1	C>G	Control	324	194	1
+1	C>T	Control	324	1285	1
+1	T>A	Control	324	375	1
+1	T>C	Control	324	370	1
+1	T>G	Control	324	101	1

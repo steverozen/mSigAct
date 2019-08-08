@@ -1,0 +1,54 @@
+Sample.Name	ratio	ratio_se	Compound	Concentration	S9.mix	Compound.Abbreviation	Group	Treatment	treatment
+MSM0.103	15.2949277460759	0.266235431476557	Dibenz[a,h]anthracene diol-epoxide	0.109 uM	No	DBADE	f_PAH	DBADE (0.109 uM)	MSM0.103_DBADE_0.109 uM
+MSM0.2	12.0501407499967	0.407610049920155	Benzo[a]pyrene diol-epoxide	0.125 uM	No	BPDE	f_PAH	BPDE (0.125 uM)	MSM0.2_BPDE_0.125 uM
+MSM0.94	9.14361340215745	0.217245272706601	6-Nitrochrysene	50 uM	No	6-Nitrochrysene	e_Nitro-PAH	6-Nitrochrysene (50 uM)	MSM0.94_6-Nitrochrysene_50 uM
+MSM0.93	8.77820946115754	0.219339103290013	6-Nitrochrysene	50 uM	Yes	6-Nitrochrysene	e_Nitro-PAH	6-Nitrochrysene (50 uM) + S9	MSM0.93_6-Nitrochrysene_50 uM
+MSM0.56	6.94005363605134	0.265005690811707	Simulated solar radiation	1.25 J	No	SSR	h_Radiation	SSR (1.25 J)	MSM0.56_SSR_1.25 J
+MSM0.110	6.15634918354487	0.125921436159616	1,2-Dimethylhydrazine	11.6 mM	Yes	DMH	m_Alkylating Agent	DMH (11.6 mM) + S9	MSM0.110_DMH_11.6 mM
+MSM0.14	6.1452130634382	0.131907618667504	Dibenz[a,h]anthracene diol-epoxide	0.0313 uM	No	DBADE	f_PAH	DBADE (0.0313 uM)	MSM0.14_DBADE_0.0313 uM
+MSM0.24	5.95589902162492	0.118245367103017	N-Ethyl-N-nitrosourea	400 uM	No	ENU	m_Alkylating Agent	ENU (400 uM)	MSM0.24_ENU_400 uM
+MSM0.40	5.00793679754516	0.221081514910271	6-Nitrochrysene	0.78 uM	No	6-Nitrochrysene	e_Nitro-PAH	6-Nitrochrysene (0.78 uM)	MSM0.40_6-Nitrochrysene_0.78 uM
+MSM0.54	4.85481514607853	0.0966724665429189	5-Methylchrysene	1.6 uM	Yes	5-Methylchrysene	f_PAH	5-Methylchrysene (1.6 uM) + S9	MSM0.54_5-Methylchrysene_1.6 uM
+MSM0.95	4.61121251874526	0.130406141361247	1,8-Dinitropyrene	8 uM	No	1,8-DNP	e_Nitro-PAH	1,8-DNP (8 uM)	MSM0.95_1,8-DNP_8 uM
+MSM0.42	4.60982050373192	0.134168887947134	Dibenz[a,h]anthracene	75 uM	Yes	DBA	f_PAH	DBA (75 uM) + S9	MSM0.42_DBA_75 uM
+MSM0.3	3.75233925551881	0.170571198315199	Aristolochic acid I	1.25 uM	No	AAI	b_Other	AAI (1.25 uM)	MSM0.3_AAI_1.25 uM
+MSM0.87	3.33195072149224	0.121219474242122	3-Nitrobenzanthrone	0.1 uM	No	3-NBA	e_Nitro-PAH	3-NBA (0.1 uM)	MSM0.87_3-NBA_0.1 uM
+MSM0.83	2.76122456602572	0.0965206538893652	Cisplatin	12.5 uM	No	Cisplatin	l_Drug Therapy	Cisplatin (12.5 uM)	MSM0.83_Cisplatin_12.5 uM
+MSM0.96	2.5663424641591	0.149943532654215	Dibenzo[a,l]pyrene diol-epoxide	0.000625 uM	No	DBPDE	f_PAH	DBPDE (0.000625 uM)	MSM0.96_DBPDE_0.000625 uM
+MSM0.63	2.42296491778581	0.0821489927432665	Propylene oxide	10 mM	No	Propylene oxide	b_Other	Propylene oxide (10 mM)	MSM0.63_Propylene oxide_10 mM
+MSM0.92	2.19606647061253	0.0539564303258894	Benzo[a]pyrene	2 uM	Yes	BaP	f_PAH	BaP (2 uM) + S9	MSM0.92_BaP_2 uM
+MSM0.90	2.04433683415923	0.0603723301349554	2-amino-1-methyl-6-phenylimidazo[4,5-b]pyridine	4 uM	Yes	PhIP	i_Heterocyclic Amine	PhIP (4 uM) + S9	MSM0.90_PhIP_4 uM
+MSM0.67	1.9204474979726	0.101665810021214	Diethyl sulfate	0.938 mM	No	DES	m_Alkylating Agent	DES (0.938 mM)	MSM0.67_DES_0.938 mM
+MSM0.75	1.7895980867193	0.0858321778489145	Temozolomide	200 uM	No	Temozolomide	l_Drug Therapy	Temozolomide (200 uM)	MSM0.75_Temozolomide_200 uM
+MSM0.122	1.58636389477268	0.124001565402613	3-Chloro-4-(dichloromethyl)-5-hydroxy-2(5H)-furanone	7 uM	Yes	MX	b_Other	MX (7 uM) + S9	MSM0.122_MX_7 uM
+MSM0.26	1.50841105402604	0.0443982544928206	Benzo[a]pyrene	0.39 uM	Yes	BaP	f_PAH	BaP (0.39 uM) + S9	MSM0.26_BaP_0.39 uM
+MSM0.27	1.33301716234608	0.0600271904820549	6-Nitrochrysene	12.5 uM	Yes	6-Nitrochrysene	e_Nitro-PAH	6-Nitrochrysene (12.5 uM) + S9	MSM0.27_6-Nitrochrysene_12.5 uM
+MSM0.102	1.30656887709275	0.0452161699953544	Potassium bromate	875 uM	No	Potassium bromate	d_ROS/NOS	Potassium bromate (875 uM)	MSM0.102_Potassium bromate_875 uM
+MSM0.16	1.30378484706609	0.0363948580055423	1,8-Dinitropyrene	0.125 uM	No	1,8-DNP	e_Nitro-PAH	1,8-DNP (0.125 uM)	MSM0.16_1,8-DNP_0.125 uM
+MSM0.11	1.26063238165277	0.040697451198559	Temozolomide	200 uM	No	Temozolomide	l_Drug Therapy	Temozolomide (200 uM)	MSM0.11_Temozolomide_200 uM
+MSM0.22	1.19520767602611	0.0426054899237047	N-Methyl-N-nitrosourea	350 uM	No	MNU	m_Alkylating Agent	MNU (350 uM)	MSM0.22_MNU_350 uM
+MSM0.111	1.18267954090612	0.0616830774284847	Benzidine	200 uM	No	Benzidine	j_Aromatic Amine	Benzidine (200 uM)	MSM0.111_Benzidine_200 uM
+MSM0.132	1.15483924063946	0.0541305208245033	Dibenzo[a,l]pyrene	0.0313 uM	Yes	DBP	f_PAH	DBP (0.0313 uM) + S9	MSM0.132_DBP_0.0313 uM
+MSM0.5	1.06853430981281	0.0357586041732133	3-Nitrobenzanthrone	0.025 uM	No	3-NBA	e_Nitro-PAH	3-NBA (0.025 uM)	MSM0.5_3-NBA_0.025 uM
+MSM0.68	1.02538184439949	0.0318377966959217	Dimethyl sulfate	0.078 mM	No	DMS	m_Alkylating Agent	DMS (0.078 mM)	MSM0.68_DMS_0.078 mM
+MSM0.41	0.978401337699503	0.067500127080942	Ellipticine	0.375 uM	Yes	Ellipticine	l_Drug Therapy	Ellipticine (0.375 uM) + S9	MSM0.41_Ellipticine_0.375 uM
+MSM0.35	0.905668553252854	0.0381950115636661	Potassium bromate	260 uM	No	Potassium bromate	d_ROS/NOS	Potassium bromate (260 uM)	MSM0.35_Potassium bromate_260 uM
+MSM0.13	0.877828252986195	0.0494839148720665	Dibenzo[a,l]pyrene diol-epoxide	0.000156 uM	No	DBPDE	f_PAH	DBPDE (0.000156 uM)	MSM0.13_DBPDE_0.000156 uM
+MSM0.44	0.859384054059533	0.0570298468327587	2-amino-1-methyl-6-phenylimidazo[4,5-b]pyridine	3 uM	Yes	PhIP	i_Heterocyclic Amine	PhIP (3 uM) + S9	MSM0.44_PhIP_3 uM
+MSM0.74	0.694082271226241	0.0264884253617921	Dibenz(a,j)acridine	5 uM	Yes	DBAC	f_PAH	DBAC (5 uM) + S9	MSM0.74_DBAC_5 uM
+MSM0.126	0.622393498039592	0.0387597517948529	4-Aminobiphenyl	300 uM	Yes	4-ABP	j_Aromatic Amine	4-ABP (300 uM) + S9	MSM0.126_4-ABP_300 uM
+MSM0.7	0.607777340399596	0.0278621813381989	Cisplatin	3.125 uM	No	Cisplatin	l_Drug Therapy	Cisplatin (3.125 uM)	MSM0.7_Cisplatin_3.125 uM
+MSM0.50	0.584113085172935	0.0266361533419048	1,6-Dinitropyrene	0.09 uM	No	1,6-DNP	e_Nitro-PAH	1,6-DNP (0.09 uM)	MSM0.50_1,6-DNP_0.09 uM
+MSM0.72	0.561840844959607	0.025849085768713	Carboplatin	5 uM	No	Carboplatin	l_Drug Therapy	Carboplatin (5 uM)	MSM0.72_Carboplatin_5 uM
+MSM0.84	0.549312709839611	0.0294247389082873	AZD7762	1.625 uM	No	AZD7762	k_DNA Damage Response Inhibitors	AZD7762 (1.625 uM)	MSM0.84_AZD7762_1.625 uM
+MSM0.49	0.501288191879623	0.0741083117556379	Aflatoxin B1	0.25 uM	Yes	AFB1	b_Other	AFB1 (0.25 uM) + S9	MSM0.49_AFB1_0.25 uM
+MSM0.124	0.449087628879636	0.0243946524348871	Methyleugenol	1.25 mM	No	Methyleugenol	b_Other	Methyleugenol (1.25 mM)	MSM0.124_Methyleugenol_1.25 mM
+MSM0.66	0.422639343626309	0.0219627477834262	Mechlorethamine (nitrogen mustard)	0.3 uM	No	Mechlorethamine	l_Drug Therapy	Mechlorethamine (0.3 uM)	MSM0.66_Mechlorethamine_0.3 uM
+MSM0.25	0.396887065879649	0.0280572306865647	Cyclophosphamide	18.75 uM	Yes	Cyclophosphamide	l_Drug Therapy	Cyclophosphamide (18.75 uM) + S9	MSM0.25_Cyclophosphamide_18.75 uM
+MSM0.70	0.394799043359649	0.0281065361101505	Ochratoxin A	0.08 uM	Yes	OTA	b_Other	OTA (0.08 uM) + S9	MSM0.70_OTA_0.08 uM
+MSM0.58	0.39062299831965	0.0314977619162627	Aristolochic acid II	37.5 uM	No	AAII	b_Other	AAII (37.5 uM)	MSM0.58_AAII_37.5 uM
+MSM0.64	0.386446953279652	0.0294839570558777	N-Nitrosopyrrolidine	50 mM	No	N-Nitrosopyrrolidine	g_Nitrosamine	N-Nitrosopyrrolidine (50 mM)	MSM0.64_N-Nitrosopyrrolidine_50 mM
+MSM0.55	0.379486878212987	0.0298995011178901	Furan	100 mM	Yes	Furan	b_Other	Furan (100 mM) + S9	MSM0.55_Furan_100 mM
+MSM0.104	0.325198292693	0.0213352523441036	Formaldehyde	120 uM	No	Formaldehyde	n_Aldehydes	Formaldehyde (120 uM)	MSM0.104_Formaldehyde_120 uM
+MSM0.12	0.312670157573003	0.0208587247635028	Dibenzo[a,l]pyrene	0.0039 uM	No	DBP	f_PAH	DBP (0.0039 uM)	MSM0.12_DBP_0.0039 uM
+MSM0.106	0.305710082506339	0.0266271491319257	Semustine (methyl-CCNU)	150 uM	No	Semustine	l_Drug Therapy	Semustine (150 uM)	MSM0.106_Semustine_150 uM
