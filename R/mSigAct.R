@@ -539,3 +539,135 @@ PlotTest1 <- function(out.dir, test1.retval)  {
                      bg.sig.info = mSigAct::HepG2.background.info,
                      solution = test1.retval$solution)
 }
+
+#' Helper function: is the set 'probe' a superset of any set in 'background'?
+#' 
+#' @keywords internal
+is.superset.of.any <- function(probe, background) {
+  for (b in background) {
+    if (sets::set_is_proper_subset(b, probe)) return(TRUE)
+  }
+  return(FALSE)
+}
+
+#' Find known signatures that can most sparsely reconstruct a spectrum.
+#' 
+#' @param spect The spectrum to be reconstructed.
+#' 
+#' @param sigs The signatures to use in reconstruction.
+#' 
+#' @param max.level The larges number of signatures to consider discarding
+#' (this is not quite correct)
+#' 
+#' @param p.thresh The maximum p value based on which it is decided
+#' to retain a signature in a reconstruction.
+#' 
+#' @param trace If > 0 print out information on progress.
+#' 
+#' @param obj.fun The objective function for nloptr ????
+#' 
+#' @param nbinom.size The \code{size} parameter to \code{XXXXX}.
+#' 
+#' @return An assignment of signature as XXXXXXXX
+
+SparseAssignActivity <- function(spect, sigs,
+                                 max.level=5,
+                                 p.thresh=0.05, trace=0,
+                                 obj.fun,
+                                 nbinom.size) {
+  mode(spect) <-  'numeric'
+  start <- one.lh.and.exp(spect, sigs, trace=0,
+                          obj.fun=obj.fun,
+                          nbinom.size=nbinom.size)
+  lh.w.all <- start$loglh  # The likelihood with all signatures
+  start.exp <- start$exposure
+  non.0.exp.index <- which(start.exp > 0.5)
+  if (trace > 0) {
+    cat('Starting with',
+        paste(names(start.exp)[non.0.exp.index], collapse=','),
+        '\n')
+    cat('max.level =', max.level, '\n')
+  }
+  if (length(non.0.exp.index) < 2) {
+    if (trace > 0) cat('returning, only', length(non.0.exp.index),
+                       'non-0 exposures\n')
+    return(start.exp)
+  }
+  max.level <- min(max.level, length(non.0.exp.index) - 1)
+  
+  c.r.s <- sets::set() # subsets of the signature indices that cannot be removed
+  
+  max.p <- numeric(max.level)
+  best.subset <- non.0.exp.index
+  best.try <- start
+  best.try.is.start <- T
+  
+  for (df in 1:max.level) {
+    if (trace > 0) cat('df =', df, '\n')
+    subsets <- sets::set_combn(non.0.exp.index, df)
+    for (subset in subsets) {
+      # subset is of class set (package sets)
+      if (is.superset.of.any(subset, c.r.s)) next
+      subset.to.remove.v <- as.numeric(subset)
+      subset.name <- paste(names(start.exp)[subset.to.remove.v], collapse=',')
+      tmp.set <- setdiff(non.0.exp.index, subset.to.remove.v)
+      try.sigs <- sigs[ , tmp.set]
+      
+      if (length(tmp.set) == 1) {
+        try.sigs <- as.matrix(try.sigs)
+        rownames(try.sigs) <- rownames(sigs)
+        if (trace > 0) cat("New code\n")
+      }
+      
+      # Get the max lh for try.sig / Get the maximum likelihood reconstruction using try.sig
+      try <- one.lh.and.exp(spect, try.sigs, trace=0,
+                            obj.fun=obj.fun,
+                            nbinom.size=nbinom.size)
+      # try contains maxlh and exposure
+      statistic <- 2 * (lh.w.all - try$loglh)
+      chisq.p <- pchisq(statistic, df, lower.tail=F)
+      if (trace > 0) {
+        cat('Trying', subset.name, 'p =', chisq.p, '; ')
+        if (trace > 1) cat('loglh =', try$loglh, '; statistic  =', statistic, ';')
+      }
+      if (chisq.p > p.thresh) {
+        # This an acceptable set of exposures
+        if (trace > 0) cat (' acceptable;')
+        if (chisq.p > max.p[df]) {
+          # This is the best so far
+          max.p[df] <- chisq.p
+          best.subset <- tmp.set
+          best.try <- try
+          best.try.is.start <- F
+          if (trace > 0) cat('best\n')
+        } else {
+          if (trace > 0) cat('not best\n')
+        }
+      } else {
+        c.r.s <- sets::set_union(c.r.s, sets::set(subset))
+        if (trace > 0)  {
+          cat('cannot remove\n')
+        }
+      }
+    } # end for (subset in subsets)
+    if (max.p[df] == 0) break
+  } # end for df in 1:max.level
+  
+  # Need to return the exposures in the context of the orginal signatures matrix
+  out.exp <- numeric(ncol(sigs)) #all zeros
+  names(out.exp) <- colnames(sigs)
+  if (best.try.is.start) {
+    out.exp <- start.exp
+  } else {
+    out.exp[best.subset] <- best.try$exposure
+  }
+  if (trace > 0) {
+    cat('max.p =', paste(max.p, collapse = ', '), '\n')
+    cat('Ending with',
+        paste(names(start.exp)[best.subset], collapse=','),
+        '\n')
+  }
+  stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
+  out.exp
+}
+

@@ -157,7 +157,7 @@ is.superset.of.any <- function(probe, background) {
   return(F)
 }
 
-sparse.assign.activity <- function(spect, sigs,
+INPROCESSsparse.assign.activity <- function(spect, sigs,
                                    max.level=5,
                                    p.thresh=0.05, trace=0,
                                    obj.fun,

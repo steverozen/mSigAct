@@ -94,3 +94,24 @@
 #' @examples 
 #' # XXXXXX
 "simple.40000.remainder"
+
+#' Control spectra from Kucab et al, 2019
+#' 
+#' @format An ICAMS catalog with 35 samples.
+"kucab.controls"
+
+#' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
+#' 
+#' @format A list with elements 2:4, each of which is a vector of 
+#' 10,000 elements, each of which is the mean of total 
+#' mutation counts of 2 to 4 control spectra.
+"kucab.control.dist"
+
+#' Another temp test ouput
+"simple.100000.NLOPT_LN_COBYLA"
+
+#' Another temp test ouput
+"simple.200000.NLOPT_GN_DIRECT_L"
+
+#' Another temp test output
+"simple.40000.NLOPT_GN_DIRECT_L"

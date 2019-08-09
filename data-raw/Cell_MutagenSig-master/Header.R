@@ -15,7 +15,7 @@ library(BSgenome.Hsapiens.UCSC.hg19)
 
 
 gen_muttype_new <- function(CTsubs){
-  muttype_freq_template <- read.table("/nfs/cancer_archive04/xz3/b_1176/14_subs_0913/MutationType_template.txt", sep = "\t", header = T, as.is = T)
+  muttype_freq_template <- read.table("../00_data/MutationType_template.txt", sep = "\t", header = T, as.is = T)
   
   CTsubs_copy <- CTsubs
   CTsubs[CTsubs$Ref %in% c("G","A"),]$Alt <- as.character(complement(DNAStringSet(CTsubs_copy[CTsubs_copy$Ref %in% c("G","A"),]$Alt)))
