@@ -3,3 +3,4 @@
 ^\.Rproj\.user$
 data-raw
 README.Rmd
+^\.travis\.yml$
