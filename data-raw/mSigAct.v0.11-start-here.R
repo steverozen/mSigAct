@@ -79,7 +79,7 @@ PARTLY.ICORPORATEDobj.fun.nbinom.maxlh <-function(exp, spectrum, sigs,
 # Use nloptr (numerical non-linear optimization) to find an assignmeent of
 # signature activites for one tumor. The nlpotr algorithm and the objective
 # function are arguments. We have not tested with other algorithms.
-nloptr.one.tumor <- function(spectrum, sigs,
+MOVEDnloptr.one.tumor <- function(spectrum, sigs,
                              algorithm='NLOPT_LN_COBYLA',
                              maxeval=1000, print_level=0,
                              xtol_rel=0.001, # 0.0001,
@@ -123,7 +123,7 @@ nloptr.one.tumor <- function(spectrum, sigs,
 # exposure - the vector of exposures that generate loglh, in this case
 # 'exposure' means the number of mutations ascribed to each signature
 #
-one.lh.and.exp <- function(spect, sigs, trace,
+PARTLYMOVEDone.lh.and.exp <- function(spect, sigs, trace,
                            algorithm='NLOPT_LN_COBYLA',
                            obj.fun,
                            nbinom.size) {

@@ -540,6 +540,82 @@ PlotTest1 <- function(out.dir, test1.retval)  {
                      solution = test1.retval$solution)
 }
 
+
+#' Find an assignment of signature activites for one tumor. 
+#'
+#' Use nloptr (numerical non-linear optimization) to 
+#' The nlpotr algorithm and the objective
+#' function are arguments. We have not tested with other algorithms.
+#' 
+#' @keywords internal
+nloptr.one.tumor <- function(spectrum, sigs,
+                             algorithm='NLOPT_LN_COBYLA',
+                             maxeval=1000, print_level=0,
+                             xtol_rel=0.001, # 0.0001,
+                             obj.fun,
+                             ... # additional arguments for obj.fun
+) {
+  if (class(sigs) == 'numeric') {
+    # In this case we got a numeric vector, not a matrix. We assume the caller
+    # intended it as a single column matrix.
+    sigs <- matrix(sigs, ncol=1)
+  }
+  
+  if (nrow(sigs)!= length(spectrum)) {
+    # If we get here there is an error. We save specturm and sigs, which seems
+    # useful for debugging in a call to mclapply (multi-core lapply).
+    save(spectrum, sigs, file='spectrum.sigs.debug.Rdata')
+    stop("nrow(sigs) != length(spectrum), look in file spectrum.sigs.debug.Rdata")
+  }
+  
+  # x0 is uniform distribution of mutations across signatures
+  # (Each signature gets the same number of mutations)
+  x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
+  
+  res <- nloptr::nloptr(x0=x0,
+                eval_f=obj.fun,
+                lb=rep(0, ncol(sigs)),
+                opts=list(algorithm=algorithm,
+                          xtol_rel=xtol_rel,
+                          print_level=print_level,
+                          maxeval=maxeval),
+                spectrum=spectrum,
+                sigs=sigs,
+                ...)
+  names(res$solution) <- colnames(sigs)
+  res
+}
+
+#' Returns a list with elements:
+#'
+#' loglh    - the log likelihood of the best solution (set of exposures) found
+#' exposure - the vector of exposures that generate loglh, in this case
+#'exposure' means the number of mutations ascribed to each signature
+#'
+#' @keywords internal
+one.lh.and.exp <- function(spect, sigs, trace,
+                           algorithm='NLOPT_LN_COBYLA',
+                           obj.fun,
+                           nbinom.size) {
+  r <- nloptr.one.tumor(spect, sigs, maxeval=1e6,
+                        xtol_rel = 1e-7,
+                        algorithm=algorithm, obj.fun = obj.fun,
+                        nbinom.size=nbinom.size)
+  if (trace >  0) cat(r$objective, r$iterations, sum(r$solution), '\n')
+  
+  loglh <- r$objective
+  
+  if (loglh == Inf && trace > 0) cat("Got -Inf in one.lh.and.exp\n")
+  
+  # sum(recon) is likely to be close to, but not equal to the number
+  # of mutations in the spectrum, so we scale exposures to get the
+  # number of mutations in the spectrum
+  exp <- r$solution * (sum(spect) / sum(r$solution)) # sum(recon))
+  
+  list(loglh=-loglh, exposure=exp)
+}
+
+
 #' Helper function: is the set 'probe' a superset of any set in 'background'?
 #' 
 #' @keywords internal
@@ -625,7 +701,7 @@ SparseAssignActivity <- function(spect, sigs,
                             nbinom.size=nbinom.size)
       # try contains maxlh and exposure
       statistic <- 2 * (lh.w.all - try$loglh)
-      chisq.p <- pchisq(statistic, df, lower.tail=F)
+      chisq.p <- stats::pchisq(statistic, df, lower.tail=F)
       if (trace > 0) {
         cat('Trying', subset.name, 'p =', chisq.p, '; ')
         if (trace > 1) cat('loglh =', try$loglh, '; statistic  =', statistic, ';')
