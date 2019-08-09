@@ -555,7 +555,8 @@ nloptr.one.tumor <- function(spectrum, sigs,
                              obj.fun,
                              ... # additional arguments for obj.fun
 ) {
-  if (class(sigs) == 'numeric') {
+  if (!"matrix" %in% class(sigs)) {
+    if (!"numeric" %in% class(sigs)) stop("Unexpected class argument: ", class(sigs))
     # In this case we got a numeric vector, not a matrix. We assume the caller
     # intended it as a single column matrix.
     sigs <- matrix(sigs, ncol=1)
@@ -747,3 +748,157 @@ SparseAssignActivity <- function(spect, sigs,
   out.exp
 }
 
+# Helper function, given signatures (sigs) and exposures (exp), return a
+# *proportional* reconstruction; in general, it is *not necessarily* scaled to
+# the actual spectrum counts.
+#' error checked (?) function to get reconstructed something?
+#' 
+#' @keywords internal
+prop.reconstruct <- function(sigs, exp) {
+  stopifnot(length(exp) == ncol(sigs))
+  as.matrix(sigs) %*% exp
+}
+
+# Define the objective function for use with nloptr (non-linear optimization)
+# Negative binomial maximum likelihood objective function
+#
+# exp  is the matrix of exposures ("activities")
+# sigs is the matrix of signatures
+# spectrum is the spectrum to assess
+# nbinom.size is the dispersion parameter for the negative
+#             binomial distribution; smaller is more dispersed
+#
+# The result is
+# -1 * log(likelihood(spectrum | reconstruction))
+# (nloptr minimizes the objective function.)
+#
+# The lower the objective function, the better
+# PARTLY.ICORPORATED
+
+#' Old objective function for SparseAssignActivity
+#' 
+#' @keywords internal
+obj.fun.nbinom.maxlh <-function(exp, spectrum, sigs, nbinom.size) {
+  
+  if (any(is.na(exp))) return(Inf)
+  
+  reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
+  
+  ## catch errors with NA in the input or in reconstruction.
+  if (any(is.na(reconstruction))) {
+    save(reconstruction, spectrum, sigs, exp, nbinom.size,
+         file='reconstruction.error.R')
+  }
+  stopifnot(!any(is.na(reconstruction)))
+  
+  loglh <- 0
+  for (i in 1:length(spectrum)) { # Iterate over each channel in the
+    # spectrum and sum the log
+    # likelihoods.
+    
+    nbinom <- stats::dnbinom(x=spectrum[i],
+                             mu = reconstruction[i],
+                             size=nbinom.size,
+                             log=T)
+    
+    loglh <-loglh + nbinom
+  }
+  stopifnot(mode(loglh) == 'numeric' )
+  -loglh
+}
+
+#' Test whether we can improve reconstruction
+#' by minimizing reconstructin error once
+#' we know what signatures are present.
+PolishAssignObjFn <- function(exp, sigs, spect) {
+  reconstruction <- 
+    prop.reconstruct(sigs = mSigAct::sp.sigs[ , sigs], exp = exp)
+  err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
+  return(err)
+}
+
+Polish <- function(exp, sigs, spect) {
+  retval <- nloptr::nloptr(x0 = exp,
+                            eval_f = PolishAssignObjFn,
+                            lb = rep(0, length(exp)),
+                            ub = rep(sum(exp), length(exp)),
+                            opts = list(algorithm = "NLOPT_LN_COBYLA",
+                                        maxeval=1000, 
+                                        print_level=0,
+                                        xtol_rel=0.001,  # 0.0001,)
+                                        xtol_abs=0.0001),
+                            sigs = sigs,
+                            spect = spect)
+    
+  names(retval$solution) <- names(exp)  
+  return(retval$solution)
+  
+}
+
+SparseAssignTest1 <- function() {
+  sig.names <- c("SBS1", "SBS22")
+  retval <-  SparseAssignTestGeneric(
+    sig.names  = sig.names,
+    sig.counts = c(1000, 2000))
+  testthat::expect_equal(retval$soln1,
+                         c(SBS1 = 973.21485997560296, 
+                           SBS22 = 2024.78514002439670))
+  
+  testthat::expect_equal(retval$soln2,
+                         c(SBS1  = 1001.0872211972701,
+                           SBS22 = 1997.8671142054766))
+  
+  return(retval)
+}
+
+SparseAssignTest2 <- function() {
+  retval <- SparseAssignTestGeneric(
+    sig.names = c("SBS3", "SBS5", "SBS10a"),
+    sig.counts = c(10, 1000, 2000)
+  )
+  
+  testthat::expect_equal(retval$soln1,
+                         c(SBS3  = 0,
+                           SBS5 = 1023.7736770381522, 
+                           SBS10a = 1990.2263229618482))
+  
+  testthat::expect_equal(retval$soln2,
+                         c(SBS5  = 1017.8476499534260,
+                           SBS10a = 2001.1238458342166))
+  
+  return(retval)
+}
+
+SparseAssignTestGeneric <- function(sig.names, sig.counts) {
+  some.sigs <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
+  spect <- round(some.sigs %*% sig.counts)
+  spect <-
+    ICAMS::as.catalog(
+      spect, 
+      ref.genome   = attr(some.sigs, "ref.genome", exact = TRUE),
+      region       = attr(some.sigs, "region", exact = TRUE),
+      catalog.type = "counts")
+  SA.out <- SparseAssignActivity(spect       = spect,
+                                 sigs        = some.sigs,
+                                 nbinom.size = 5,
+                                 obj.fun     = obj.fun.nbinom.maxlh,
+                                 trace       = 1)
+  zeros <- which(SA.out < 0.5)
+  if (length(zeros) > 0) {
+    SA.out2 <- SA.out[-zeros]
+    sig.names2 <- sig.names[-zeros]
+  } else {
+    SA.out2 <- SA.out
+    sig.names2 <- sig.names
+  }
+  
+  polish.out <- Polish(exp = SA.out2,
+                    sigs = sig.names2,
+                    spect = spect)
+  names(sig.counts) <- sig.names
+  return(list(soln1      = SA.out,
+              soln2      = polish.out,
+              truth      = sig.counts,
+              input.spect = spect))
+  
+}

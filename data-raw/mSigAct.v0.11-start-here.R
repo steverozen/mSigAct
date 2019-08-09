@@ -1024,7 +1024,7 @@ mSigAct.basic.test <- function() {
   stopifnot(all(all.equal(short.analysis$exposure, expected.exp, tolerance = 0.005)))
 
   # Create a spectrum that has only one signature, and a matrix of spectra that has only
-  # on spectrum. These conditions often exercise errors.
+  # one spectrum. These conditions often exercise errors.
   degenerate.spectrum <-
     matrix(c(round(liver.wes.sigs[ , 'Signature.AA'] * 1000, digits=0),
              round(liver.wes.sigs[ , 'Signature.AA'] * 500, digits=0)),
