@@ -2,6 +2,7 @@ context("SparseAssignActivity")
 
 
 test_that("SparseAssignTest1", {
+  set.seed(9190)
   SparseAssignTest1 <- function() {
     retval <-  SparseAssignTestGeneric(
       sig.counts = c(SBS1 = 1000, SBS22 = 2000))
