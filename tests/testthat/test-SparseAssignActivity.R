@@ -38,18 +38,21 @@ test_that("SparseAssignTest2", {
     testthat::expect_equal(retval$soln1,
                            c(SBS3  = 0,
                              SBS5 = 1023.7736770381522, 
-                             SBS10a = 1990.2263229618482))
+                             SBS10a = 1990.2263229618482),
+                           tolerance = 10e-2)
     
-    testthat::expect_equal(as.numeric(retval$edist1), 7.3353217488852822)
+    testthat::expect_equal(as.numeric(retval$edist1),
+                           7.3353217488852822,
+                           tolerance = 10e-2)
     
     testthat::expect_equal(retval$soln2,
                            c(SBS5  = 1017.8476499534260,
                              SBS10a = 2001.1238458342166),
-                           tolerance = 1)
+                           tolerance = 10e-2)
     
     testthat::expect_equal(as.numeric(retval$edist2), 
                            3.0816408978467047,
-                           tolerance = 1)
+                           tolerance = 10e-2)
     
     # return(retval)
   }
@@ -58,7 +61,6 @@ test_that("SparseAssignTest2", {
 
 
 test_that("SparseAssignTest3", {
-  skip("temp skip")
   SparseAssignTest3 <- function() {
     retval <- SparseAssignTestGeneric(
       sig.counts = c(SBS3=300, SBS5=300, SBS4=300, SBS29=300, SBS24=300, SBS8=300)
