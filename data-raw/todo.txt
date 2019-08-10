@@ -1,0 +1,14 @@
+To Do
+
+1. Bring over signature presence test.
+
+2. Bring over other code in old mSigAct.
+
+3. Provide a version of sparse assign signature that runs on a catalog of spectra
+
+4. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality.
+
+5. Test Kucab background signature approach and compare to our approach.
+
+6. Move background subtraction tests to testthat.
+

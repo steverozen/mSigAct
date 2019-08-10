@@ -8,8 +8,8 @@ one.lh.and.exp(spect, sigs, trace, algorithm = "NLOPT_LN_COBYLA",
   obj.fun, nbinom.size)
 }
 \description{
-loglh    - the log likelihood of the best solution (set of exposures) found
-exposure - the vector of exposures that generate loglh, in this case
-exposure' means the number of mutations ascribed to each signature
+\code{loglh}    - the log likelihood of the best solution (set of exposures) found
+\code{exposure}  - the vector of exposures that generate \code{loglh}, in this case
+this is the number of mutations ascribed to each signature.
 }
 \keyword{internal}

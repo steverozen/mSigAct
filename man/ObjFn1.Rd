@@ -2,32 +2,22 @@
 % Please edit documentation in R/mSigAct.R
 \name{ObjFn1}
 \alias{ObjFn1}
-\title{Estimate a signature minus a background signature}
+\title{Objective function for \code{\link{FindSignatureMinusBackground}}.}
 \usage{
 ObjFn1(est.target.sig.and.b, obs.spectra, bg.sig.info)
 }
-\description{
-Let the input spectra be s1, s2, ...
-}
-\details{
-Fig target.sig that maximize the likelihoods
-max_(b1, target.sig){s1 | 
-            b1, target.sig, background.sig, 
-            background.sig.nbinom.size, background.sig.count.mu,
-     background.sig.count.nbinom.size}
-b1 * background.sig + (total-mut1 - b1) * target.sig * prob(b1), \cr
-b2 * background.sig + (total-mut2 - b2) * target.sig * prob(b2), \cr
-... \cr
-\cr
+\arguments{
+\item{est.target.sig.and.b}{A numeric vector of which elements
+1:96 are the signature (as a vector) and the remaining elements
+are the coefficients for each input spectrum in \code{obs.spectra}.}
 
-Note: I guess you could estimate "background" and "target.sig"
-at the same time, but then background might be slightly (?)
-different for each set of input spectra. To do that would
-include the likelhoods
-background.s1 | background.sig, background.sig.nbinom.size
-background.s2 | background.sig, background.sig.nbinom.size
-and include a maximization over background.sig and
-background.sig.nbinom.size
-....
+\item{obs.spectra}{The observed spectra, which may be the
+sum of the activities of the background signature and the signature
+of an experimental treatment.}
+
+\item{bg.sig.info}{Information on the background signature. See for example
+\code{\link{HepG2.background.info}}.}
 }
-\keyword{internal}
+\description{
+Objective function for \code{\link{FindSignatureMinusBackground}}.
+}

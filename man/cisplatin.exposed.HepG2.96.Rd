@@ -3,15 +3,12 @@
 \docType{data}
 \name{cisplatin.exposed.HepG2.96}
 \alias{cisplatin.exposed.HepG2.96}
-\title{Test experimental spectra}
-\format{XXXX}
+\title{Mutational spectra of cisplatin exposed HepG2 cells.}
+\format{An \code{[ICAMS]} \code{counts} catalog.}
 \usage{
 cisplatin.exposed.HepG2.96
 }
 \description{
-Test experimental spectra
-}
-\examples{
-# XXXX
+Mutational spectra of cisplatin exposed HepG2 cells.
 }
 \keyword{datasets}

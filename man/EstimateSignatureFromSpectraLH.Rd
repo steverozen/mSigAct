@@ -41,5 +41,5 @@ by the signature and an indication of variability around
 that estimate.
 }
 \details{
-Currently only workds on SBS 96 signatures.
+Only works on SBS 96 signatures.
 }

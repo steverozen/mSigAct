@@ -11,7 +11,4 @@ simple.40000.remainder
 \description{
 Temporary test data
 }
-\examples{
-# XXXXXX
-}
 \keyword{datasets}

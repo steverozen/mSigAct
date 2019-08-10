@@ -2,11 +2,11 @@
 % Please edit documentation in R/mSigAct.R
 \name{obj.fun.nbinom.maxlh}
 \alias{obj.fun.nbinom.maxlh}
-\title{Old objective function for SparseAssignActivity}
+\title{Objective function for \code{[SparseAssignActivity]}.}
 \usage{
 obj.fun.nbinom.maxlh(exp, spectrum, sigs, nbinom.size)
 }
 \description{
-Old objective function for SparseAssignActivity
+Objective function for \code{[SparseAssignActivity]}.
 }
 \keyword{internal}

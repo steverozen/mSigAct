@@ -20,12 +20,12 @@ to retain a signature in a reconstruction.}
 
 \item{trace}{If > 0 print out information on progress.}
 
-\item{obj.fun}{The objective function for nloptr ????}
+\item{obj.fun}{The objective function for \code{\link[nloptr]{nloptr}} ????.}
 
 \item{nbinom.size}{The \code{size} parameter to \code{XXXXX}.}
 }
 \value{
-An assignment of signature as XXXXXXXX
+An assignment of signature as ???.
 }
 \description{
 Find known signatures that can most sparsely reconstruct a spectrum.

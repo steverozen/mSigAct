@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{NegLLHOfSignature}
 \alias{NegLLHOfSignature}
-\title{Objective function for nloptr for estimating a background signature.}
+\title{Objective function for estimating a background signature from multiple background spectra.}
 \usage{
 NegLLHOfSignature(sig.and.nbinom.size, spectra)
 }
@@ -23,8 +23,8 @@ Returns the negative log likelihood
 that the signature with an
 estimated negative binomial
 dispersion parameter,
-generated the observed spectra given the
+generated the observed (multiple) spectra given the
 likelihood of the observed total counts
-associated with the signature.
+attributed to the signature.
 }
 \keyword{internal}

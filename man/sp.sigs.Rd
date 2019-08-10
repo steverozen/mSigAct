@@ -4,14 +4,11 @@
 \name{sp.sigs}
 \alias{sp.sigs}
 \title{SigProfiler 96 SBS signatures}
-\format{XXXXXXX}
+\format{An \code{[ICAMS]} \code{counts.spectrum} catalog; see Alexandrov et al. ?????.}
 \usage{
 sp.sigs
 }
 \description{
 SigProfiler 96 SBS signatures
-}
-\examples{
-# XXXXX
 }
 \keyword{datasets}

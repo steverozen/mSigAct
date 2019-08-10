@@ -14,6 +14,7 @@ AGA
 AGAT
 AGT
 al
+Alexandrov
 Aristolochic
 ATA
 ATC
@@ -65,14 +66,17 @@ indel
 indels
 intron
 IUPAC
+Kucab
 MakeVCFDBSdf
 mer
 mers
 microhomology
 Mmusculus
+mut
 mutect
 Mutect
 MuTect
+nbinom
 Ng
 NN
 nucleotides
@@ -87,6 +91,8 @@ sanger
 SBS
 SBSs
 scitranslmed
+sig
+SigProfiler
 steverozen
 StrandToPdf
 Strelka

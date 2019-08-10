@@ -2,14 +2,12 @@
 % Please edit documentation in R/mSigAct.R
 \name{nloptr.one.tumor}
 \alias{nloptr.one.tumor}
-\title{Find an assignment of signature activites for one tumor.}
+\title{Find an assignment of signature activities for one tumor.}
 \usage{
 nloptr.one.tumor(spectrum, sigs, algorithm = "NLOPT_LN_COBYLA",
   maxeval = 1000, print_level = 0, xtol_rel = 0.001, obj.fun, ...)
 }
 \description{
-Use nloptr (numerical non-linear optimization) to 
-The nlpotr algorithm and the objective
-function are arguments. We have not tested with other algorithms.
+Use \code{[nloptr::nloptr]} (numerical non-linear optimization) to ???
 }
 \keyword{internal}

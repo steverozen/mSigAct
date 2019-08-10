@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{LLHSpectrumNegBinom}
 \alias{LLHSpectrumNegBinom}
-\title{Likelihood that observed spectrum was generated from a vector of expected counts.
+\title{Likelihood that one observed spectrum was generated from a vector of expected counts.
  
 Returns the sum of the likelihoods that each each element of the
 spectrum was generated from the corresponding expected count.}
@@ -29,7 +29,7 @@ Smaller values correspond to larger dispersion.}
 \code{log(likelihood(spectrum | expected.counts))}
 }
 \description{
-Likelihood that observed spectrum was generated from a vector of expected counts.
+Likelihood that one observed spectrum was generated from a vector of expected counts.
  
 Returns the sum of the likelihoods that each each element of the
 spectrum was generated from the corresponding expected count.

@@ -3,12 +3,12 @@
 \docType{data}
 \name{kucab.controls}
 \alias{kucab.controls}
-\title{Control spectra from Kucab et al, 2019}
-\format{An ICAMS catalog with 35 samples.}
+\title{Control spectra from Kucab et al., 2019}
+\format{An \code{[ICAMS]} \code{counts} catalog with 35 samples.}
 \usage{
 kucab.controls
 }
 \description{
-Control spectra from Kucab et al, 2019
+Control spectra from Kucab et al., 2019
 }
 \keyword{datasets}

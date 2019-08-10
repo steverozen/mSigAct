@@ -3,15 +3,12 @@
 \docType{data}
 \name{HepG2.background.spectra}
 \alias{HepG2.background.spectra}
-\title{Test background spectra}
-\format{XXXX}
+\title{Background spectra for HepG2.}
+\format{An \code{[ICAMS]} \code{counts} catalog.}
 \usage{
 HepG2.background.spectra
 }
 \description{
-Test background spectra
-}
-\examples{
-# XXXX
+Background spectra for HepG2.
 }
 \keyword{datasets}

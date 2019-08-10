@@ -3,12 +3,12 @@
 \docType{data}
 \name{simple.100000.NLOPT_LN_COBYLA}
 \alias{simple.100000.NLOPT_LN_COBYLA}
-\title{Another temp test ouput}
+\title{Another temp test output}
 \format{An object of class \code{list} of length 12.}
 \usage{
 simple.100000.NLOPT_LN_COBYLA
 }
 \description{
-Another temp test ouput
+Another temp test output
 }
 \keyword{datasets}

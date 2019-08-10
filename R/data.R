@@ -34,29 +34,22 @@
 #' 
 "HepG2.background.info"
 
-#' Test experimental spectra
+#' Mutational spectra of cisplatin exposed HepG2 cells.
 #' 
-#' @format XXXX
+#' @format An \code{[ICAMS]} \code{counts} catalog.
 #' 
-#' @examples 
-#' # XXXX
 "cisplatin.exposed.HepG2.96"
 
 
-#' Test background spectra
+#' Background spectra for HepG2.
 #' 
-#' @format XXXX
+#' @format An \code{[ICAMS]} \code{counts} catalog.
 #' 
-#' 
-#' @examples 
-#' # XXXX
 "HepG2.background.spectra"
 
 #' SigProfiler 96 SBS signatures
-#' @format XXXXXXX
+#' @format An \code{[ICAMS]} \code{counts.spectrum} catalog; see Alexandrov et al. ?????.
 #' 
-#' @examples 
-#' # XXXXX
 "sp.sigs"
 
 #' Tests of HepG2 background subtraction
@@ -91,13 +84,11 @@
 #' 
 #' @format Complicated
 #' 
-#' @examples 
-#' # XXXXXX
 "simple.40000.remainder"
 
-#' Control spectra from Kucab et al, 2019
+#' Control spectra from Kucab et al., 2019
 #' 
-#' @format An ICAMS catalog with 35 samples.
+#' @format An \code{[ICAMS]} \code{counts} catalog with 35 samples.
 "kucab.controls"
 
 #' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
@@ -107,10 +98,10 @@
 #' mutation counts of 2 to 4 control spectra.
 "kucab.control.dist"
 
-#' Another temp test ouput
+#' Another temp test output
 "simple.100000.NLOPT_LN_COBYLA"
 
-#' Another temp test ouput
+#' Another temp test output
 "simple.200000.NLOPT_GN_DIRECT_L"
 
 #' Another temp test output
