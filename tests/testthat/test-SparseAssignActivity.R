@@ -2,7 +2,6 @@ context("SparseAssignActivity")
 
 
 test_that("SparseAssignTest1", {
-  set.seed(9190)
   SparseAssignTest1 <- function() {
     retval <-  SparseAssignTestGeneric(
       sig.counts = c(SBS1 = 1000, SBS22 = 2000))
@@ -32,7 +31,6 @@ test_that("SparseAssignTest1", {
 
 test_that("SparseAssignTest2", {
   SparseAssignTest2 <- function() {
-    skip("temp skip")
     retval <- SparseAssignTestGeneric(
       sig.counts = c(SBS3 = 10, SBS5 = 1000, SBS10a = 2000)
     )
@@ -46,11 +44,14 @@ test_that("SparseAssignTest2", {
     
     testthat::expect_equal(retval$soln2,
                            c(SBS5  = 1017.8476499534260,
-                             SBS10a = 2001.1238458342166))
+                             SBS10a = 2001.1238458342166),
+                           tolerance = 1)
     
-    testthat::expect_equal(as.numeric(retval$edist2), 3.0816408978467047)
+    testthat::expect_equal(as.numeric(retval$edist2), 
+                           3.0816408978467047,
+                           tolerance = 1)
     
-    return(retval)
+    # return(retval)
   }
   SparseAssignTest2()
 })
