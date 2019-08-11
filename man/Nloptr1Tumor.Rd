@@ -4,8 +4,7 @@
 \alias{Nloptr1Tumor}
 \title{Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.}
 \usage{
-Nloptr1Tumor(spectrum, sigs, global.opts = NULL, local.opts = NULL,
-  trace = 0, eval_f, ...)
+Nloptr1Tumor(spectrum, sigs, m.opts = NULL, eval_f, ...)
 }
 \arguments{
 \item{spectrum}{A single mutational spectrum a numeric vector or
@@ -13,13 +12,13 @@ single-column numeric matrix.}
 
 \item{sigs}{A matrix of mutational signatures.}
 
-\item{global.opts}{See \code{\link[nloptr]{nloptr}}.}
-
-\item{local.opts}{See \code{\link[nloptr]{nloptr}}.}
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{...}{Additional arguments for \code{eval_f}.}
+
+\item{local.opts}{See \code{\link[nloptr]{nloptr}}.}
 }
 \description{
 Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.

@@ -1,18 +1,14 @@
 To Do
 
-0. Testthat errors on Travis-CI
 
-1. Bring over signature presence test.
+1. Create tests for signature presence test.
 
-2. Bring over other code in old mSigAct.
+2. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality and look into -Inf likelihoods (SparseAssignTest5)
 
-3. Provide a version of sparse assign signature that runs on a catalog of spectra
+3. Test Kucab background signature approach and compare to our approach.
 
-4. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality.
+4. Move background subtraction tests to testthat.
 
-5. Test Kucab background signature approach and compare to our approach.
+5. Clean documentation for SparseAssignActivity.
 
-6. Move background subtraction tests to testthat.
-
-7. Clean documentation for SparseAssignActivity.
-
+6. Bring over other code in old mSigAct.

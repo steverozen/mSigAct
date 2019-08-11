@@ -5,8 +5,7 @@
 \title{Find known signatures that can most sparsely reconstruct each spectrum in a catalog.}
 \usage{
 SparseAssignActivity(spectra, sigs, max.level = 5, p.thresh = 0.5,
-  trace = 0, eval_f, nbinom.size, global.opts, local.opts,
-  mc.cores = NULL)
+  eval_f, m.opts, mc.cores = NULL)
 }
 \arguments{
 \item{spectra}{The spectra (multiple spectra) to be reconstructed.}
@@ -19,17 +18,10 @@ in the reconstruction.}
 \item{p.thresh}{The maximum p value based on which it is decided
 to retain a signature in a reconstruction.}
 
-\item{trace}{If > 0 print out information on progress.}
-
 \item{eval_f}{The objective function for
 \code{\link[nloptr]{nloptr}}.}
 
-\item{nbinom.size}{The \code{size} parameter to
-\code{\link[stats]{dnbinom}} (passed in to \code{eval_f}.}
-
-\item{global.opts}{See\code{\link[nloptr]{nloptr}}.}
-
-\item{local.opts}{See\code{\link[nloptr]{nloptr}}.}
+\item{m.opts}{See\code{\link{DefaultManyOpts}}.}
 
 \item{mc.cores}{The number of cores to use; if \code{NULL} use
 \code{ncol{spectra}}, except on Windows, where \code{mc.cores}

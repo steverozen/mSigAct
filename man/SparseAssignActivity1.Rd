@@ -5,7 +5,7 @@
 \title{Component of \code{\link{SparseAssignActivity}} for one spectrum.}
 \usage{
 SparseAssignActivity1(spect, sigs, max.level = 5, p.thresh = 0.05,
-  trace = 0, eval_f, nbinom.size, global.opts, local.opts)
+  eval_f, m.opts)
 }
 \description{
 Component of \code{\link{SparseAssignActivity}} for one spectrum.

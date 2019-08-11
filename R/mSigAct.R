@@ -455,7 +455,8 @@ DefaultManyOpts <- function() {
   return(list(
     global.opts = DefaultGlobalOpts(),
     local.opts  = DefaultLocalOpts(),
-    nbinom.size = 5
+    nbinom.size = 5,
+    trace       = 0
   ))
 }
 
@@ -468,7 +469,7 @@ DefaultManyOpts <- function() {
 #' 
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #' 
-#' @param global.opts See \code{\link[nloptr]{nloptr}}.
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
 #' 
 #' @param local.opts See \code{\link[nloptr]{nloptr}}.
 #' 
@@ -477,9 +478,7 @@ DefaultManyOpts <- function() {
 #' @keywords internal
 Nloptr1Tumor <- function(spectrum, 
                          sigs,
-                         global.opts = NULL,
-                         local.opts  = NULL,
-                         trace = 0,
+                         m.opts = NULL,
                          eval_f,
                          ... ) {
   if (!"matrix" %in% class(sigs)) {
@@ -498,9 +497,7 @@ Nloptr1Tumor <- function(spectrum,
     stop("nrow(sigs) != length(spectrum), look in file spectrum.sigs.debug.Rdata")
   }
   
-  if (is.null(global.opts)) global.opts <- DefaultGlobalOpts()
-  
-  if (is.null(local.opts)) local.opts <- DefaultLocalOpts()
+  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   
   # x0 is uniform distribution of mutations across signatures
   # (Each signature gets the same number of mutations)
@@ -513,12 +510,12 @@ Nloptr1Tumor <- function(spectrum,
       eval_f=eval_f,
       lb = rep(0, ncol(sigs)),
       ub = rep(sum(spectrum), ncol(sigs)), 
-      opts = global.opts,
+      opts = m.opts$global.opts,
       spectrum=spectrum,
       sigs=sigs,
       ...)
   }
-  if (trace > 0) message("globa.res$objective = ", global.res$objective)
+  if (m.opts$trace > 0) message("globa.res$objective = ", global.res$objective)
   
   # TEST
   
@@ -528,11 +525,12 @@ Nloptr1Tumor <- function(spectrum,
     eval_f = eval_f,
     lb     = rep(0, ncol(sigs)),
     ub     = rep(sum(spectrum), ncol(sigs)), 
-    opts =  local.opts, 
+    opts =  m.opts$local.opts, 
     spectrum=spectrum,
     sigs=sigs,
     ...)
-  if (trace > 0) message("local.res$objective = ", local.res$objective)
+  if (m.opts$trace > 0)
+    message("local.res$objective = ", local.res$objective)
 
   names(local.res$solution) <- colnames(sigs)
   return(list(objective =  local.res$objective,
@@ -550,21 +548,17 @@ Nloptr1Tumor <- function(spectrum,
 #' @keywords internal
 one.lh.and.exp <- function(spect,
                            sigs, 
-                           trace,
-                           global.opts,
-                           local.opts,
-                           eval_f,
-                           nbinom.size) {
+                           m.opts,
+                           eval_f) {
   r <- Nloptr1Tumor(spect, 
                     sigs, 
-                    global.opts = global.opts,
-                    local.opts  = local.opts,
+                    m.opts = m.opts,
                     eval_f      = eval_f,
-                    nbinom.size = nbinom.size,
-                    trace       = trace)
+                    nbinom.size = m.opts$nbinom.size)
   loglh <- r$objective
   
-  if (loglh == Inf && trace > 0) message("Got -Inf in one.lh.and.exp\n")
+  if (loglh == Inf && m.opts$trace > 0)
+    message("Got -Inf in one.lh.and.exp\n")
   
   # sum(recon) is likely to be close to, but not equal to the number
   # of mutations in the spectrum, so we scale exposures to get the
@@ -597,17 +591,10 @@ is.superset.of.any <- function(probe, background) {
 #' @param p.thresh The maximum p value based on which it is decided
 #' to retain a signature in a reconstruction.
 #' 
-#' @param trace If > 0 print out information on progress.
-#' 
 #' @param eval_f The objective function for
 #'  \code{\link[nloptr]{nloptr}}.
 #'  
-#' @param global.opts See\code{\link[nloptr]{nloptr}}.
-#' 
-#' @param local.opts See\code{\link[nloptr]{nloptr}}.
-#'
-#' @param nbinom.size The \code{size} parameter to
-#'  \code{\link[stats]{dnbinom}} (passed in to \code{eval_f}.
+#' @param m.opts See\code{\link{DefaultManyOpts}}.
 #' 
 #' @param mc.cores The number of cores to use; if \code{NULL} use
 #'  \code{ncol{spectra}}, except on Windows, where \code{mc.cores}
@@ -618,23 +605,19 @@ is.superset.of.any <- function(probe, background) {
 #' @export
 
 SparseAssignActivity <- function(spectra,
-                                  sigs,
-                                  max.level = 5,
-                                  p.thresh  = 0.5,
-                                  trace     = 0,
-                                  eval_f,
-                                  nbinom.size,
-                                  global.opts,
-                                  local.opts,
-                                  mc.cores  = NULL) {
+                                 sigs,
+                                 max.level = 5,
+                                 p.thresh  = 0.5,
+                                 eval_f,
+                                 m.opts,
+                                 mc.cores  = NULL) {
   f1 <- function(i) {
     retval1 <- SparseAssignActivity1(
-      spect = spectra[ , i, drop = FALSE],
-      sigs  = sigs,
+      spect    = spectra[ , i, drop = FALSE],
+      sigs     = sigs,
       p.thresh = p.thresh,
-      trace = trace,
-      eval_f = eval_f,
-      nbinom.size = nbinom.size)
+      m.opts   = m.opts,
+      eval_f   = eval_f)
     
     return(retval1)
   }
@@ -657,35 +640,26 @@ SparseAssignActivity <- function(spectra,
 #' Component of \code{\link{SparseAssignActivity}} for one spectrum.
 #' @keywords internal
 
-SparseAssignActivity1 <- function(spect, 
-                                  sigs,
-                                 max.level = 5,
-                                 p.thresh = 0.05,
-                                 trace    = 0,
-                                 eval_f,
-                                 nbinom.size,
-                                 global.opts,
-                                 local.opts) {
+SparseAssignActivity1 <- function(
+  spect, sigs, max.level = 5,p.thresh = 0.05, eval_f, m.opts) {
   mode(spect) <-  'numeric'
   start <- one.lh.and.exp(spect, 
                           sigs,
                           eval_f     = eval_f,
-                          nbinom.size = nbinom.size,
-                          trace       = trace,
-                          global.opts = global.opts,
-                          local.opts  = local.opts)
+                          m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp > 0.5)
-  if (trace > 0) {
+  if (m.opts$trace > 0) {
     message('Starting with',
         paste(names(start.exp)[non.0.exp.index], collapse=','),
         '\n')
     message('max.level =', max.level, '\n')
   }
   if (length(non.0.exp.index) < 2) {
-    if (trace > 0) message('returning, only', length(non.0.exp.index),
-                       'non-0 exposures\n')
+    if (m.opts$trace > 0)
+      message("returning, only ", length(non.0.exp.index),
+                       " non-0 exposures")
     return(start.exp)
   }
   max.level <- min(max.level, length(non.0.exp.index) - 1)
@@ -698,7 +672,7 @@ SparseAssignActivity1 <- function(spect,
   best.try.is.start <- T
   
   for (df in 1:max.level) {
-    if (trace > 1) message('df =', df, '\n')
+    if (m.opts$trace > 1) message('df =', df, '\n')
     subsets <- sets::set_combn(non.0.exp.index, df)
     for (subset in subsets) {
       # subset is of class set (package sets)
@@ -711,41 +685,39 @@ SparseAssignActivity1 <- function(spect,
       if (length(tmp.set) == 1) {
         try.sigs <- as.matrix(try.sigs)
         rownames(try.sigs) <- rownames(sigs)
-        if (trace > 0) message("Running new code\n")
+        if (m.opts$trace > 0) message("Running new code\n")
       }
       
       # Get the max lh for try.sig / Get the maximum likelihood 
       # reconstruction using try.sig
       try <- one.lh.and.exp(spect, 
                             try.sigs,
-                            trace       = trace,
-                            eval_f      = eval_f,
-                            nbinom.size = nbinom.size,
-                            global.opts = global.opts,
-                            local.opts  = local.opts)
+                            eval_f    = eval_f,
+                            m.opts = m.opts)
       # try contains maxlh and exposure
       statistic <- 2 * (lh.w.all - try$loglh)
       chisq.p <- stats::pchisq(statistic, df, lower.tail=F)
-      if (trace > 0) {
-        message('Trying', subset.name, 'p =', chisq.p, '; ')
-        if (trace > 1) message('loglh =', try$loglh, '; statistic  =', statistic, ';')
+      if (m.opts$trace > 0) {
+        message("Trying" , subset.name, ", p = ", chisq.p)
+        if (m.opts$trace > 1) 
+          message("loglh = ", try$loglh, "; statistic  =", statistic)
       }
       if (chisq.p > p.thresh) {
         # This an acceptable set of exposures
-        if (trace > 0) message(' acceptable;')
+        if (m.opts$trace > 0) message("acceptable")
         if (chisq.p > max.p[df]) {
           # This is the best so far
           max.p[df] <- chisq.p
           best.subset <- tmp.set
           best.try <- try
           best.try.is.start <- F
-          if (trace > 0) message('best\n')
+          if (m.opts$trace > 0) message('best\n')
         } else {
-          if (trace > 0) message('not best\n')
+          if (m.opts$trace > 0) message('not best\n')
         }
       } else {
         c.r.s <- sets::set_union(c.r.s, sets::set(subset))
-        if (trace > 0)  {
+        if (m.opts$trace > 0)  {
           message('cannot remove\n')
         }
       }
@@ -762,7 +734,7 @@ SparseAssignActivity1 <- function(spect,
   } else {
     out.exp[best.subset] <- best.try$exposure
   }
-  if (trace > 0) {
+  if (m.opts$trace > 0) {
     message('max.p =', paste(max.p, collapse = ', '), '\n')
     message('Ending with',
         paste(names(start.exp)[best.subset], collapse=','),
@@ -891,15 +863,14 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
       region       = region,
       catalog.type = "counts")
   nbinom.size <- 5
-  global.opts <- DefaultGlobalOpts()
-  local.opts  <- DefaultLocalOpts()
+
+  m.opts <- DefaultManyOpts()
+  m.opts$trace <- trace
+  
   SA.out <- SparseAssignActivity1(spect      = spect,
                                  sigs        = some.sigs,
-                                 nbinom.size = nbinom.size,
                                  eval_f      = obj.fun.nbinom.maxlh,
-                                 trace       = trace,
-                                 global.opts = global.opts,
-                                 local.opts  = local.opts)
+                                 m.opts   = m.opts)
   zeros <- which(SA.out < 0.5)
   if (length(zeros) > 0) {
     SA.out2 <- SA.out[-zeros]
@@ -969,35 +940,15 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0) {
       ref.genome   = ref.genome,
       region       = region,
       catalog.type = "counts")
-  SA.out <- SparseAssignActivity(spectra     = spect,
-                                  sigs        = some.sigs,
-                                  nbinom.size = 5,
-                                  eval_f     = obj.fun.nbinom.maxlh,
-                                  trace       = 0) 
+  
+  m.opts <- DefaultManyOpts()
+  m.opts$trace <- trace
+  
+  SA.out <- SparseAssignActivity(spectra    = spect,
+                                  sigs      = some.sigs,
+                                  eval_f    = obj.fun.nbinom.maxlh,
+                                  m.opts = m.opts) 
   return(SA.out)
-
-  ## DEBUG TO HERE
-  
-  zeros <- which(SA.out < 0.5)
-  if (length(zeros) > 0) {
-    SA.out2 <- SA.out[-zeros]
-    sig.names2 <- sig.names[-zeros]
-  } else {
-    SA.out2 <- SA.out
-    sig.names2 <- sig.names
-  }
-  
-  polish.out <- Polish(exp    = SA.out2,
-                       sig.names = sig.names2,
-                       spect     = spect)
-  
-  return(list(soln1       = SA.out,
-              soln2       = polish.out,
-              edist1      = EDist2Spect(SA.out, sig.names, spect),
-              edist2      = EDist2Spect(polish.out, sig.names2, spect),
-              truth       = sig.counts,
-              input.spect = spect))
-  
 }
 
 
@@ -1006,29 +957,22 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0) {
 is.present.p.m.likelihood <- function(spect,
                                       sigs,
                                       sig.to.test,
-                                      trace = 0,
-                                      global.opts,
-                                      local.opts,
-                                      eval_f,
-                                      nbinom.size) {
+                                      m.opts,
+                                      eval_f) {
   
   loglh.with <- one.lh.and.exp(spect,
                                sigs, 
-                               trace = trace,
-                               global.opts = global.opts,
-                               local.opts  = local.opts,
-                               eval_f=eval_f,
-                               nbinom.size = nbinom.size)$loglh
+                               m.opts = m.opts,
+                               eval_f    = eval_f)$loglh
   
-  loglh.without <- one.lh.and.exp(spect, sigs[ ,-sig.to.test],
-                                  trace=trace,
-                                  eval_f = eval_f,
-                                  global.opts = global.opts,
-                                  local.opts  = local.opts,
-                                  nbinom.size = nbinom.size)$loglh
+  loglh.without <- one.lh.and.exp(spect, 
+                                  sigs[ ,-sig.to.test],
+                                  eval_f    = eval_f,
+                                  m.opts = m.opts)$loglh
   statistic <- 2 * (loglh.with - loglh.without)
-  chisq.p <- stats::pchisq(statistic, 1, lower.tail=F)
-  if (trace > 0) message('statistic  =', statistic, '\nchisq p =', chisq.p, '\n')
+  chisq.p <- stats::pchisq(statistic, 1, lower.tail = FALSE)
+  if (m.opts$trace > 0) 
+    message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
   
   list(with=loglh.with,
        without=loglh.without,
@@ -1037,14 +981,15 @@ is.present.p.m.likelihood <- function(spect,
 }
 
 signature.presence.test <-
-  function(spect, sigs, target.sig.index,
-           trace=0,
+  function(spect, sigs, 
+           target.sig.index,
            eval_f,
-           nbinom.size) {
+           m.opts) {
     is.present.p.m.likelihood(spect,
-                              sigs, target.sig.index,
-                              trace=trace, eval_f=eval_f,
-                              nbinom.size=nbinom.size)$chisq.p
+                              sigs, 
+                              target.sig.index,
+                              eval_f    = eval_f,
+                              m.opts = m.opts)$chisq.p
   }
 
 
