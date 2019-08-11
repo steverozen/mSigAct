@@ -43,7 +43,7 @@ test_that("SparseAssignTest2", {
   
   testthat::expect_equal(as.numeric(retval$edist2), 
                          2.897068,
-                         tolerance = 10e-2)
+                         tolerance = 1e-2)
 })
 
 
@@ -128,7 +128,7 @@ test_that("SparseAssignTest5", {
                          tolerance = 1e-2)
   
   testthat::expect_equal(as.numeric(retval$edist1), 5.956736,
-                         tolerance = 10e-2)
+                         tolerance = 1e-2)
   
   testthat::expect_equal(retval$soln2,
                          c(SBS5  = 51.27930,
@@ -142,8 +142,8 @@ test_that("SparseAssignTest5", {
 
 
 test_that("SparseAssignTest6", {
-  retval <- 
-    XSparseAssignTestGeneric(sig.counts = c(SBS1 = 1000, SBS22 = 2000))
+  input <- c(SBS1 = 1000, SBS22 = 2000)
+  retval <- XSparseAssignTestGeneric(sig.counts = input)
   expected <- matrix(c(999.2467, 1998.7533), ncol = 1)
   rownames(expected) <- names(input)
   colnames(expected) <- "tumor1"
@@ -159,6 +159,6 @@ test_that("SparseAssignTest7", {
                      ncol = 3)
   colnames(expected) <- paste0("tumor", 1:3)
   rownames(expected) <- rownames(input.exp)
-  testthat::expect_equal(retval, expected, tolerance = 10e-2)
+  testthat::expect_equal(retval, expected, tolerance = 1e-2)
 })
 
