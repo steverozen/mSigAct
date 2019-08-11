@@ -143,7 +143,8 @@ test_that("SparseAssignTest5", {
 
 test_that("SparseAssignTest6", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
-  retval <- XSparseAssignTestGeneric(sig.counts = input)
+  # Automated testing on Travic-CI does not allow spawning processes.
+  retval <- XSparseAssignTestGeneric(sig.counts = input, mc.cores = 1)
   expected <- matrix(c(999.2467, 1998.7533), ncol = 1)
   rownames(expected) <- names(input)
   colnames(expected) <- "tumor1"
@@ -154,7 +155,8 @@ test_that("SparseAssignTest6", {
 test_that("SparseAssignTest7", {
   input.exp <- matrix(c(1000, 2000, 0, 2000, 10, 1000), ncol = 3)
   rownames(input.exp) <- c("SBS1", "SBS22")
-  retval <-  XSparseAssignTestGeneric(sig.counts = input.exp)
+  # Automated testing on Travic-CI does not allow spawning processes.
+  retval <-  XSparseAssignTestGeneric(sig.counts = input.exp, mc.cores = 1)
   expected <- matrix(c(999.2467, 1998.7533, 0, 1996, 10.40123, 1000.59877),
                      ncol = 3)
   colnames(expected) <- paste0("tumor", 1:3)

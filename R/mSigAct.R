@@ -451,6 +451,20 @@ DefaultLocalOpts <- function() {
               maxeval     = 10000))
 }
 
+#' Set default options for many functions, especially \code{link[noptr]{nloptr}}.
+#' 
+#' @export
+#' 
+#' @return A list with the following elements
+#' \describe{
+#'   \item{global.opts}{Options for \code{\link[nloptr]{nloptr}},
+#'   q.v., for the global optimation phase.}
+#'   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
+#'   q.v., for the local optimation phase.}
+#'   \item{nbinom.size}{The \code{size}
+#'    parameter used by \code{\link[stats]{dnbinom}}.}
+#'   \item{trace}{If > 0 print progress messages.}
+#' }
 DefaultManyOpts <- function() {
   return(list(
     global.opts = DefaultGlobalOpts(),
@@ -870,7 +884,8 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   SA.out <- SparseAssignActivity1(spect      = spect,
                                  sigs        = some.sigs,
                                  eval_f      = obj.fun.nbinom.maxlh,
-                                 m.opts   = m.opts)
+                                 m.opts      = m.opts)
+  
   zeros <- which(SA.out < 0.5)
   if (length(zeros) > 0) {
     SA.out2 <- SA.out[-zeros]
@@ -915,7 +930,7 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
 #' 
 #' @keywords internal
 
-XSparseAssignTestGeneric <- function(sig.counts, trace = 0) {
+XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
   
   if (!is.matrix(sig.counts)) {
     tmp.names <- names(sig.counts)
@@ -947,7 +962,8 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   SA.out <- SparseAssignActivity(spectra    = spect,
                                   sigs      = some.sigs,
                                   eval_f    = obj.fun.nbinom.maxlh,
-                                  m.opts = m.opts) 
+                                  m.opts    = m.opts,
+                                  mc.cores  = mc.cores) 
   return(SA.out)
 }
 

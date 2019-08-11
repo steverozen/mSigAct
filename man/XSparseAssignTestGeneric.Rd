@@ -4,7 +4,7 @@
 \alias{XSparseAssignTestGeneric}
 \title{Framework for testing \code{\link{SparseAssignActivity1}}.}
 \usage{
-XSparseAssignTestGeneric(sig.counts, trace = 0)
+XSparseAssignTestGeneric(sig.counts, trace = 0, mc.cores = NULL)
 }
 \arguments{
 \item{sig.counts}{A matrix of target exposures:
