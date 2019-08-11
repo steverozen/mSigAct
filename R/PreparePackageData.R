@@ -20,6 +20,18 @@ MakeHepG2BackgroundPart1 <- function() {
   )
 }
 
+Make.sp.sigs.exome <- function() {
+  tmp <- mSigAct::sp.sigs
+  attr(tmp, "abundance") <- ICAMS::all.abundance$BSgenome.Hsapiens.1000genomes.hs37d5$genome$'96'
+  sp.sigs.exome <-
+    ICAMS::TransformCatalog(
+      tmp, 
+      target.region = "exome",
+      target.abundance = ICAMS::all.abundance$BSgenome.Hsapiens.1000genomes.hs37d5$exome$'96')
+  usethis::use_data(sp.sigs.exome)
+  
+}
+
 
 #' Read the specified spectra file and estimate the HepG2 background signature.
 #' 

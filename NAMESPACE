@@ -3,5 +3,6 @@
 export(DefaultManyOpts)
 export(EstimateSignatureFromSpectraLH)
 export(LLHSpectrumNegBinom)
+export(SignaturePresenceTest1)
 export(SparseAssignActivity)
 importFrom(stats,dnbinom)

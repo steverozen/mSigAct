@@ -1,7 +1,9 @@
 To Do
 
+0. Process multiple spectra with signature presence test (but make sure it's not already
+in "process.one.group")
 
-1. Create tests for signature presence test.
+1. load taiwan.HCC.spectra.tsv and test "process.one.group" on it.
 
 2. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality and look into -Inf likelihoods (SparseAssignTest5)
 

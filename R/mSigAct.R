@@ -458,9 +458,9 @@ DefaultLocalOpts <- function() {
 #' @return A list with the following elements
 #' \describe{
 #'   \item{global.opts}{Options for \code{\link[nloptr]{nloptr}},
-#'   q.v., for the global optimation phase.}
+#'   q.v., for the global optimization phase.}
 #'   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
-#'   q.v., for the local optimation phase.}
+#'   q.v., for the local optimization phase.}
 #'   \item{nbinom.size}{The \code{size}
 #'    parameter used by \code{\link[stats]{dnbinom}}.}
 #'   \item{trace}{If > 0 print progress messages.}
@@ -834,7 +834,9 @@ EDist2Spect <- function(exp, sig.names, spect) {
   return(err)
 }
 
-
+#' "Polish" a solution by minimizing Euclidean distance to the input spectrum.
+#' 
+#' @keywords internal
 Polish <- function(exp, sig.names, spect) {
   retval <- nloptr::nloptr(x0 = exp,
                             eval_f = EDist2Spect,
@@ -968,22 +970,32 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
 }
 
 
-## Likelihood ratio test for signature presence.
+#' Test whether a given signature is plausibly present in a spectrum.
+#' 
+#' @param spectrum The spectrum to analyze
+#' 
+#' @param sigs A catalog of signatures from which to choose
+#' 
+#' @param target.sig.index The index of the signature the presence
+#' of which we want to test.
+#' 
+#' @param eval_f See \code{link[nloptr]{nloptr}}.
+#' 
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
+#' 
+#' @export
 
-is.present.p.m.likelihood <- function(spect,
-                                      sigs,
-                                      sig.to.test,
-                                      m.opts,
-                                      eval_f) {
+SignaturePresenceTest1 <- function(
+  spectrum, sigs, target.sig.index, m.opts, eval_f) {
   
-  loglh.with <- one.lh.and.exp(spect,
-                               sigs, 
+  loglh.with <- one.lh.and.exp(spect  = spectrum,
+                               sigs   = sigs, 
                                m.opts = m.opts,
-                               eval_f    = eval_f)$loglh
+                               eval_f = eval_f)$loglh
   
-  loglh.without <- one.lh.and.exp(spect, 
-                                  sigs[ ,-sig.to.test],
-                                  eval_f    = eval_f,
+  loglh.without <- one.lh.and.exp(spect  = spectrum, 
+                                  sigs   = sigs[ ,-target.sig.index],
+                                  eval_f = eval_f,
                                   m.opts = m.opts)$loglh
   statistic <- 2 * (loglh.with - loglh.without)
   chisq.p <- stats::pchisq(statistic, 1, lower.tail = FALSE)
@@ -996,18 +1008,17 @@ is.present.p.m.likelihood <- function(spect,
        chisq.p=chisq.p)
 }
 
-signature.presence.test <-
-  function(spect, sigs, 
-           target.sig.index,
-           eval_f,
-           m.opts) {
-    is.present.p.m.likelihood(spect,
+if (FALSE) {
+OLDSignaturePresenceTest1 <- function(
+  spectrum, sigs, target.sig.index, eval_f, m.opts) {
+    test.out <- is.present.p.m.likelihood(spectrum,
                               sigs, 
                               target.sig.index,
                               eval_f    = eval_f,
-                              m.opts = m.opts)$chisq.p
+                              m.opts = m.opts)
+    return(test.out$chisq.p)
   }
-
+}
 
 Adj.mc.cores <- function(mc.cores) {
   if (Sys.info()["sysname"] == "Windows" && mc.cores > 1) {
@@ -1016,6 +1027,45 @@ Adj.mc.cores <- function(mc.cores) {
   }
   return(mc.cores)
 }
+
+#' Framework for testing \code{\link{SignaturePresenceTest1}}.
+#' 
+#' @keywords internal
+
+TestSignaturePresenceTest1 <- function(sig.counts, trace = 0) {
+  
+  sig.names <- names(sig.counts)
+  
+  some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
+  ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
+  region     <- attr(some.sigs, "region", exact = TRUE)
+  if (is.null(region)) {
+    message("Null region, why?")
+    region <- "genome"
+  }
+  
+  spectrum <- round(some.sigs %*% sig.counts)
+  spectrum <-
+    ICAMS::as.catalog(
+      object       = spectrum, 
+      ref.genome   = ref.genome,
+      region       = region,
+      catalog.type = "counts")
+  nbinom.size <- 5
+  
+  m.opts <- DefaultManyOpts()
+  m.opts$trace <- trace
+  
+  retval <- SignaturePresenceTest1(
+    spectrum         = spectrum,
+    sigs             = some.sigs, 
+    target.sig.index = 1,
+    eval_f           = obj.fun.nbinom.maxlh,
+    m.opts           = m.opts)
+  
+  return(retval)
+}
+
 
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
 

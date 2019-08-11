@@ -1,5 +1,6 @@
 context("SparseAssignActivity")
 
+# === The first 5 tests test SparseAssignActivity1 ===
 
 test_that("SparseAssignTest1", {
   retval <-  SparseAssignTestGeneric(
@@ -140,6 +141,7 @@ test_that("SparseAssignTest5", {
                          tolerance = 0.1)
 })
 
+# === The next tests test SparseAssignActivity ===
 
 test_that("SparseAssignTest6", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
