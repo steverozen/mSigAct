@@ -5,6 +5,7 @@ source("Figure3_SubstitutionSig.R")
 
 # Variable control_profile contains the control spectra
 
+# The functions below are temporary -- have been moved to ICAMS
 Unstaple96 <- function(c1) {
   retval <-
     paste0(substr(c1, 1, 1),
