@@ -387,7 +387,7 @@ TestNew(1, 10) # just test the first 10 esophageal adenocarcinomas
 
 ## Likelihood ratio test
 
-is.present.p.m.likelihood <- function(spect,
+INPROCESSis.present.p.m.likelihood <- function(spect,
                                  sigs,
                                  sig.to.test,
                                  trace=0,
@@ -412,7 +412,7 @@ is.present.p.m.likelihood <- function(spect,
        chisq.p=chisq.p)
 }
 
-signature.presence.test <-
+INPROCESSsignature.presence.test <-
     function(spect, sigs, target.sig.index,
                           trace=0,
                           obj.fun,

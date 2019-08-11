@@ -2,11 +2,11 @@
 % Please edit documentation in R/mSigAct.R
 \name{SparseAssignTestGeneric}
 \alias{SparseAssignTestGeneric}
-\title{Framework for testing \code{[SparseAssignActivity]}.}
+\title{Framework for testing \code{\link{SparseAssignActivity1}}.}
 \usage{
 SparseAssignTestGeneric(sig.counts, trace = 0)
 }
 \description{
-Framework for testing \code{[SparseAssignActivity]}.
+Framework for testing \code{\link{SparseAssignActivity1}}.
 }
 \keyword{internal}

@@ -1,9 +1,14 @@
 Package: mSigAct
-Title: What the Package Does (One Line, Title Case)
-Version: 1.0.0.9001
+Title: mutational Signature Activity analysis ('mSigAct')
+Version: 1.0.0.9002
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
 Maintainer: Steve Rozen <steverozen@gmail.com>
-Description: Analysis of the "activities" of mutational signatures in mutational spectra.
+Description:  Analyze the the "activities" of mutational signatures in one or
+    more mutational spectra. 'mSigAct' stands for mutational Signature 
+    Activity. mSigAct can estimate (conservatively) whether there is evidence
+    that a particular mutational signature is present in a spectrum and can
+    determine a minimal subset of signatures needed to plausibly reconstruct an
+    observed spectrum.
 License: GPL-3
 URL: https://github.com/steverozen/mSigAct
 BugReports: https://github.com/steverozen/mSigAct/issues
@@ -17,9 +22,9 @@ Imports:
     ICAMS,
     nloptr,
     stats,
-    lsa
+    lsa,
+    sets
 Suggests: 
     testthat (>= 2.1.0),
     usethis,
-    utils,
-    sets
+    utils

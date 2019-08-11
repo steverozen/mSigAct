@@ -4,7 +4,9 @@
 \name{sp.sigs}
 \alias{sp.sigs}
 \title{SigProfiler 96 SBS signatures}
-\format{An \code{[ICAMS]} \code{counts.spectrum} catalog; see Alexandrov et al. ?????.}
+\format{An \code{[ICAMS]} \code{counts.spectrum} catalog;
+ see Alexandrov et al. 
+ \url{https://www.biorxiv.org/content/10.1101/322859v2}.}
 \usage{
 sp.sigs
 }

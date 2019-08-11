@@ -14,7 +14,7 @@ Let the input spectra be s1, s2, ...
 \details{
 Find target.signature that maximize the likelihoods:
 
-```
+\preformatted{
 max_(b1, target.signature){s1 | 
             b1, target.signature, background.sig, 
             background.sig.nbinom.size, background.sig.count.mu,
@@ -22,7 +22,7 @@ max_(b1, target.signature){s1 |
 b1 * background.sig + (total-mut1 - b1) * target.sig * prob(b1), \cr
 b2 * background.sig + (total-mut2 - b2) * target.sig * prob(b2), \cr
 ... 
-````
+}
 
 See \code{\link{ObjFn1}}.
 }

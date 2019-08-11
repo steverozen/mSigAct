@@ -2,31 +2,42 @@
 % Please edit documentation in R/mSigAct.R
 \name{SparseAssignActivity}
 \alias{SparseAssignActivity}
-\title{Find known signatures that can most sparsely reconstruct a spectrum.}
+\title{Find known signatures that can most sparsely reconstruct each spectrum in a catalog.}
 \usage{
-SparseAssignActivity(spect, sigs, max.level = 5, p.thresh = 0.05,
-  trace = 0, obj.fun, nbinom.size)
+SparseAssignActivity(spectra, sigs, max.level = 5, p.thresh = 0.5,
+  trace = 0, eval_f, nbinom.size, global.opts, local.opts,
+  mc.cores = NULL)
 }
 \arguments{
-\item{spect}{The spectrum to be reconstructed.}
+\item{spectra}{The spectra (multiple spectra) to be reconstructed.}
 
-\item{sigs}{The signatures to use in reconstruction.}
+\item{sigs}{The known signatures to use in reconstruction.}
 
-\item{max.level}{The larges number of signatures to consider discarding
-(this is not quite correct)}
+\item{max.level}{The largest number of signatures to consider discarding
+in the reconstruction.}
 
 \item{p.thresh}{The maximum p value based on which it is decided
 to retain a signature in a reconstruction.}
 
 \item{trace}{If > 0 print out information on progress.}
 
-\item{obj.fun}{The objective function for \code{\link[nloptr]{nloptr}} ????.}
+\item{eval_f}{The objective function for
+\code{\link[nloptr]{nloptr}}.}
 
-\item{nbinom.size}{The \code{size} parameter to \code{XXXXX}.}
+\item{nbinom.size}{The \code{size} parameter to
+\code{\link[stats]{dnbinom}} (passed in to \code{eval_f}.}
+
+\item{global.opts}{See\code{\link[nloptr]{nloptr}}.}
+
+\item{local.opts}{See\code{\link[nloptr]{nloptr}}.}
+
+\item{mc.cores}{The number of cores to use; if \code{NULL} use
+\code{ncol{spectra}}, except on Windows, where \code{mc.cores}
+is always 1.}
 }
 \value{
 An assignment of signature as ???.
 }
 \description{
-Find known signatures that can most sparsely reconstruct a spectrum.
+Find known signatures that can most sparsely reconstruct each spectrum in a catalog.
 }

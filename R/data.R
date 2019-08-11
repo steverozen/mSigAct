@@ -36,19 +36,21 @@
 
 #' Mutational spectra of cisplatin exposed HepG2 cells.
 #' 
-#' @format An \code{[ICAMS]} \code{counts} catalog.
+#' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.
 #' 
 "cisplatin.exposed.HepG2.96"
 
 
 #' Background spectra for HepG2.
 #' 
-#' @format An \code{[ICAMS]} \code{counts} catalog.
+#' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.
 #' 
 "HepG2.background.spectra"
 
 #' SigProfiler 96 SBS signatures
-#' @format An \code{[ICAMS]} \code{counts.spectrum} catalog; see Alexandrov et al. ?????.
+#' @format An \code{[ICAMS]} \code{counts.spectrum} catalog;
+#'  see Alexandrov et al. 
+#'  \url{https://www.biorxiv.org/content/10.1101/322859v2}.
 #' 
 "sp.sigs"
 
@@ -61,6 +63,22 @@
 #' HepG2.bg.tests.no.noise[1:2, 1:10]
 "HepG2.bg.tests.no.noise"
 
+
+#' Control spectra from Kucab et al., 2019
+#' 
+#' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog with 35 samples.
+"kucab.controls"
+
+#' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
+#' 
+#' @format A list with elements 2:4, each of which is a vector of 
+#' 10,000 elements, each of which is the mean of total 
+#' mutation counts of 2 to 4 control spectra.
+"kucab.control.dist"
+
+
+# ==== BELOW HERE EVERYTHING IS TEMPORARY TEST OUTPUT =====
+
 #' Temporary test data
 #' 
 #' @format Complicated
@@ -70,13 +88,9 @@
 #' 
 "simple.40000.HepG2.tests"
 
-
 #' Temporary test data
 #' 
 #' @format Complicated
-#' 
-#' @examples 
-#' # XXXXXX
 #' 
 "simple.40000.new.sig0"
 
@@ -85,18 +99,6 @@
 #' @format Complicated
 #' 
 "simple.40000.remainder"
-
-#' Control spectra from Kucab et al., 2019
-#' 
-#' @format An \code{[ICAMS]} \code{counts} catalog with 35 samples.
-"kucab.controls"
-
-#' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
-#' 
-#' @format A list with elements 2:4, each of which is a vector of 
-#' 10,000 elements, each of which is the mean of total 
-#' mutation counts of 2 to 4 control spectra.
-"kucab.control.dist"
 
 #' Another temp test output
 "simple.100000.NLOPT_LN_COBYLA"

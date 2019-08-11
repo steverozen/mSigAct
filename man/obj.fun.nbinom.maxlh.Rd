@@ -2,11 +2,12 @@
 % Please edit documentation in R/mSigAct.R
 \name{obj.fun.nbinom.maxlh}
 \alias{obj.fun.nbinom.maxlh}
-\title{Objective function for \code{[SparseAssignActivity]}.}
+\title{The negative binomial maximum likelihood objective function.}
 \usage{
 obj.fun.nbinom.maxlh(exp, spectrum, sigs, nbinom.size)
 }
 \description{
+For use by \code{\link[nloptr]{nloptr}}
 Objective function for \code{[SparseAssignActivity]}.
 }
 \keyword{internal}

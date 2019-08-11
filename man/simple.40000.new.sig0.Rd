@@ -11,8 +11,4 @@ simple.40000.new.sig0
 \description{
 Temporary test data
 }
-\examples{
-# XXXXXX
-
-}
 \keyword{datasets}

@@ -4,7 +4,7 @@
 \name{kucab.controls}
 \alias{kucab.controls}
 \title{Control spectra from Kucab et al., 2019}
-\format{An \code{[ICAMS]} \code{counts} catalog with 35 samples.}
+\format{An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog with 35 samples.}
 \usage{
 kucab.controls
 }

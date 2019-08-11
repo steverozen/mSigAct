@@ -2,10 +2,12 @@
 % Please edit documentation in R/mSigAct.R
 \name{LLHSpectrumNegBinom}
 \alias{LLHSpectrumNegBinom}
-\title{Likelihood that one observed spectrum was generated from a vector of expected counts.
+\title{Likelihood that \strong{1} observed spectrum was generated from a vector of expected counts.
  
-Returns the sum of the likelihoods that each each element of the
-spectrum was generated from the corresponding expected count.}
+Returns the sum of the negative binomial likelihoods
+that each each element of the
+spectrum (i.e., the count for each mutation type e.g. ACT > AAT)
+was generated from expected count for that mutation type.}
 \usage{
 LLHSpectrumNegBinom(spectrum, expected.counts, nbinom.size)
 }
@@ -29,8 +31,10 @@ Smaller values correspond to larger dispersion.}
 \code{log(likelihood(spectrum | expected.counts))}
 }
 \description{
-Likelihood that one observed spectrum was generated from a vector of expected counts.
+Likelihood that \strong{1} observed spectrum was generated from a vector of expected counts.
  
-Returns the sum of the likelihoods that each each element of the
-spectrum was generated from the corresponding expected count.
+Returns the sum of the negative binomial likelihoods
+that each each element of the
+spectrum (i.e., the count for each mutation type e.g. ACT > AAT)
+was generated from expected count for that mutation type.
 }

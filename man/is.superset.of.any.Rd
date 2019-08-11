@@ -2,11 +2,11 @@
 % Please edit documentation in R/mSigAct.R
 \name{is.superset.of.any}
 \alias{is.superset.of.any}
-\title{Helper function: is the set 'probe' a superset of any set in 'background'?}
+\title{Is the set 'probe' a superset of any set in 'background'?}
 \usage{
 is.superset.of.any(probe, background)
 }
 \description{
-Helper function: is the set 'probe' a superset of any set in 'background'?
+Is the set 'probe' a superset of any set in 'background'?
 }
 \keyword{internal}

@@ -4,8 +4,8 @@
 \alias{one.lh.and.exp}
 \title{Returns a list with elements:}
 \usage{
-one.lh.and.exp(spect, sigs, trace, algorithm = "NLOPT_LN_COBYLA",
-  obj.fun, nbinom.size)
+one.lh.and.exp(spect, sigs, trace, global.opts, local.opts, eval_f,
+  nbinom.size)
 }
 \description{
 \code{loglh}    - the log likelihood of the best solution (set of exposures) found

@@ -4,7 +4,7 @@
 \name{cisplatin.exposed.HepG2.96}
 \alias{cisplatin.exposed.HepG2.96}
 \title{Mutational spectra of cisplatin exposed HepG2 cells.}
-\format{An \code{[ICAMS]} \code{counts} catalog.}
+\format{An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.}
 \usage{
 cisplatin.exposed.HepG2.96
 }

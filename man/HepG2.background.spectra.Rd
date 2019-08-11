@@ -4,7 +4,7 @@
 \name{HepG2.background.spectra}
 \alias{HepG2.background.spectra}
 \title{Background spectra for HepG2.}
-\format{An \code{[ICAMS]} \code{counts} catalog.}
+\format{An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.}
 \usage{
 HepG2.background.spectra
 }

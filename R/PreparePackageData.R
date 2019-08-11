@@ -1,6 +1,6 @@
 # Part 1, Background spectra for HepG2.
 
-#' Make a standard \code{[ICAMS]} SBS 96 catalog for the HepG2 background signature.
+#' Make a standard \code{\link[ICAMS]{ICAMS}} SBS 96 catalog for the HepG2 background signature.
 #' 
 #' @keywords internal
 

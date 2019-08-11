@@ -2,11 +2,11 @@
 % Please edit documentation in R/PreparePackageData.R
 \name{MakeHepG2BackgroundPart1}
 \alias{MakeHepG2BackgroundPart1}
-\title{Make a standard \code{[ICAMS]} SBS 96 catalog for the HepG2 background signature.}
+\title{Make a standard \code{\link[ICAMS]{ICAMS}} SBS 96 catalog for the HepG2 background signature.}
 \usage{
 MakeHepG2BackgroundPart1()
 }
 \description{
-Make a standard \code{[ICAMS]} SBS 96 catalog for the HepG2 background signature.
+Make a standard \code{\link[ICAMS]{ICAMS}} SBS 96 catalog for the HepG2 background signature.
 }
 \keyword{internal}
