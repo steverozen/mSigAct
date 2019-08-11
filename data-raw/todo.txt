@@ -1,7 +1,6 @@
 To Do
 
-0. Process multiple spectra with signature presence test (but make sure it's not already
-in "process.one.group")
+0. Continue with OtherFunctions.R (currently in data-raw)
 
 1. load taiwan.HCC.spectra.tsv and test "process.one.group" on it.
 
