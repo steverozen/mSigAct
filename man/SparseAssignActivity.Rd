@@ -28,7 +28,7 @@ to retain a signature in a reconstruction.}
 is always 1.}
 }
 \value{
-An assignment of signature as ???.
+A list with the exposure matrix as element \code{exposure}.
 }
 \description{
 Find known signatures that can most sparsely reconstruct each spectrum in a catalog.

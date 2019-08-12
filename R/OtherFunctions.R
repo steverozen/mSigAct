@@ -19,7 +19,8 @@
 #'
 #' @keywords internal
 #' 
-#' @importFrom graphics hist
+#' @importFrom graphics hist 
+#' @importFrom grDevices pdf dev.off
 #' 
 mSigOneGroup <- function(spectra,
                          sigs,
@@ -27,9 +28,9 @@ mSigOneGroup <- function(spectra,
                          path.root,
                          eval_f,
                          m.opts = NULL,
-                         trace=0,
-                         col=NULL,
-                         mc.cores=190) {
+                         trace = 0,
+                         col = NULL,
+                         mc.cores = 190) {
   
   target.sig.index <- which(colnames(sigs) == target.sig.name)
   # check if signatures sum to 1
@@ -49,17 +50,17 @@ mSigOneGroup <- function(spectra,
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
   
-  out.pvals <-
+  out.res <-
     parallel::mclapply(
-      X=s.spectra.to.list,
-      FUN=SignaturePresenceTest1,
+      X                = s.spectra.to.list,
+      FUN              = SignaturePresenceTest1,
       mc.cores         = mc.cores,
       sigs             = sigs,
       target.sig.index = target.sig.index,
-      m.opts = m.opts,
-      eval_f = eval_f)
+      m.opts           = m.opts,
+      eval_f           = eval_f)
   
-  out.pvals  <- unlist(out.pvals)
+  out.pvals  <- lapply(out.res, function(x) x$chisq.p)
   names(out.pvals)  <- colnames(s.spectra)
   
   low.pval <- which(out.pvals < 0.05)
@@ -67,54 +68,54 @@ mSigOneGroup <- function(spectra,
     # Have to wrap column-wise index of s.spectra in as.matrix in case
     # length(low.pval) == 1, in which case indexing returns a vector
     
-    check.w.sig <- s.spectra[, low.pval, drop=F]
+    check.w.sig <- s.spectra[, low.pval, drop = FALSE]
     # The column names are lost if length(low.pval) == 1
     colnames(check.w.sig) = colnames(s.spectra)[low.pval]
-    spec.path <- paste(path.root, 'check.with.sig.pdf', sep='.')
-    pdf.mut.sig.profile(path=spec.path, check.w.sig)
+    spec.path <- paste(path.root, 'check.with.sig.pdf', sep = '.')
+    
+    ICAMS::PlotCatalogToPdf(catalog = check.w.sig, file = spec.path) # TODO(Steve): is check.w.sig a catalog?
     
   }
   
-  out.exp <-
-    parallel::mclapply(
-      X        = s.spectra.to.list,
-      FUN      = sparse.assign.activity,
-      sigs     = sigs,
-      eval_f   = eval_f,
-      m.opts   = m.opts,
-      mc.cores = mc.cores)
-  
+  out.exp <- SparseAssignActivity(
+    spectra  = s.spectra.to.list,
+    sigs     = sigs,
+    eval_f   = eval_f,
+    m.opts   = m.opts,
+    mc.cores = mc.cores)
+
   out.exp  <-  do.call(cbind, out.exp)
   colnames(out.exp)  <-  colnames(s.spectra)
   sanity.check.ex(s.spectra, sigs, out.exp)
   
   # Plotting part
-  hist.path <- paste(path.root, 'pval.histogram.pdf', sep='.')
+  hist.path <- paste(path.root, 'pval.histogram.pdf', sep = '.')
   pdf(hist.path, useDingbats = F)
-  hist(out.pvals, breaks=seq(from=0, to=1, by=0.01))
+  hist(out.pvals, breaks = seq(from = 0, to = 1, by = 0.01))
   dev.off()
   
   approx.num.per.row <- 30
-  starts <- seq(from=1, to=ncol(s.spectra), by=approx.num.per.row)
+  starts <- seq(from = 1, to = ncol(s.spectra), by = approx.num.per.row)
   ranges <-
     lapply(starts,
            function(x) {
-             x:(min(x+approx.num.per.row-1, ncol(s.spectra)))
+             x:(min(x + approx.num.per.row - 1, ncol(s.spectra)))
            } )
-  exp.path <- paste(path.root, 'exposures.pdf', sep='.')
-  pdf.ex.by.range(exp.path, s.spectra, sigs, exp=out.exp,
-                  range=ranges, col=col)
-  recon.path <- paste(path.root, 'reconstruction.err.pdf', sep='.')
+  exp.path <- paste(path.root, 'exposures.pdf', sep = '.')
+  pdf.ex.by.range(exp.path, s.spectra, sigs, exp = out.exp,
+                  ranges = ranges, col = col)
+  recon.path <- paste(path.root, 'reconstruction.err.pdf', sep = '.')
   
   plot.recon.by.range(recon.path,
                       s.spectra,
                       sigs,
                       out.exp,
-                      range  = ranges,
-                      eval_f = eval_f,
-                      m.opts = m.opts)
+                      range  = ranges #,
+                      # eval_f = eval_f,
+                      # m.opts = m.opts
+                      )
   
-  return(list(pval=out.pvals, exposure=out.exp))
+  return(list(pval = out.pvals, exposure = out.exp))
 }
 
 mSigAct.basic.test <- function() {
@@ -417,73 +418,73 @@ mSigAct.basic.test <- function() {
   
   short.taiwan.hcc2 <-
     structure(
-      c(0L, 2L, 0L, 3L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 1L,
-        1L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-        0L, 1L, 0L, 0L, 0L, 7L, 1L, 3L, 1L, 2L, 0L, 2L, 1L, 3L, 1L, 1L,
-        1L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 3L, 3L, 0L, 0L, 0L, 1L, 0L, 0L,
-        0L, 0L, 0L, 0L, 2L, 0L, 1L, 0L, 2L, 1L, 0L, 1L, 1L, 1L, 1L, 1L,
-        0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L,
-        0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 1L, 1L, 0L,
-        1L, 0L, 1L, 0L, 2L, 0L, 2L, 1L, 0L, 0L, 0L, 2L, 3L, 0L, 0L, 0L,
-        2L, 0L, 0L, 2L, 0L, 1L, 1L, 0L, 1L, 3L, 0L, 1L, 2L, 1L, 0L, 0L,
-        2L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 2L, 2L, 1L, 0L, 0L, 0L,
-        0L, 1L, 0L, 0L, 2L, 1L, 1L, 3L, 0L, 0L, 0L, 2L, 1L, 0L, 1L, 0L,
-        0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 3L, 0L, 2L, 1L, 1L, 0L, 2L,
-        0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-        0L, 0L, 1L, 2L, 3L, 3L, 0L, 1L, 1L, 0L, 0L, 1L, 3L, 0L, 1L, 1L,
-        2L, 1L, 0L, 0L, 0L, 2L, 1L, 2L, 0L, 2L, 1L, 0L, 0L, 2L, 1L, 0L,
-        0L, 1L, 0L, 0L, 0L, 3L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-        1L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 1L,
-        0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 1L,
-        1L, 2L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 2L,
-        0L, 0L, 2L, 1L, 1L, 2L, 1L, 2L, 0L, 1L, 3L, 2L, 3L, 2L, 4L, 0L,
-        0L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L,
-        0L, 0L, 0L, 2L, 1L, 2L, 1L, 0L, 3L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L,
-        1L, 0L, 0L, 1L, 2L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 3L,
-        1L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-        0L, 0L, 1L, 1L, 1L, 0L, 0L, 2L, 0L, 4L, 0L, 1L, 2L, 1L, 2L, 0L,
-        0L, 1L, 0L, 0L, 0L, 2L, 1L, 2L, 0L, 2L, 0L, 1L, 1L, 0L, 0L, 1L,
-        0L, 2L, 0L, 2L, 0L, 1L, 2L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L,
-        1L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 4L, 0L, 2L, 0L, 0L, 2L,
-        0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 1L, 0L, 0L,
-        0L, 0L, 0L, 0L, 2L, 2L, 1L, 2L, 0L, 1L, 3L, 0L, 1L, 2L, 2L, 1L,
-        2L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-        0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 3L, 0L, 1L, 1L,
-        1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-        0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 3L, 1L, 0L, 0L, 0L, 0L,
-        3L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L,
-        0L, 0L, 2L, 0L, 1L, 1L, 1L, 3L, 1L, 2L, 1L, 0L, 0L, 1L, 0L, 0L,
-        0L, 2L, 2L, 1L, 0L, 1L, 1L, 0L, 1L, 2L, 0L, 1L, 0L, 0L, 0L, 0L,
-        0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 2L, 0L,
-        0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-        0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 2L, 0L, 1L, 1L,
-        1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        1L, 1L, 0L, 1L, 0L, 1L, 0L, 2L, 1L, 2L, 0L, 0L, 0L, 1L, 0L, 0L,
-        0L, 0L, 3L, 1L, 1L, 2L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 5L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 0L, 1L, 2L, 0L,
-        0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 3L, 1L, 1L, 0L, 1L, 0L,
-        1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 1L, 1L, 1L, 2L, 3L, 2L, 4L, 0L, 2L, 1L, 3L, 1L, 1L,
-        0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-        0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 2L, 1L, 0L, 0L, 0L, 0L, 1L, 0L,
-        1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 1L,
-        0L, 0L, 1L, 0L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L,
-        0L, 0L, 0L, 0L, 1L, 0L, 0L, 2L, 0L, 3L, 1L, 1L, 1L, 1L, 1L, 1L,
-        1L, 2L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 1L, 0L, 1L, 0L, 3L, 0L, 0L,
-        0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L,
-        1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        1L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 2L, 1L, 0L, 0L, 1L, 1L, 0L,
-        1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 2L, 4L, 1L, 0L, 0L, 0L, 0L, 0L,
-        0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-        0L, 0L, 0L), .Dim = c(96L, 11L),
+      c(0, 2, 0, 3, 0, 1, 0, 1, 0, 0, 0, 1, 1,
+        1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
+        0, 1, 0, 0, 0, 7, 1, 3, 1, 2, 0, 2, 1, 3, 1, 1,
+        1, 0, 1, 0, 1, 1, 0, 0, 3, 3, 0, 0, 0, 1, 0, 0,
+        0, 0, 0, 0, 2, 0, 1, 0, 2, 1, 0, 1, 1, 1, 1, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0,
+        0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0,
+        1, 0, 1, 0, 2, 0, 2, 1, 0, 0, 0, 2, 3, 0, 0, 0,
+        2, 0, 0, 2, 0, 1, 1, 0, 1, 3, 0, 1, 2, 1, 0, 0,
+        2, 1, 0, 0, 0, 1, 0, 0, 0, 0, 2, 2, 1, 0, 0, 0,
+        0, 1, 0, 0, 2, 1, 1, 3, 0, 0, 0, 2, 1, 0, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 1, 0, 3, 0, 2, 1, 1, 0, 2,
+        0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 0, 1, 2, 3, 3, 0, 1, 1, 0, 0, 1, 3, 0, 1, 1,
+        2, 1, 0, 0, 0, 2, 1, 2, 0, 2, 1, 0, 0, 2, 1, 0,
+        0, 1, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+        1, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
+        1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 2,
+        0, 0, 2, 1, 1, 2, 1, 2, 0, 1, 3, 2, 3, 2, 4, 0,
+        0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+        0, 0, 0, 2, 1, 2, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+        1, 0, 0, 1, 2, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 3,
+        1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+        0, 0, 1, 1, 1, 0, 0, 2, 0, 4, 0, 1, 2, 1, 2, 0,
+        0, 1, 0, 0, 0, 2, 1, 2, 0, 2, 0, 1, 1, 0, 0, 1,
+        0, 2, 0, 2, 0, 1, 2, 0, 0, 0, 0, 0, 1, 1, 0, 0,
+        1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 4, 0, 2, 0, 0, 2,
+        0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
+        0, 0, 0, 0, 2, 2, 1, 2, 0, 1, 3, 0, 1, 2, 2, 1,
+        2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 3, 0, 1, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 3, 1, 0, 0, 0, 0,
+        3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0,
+        0, 0, 2, 0, 1, 1, 1, 3, 1, 2, 1, 0, 0, 1, 0, 0,
+        0, 2, 2, 1, 0, 1, 1, 0, 1, 2, 0, 1, 0, 0, 0, 0,
+        0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0,
+        0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 1,
+        1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 1, 0, 1, 0, 1, 0, 2, 1, 2, 0, 0, 0, 1, 0, 0,
+        0, 0, 3, 1, 1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+        0, 0, 0, 5, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 2, 0,
+        0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 3, 1, 1, 0, 1, 0,
+        1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 2, 3, 2, 4, 0, 2, 1, 3, 1, 1,
+        0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+        0, 0, 0, 0, 1, 0, 1, 1, 2, 1, 0, 0, 0, 0, 1, 0,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1,
+        0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0,
+        0, 0, 0, 0, 1, 0, 0, 2, 0, 3, 1, 1, 1, 1, 1, 1,
+        1, 2, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 3, 0, 0,
+        0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+        0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 1, 0, 1, 1, 2, 1, 0, 0, 1, 1, 0,
+        1, 0, 0, 0, 0, 0, 0, 1, 2, 4, 1, 0, 0, 0, 0, 0,
+        0, 1, 1, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0), .Dim = c(96L, 11L),
       .Dimnames =
         list(c("ACAA", "ACCA",
                "ACGA", "ACTA", "CCAA", "CCCA", "CCGA", "CCTA", "GCAA", "GCCA",
@@ -546,21 +547,21 @@ mSigAct.basic.test <- function() {
   # Create a spectrum that has only one signature, and a matrix of spectra that has only
   # one spectrum. These conditions often exercise errors.
   degenerate.spectrum <-
-    matrix(c(round(liver.wes.sigs[ , 'Signature.AA'] * 1000, digits=0),
-             round(liver.wes.sigs[ , 'Signature.AA'] * 500, digits=0)),
-           ncol=2)
+    matrix(c(round(liver.wes.sigs[ , 'Signature.AA'] * 1000, digits = 0),
+             round(liver.wes.sigs[ , 'Signature.AA'] * 500, digits = 0)),
+           ncol = 2)
   
-  colnames(degenerate.spectrum)  <-  c('Test1', 'Test2')
+  colnames(degenerate.spectrum) <-  c('Test1', 'Test2')
   rownames(degenerate.spectrum) <-  row.names(short.taiwan.hcc2)
   
   degenerate.analysis <-
-    mSigOneGroup(spectra=degenerate.spectrum,
-                      sigs=liver.wes.sigs,
-                      target.sig.name='Signature.AA',
-                      path.root='mSigAct.basic.test.degenerate',
-                      obj.fun=obj.fun.nbinom.maxlh,
-                      nbinom.size=5,
-                      mc.cores=1)
+    mSigOneGroup(spectra         = degenerate.spectrum,
+                 sigs            = liver.wes.sigs,
+                 target.sig.name = 'Signature.AA',
+                 path.root       = 'mSigAct.basic.test.degenerate',
+                 eval_f          = obj.fun.nbinom.maxlh,
+                 m.opts          = m.opts,
+                 mc.cores        = 1)
   
   degenerate.expected <-
     structure(list(pval = structure(c(2.59102885448936e-167, 3.85329163031964e-123
@@ -586,7 +587,7 @@ mSigAct.basic.test <- function() {
     .Names = c("pval",
                "exposure"))
   
-  stopifnot(all(all.equal(degenerate.analysis, degenerate.expected, tolerance =0.005)))
+  stopifnot(all(all.equal(degenerate.analysis, degenerate.expected, tolerance = 0.005)))
   
 }
 
@@ -594,6 +595,360 @@ mSigAct.basic.test <- function() {
 sort.spectra.columns <- function(spectrum) {
   if (ncol(spectrum) <= 1) return(spectrum) # ncol can be 0, or 1
   spect.total <- margin.table(spectrum, 2)
-  spect.order <- order(spect.total, colnames(spectrum), method='radix', decreasing = c(T, F))
+  spect.order <- order(spect.total, colnames(spectrum), method = 'radix', decreasing = c(T, F))
   spectrum[ , spect.order]
 }
+
+pdf.ex.by.range <- function(path,   # Out file path
+                            spectrum,
+                            sigs,
+                            exp,
+                            ranges, # A list of vectors
+                            col=NULL,
+                            main=NULL,
+                            xlab=NULL,
+                            ylab=NULL
+) {
+  pdf(path, width = 8.2677, height = 11.6929, # for A4
+      onefile = T, useDingbats = F)
+  plot.ex.by.range(spectrum, sigs, exp, ranges, col, main, xlab, ylab)
+  dev.off()
+}
+
+### plot.ex.by.range
+###
+### Plot exposures broken up by ranges
+plot.ex.by.range <- function(spectrum,
+                             sigs,
+                             exp,
+                             ranges, # A list of vectors
+                             col=NULL,
+                             main=NULL,
+                             xlab=NULL,
+                             ylab=NULL,
+                             mfrow=c(3,1) # 3 exposure graphs per page by default
+) {
+  # TODO(steve) save opar
+  par(
+    mfrow = mfrow,
+    # mar  =c(1.5,1,2,2), # space between plot and figure, for axis labels etc
+    oma  = rep(3, 4) # outer margin between figure and device.
+  )
+  if (is.null(ylab)) ylab <- 'Number of mutations'
+  first = TRUE
+  for (range in ranges) {
+    if (first) {
+      plot.exposures(exp[ ,range], signatures = sigs,
+                     input.genomes = spectrum[ , range],
+                     plot.proprtion = FALSE,
+                     col = col,
+                     main = main,
+                     ylab = ylab, xlab = xlab)
+      first = FALSE
+    } else {
+      plot.exposures(exp[ ,range], signatures = sigs, 
+                     input.genomes = spectrum[ , range],
+                     plot.proprtion = FALSE,
+                     plot.legend = FALSE,
+                     main = main,
+                     col = col,
+                     ylab = ylab, xlab = xlab)
+    }
+  }
+}
+
+sanity.check.ex <- function(spectrum, sigs, exposure) {
+  ex.sums <- margin.table(exposure, 2)
+  all.reconstruct <- as.matrix(sigs)  %*% exposure
+  rec.sums <- margin.table(all.reconstruct, 2)
+  stopifnot(abs(ex.sums - rec.sums) < 1)
+  spect.sums <- margin.table(spectrum, 2)
+  stopifnot(abs(spect.sums - ex.sums) < 1)
+}
+
+# plot.recon.by.range calls the objective function as one
+# of its analyses.
+#' Plot spectrum recontruction broken up by ranges
+#' @keywords internal
+#' @importFrom graphics par abline axis plot
+#' @importFrom grDevices cairo_pdf
+plot.recon.by.range <- function(path, spect, sigs, ex, range,
+                                obj.fun,
+                                nbinom.size) {
+  cairo_pdf(path,
+            width = 8.2677, height = 11.6929, # for A4
+            onefile = T)
+  par(
+    mfrow=c(3,1), # 3 graphs per page
+    mar=c(1.5,1.1,4.6,1), # space between plot and figure, for axis labels etc
+    oma=c(4,6,3,3) # outer margin between figure and device.
+  )
+  
+  for (r in range) {
+    plot.recon.and.loglh(spect, sigs, ex, r #,
+                         #eval_f = eval_f,
+                         #nbinom.size=nbinom.size
+                         )
+  }
+  dev.off()
+}
+
+# Plot reconstructions and the associted log-likelihoods.
+plot.recon.and.loglh <- function(spect, sigs, ex, range #,
+                                 # obj.fun,
+                                 # nbinom.size
+                                  ) { 
+  plot.reconstruction(signatures      = sigs,
+                      exposures.mat   = ex[ , range, drop = FALSE],
+                      input.genomes   = spect[ , range, drop = FALSE],
+                      normalize.recon = T)
+  
+  
+  
+  # neg.ll <- compute.all.neg.log.lh(spect[ ,range,drop=F], sigs=sigs,
+  #                                 exp = ex[ , range, drop=F],
+  #                                 obj.fun=obj.fun,
+  #                                 nbinom.size=nbinom.size)
+  #s.names <- names(neg.ll)
+  #l.range <- 1:length(s.names)
+  #plot(neg.ll, xaxt='n', ylab=('Neg ln likelihood'), xlab='', new=T)
+  #axis(side = 1, labels = s.names, at=l.range, las=2)
+  #abline(v=l.range, lty=3)
+}
+
+plot.exposures <- 
+  function(s.weights, # This is actually the exposure "counts"
+           # (or floats approximating the exposure counts)
+           signames=NULL,
+           scale.num=NULL,
+           signatures=NULL,
+           input.genomes=NULL,
+           plot.proprtion=T,
+           plot.legend=T,
+           ylim=NULL,
+           main=NULL,
+           ylab=NULL,
+           xlab=NULL,
+           col=NULL
+  ) {
+    
+    # note - might be reals > 1, not necessary colSum==1
+    s.weights <- as.matrix(s.weights) # in case it is a data frame
+    signature_proportions <- t(s.weights)
+    num.sigs = dim(s.weights)[1]
+    num.samples = dim(s.weights)[2]
+    
+    if (is.null(col)) {
+      if (num.sigs <= 8) {
+        col = # c('skyblue', 'black', 'grey', 'yellow', 'blue', 'brown', 'green4', 'red')
+          c('red', 'black', 'grey', 'yellow', 'blue', 'brown', 'green4', 'skyblue')
+        
+      } else {
+        # lots of signatures; use shaded lines to differentiate
+        col = rainbow(num.sigs)
+      }
+    }
+    if (num.sigs <= 12) {
+      p.dense = -1 # will repeat as needed, -1 = solid
+      p.angle = 0  # ditto
+    } else {
+      # lots of signatures; use shaded lines to differentiate
+      p.dense = c(-1,35,35,50,50) # will repeat as needed, -1 = solid
+      p.angle = c(0,0,135,45,135)  # ditto
+    }
+    # for legend, we need to put in reverse order. make sure this matches
+    # order used in barplot
+    num.repeats = ceiling(num.sigs/length(p.dense))
+    p.dense.rev = rev(rep(p.dense,num.repeats)[1:num.sigs])
+    p.angle.rev = rev(rep(p.angle,num.repeats)[1:num.sigs])
+    
+    # add names (if not already set as row.names in the original input frame)
+    # for sorting. (needs a "Sample" column in the signature_proportions frame)
+    # if (length(colnames(s.weights))==0) colnames(s.weights) = signature_proportions$Sample
+    if (is.null(scale.num)){
+      ylabel = '# mutations'
+    } else { # show as rate instead of count
+      if (scale.num < 3000 || scale.num > 3300) {
+        warning('assuming "scale.num" should be divisor for human genome. using 3000')
+        scale.num = 3000
+      }
+      s.weights = s.weights/scale.num
+      ylabel ='# mutations/Mbase'
+    }
+    l.cex = if (num.sigs > 15) .5 else 1 # char expansion for legend (was 0.7)
+    direction = 2 # 1=always horizontal, 2=perpendicular to axis
+    
+    # if we weights file and counts file have samples in different order
+    if (!all(colnames(s.weights)==colnames(input.genomes))) {
+      input.genomes = input.genomes[,colnames(s.weights)]
+      warning('weights file and counts file are ordered differently; re-ordering counts.')
+    }
+    
+    # ignore column names; we'll plot them separately to make them fit
+    bp = barplot(s.weights,
+                 ylim=ylim,
+                 las=1,
+                 col=col,
+                 ylab=ylab,
+                 yaxt='s',
+                 xaxt='n',
+                 xlab=xlab,
+                 density=p.dense, angle=p.angle,
+                 border=ifelse(num.samples>200,NA,1),
+                 main=main, cex.main=1.2)
+    
+    # get max y values for plot region, put legend at top right
+    dims = par('usr') # c(x.min, x.max, y.min, y.max)
+    y.max = dims[4]
+    
+    if (plot.legend) {
+      # less space between rows (y.intersp), and between box & label (x.intersp)
+      # reverse the order, so sig 1 is at bottom (to match bargraph)
+      legend.x <- ncol(s.weights) * .7
+      legend.y <- y.max * 0.8
+      legend(x=legend.x, y=legend.y,
+             rev(row.names(s.weights)),
+             density=p.dense.rev, angle=p.angle.rev,
+             bg=NA, xpd=NA,
+             fill=col[num.sigs:1],
+             x.intersp=.4, y.intersp=.8,
+             bty='n', cex=l.cex * 0.9)
+      text(x=legend.x, y = legend.y, "Mutational signature", adj=-0.09)
+    }
+    
+    # now add sample names, rotated to hopefully fit
+    # don't even try to show all if there are too many
+    if (num.samples <= 200) {
+      if (length(bp)<50) size.adj = .75
+      else if (length(bp)<80) size.adj = .65
+      else if (length(bp)<100) size.adj = 0.4 # .5
+      else if (length(bp)<120) size.adj = .4
+      else if (length(bp)<150) size.adj = .3
+      else size.adj = .3
+      mtext(colnames(s.weights), side=1, at=bp, las=direction, cex=size.adj)
+    }
+    
+    if (plot.proprtion) {
+      # add proportion panel; eg col should sum() to 1. matrix divided by
+      # a vector goes col-wise, not row-wise, so transpose twice :(
+      bp = barplot(t(t(s.weights)/colSums(s.weights)), las=1, col=col, ylab='Proportion',
+                   density=p.dense, angle=p.angle.rev,
+                   main='', axisnames=F, border=NA)
+    }
+    
+  }
+
+#' Plot information about reconstructed spectrum
+#' 
+#' @keywords internal
+#' 
+#' @importFrom graphics barplot legend mtext points text
+#' @importFrom stats cor na.omit
+#' @importFrom grDevices rainbow
+plot.reconstruction <-
+  function(signatures, # Mutation classes x signatures
+           exposures.mat, # Signatures x samples
+           input.genomes, # Mutation classes x samples
+           normalize.recon, # Normalize to the number of mutations in the spectrum
+           padding=0          # How many samples wide the plot should be. (we'll add empty
+  ) {
+    
+    num.sigs = ncol(signatures)
+    num.samples = ncol(input.genomes)
+    recon = signatures %*% exposures.mat
+    # original matrix with mutation class counts per sample
+    mat = input.genomes # as.matrix(input.genomes)
+    
+    # Calculate reconstruction errors
+    cos.sim = sapply(1:num.samples, function(i) lsa::cosine(mat[,i], recon[,i]) )
+    pearson.cor = sapply(1:num.samples, function(i) cor(mat[,i], recon[,i], method='pearson') )
+    
+    # Euclidian distance
+    Eu.dist = apply(mat - recon, 2, function(x) sqrt(sum((x)^2)) ) # raw dist
+    
+    # KL divergence:
+    norm.mat = mat/colSums(mat) # normalized by total number of mutations
+    norm.recon = recon/sum(recon)
+    kl = vector('numeric', length=num.samples)
+    for (i in 1:num.samples) { # each column of sample/recon. matrix
+      zero = norm.mat[,i] == 0 | norm.recon[,i] == 0 # use only non-zero rows
+      if (all(zero)) { # shouldn't happen...
+        kl[i] = 0
+      } else {
+        kl[i] = sum( norm.mat[!zero,i] *
+                       log(norm.mat[!zero,i]/norm.recon[!zero,i]) )
+      }
+    }
+    
+    if (normalize.recon) {
+      Eu.dist <- Eu.dist / colSums(mat)
+      # kl <- kl / colSums(mat)
+    }
+    
+    if (padding && ncol(mat) < padding) {
+      # add empty columns so that reconstruction error plots have the
+      # samples lined up with the exposure/proportion plots. (Eg if plotting
+      # 50 samples at a time, and last figure only has 40 samples.)
+      dims = par('usr') # NOT SURE THIS IS CORRECT
+      NAs = rep(NA, padding-dims[2])
+      cos.sim = c(cos.sim, NAs)
+      pearson.cor = c(pearson.cor, NAs)
+      Eu.dist = c(Eu.dist, NAs)
+      kl = c(kl, NAs)
+    }
+    # don't need so much top/bottom margin space for these 2 plots
+    # new.mar = par('mar'); new.mar[1] = 2; new.mar[3] = 2
+    # old.pars = par(mar=new.mar)
+    
+    # plot the cosine and pearson on the same figure, since they are both 0<=x<=1
+    
+    y.low <- min(c(cos.sim, pearson.cor)) - 0.1
+    
+    if (is.na(y.low)) {y.low = 0}
+    
+    plot(cos.sim, type='p', pch=16, col='grey50', main='Reconstruction error',
+         ylim=c(y.low, 1),
+         xlab='',
+         xaxt='n',
+         ylab='', bty='n',
+         las=2, new=T)
+    points(pearson.cor, type='p', pch=1, col='black') # same scale as cos.sim
+    axis(side=1, # below
+         labels=colnames(input.genomes),
+         at=1:length(cos.sim),
+         las=2)
+    abline(v=1:length(cos.sim), lty=3)
+    legend(0.1 * length(cos.sim), y.low + (1 - y.low) * .25,
+           legend=c('Cosine similarity',"Pearson corr."),
+           col=c('grey50','black'), pch=c(16,1), xpd=NA, bty='n')
+    
+    
+    if (normalize.recon) {
+      Eu.label = 'Euclidean dist / number of mutations'
+      # kl.label = 'KL divergence / number of mutations'
+    } else {
+      Eu.label = 'Euclidean dist'
+      # kl.label = 'KL divergence'
+    }
+    kl.label = 'KL divergence'
+    # now plot kl and Euclidean on another graph.
+    kl.max = max(na.omit(kl))
+    plot(kl, type='p', pch=16, col='blue', ylim=c(0,kl.max), xlab='', ylab='', axes=F,
+         new=T)
+    axis(2, ylim=c(0, kl.max), col.axis='blue', las=1)
+    par(new=TRUE) # allow a second plot on the same figure
+    eu.max = max(na.omit(Eu.dist))
+    plot(Eu.dist, type='p', pch=16, col='red',  xlab="", ylab="", ylim=c(0,eu.max), axes=F)
+    axis(side=1, # below
+         labels=colnames(input.genomes),
+         at=1:length(Eu.dist),
+         las=2)
+    abline(v=1:length(Eu.dist), lty=3)
+    legend(0.1 * length(kl), 0.25 * eu.max,legend=c(Eu.label, kl.label),
+           col=c('red', 'blue'), pch=16, xpd=NA, bty='n')
+    ## add text to second y axis
+    
+    axis(4, ylim=c(0, eu.max), col.axis='red', las=1)
+    
+  }
+

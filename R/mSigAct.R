@@ -501,13 +501,13 @@ Nloptr1Tumor <- function(spectrum,
     }
     # Otherwise sigs is a numeric vector, not a matrix. We assume the caller
     # intended it as a single column matrix.
-    sigs <- matrix(sigs, ncol=1)
+    sigs <- matrix(sigs, ncol = 1)
   }
   
-  if (nrow(sigs)!= length(spectrum)) {
+  if (nrow(sigs) != length(spectrum)) {
     # If we get here there is an error. We save specturm and sigs, which seems
     # useful for debugging in a call to mclapply (multi-core lapply).
-    save(spectrum, sigs, file='spectrum.sigs.debug.Rdata')
+    save(spectrum, sigs, file = 'spectrum.sigs.debug.Rdata')
     stop("nrow(sigs) != length(spectrum), look in file spectrum.sigs.debug.Rdata")
   }
   
@@ -520,13 +520,13 @@ Nloptr1Tumor <- function(spectrum,
   if (TRUE) {
     set.seed(101010)
     global.res <- nloptr::nloptr(
-      x0=x0,
-      eval_f=eval_f,
-      lb = rep(0, ncol(sigs)),
-      ub = rep(sum(spectrum), ncol(sigs)), 
-      opts = m.opts$global.opts,
-      spectrum=spectrum,
-      sigs=sigs,
+      x0       = x0,
+      eval_f   = eval_f,
+      lb       = rep(0, ncol(sigs)),
+      ub       = rep(sum(spectrum), ncol(sigs)), 
+      opts     = m.opts$global.opts,
+      spectrum = spectrum,
+      sigs     = sigs,
       ...)
   }
   if (m.opts$trace > 0) message("globa.res$objective = ", global.res$objective)
@@ -535,13 +535,13 @@ Nloptr1Tumor <- function(spectrum,
   
   local.res <- nloptr::nloptr(
     # x0=x0,
-    x0 = global.res$solution,
-    eval_f = eval_f,
-    lb     = rep(0, ncol(sigs)),
-    ub     = rep(sum(spectrum), ncol(sigs)), 
-    opts =  m.opts$local.opts, 
-    spectrum=spectrum,
-    sigs=sigs,
+    x0       = global.res$solution,
+    eval_f   = eval_f,
+    lb       = rep(0, ncol(sigs)),
+    ub       = rep(sum(spectrum), ncol(sigs)), 
+    opts     = m.opts$local.opts, 
+    spectrum = spectrum,
+    sigs     = sigs,
     ...)
   if (m.opts$trace > 0)
     message("local.res$objective = ", local.res$objective)
@@ -614,7 +614,7 @@ is.superset.of.any <- function(probe, background) {
 #'  \code{ncol{spectra}}, except on Windows, where \code{mc.cores}
 #'  is always 1.
 #' 
-#' @return An assignment of signature as ???.
+#' @return A list with the exposure matrix as element \code{exposure}.
 #' 
 #' @export
 
@@ -646,7 +646,7 @@ SparseAssignActivity <- function(spectra,
   colnames(retval2) <- colnames(spectra)
   rownames(retval2) <- colnames(sigs)
   
-  return(retval2)
+  return(list(exposure = retval2))
   # return(retval)
   
 }
@@ -655,7 +655,7 @@ SparseAssignActivity <- function(spectra,
 #' @keywords internal
 
 SparseAssignActivity1 <- function(
-  spect, sigs, max.level = 5,p.thresh = 0.05, eval_f, m.opts) {
+  spect, sigs, max.level = 5, p.thresh = 0.05, eval_f, m.opts) {
   mode(spect) <-  'numeric'
   start <- one.lh.and.exp(spect, 
                           sigs,
@@ -666,7 +666,7 @@ SparseAssignActivity1 <- function(
   non.0.exp.index <- which(start.exp > 0.5)
   if (m.opts$trace > 0) {
     message('Starting with',
-        paste(names(start.exp)[non.0.exp.index], collapse=','),
+        paste(names(start.exp)[non.0.exp.index], collapse = ","),
         '\n')
     message('max.level =', max.level, '\n')
   }
@@ -692,7 +692,7 @@ SparseAssignActivity1 <- function(
       # subset is of class set (package sets)
       if (is.superset.of.any(subset, c.r.s)) next
       subset.to.remove.v <- as.numeric(subset)
-      subset.name <- paste(names(start.exp)[subset.to.remove.v], collapse=',')
+      subset.name <- paste(names(start.exp)[subset.to.remove.v], collapse = ",")
       tmp.set <- setdiff(non.0.exp.index, subset.to.remove.v)
       try.sigs <- sigs[ , tmp.set]
       
@@ -1002,10 +1002,10 @@ SignaturePresenceTest1 <- function(
   if (m.opts$trace > 0) 
     message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
   
-  list(with=loglh.with,
-       without=loglh.without,
-       statistic=statistic,
-       chisq.p=chisq.p)
+  list(with      = loglh.with,
+       without   = loglh.without,
+       statistic = statistic,
+       chisq.p   = chisq.p)
 }
 
 if (FALSE) {

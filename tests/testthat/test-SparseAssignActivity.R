@@ -150,7 +150,7 @@ test_that("SparseAssignTest6", {
   expected <- matrix(c(999.2467, 1998.7533), ncol = 1)
   rownames(expected) <- names(input)
   colnames(expected) <- "tumor1"
-  testthat::expect_equal(retval, expected, tolerance = 1e-2)
+  testthat::expect_equal(retval$exposure, expected, tolerance = 1e-2)
 })
 
 
@@ -163,6 +163,6 @@ test_that("SparseAssignTest7", {
                      ncol = 3)
   colnames(expected) <- paste0("tumor", 1:3)
   rownames(expected) <- rownames(input.exp)
-  testthat::expect_equal(retval, expected, tolerance = 1e-2)
+  testthat::expect_equal(retval$exposure, expected, tolerance = 1e-2)
 })
 
