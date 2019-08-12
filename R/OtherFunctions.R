@@ -15,7 +15,15 @@
 # <path.root>.exposures.pdf
 # <path.root>.reconstruction.err.pdf
 
-mSigOneGroup <- function(spectra, sigs, target.sig.name,
+#' Analyze and plot a group of spectra
+#'
+#' @keywords internal
+#' 
+#' @importFrom graphics hist
+#' 
+mSigOneGroup <- function(spectra,
+                         sigs,
+                         target.sig.name,
                          path.root,
                          eval_f,
                          m.opts = NULL,
@@ -67,15 +75,14 @@ mSigOneGroup <- function(spectra, sigs, target.sig.name,
     
   }
   
-  
   out.exp <-
     parallel::mclapply(
-      X=s.spectra.to.list,
-      FUN=sparse.assign.activity,
-      sigs=sigs,
-      obj.fun=obj.fun,
-      nbinom.size=nbinom.size,
-      mc.cores=mc.cores)
+      X        = s.spectra.to.list,
+      FUN      = sparse.assign.activity,
+      sigs     = sigs,
+      eval_f   = eval_f,
+      m.opts   = m.opts,
+      mc.cores = mc.cores)
   
   out.exp  <-  do.call(cbind, out.exp)
   colnames(out.exp)  <-  colnames(s.spectra)
@@ -99,14 +106,15 @@ mSigOneGroup <- function(spectra, sigs, target.sig.name,
                   range=ranges, col=col)
   recon.path <- paste(path.root, 'reconstruction.err.pdf', sep='.')
   
-  plot.recon.by.range(recon.path, s.spectra,
+  plot.recon.by.range(recon.path,
+                      s.spectra,
                       sigs,
                       out.exp,
-                      range = ranges,
-                      obj.fun=obj.fun,
-                      nbinom.size=nbinom.size)
+                      range  = ranges,
+                      eval_f = eval_f,
+                      m.opts = m.opts)
   
-  list(pval=out.pvals, exposure=out.exp)
+  return(list(pval=out.pvals, exposure=out.exp))
 }
 
 mSigAct.basic.test <- function() {
