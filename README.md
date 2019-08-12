@@ -25,7 +25,7 @@ The current stable version is
 at
 
 ``` r
-devtools::install_github(repo = "steverozen/mSigAct", ref = "version_2.0.0")
+devtools::install_github(repo = "steverozen/mSigAct", ref = "v2.0.0-branch")
 ```
 
 The alpha version used in Ng et al., 2017, “Aristolochic acids and their
