@@ -13,11 +13,11 @@
 #' spectrum, assuming each mutational types generates counts according to
 #' a negative binomial distribution with 
 #' the given \code{expected.counts} (argument \code{mu}
-#' to \code{\link[stats]{dnbinom}}) and dispersion parameter
+#' to \code{\link[stats]{NegBinomial}}) and dispersion parameter
 #' \code{nbinom.size}.
 #' 
 #' @param nbinom.size The \code{size} parameter that
-#' governs dispersion. See \code{\link[stats]{dnbinom}}.
+#' governs dispersion. See \code{\link[stats]{NegBinomial}}.
 #' Smaller values correspond to larger dispersion.
 #'
 #' @return \code{log(likelihood(spectrum | expected.counts))}
@@ -55,7 +55,7 @@ LLHSpectrumNegBinom <-function(spectrum, expected.counts, nbinom.size) {
 #' @param signature A signature as a numeric vector.
 #' 
 #' @param nbinom.size The \code{size} argument for
-#' \code{\link[stats]{dnbinom}}.
+#' \code{\link[stats]{NegBinomial}}.
 #' 
 LLHOfSignatureGivenSpectrum <- function(spectrum, signature, nbinom.size) {
     expected.counts <- sum(spectrum) * signature
@@ -462,7 +462,7 @@ DefaultLocalOpts <- function() {
 #'   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
 #'   q.v., for the local optimization phase.}
 #'   \item{nbinom.size}{The \code{size}
-#'    parameter used by \code{\link[stats]{dnbinom}}.}
+#'    parameter used by \code{\link[stats]{NegBinomial}}.}
 #'   \item{trace}{If > 0 print progress messages.}
 #' }
 DefaultManyOpts <- function() {
@@ -606,9 +606,11 @@ is.superset.of.any <- function(probe, background) {
 #' to retain a signature in a reconstruction.
 #' 
 #' @param eval_f The objective function for
-#'  \code{\link[nloptr]{nloptr}}.
+#'  \code{\link[nloptr]{nloptr}}. If \code{NULL} defaults
+#'  to 
 #'  
-#' @param m.opts See\code{\link{DefaultManyOpts}}.
+#' @param m.opts If \code{NULL},
+#'   defaults to \code{\link{DefaultManyOpts}()}.
 #' 
 #' @param mc.cores The number of cores to use; if \code{NULL} use
 #'  \code{ncol{spectra}}, except on Windows, where \code{mc.cores}
@@ -622,8 +624,8 @@ SparseAssignActivity <- function(spectra,
                                  sigs,
                                  max.level = 5,
                                  p.thresh  = 0.5,
-                                 eval_f,
-                                 m.opts,
+                                 eval_f    = NULL,
+                                 m.opts    = NULL,
                                  mc.cores  = NULL) {
   f1 <- function(i) {
     retval1 <- SparseAssignActivity1(
@@ -635,6 +637,10 @@ SparseAssignActivity <- function(spectra,
     
     return(retval1)
   }
+  
+  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
+  
+  if (is.null(eval_f)) eval_f <- ObjFnBinomMaxLH
   
   mc.cores <- Adj.mc.cores(
     ifelse(is.null(mc.cores), ncol(spectra), mc.cores))
@@ -789,7 +795,7 @@ prop.reconstruct <- function(sigs, exp) {
 #' Objective function for \code{[SparseAssignActivity]}.
 #' 
 #' @keywords internal
-obj.fun.nbinom.maxlh <- function(exp, spectrum, sigs, nbinom.size) {
+ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   
   if (any(is.na(exp))) return(Inf)
   
@@ -885,7 +891,7 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   
   SA.out <- SparseAssignActivity1(spect      = spect,
                                  sigs        = some.sigs,
-                                 eval_f      = obj.fun.nbinom.maxlh,
+                                 eval_f      = ObjFnBinomMaxLH,
                                  m.opts      = m.opts)
   
   zeros <- which(SA.out < 0.5)
@@ -963,7 +969,7 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
   
   SA.out <- SparseAssignActivity(spectra    = spect,
                                   sigs      = some.sigs,
-                                  eval_f    = obj.fun.nbinom.maxlh,
+                                  eval_f    = ObjFnBinomMaxLH,
                                   m.opts    = m.opts,
                                   mc.cores  = mc.cores) 
   return(SA.out)
@@ -1060,7 +1066,7 @@ TestSignaturePresenceTest1 <- function(sig.counts, trace = 0) {
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = obj.fun.nbinom.maxlh,
+    eval_f           = ObjFnBinomMaxLH,
     m.opts           = m.opts)
   
   return(retval)

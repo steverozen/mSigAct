@@ -16,8 +16,11 @@ knitr::opts_chunk$set(
 # mSigAct
 
 Analyze the the "activities" of mutational signatures in one or
-more mutational spectra. 'mSigAct' stands for mutational Signature 
-Activity. mSigAct can estimate (conservatively) whether there is evidence
+more mutational spectra.
+'mSigAct' stands for **m**tational **Sig**nature
+**Act**ivity. 
+mSigAct can estimate (conservatively)
+whether there is evidence
 that a particular mutational signature is present in a spectrum and can
 determine a minimal subset of signatures needed to plausibly reconstruct an
 observed spectrum.

@@ -83,6 +83,14 @@
 #' mutation counts of 2 to 4 control spectra.
 "kucab.control.dist"
 
+#' Demonstration data: an \code{\link[ICAMS]{ICAMS}} catalog.
+#' 
+#' @source Cite Alexandrov et al, 2019
+#' 
+#' @format An \code{\link[ICAMS]{ICAMS}} catalog with 
+#' mutations from 35 biliary tract tumors.
+"BTSG.WGS.PCAWG"
+
 
 # ==== BELOW HERE EVERYTHING IS TEMPORARY TEST OUTPUT =====
 

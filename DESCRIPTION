@@ -1,6 +1,6 @@
 Package: mSigAct
 Title: mutational Signature Activity analysis ('mSigAct')
-Version: 2.0.0
+Version: 2.0.0.9001
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description:  Analyze the the "activities" of mutational signatures in one or
@@ -17,6 +17,7 @@ LazyData: true
 Language: en-US
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
 biocViews:
 Imports:
     ICAMS,
@@ -27,4 +28,6 @@ Imports:
 Suggests: 
     testthat (>= 2.1.0),
     usethis,
-    utils
+    utils,
+    knitr,
+    rmarkdown

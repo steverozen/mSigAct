@@ -510,7 +510,7 @@ mSigAct.basic.test <- function() {
                  sigs            = liver.wes.sigs,
                  target.sig.name ='Signature.AA',
                  path.root       = 'mSigAct.basic.test.short.analysis',
-                 eval_f          = obj.fun.nbinom.maxlh,
+                 eval_f          = ObjFnBinomMaxLH,
                  m.opts          = m.opts, 
                  mc.cores        = 1)
   
@@ -559,7 +559,7 @@ mSigAct.basic.test <- function() {
                  sigs            = liver.wes.sigs,
                  target.sig.name = 'Signature.AA',
                  path.root       = 'mSigAct.basic.test.degenerate',
-                 eval_f          = obj.fun.nbinom.maxlh,
+                 eval_f          = ObjFnBinomMaxLH,
                  m.opts          = m.opts,
                  mc.cores        = 1)
   

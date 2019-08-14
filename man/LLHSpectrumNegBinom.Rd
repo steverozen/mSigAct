@@ -20,11 +20,11 @@ likelihood that this model generated the observed
 spectrum, assuming each mutational types generates counts according to
 a negative binomial distribution with 
 the given \code{expected.counts} (argument \code{mu}
-to \code{\link[stats]{dnbinom}}) and dispersion parameter
+to \code{\link[stats]{NegBinomial}}) and dispersion parameter
 \code{nbinom.size}.}
 
 \item{nbinom.size}{The \code{size} parameter that
-governs dispersion. See \code{\link[stats]{dnbinom}}.
+governs dispersion. See \code{\link[stats]{NegBinomial}}.
 Smaller values correspond to larger dispersion.}
 }
 \value{

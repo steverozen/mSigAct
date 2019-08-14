@@ -14,7 +14,7 @@ A list with the following elements
   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
   q.v., for the local optimization phase.}
   \item{nbinom.size}{The \code{size}
-   parameter used by \code{\link[stats]{dnbinom}}.}
+   parameter used by \code{\link[stats]{NegBinomial}}.}
   \item{trace}{If > 0 print progress messages.}
 }
 }
