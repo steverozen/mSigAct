@@ -10,18 +10,18 @@
 #' is essentially the same as \code{background.sig}.
 #' 
 #' \item \code{sig.nbinom.size} The \code{size} argument for
-#' \code{\link[stats]{dnbinom}} for sampling error around
+#' \code{\link[stats]{NegBinomial}} for sampling error around
 #' the components of \code{background.sig}.
 #' 
 #' \item \code{count.nbinom.mu} The \code{mu} argument
 #'  for
-#' \code{\link[stats]{dnbinom}} for the distribution
+#' \code{\link[stats]{NegBinomial}} for the distribution
 #' of total counts due to \code{background.sig} across
 #' replicate exposed clones.
 #' 
 #' \item \code{count.nbinom.size} The \code{size} argument
 #'  for
-#' \code{\link[stats]{dnbinom}} for the distribution
+#' \code{\link[stats]{NegBinomial}} for the distribution
 #' of total counts due to \code{background.sig} across
 #' replicate exposed clones.
 #' 

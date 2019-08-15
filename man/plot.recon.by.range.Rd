@@ -2,12 +2,12 @@
 % Please edit documentation in R/OtherFunctions.R
 \name{plot.recon.by.range}
 \alias{plot.recon.by.range}
-\title{Plot spectrum recontruction broken up by ranges}
+\title{Plot spectrum reconstruction broken up by ranges}
 \usage{
 \method{plot}{recon.by.range}(path, spect, sigs, ex, range, obj.fun,
   nbinom.size)
 }
 \description{
-Plot spectrum recontruction broken up by ranges
+Plot spectrum reconstruction broken up by ranges
 }
 \keyword{internal}

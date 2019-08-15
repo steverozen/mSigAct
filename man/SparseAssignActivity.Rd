@@ -20,7 +20,7 @@ to retain a signature in a reconstruction.}
 
 \item{eval_f}{The objective function for
 \code{\link[nloptr]{nloptr}}. If \code{NULL} defaults
-to}
+to \code{\link{ObjFnBinomMaxLH}}.}
 
 \item{m.opts}{If \code{NULL},
 defaults to \code{\link{DefaultManyOpts}()}.}
@@ -30,7 +30,7 @@ defaults to \code{\link{DefaultManyOpts}()}.}
 is always 1.}
 }
 \value{
-A list with the exposure matrix as element \code{exposure}.
+A list with the inferred exposure matrix as element \code{exposure}.
 }
 \description{
 Find known signatures that can most sparsely reconstruct each spectrum in a catalog.

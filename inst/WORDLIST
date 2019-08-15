@@ -22,6 +22,7 @@ ATCs
 ATG
 ATGs
 ATTG
+biliary
 bioc
 bioconductor
 BSgenome
@@ -61,11 +62,13 @@ hg
 homopolymers
 http
 https
+ICAMS
 ICAMS’
 indel
 indels
 intron
 IUPAC
+ivity
 Kucab
 MakeVCFDBSdf
 mer
@@ -78,6 +81,7 @@ Mutect
 MuTect
 nbinom
 Ng
+nloptr
 NN
 nucleotides
 PCAWG
@@ -93,11 +97,13 @@ SBSs
 scitranslmed
 sig
 SigProfiler
+SparseAssignActivity
 steverozen
 StrandToPdf
 Strelka
 SureSelect
 TAC
+tational
 TCT
 TCTA
 tetranucleotide

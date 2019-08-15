@@ -607,7 +607,7 @@ is.superset.of.any <- function(probe, background) {
 #' 
 #' @param eval_f The objective function for
 #'  \code{\link[nloptr]{nloptr}}. If \code{NULL} defaults
-#'  to 
+#'  to \code{\link{ObjFnBinomMaxLH}}.
 #'  
 #' @param m.opts If \code{NULL},
 #'   defaults to \code{\link{DefaultManyOpts}()}.
@@ -616,7 +616,7 @@ is.superset.of.any <- function(probe, background) {
 #'  \code{ncol{spectra}}, except on Windows, where \code{mc.cores}
 #'  is always 1.
 #' 
-#' @return A list with the exposure matrix as element \code{exposure}.
+#' @return A list with the inferred exposure matrix as element \code{exposure}.
 #' 
 #' @export
 
@@ -716,7 +716,7 @@ SparseAssignActivity1 <- function(
                             m.opts = m.opts)
       # try contains maxlh and exposure
       statistic <- 2 * (lh.w.all - try$loglh)
-      chisq.p <- stats::pchisq(statistic, df, lower.tail=F)
+      chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
       if (m.opts$trace > 0) {
         message("Trying" , subset.name, ", p = ", chisq.p)
         if (m.opts$trace > 1) 
@@ -757,7 +757,7 @@ SparseAssignActivity1 <- function(
   if (m.opts$trace > 0) {
     message('max.p =', paste(max.p, collapse = ', '), '\n')
     message('Ending with',
-        paste(names(start.exp)[best.subset], collapse=','),
+        paste(names(start.exp)[best.subset], collapse = ","),
         '\n')
   }
   stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
@@ -807,7 +807,7 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   ## catch errors with NA in the input or in reconstruction.
   if (any(is.na(reconstruction))) {
     save(reconstruction, spectrum, sigs, exp, nbinom.size,
-         file='reconstruction.error.R')
+         file = "reconstruction.error.R")
   }
   stopifnot(!any(is.na(reconstruction)))
   
@@ -817,6 +817,7 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   
   return(-loglh)
 }
+
 
 #' Euclidean reconstruction error.
 #' 
@@ -830,6 +831,7 @@ EDist2SpectRounded <- function(exp, sig.names, spect) {
   return(err)
 }
 
+
 #' Euclidean reconstruction error.
 #' 
 #' @keywords internal
@@ -840,6 +842,7 @@ EDist2Spect <- function(exp, sig.names, spect) {
   return(err)
 }
 
+
 #' "Polish" a solution by minimizing Euclidean distance to the input spectrum.
 #' 
 #' @keywords internal
@@ -848,11 +851,11 @@ Polish <- function(exp, sig.names, spect) {
                             eval_f = EDist2Spect,
                             lb = rep(0, length(exp)),
                             ub = rep(sum(exp), length(exp)),
-                            opts = list(algorithm = "NLOPT_LN_COBYLA",
-                                        maxeval=1000, 
-                                        print_level=0,
-                                        xtol_rel=0.001,  # 0.0001,)
-                                        xtol_abs=0.0001),
+                            opts = list(algorithm   = "NLOPT_LN_COBYLA",
+                                        maxeval     = 1000, 
+                                        print_level = 0,
+                                        xtol_rel    = 0.001,
+                                        xtol_abs    = 0.0001),
                             sig.names = sig.names,
                             spect     = spect)
     
@@ -860,6 +863,7 @@ Polish <- function(exp, sig.names, spect) {
   return(retval$solution)
   
 }
+
 
 #' Framework for testing \code{\link{SparseAssignActivity1}}.
 #' 
@@ -1014,17 +1018,6 @@ SignaturePresenceTest1 <- function(
        chisq.p   = chisq.p)
 }
 
-if (FALSE) {
-OLDSignaturePresenceTest1 <- function(
-  spectrum, sigs, target.sig.index, eval_f, m.opts) {
-    test.out <- is.present.p.m.likelihood(spectrum,
-                              sigs, 
-                              target.sig.index,
-                              eval_f    = eval_f,
-                              m.opts = m.opts)
-    return(test.out$chisq.p)
-  }
-}
 
 Adj.mc.cores <- function(mc.cores) {
   if (Sys.info()["sysname"] == "Windows" && mc.cores > 1) {
@@ -1057,7 +1050,6 @@ TestSignaturePresenceTest1 <- function(sig.counts, trace = 0) {
       ref.genome   = ref.genome,
       region       = region,
       catalog.type = "counts")
-  nbinom.size <- 5
   
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace

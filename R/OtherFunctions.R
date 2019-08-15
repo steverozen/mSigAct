@@ -668,7 +668,7 @@ sanity.check.ex <- function(spectrum, sigs, exposure) {
 
 # plot.recon.by.range calls the objective function as one
 # of its analyses.
-#' Plot spectrum recontruction broken up by ranges
+#' Plot spectrum reconstruction broken up by ranges
 #' @keywords internal
 #' @importFrom graphics par abline axis plot
 #' @importFrom grDevices cairo_pdf

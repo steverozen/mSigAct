@@ -2,7 +2,7 @@
 
 First version as a package. Not all functionality from the alpha version has been incorporated.
 
-# msigAct v1.2-alpha
+# mSigAct v1.2-alpha
 
 Version of the code used in Ng et al., 2017, "Aristolochic acids and their derivatives are widely 
 implicated in liver cancers in Taiwan and throughout Asia", Science Translational Medicine 2017
