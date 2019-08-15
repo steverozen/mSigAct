@@ -26,7 +26,7 @@ to \code{\link{ObjFnBinomMaxLH}}.}
 defaults to \code{\link{DefaultManyOpts}()}.}
 
 \item{mc.cores}{The number of cores to use; if \code{NULL} use
-\code{ncol{spectra}}, except on Windows, where \code{mc.cores}
+\code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
 is always 1.}
 }
 \value{

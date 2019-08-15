@@ -613,7 +613,7 @@ is.superset.of.any <- function(probe, background) {
 #'   defaults to \code{\link{DefaultManyOpts}()}.
 #' 
 #' @param mc.cores The number of cores to use; if \code{NULL} use
-#'  \code{ncol{spectra}}, except on Windows, where \code{mc.cores}
+#'  \code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
 #'  is always 1.
 #' 
 #' @return A list with the inferred exposure matrix as element \code{exposure}.
@@ -643,7 +643,9 @@ SparseAssignActivity <- function(spectra,
   if (is.null(eval_f)) eval_f <- ObjFnBinomMaxLH
   
   mc.cores <- Adj.mc.cores(
-    ifelse(is.null(mc.cores), ncol(spectra), mc.cores))
+    ifelse(is.null(mc.cores), 
+           min(10, ncol(spectra)),
+           mc.cores))
   
   retval <- parallel::mclapply(1:ncol(spectra), f1, mc.cores = mc.cores)
 

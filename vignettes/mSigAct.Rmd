@@ -66,8 +66,9 @@ mutation spectra or signatures from files, see
 library(mSigAct)
 
 estimated.exposure <- 
-  SparseAssignActivity(spectra = mSigAct::BTSG.WGS.PCAWG[ , 1:3],
-                       sigs = mSigAct::sp.sigs[ ,c("SBS1", "SBS5")])
+  SparseAssignActivity(spectra  = mSigAct::BTSG.WGS.PCAWG[ , 1:3],
+                       sigs     = mSigAct::sp.sigs[ ,c("SBS1", "SBS5")],
+                       mc.cores = 1)
 
 estimated.exposure
 ```
@@ -76,6 +77,20 @@ each of the observed `spectra` (independently) using a subset of
 the signatures provided in the argument `sigs`. 
 Normally these signatures should be those previously observed in
 the cancer type in which `spectra` were observed.
+
+Each spectrum in `spectra` can
+be analyzed in a separate 
+sub-process using the `parallel` package.
+The argument `mc.cores` specifies the
+number of cores to use.
+Here set `mc.cores = 1` because
+automatic checking services such as 
+CRAN do not permit
+spawning sub-processes. By default
+`mc.cores` is min of
+10 or the number of input spectra.
+You will probably want to select
+a reasonable number of cores for your system.
 
 `SparseAssignActivity` uses the
 [nloptr](https://CRAN.R-project.org/package=nloptr)
