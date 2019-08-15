@@ -93,7 +93,7 @@ try adjusting the components of `m.opts`.
 For tracing the progress of the optimizations, you can try
 
 ```{r}
-m.opts <- DefaultGlobalOpts()
+m.opts <- DefaultManyOpts()
 m.opts$global.opts$print_level <- 1
 ```
 
