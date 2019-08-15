@@ -115,11 +115,11 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' @param spectra An \code{\link[ICAMS]{ICAMS}} \code{catalog} with 
 #' \code{catalog.type = "counts"}.
 #' 
-#' @param algorithm See \code{link[nloptr]{nloptr}}.
-#' @param maxeval See \code{link[nloptr]{nloptr}}.
-#' @param print_level See \code{link[nloptr]{nloptr}}.
-#' @param xtol_rel See \code{link[nloptr]{nloptr}}.
-#' @param xtol_abs See \code{link[nloptr]{nloptr}}.
+#' @param algorithm See \code{\link[nloptr]{nloptr}}.
+#' @param maxeval See \code{\link[nloptr]{nloptr}}.
+#' @param print_level See \code{\link[nloptr]{nloptr}}.
+#' @param xtol_rel See \code{\link[nloptr]{nloptr}}.
+#' @param xtol_abs See \code{\link[nloptr]{nloptr}}.
 #' 
 #' @return A list with the elements 
 #' \enumerate{
@@ -451,7 +451,7 @@ DefaultLocalOpts <- function() {
               maxeval     = 10000))
 }
 
-#' Set default options for many functions, especially \code{link[noptr]{nloptr}}.
+#' Set default options for many functions, especially \code{\link[noptr]{nloptr}}.
 #' 
 #' @export
 #' 
@@ -991,7 +991,7 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
 #' @param target.sig.index The index of the signature the presence
 #' of which we want to test.
 #' 
-#' @param eval_f See \code{link[nloptr]{nloptr}}.
+#' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #' 
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #' 
