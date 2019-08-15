@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{DefaultManyOpts}
 \alias{DefaultManyOpts}
-\title{Set default options for many functions, especially \code{link[noptr]{nloptr}}.}
+\title{Set default options for many functions, especially \code{\link[noptr]{nloptr}}.}
 \usage{
 DefaultManyOpts()
 }
@@ -19,5 +19,5 @@ A list with the following elements
 }
 }
 \description{
-Set default options for many functions, especially \code{link[noptr]{nloptr}}.
+Set default options for many functions, especially \code{\link[noptr]{nloptr}}.
 }

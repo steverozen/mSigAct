@@ -91,35 +91,3 @@
 #' mutations from 35 biliary tract tumors.
 "BTSG.WGS.PCAWG"
 
-
-# ==== BELOW HERE EVERYTHING IS TEMPORARY TEST OUTPUT =====
-
-#' Temporary test data
-#' 
-#' @format Complicated
-#' 
-#' @examples 
-#' # XXXXXX
-#' 
-"simple.40000.HepG2.tests"
-
-#' Temporary test data
-#' 
-#' @format Complicated
-#' 
-"simple.40000.new.sig0"
-
-#' Temporary test data
-#' 
-#' @format Complicated
-#' 
-"simple.40000.remainder"
-
-#' Another temp test output
-"simple.100000.NLOPT_LN_COBYLA"
-
-#' Another temp test output
-"simple.200000.NLOPT_GN_DIRECT_L"
-
-#' Another temp test output
-"simple.40000.NLOPT_GN_DIRECT_L"

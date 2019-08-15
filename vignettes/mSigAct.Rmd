@@ -24,7 +24,7 @@ mSigAct provides two major analytical capabilities.
 
 * It can estimate (conservatively) whether there is evidence
     that a particular mutational signature is present in a spectrum.
-    The function for this is `SignaturePresenceTest`.
+    The function for this is `SignaturePresenceTest1`.
     
 * It can
     determine a minimal subset of signatures needed to plausibly reconstruct an

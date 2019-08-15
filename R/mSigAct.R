@@ -451,7 +451,7 @@ DefaultLocalOpts <- function() {
               maxeval     = 10000))
 }
 
-#' Set default options for many functions, especially \code{\link[noptr]{nloptr}}.
+#' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.
 #' 
 #' @export
 #' 

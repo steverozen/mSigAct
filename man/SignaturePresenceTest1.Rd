@@ -16,7 +16,7 @@ of which we want to test.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
-\item{eval_f}{See \code{link[nloptr]{nloptr}}.}
+\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 }
 \description{
 Test whether a given signature is plausibly present in a spectrum.

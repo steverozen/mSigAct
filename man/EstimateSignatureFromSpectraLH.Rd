@@ -12,15 +12,15 @@ EstimateSignatureFromSpectraLH(spectra, algorithm = "NLOPT_LN_COBYLA",
 \item{spectra}{An \code{\link[ICAMS]{ICAMS}} \code{catalog} with 
 \code{catalog.type = "counts"}.}
 
-\item{algorithm}{See \code{link[nloptr]{nloptr}}.}
+\item{algorithm}{See \code{\link[nloptr]{nloptr}}.}
 
-\item{maxeval}{See \code{link[nloptr]{nloptr}}.}
+\item{maxeval}{See \code{\link[nloptr]{nloptr}}.}
 
-\item{print_level}{See \code{link[nloptr]{nloptr}}.}
+\item{print_level}{See \code{\link[nloptr]{nloptr}}.}
 
-\item{xtol_rel}{See \code{link[nloptr]{nloptr}}.}
+\item{xtol_rel}{See \code{\link[nloptr]{nloptr}}.}
 
-\item{xtol_abs}{See \code{link[nloptr]{nloptr}}.}
+\item{xtol_abs}{See \code{\link[nloptr]{nloptr}}.}
 }
 \value{
 A list with the elements 
