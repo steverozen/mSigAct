@@ -1,12 +1,12 @@
 To Do
 
-0. Continue with OtherFunctions.R (currently in data-raw)
+0. Test Kucab background signature approach and compare to our approach.
 
-1. load taiwan.HCC.spectra.tsv and test "process.one.group" on it.
+1. Continue with OtherFunctions.R (currently in data-raw)
 
-2. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality and look into -Inf likelihoods (SparseAssignTest5)
+2. load taiwan.HCC.spectra.tsv and test "process.one.group" on it.
 
-3. Test Kucab background signature approach and compare to our approach.
+3. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality and look into -Inf likelihoods (SparseAssignTest5)
 
 4. Move background subtraction tests to testthat.
 

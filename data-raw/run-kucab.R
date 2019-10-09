@@ -3,32 +3,11 @@
 setwd("data-raw/Cell_MutagenSig-master/")
 source("Figure3_SubstitutionSig.R")
 
-# Variable control_profile contains the control spectra
-
-# The functions below are temporary -- have been moved to ICAMS
-Unstaple96 <- function(c1) {
-  retval <-
-    paste0(substr(c1, 1, 1),
-           substr(c1, 3, 3),
-           substr(c1, 7, 7),
-           substr(c1, 5, 5))
-  return(retval)
-}
-
-Restaple96 <- function(c1) {
-  retval <-
-    paste0(substr(c1, 1, 1),
-           "[",
-           substr(c1, 2, 2),
-           ">",
-           substr(c1, 4, 4),
-           "]",
-           substr(c1, 3, 3))
-  return(retval)
-}
-           
-kucab.controls <- control_profile  
-rownames(kucab.controls) <- Unstaple96(rownames(kucab.controls))
+# Step 1, get the control spectra from the Kucab et al.
+# The variable control_profile contains the control spectra
+# and is defined in Figure3_SubstitutionSig.R.
+kucab.controls <- control_profile
+rownames(kucab.controls) <- ICAMS:::Unstaple96(rownames(kucab.controls))
 kucab.controls <- 
   ICAMS::as.catalog(kucab.controls, catalog.type = "counts", region = "genome")
 control.details <- 
@@ -43,6 +22,9 @@ kucab.controls <- kucab.controls[ICAMS::catalog.row.order$SBS96, ]
 usethis::use_data(kucab.controls, overwrite = TRUE)
 ICAMS::PlotCatalogToPdf(mSigAct::kucab.controls, "kucab.controls.pdf")
 
+
+# Step 2, compute the distribution of means of samples of
+# spectra from 2, 3, and 4 cell lines.
 kucab.compute.control.dist <- function(num.controls) {
   x <- colSums(mSigAct::kucab.controls)
   retval <- NULL
@@ -57,3 +39,31 @@ kucab.compute.control.dist <- function(num.controls) {
 kucab.control.dist <- list()
 for (i in 2:4) kucab.control.dist[[i]] <- kucab.compute.control.dist(i)
 usethis::use_data(kucab.control.dist)
+
+
+
+
+
+
+# The functions below are temporary -- have been moved to ICAMS
+XUnstaple96 <- function(c1) {
+  retval <-
+    paste0(substr(c1, 1, 1),
+           substr(c1, 3, 3),
+           substr(c1, 7, 7),
+           substr(c1, 5, 5))
+  return(retval)
+}
+
+XRestaple96 <- function(c1) {
+  retval <-
+    paste0(substr(c1, 1, 1),
+           "[",
+           substr(c1, 2, 2),
+           ">",
+           substr(c1, 4, 4),
+           "]",
+           substr(c1, 3, 3))
+  return(retval)
+}
+
