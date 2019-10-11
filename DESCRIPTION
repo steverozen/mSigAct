@@ -33,5 +33,6 @@ Suggests:
     usethis,
     utils,
     knitr,
+    BSgenome.Hsapiens.1000genomes.hs37d5,
     rmarkdown,
     PCAWG7
