@@ -1032,11 +1032,16 @@ Adj.mc.cores <- function(mc.cores) {
 #' 
 #' @keywords internal
 
-TestSignaturePresenceTest1 <- function(sig.counts, trace = 0) {
+TestSignaturePresenceTest1 <- 
+  function(sig.counts, input.sigs = PCAWG7::signature$genome$SBS96, trace = 0) {
   
   sig.names <- names(sig.counts)
   
-  some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
+  if(sum(sig.names %in% colnames(input.sigs)) == 0) {
+    stop("sig.names not all in input.sigs")
+  }
+  
+  some.sigs  <- input.sigs[ , sig.names, drop = FALSE]
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
