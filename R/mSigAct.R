@@ -1036,6 +1036,10 @@ Adj.mc.cores <- function(mc.cores) {
 TestSignaturePresenceTest1 <- 
   function(sig.counts, input.sigs = PCAWG7::signature$genome$SBS96, trace = 0) {
   
+  if(!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5", quietly = TRUE)){
+     stop("Please install Bioconductor library  BSgenome.Hsapiens.1000genomes.hs37d5")
+  }
+    
   sig.names <- names(sig.counts)
   
   if(sum(sig.names %in% colnames(input.sigs)) == 0) {
