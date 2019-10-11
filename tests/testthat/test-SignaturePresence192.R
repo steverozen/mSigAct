@@ -2,7 +2,8 @@ context("SignaturePresenceTest")
 
 test_that("SignaturePresence1 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
-  retval <- TestSignaturePresenceTest1(sig.counts = input)
+  retval <- TestSignaturePresenceTest1(sig.counts = input, 
+                                       input.sigs=PCAWG7::signature$genome$SBS192)
   testthat::expect_equal(retval$chisq.p, 0, tolerance = 1e-5)
 })
 

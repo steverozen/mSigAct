@@ -1068,7 +1068,7 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = ObjFnBinomMaxLH,
+    eval_f           = mSigAct:::ObjFnBinomMaxLH,
     m.opts           = m.opts)
   
   return(retval)
