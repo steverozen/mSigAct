@@ -1040,6 +1040,7 @@ TestSignaturePresenceTest1 <-
   
   some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
   some.sigs  <- sigs[ , sig.names, drop = FALSE]
+  
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
