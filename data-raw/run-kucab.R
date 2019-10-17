@@ -3,7 +3,7 @@
 setwd("data-raw/Cell_MutagenSig-master/")
 source("Figure3_SubstitutionSig.R")
 
-# Step 1, get the control spectra from the Kucab et al.
+# Step 1, get the control spectra from the Kucab et al. data.
 # The variable control_profile contains the control spectra
 # and is defined in Figure3_SubstitutionSig.R.
 kucab.controls <- control_profile
