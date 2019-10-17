@@ -156,13 +156,34 @@ TestTable2TestInput <- function(test.table,
       spectra <-
         ICAMS::as.catalog(spectra, region = "genome",
                           catalog.type = "counts")
-      output[[paste0(sig, "_", cont, "_", paste(s.range, collapse = ","))]] <- 
+      output[[paste0("Target.sig=", sig, "_BGcont=", cont, 
+                     "_rows=", paste(s.range, collapse = ","))]] <- 
         list(spectra = spectra, test.rows = sub.table[s.range, ])
     }
   }
   return(output)
 }
 
+
+#' Run a suite of tests given data specfied in \code{test.table}
+#' 
+#' @param test.table XXX
+#' @param num.replicates Currently ignored and assumed to be 1.
+#' @param num.spectra.per.replicate The number of spectra from which to subtract
+#'                                  the background signature. For the Duke-NUS 
+#'                                  workflow, 2 or 3 would be a realistic number.
+#'                                  Currently we just take the first 2 spectra
+#'                                  for a given target signature and background.
+#'                                  In the future we could take multiple samples.
+#' @param bg.info Information on the background signatures, e.g. \code{HepG2.background.info}.
+#' @param out.dir XXXX
+#' @param mc.cores    See \code{FindSignatureMinusBackground}.
+#' @param maxeval     See \code{FindSignatureMinusBackground}.
+#' @param xtol_rel    See \code{FindSignatureMinusBackground}.
+#' @param xtol_abs    See \code{FindSignatureMinusBackground}.
+#' @param print_level See \code{FindSignatureMinusBackground}.
+#' @param algorithm   See \code{FindSignatureMinusBackground}.
+#' @param If \code{TRUE} print some progress information.
 RunTests <- function(test.table, 
                      num.replicates,
                      num.spectra.per.replicate,
@@ -197,7 +218,7 @@ RunTests <- function(test.table,
     spectra <- test.input.list[[test.name]][["spectra"]]
     
     retval <-
-      FindSignatureMinusBackground(spectra,
+      FindSignatureMinusBackground(spectra, # Defined in mSigAct.R
                                    bg.sig.info = bg.info,
                                    maxeval = maxeval, 
                                    print_level = print_level,
@@ -221,9 +242,10 @@ RunTests <- function(test.table,
   return(output)
 }
 
-RunRunTests <- function(maxeval = 10000, algorithm, mc.cores = 10) {
+RunHepG2Tests <- function(maxeval = 40000, algorithm, mc.cores = 10, rows = NULL) {
+  if (is.null(rows)) rows <- 1:nrow(HepG2.bg.tests.no.noise)
   output <- RunTests(
-    test.table = mSigAct::HepG2.bg.tests.no.noise, # [1:120, ],
+    test.table = mSigAct::HepG2.bg.tests.no.noise[rows, ],
     num.replicates = 1,
     num.spectra.per.replicate = 2,
     bg.info = mSigAct::HepG2.background.info,
@@ -236,7 +258,9 @@ RunRunTests <- function(maxeval = 10000, algorithm, mc.cores = 10) {
   invisible(output)
 }
 
-
+# foo <- RunHepG2Tests(mc.cores = 1, algorithm = "NLOPT_GN_DIRECT", rows = 1:22)
+# foo2 <- EvalMultiTest(foo, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/foo", foo2)
 
 TestOutput2TestRows <- function(test.output.item) {
   return(test.output.item[["input"]][["test.rows"]])
@@ -371,28 +395,33 @@ SaveEvaluatedOuput <- function(out.dir, ev.output) {
   }
 }
 
+# Example of how to run
+# simple.40000.remainder <- RunHepG2Tests(maxeval = 40000)
+# foo.remainder <- EvalMultiTest(simple.40000.remainder, HepG2.background.info)
+# SaveEvaluatedOuput("data-raw/ev.remainder", foo.remainder)
+
+
+
 # mfoo <- EvalMultiTest(simple.40000.HepG2.tests, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev3", mfoo)
 
 # foo2X <- EvalMultiTest(simple.40000.new.sig0, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev.new.sig0x", foo2X)
 
-# simple.40000.remainder <- RunRunTests(maxeval = 40000)
-# foo.remainder <- EvalMultiTest(simple.40000.remainder, HepG2.background.info)
-# SaveEvaluatedOuput("data-raw/ev.remainder", foo.remainder)
 
-# simple.200000.NLOPT_GN_DIRECT_L <- RunRunTests(maxeval = 200000)
+
+# simple.200000.NLOPT_GN_DIRECT_L <- RunHepG2Tests(maxeval = 200000)
 # usethis::use_data(simple.200000.NLOPT_GN_DIRECT_L)
 # foo.NLOPT_GN_DIRECT_L <- EvalMultiTest(simple.200000.NLOPT_GN_DIRECT_L, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev.200000.NLOPT_GN_DIRECT_L", foo.NLOPT_GN_DIRECT_L)
 
-# simple.100000.NLOPT_LN_COBYLA <- RunRunTests(maxeval = 100000, algorithm = "NLOPT_LN_COBYLA")
+# simple.100000.NLOPT_LN_COBYLA <- RunHepG2Tests(maxeval = 100000, algorithm = "NLOPT_LN_COBYLA")
 # usethis::use_data(simple.100000.NLOPT_LN_COBYLA)
 # foo <- EvalMultiTest(simple.100000.NLOPT_LN_COBYLA, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/simple.100000.NLOPT_LN_COBYLA", foo)
 
 
-# simple.200000.NLOPT_GN_DIRECT <- RunRunTests(maxeval = 200000, algorithm = "NLOPT_GN_DIRECT")
+# simple.200000.NLOPT_GN_DIRECT <- RunHepG2Tests(maxeval = 200000, algorithm = "NLOPT_GN_DIRECT")
 # usethis::use_data(simple.200000.NLOPT_GN_DIRECT)
 # foo.NLOPT_GN_DIRECT <- EvalMultiTest(simple.200000.NLOPT_GN_DIRECT, HepG2.background.info)
 # SaveEvaluatedOuput("data-raw/ev.200000.NLOPT_GN_DIRECT", foo.NLOPT_GN_DIRECT)
