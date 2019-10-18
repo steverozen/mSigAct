@@ -90,9 +90,12 @@ EstimateSignatureFromSpectraLH <-
     
     nbinom.size <- ret$solution[len + 1]
     
-    return(list(background.sig = sig,
-                mean.sig       = mean.sig,
-                nbinom.size    = nbinom.size))
+    return(list(background.sig   = sig,
+                mean.sig         = mean.sig,
+                nbinom.size      = nbinom.size,
+                count.nbinom.mu  = mean(colSums(spectra)),
+                count.binom.size = 20,
+                nloptr.ret       = ret))
     
   }
 
@@ -180,3 +183,11 @@ MakeCisplatinCatalogs <- function() {
   
   return(cats)
 }
+
+LoadToEnvironment <- function(RData, env = new.env()){
+  load(RData, env)
+  return(env) 
+}
+
+mcf10a <- LoadToEnvironment(
+  "data-raw/spectra.for.background.signature/MCF-10A-background/background_spectra.Rdata")

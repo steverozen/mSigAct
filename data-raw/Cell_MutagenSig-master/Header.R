@@ -34,7 +34,7 @@ gen_muttype_new <- function(CTsubs){
   
 }
 plotCountbasis_average_se <- function(muts_basis,h,w,outputname){
-  mean_parentmuts <- sum(muts_basis[,2:dim(muts_basis)[2]])/(dim(muts_basis)[2]-1)
+  mean_parentmuts <- sum(muts_basis[,2:ncol(muts_basis)])/(ncol(muts_basis)-1)
   
   muts_basis_melt <- melt(muts_basis,"MutationType")
   names(muts_basis_melt) <- c("MutationType","sample","count")

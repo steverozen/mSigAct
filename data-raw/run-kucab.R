@@ -54,37 +54,41 @@ muts_compound <- muts_summary_details[muts_summary_details$Group != "a_Control",
 
 # START HERE
 # Averaged control profile
-parentmuts <- sub_catalogue[,c(1,which(colnames(sub_catalogue) %in% muts_summary_details[muts_summary_details$Group=="a_Control","Sample"]))]
-control_mean <- plotCountbasis_average_se(parentmuts,2,7,"Fig3A")
+parentmuts <- kucab.spectra[ ,muts_control$New.names]
+pmut <- cbind(MutationType = rownames(parentmuts), parentmuts)
+
+# Throws error:
+# control_mean <- plotCountbasis_average_se(pmut,2,7,"Fig3A")
 
 # Mutational signatures
 #############################################
 #   Calculate signal-to-noise ratio distance for mutational profile
 #    between mutagen and distinction (control)
 #############################################
-control_profile <- sub_catalogue[,as.character(muts_control[,"Sample"])]
+# control_profile <- sub_catalogue[,as.character(muts_control[,"Sample"])]
 # End of material copied from Kucab
 
 
 # Step 1, get the control spectra from the Kucab et al. data.
 # The variable control_profile contains the control spectra
 # and is defined in Figure3_SubstitutionSig.R.
-kucab.controls <- control_profile
+kucab.controls <- parentmuts
 
-rownames(kucab.controls) <- ICAMS:::Unstaple96(rownames(kucab.controls))
-kucab.controls <- 
-  ICAMS::as.catalog(kucab.controls, catalog.type = "counts", region = "genome")
-control.details <- 
-  muts_summary_details[muts_summary_details$Group == "a_Control", ]
-new.colnames <- 
-    cbind(colnames(kucab.controls),
-    control.details[colnames(kucab.controls),
-                    c("Compound", "Concentration")])
-colnames(kucab.controls) <- 
-  apply(new.colnames, MARGIN = 1, FUN = paste0, collapse = "_")
-kucab.controls <- kucab.controls[ICAMS::catalog.row.order$SBS96, ]
-usethis::use_data(kucab.controls, overwrite = TRUE)
-ICAMS::PlotCatalogToPdf(mSigAct::kucab.controls, "kucab.controls.pdf")
+# rownames(kucab.controls) <- ICAMS:::Unstaple96(rownames(kucab.controls))
+# kucab.controls <- 
+#   ICAMS::as.catalog(kucab.controls, catalog.type = "counts", region = "genome")
+# control.details <- 
+#   muts_summary_details[muts_summary_details$Group == "a_Control", ]
+# new.colnames <- 
+#    cbind(colnames(kucab.controls),
+#     control.details[colnames(kucab.controls),
+#                     c("Compound", "Concentration")])
+# colnames(kucab.controls) <- 
+#  apply(new.colnames, MARGIN = 1, FUN = paste0, collapse = "_")
+# kucab.controls <- kucab.controls[ICAMS::catalog.row.order$SBS96, ]
+# 
+# usethis::use_data(kucab.controls, overwrite = TRUE)
+ICAMS::PlotCatalogToPdf(kucab.controls, "kucab.controls.pdf")
 
 
 # Step 2, compute the distribution of means of samples of
@@ -108,7 +112,7 @@ usethis::use_data(kucab.control.dist)
 
 
 
-
+if (FALSE) {
 # The functions below are temporary -- have been moved to ICAMS
 XUnstaple96 <- function(c1) {
   retval <-
@@ -130,4 +134,4 @@ XRestaple96 <- function(c1) {
            substr(c1, 3, 3))
   return(retval)
 }
-
+}

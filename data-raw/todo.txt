@@ -1,7 +1,12 @@
 To Do
 
-0. Test Kucab background signature approach and compare to our approach.
 0.1 Make synthetic data based on Kucab background
+
+0. Test Kucab background signature approach  and compare to our approach.
+0.01 more clean up; more simple tests
+
+try initial estimate of bg propition max(bg.mut.proportion / spec.mut.proportion), then simply subtract
+
 0.11 Figure out which optimization is best (global vs local? try on cluster!)
 0.2 Test our approach on data in 0.1
 0.3 Test Kucab approach on data in 0.1
