@@ -1,0 +1,325 @@
+Sample.Name	Sample	sub_num	Compound.Abbreviation	Group
+MSM0.1	MSM0.1_s1	232	H2O Control	a_Control
+MSM0.1	MSM0.1_s2	220	H2O Control	a_Control
+MSM0.10	MSM0.10_s1	278	Melphalan	l_Drug Therapy
+MSM0.10	MSM0.10_s2	291	Melphalan	l_Drug Therapy
+MSM0.10	MSM0.10_s3	292	Melphalan	l_Drug Therapy
+MSM0.100	MSM0.100_s1	219	2,6-Dimethylaniline	j_Aromatic Amine
+MSM0.100	MSM0.100_s2	243	2,6-Dimethylaniline	j_Aromatic Amine
+MSM0.101	MSM0.101_s1	240	Cyclophosphamide	l_Drug Therapy
+MSM0.101	MSM0.101_s2	208	Cyclophosphamide	l_Drug Therapy
+MSM0.102	MSM0.102_s3	468	Potassium bromate	d_ROS/NOS
+MSM0.102	MSM0.102_s4	556	Potassium bromate	d_ROS/NOS
+MSM0.102	MSM0.102_s5	633	Potassium bromate	d_ROS/NOS
+MSM0.103	MSM0.103_s1	3622	DBADE	f_PAH
+MSM0.103	MSM0.103_s5	4139	DBADE	f_PAH
+MSM0.103	MSM0.103_s6	3945	DBADE	f_PAH
+MSM0.104	MSM0.104_s1	337	Formaldehyde	n_Aldehydes
+MSM0.104	MSM0.104_s2	314	Formaldehyde	n_Aldehydes
+MSM0.104	MSM0.104_s3	301	Formaldehyde	n_Aldehydes
+MSM0.105	MSM0.105_s1	288	Acetaldehyde	n_Aldehydes
+MSM0.105	MSM0.105_s3	257	Acetaldehyde	n_Aldehydes
+MSM0.106	MSM0.106_s1	262	Semustine	l_Drug Therapy
+MSM0.106	MSM0.106_s2	365	Semustine	l_Drug Therapy
+MSM0.106	MSM0.106_s3	311	Semustine	l_Drug Therapy
+MSM0.107	MSM0.107_s1	239	2,6-Dimethylaniline	j_Aromatic Amine
+MSM0.107	MSM0.107_s2	225	2,6-Dimethylaniline	j_Aromatic Amine
+MSM0.108	MSM0.108_s2	213	MNNG	m_Alkylating Agent
+MSM0.108	MSM0.108_s3	247	MNNG	m_Alkylating Agent
+MSM0.109	MSM0.109_s1	180	Peroxynitrite	d_ROS/NOS
+MSM0.109	MSM0.109_s2	311	Peroxynitrite	d_ROS/NOS
+MSM0.11	MSM0.11_s1	531	Temozolomide	l_Drug Therapy
+MSM0.11	MSM0.11_s2	485	Temozolomide	l_Drug Therapy
+MSM0.11	MSM0.11_s3	608	Temozolomide	l_Drug Therapy
+MSM0.110	MSM0.110_s1	1803	DMH	m_Alkylating Agent
+MSM0.110	MSM0.110_s2	1507	DMH	m_Alkylating Agent
+MSM0.110	MSM0.110_s3	1831	DMH	m_Alkylating Agent
+MSM0.111	MSM0.111_s1	533	Benzidine	j_Aromatic Amine
+MSM0.111	MSM0.111_s2	670	Benzidine	j_Aromatic Amine
+MSM0.111	MSM0.111_s3	365	Benzidine	j_Aromatic Amine
+MSM0.112	MSM0.112_s1	244	Benzidine	j_Aromatic Amine
+MSM0.112	MSM0.112_s2	262	Benzidine	j_Aromatic Amine
+MSM0.112	MSM0.112_s3	312	Benzidine	j_Aromatic Amine
+MSM0.113	MSM0.113_s1	233	2-Naphthylamine	j_Aromatic Amine
+MSM0.113	MSM0.113_s2	247	2-Naphthylamine	j_Aromatic Amine
+MSM0.114	MSM0.114_s1	196	2-Naphthylamine	j_Aromatic Amine
+MSM0.114	MSM0.114_s2	209	2-Naphthylamine	j_Aromatic Amine
+MSM0.114	MSM0.114_s5	244	2-Naphthylamine	j_Aromatic Amine
+MSM0.115	MSM0.115_s1	257	MOCA	j_Aromatic Amine
+MSM0.115	MSM0.115_s2	232	MOCA	j_Aromatic Amine
+MSM0.116	MSM0.116_s1	245	MOCA	j_Aromatic Amine
+MSM0.116	MSM0.116_s2	244	MOCA	j_Aromatic Amine
+MSM0.116	MSM0.116_s3	259	MOCA	j_Aromatic Amine
+MSM0.117	MSM0.117_s1	238	MX	b_Other
+MSM0.117	MSM0.117_s5	221	MX	b_Other
+MSM0.118	MSM0.118_s1	270	DMSO Control	a_Control
+MSM0.118	MSM0.118_s2	271	DMSO Control	a_Control
+MSM0.119	MSM0.119_s1	244	DMSO Control	a_Control
+MSM0.119	MSM0.119_s2	219	DMSO Control	a_Control
+MSM0.12	MSM0.12_s1	323	DBP	f_PAH
+MSM0.12	MSM0.12_s3	297	DBP	f_PAH
+MSM0.12	MSM0.12_s4	323	DBP	f_PAH
+MSM0.120	MSM0.120_s1	285	MeOH Control	a_Control
+MSM0.120	MSM0.120_s2	307	MeOH Control	a_Control
+MSM0.120	MSM0.120_s3	266	MeOH Control	a_Control
+MSM0.121	MSM0.121_s3	253	2-Naphthylamine	j_Aromatic Amine
+MSM0.121	MSM0.121_s4	246	2-Naphthylamine	j_Aromatic Amine
+MSM0.121	MSM0.121_s5	264	2-Naphthylamine	j_Aromatic Amine
+MSM0.122	MSM0.122_s1	505	MX	b_Other
+MSM0.122	MSM0.122_s2	1009	MX	b_Other
+MSM0.122	MSM0.122_s4	344	MX	b_Other
+MSM0.123	MSM0.123_s1	275	Semustine	l_Drug Therapy
+MSM0.123	MSM0.123_s2	229	Semustine	l_Drug Therapy
+MSM0.123	MSM0.123_s3	325	Semustine	l_Drug Therapy
+MSM0.124	MSM0.124_s1	347	Methyleugenol	b_Other
+MSM0.124	MSM0.124_s2	318	Methyleugenol	b_Other
+MSM0.124	MSM0.124_s3	376	Methyleugenol	b_Other
+MSM0.125	MSM0.125_s1	256	Methyleugenol	b_Other
+MSM0.125	MSM0.125_s2	255	Methyleugenol	b_Other
+MSM0.125	MSM0.125_s3	282	Methyleugenol	b_Other
+MSM0.126	MSM0.126_s1	435	4-ABP	j_Aromatic Amine
+MSM0.126	MSM0.126_s2	342	4-ABP	j_Aromatic Amine
+MSM0.127	MSM0.127_s1	251	MeOH Control	a_Control
+MSM0.127	MSM0.127_s2	206	MeOH Control	a_Control
+MSM0.128	MSM0.128_s2	331	Media Control	a_Control
+MSM0.128	MSM0.128_s3	358	Media Control	a_Control
+MSM0.128	MSM0.128_s4	314	Media Control	a_Control
+MSM0.129	MSM0.129_s1	239	Media Control	a_Control
+MSM0.129	MSM0.129_s2	261	Media Control	a_Control
+MSM0.129	MSM0.129_s3	261	Media Control	a_Control
+MSM0.13	MSM0.13_s1	582	DBPDE	f_PAH
+MSM0.13	MSM0.13_s2	353	DBPDE	f_PAH
+MSM0.13	MSM0.13_s3	414	DBPDE	f_PAH
+MSM0.130	MSM0.130_s1	252	DBC	f_PAH
+MSM0.130	MSM0.130_s2	231	DBC	f_PAH
+MSM0.130	MSM0.130_s3	234	DBC	f_PAH
+MSM0.131	MSM0.131_s1	213	DMSO Control	a_Control
+MSM0.131	MSM0.131_s2	200	DMSO Control	a_Control
+MSM0.131	MSM0.131_s3	200	DMSO Control	a_Control
+MSM0.132	MSM0.132_s1	661	DBP	f_PAH
+MSM0.132	MSM0.132_s2	457	DBP	f_PAH
+MSM0.132	MSM0.132_s3	430	DBP	f_PAH
+MSM0.14	MSM0.14_s1	1472	DBADE	f_PAH
+MSM0.14	MSM0.14_s2	1774	DBADE	f_PAH
+MSM0.14	MSM0.14_s3	1887	DBADE	f_PAH
+MSM0.15	MSM0.15_s1	225	Mitomycin C	l_Drug Therapy
+MSM0.15	MSM0.15_s2	205	Mitomycin C	l_Drug Therapy
+MSM0.15	MSM0.15_s3	228	Mitomycin C	l_Drug Therapy
+MSM0.16	MSM0.16_s1	570	1,8-DNP	e_Nitro-PAH
+MSM0.16	MSM0.16_s2	560	1,8-DNP	e_Nitro-PAH
+MSM0.16	MSM0.16_s3	525	1,8-DNP	e_Nitro-PAH
+MSM0.17	MSM0.17_s1	237	2-Nitrofluorene	e_Nitro-PAH
+MSM0.17	MSM0.17_s2	300	2-Nitrofluorene	e_Nitro-PAH
+MSM0.18	MSM0.18_s1	261	Etoposide	l_Drug Therapy
+MSM0.18	MSM0.18_s2	198	Etoposide	l_Drug Therapy
+MSM0.19	MSM0.19_s1	228	H2O2	d_ROS/NOS
+MSM0.19	MSM0.19_s2	232	H2O2	d_ROS/NOS
+MSM0.2	MSM0.2_s1	4145	BPDE	f_PAH
+MSM0.2	MSM0.2_s2	2052	BPDE	f_PAH
+MSM0.2	MSM0.2_s3	3178	BPDE	f_PAH
+MSM0.20	MSM0.20_s1	210	CdCl2	c_Metal Salts
+MSM0.20	MSM0.20_s2	256	CdCl2	c_Metal Salts
+MSM0.21	MSM0.21_s1	248	NaAsO2	c_Metal Salts
+MSM0.21	MSM0.21_s3	212	NaAsO2	c_Metal Salts
+MSM0.21	MSM0.21_s5	235	NaAsO2	c_Metal Salts
+MSM0.22	MSM0.22_s1	524	MNU	m_Alkylating Agent
+MSM0.22	MSM0.22_s2	450	MNU	m_Alkylating Agent
+MSM0.22	MSM0.22_s3	603	MNU	m_Alkylating Agent
+MSM0.23	MSM0.23_s1	272	Acetaldehyde	n_Aldehydes
+MSM0.23	MSM0.23_s2	227	Acetaldehyde	n_Aldehydes
+MSM0.24	MSM0.24_s1	1499	ENU	m_Alkylating Agent
+MSM0.24	MSM0.24_s3	1779	ENU	m_Alkylating Agent
+MSM0.24	MSM0.24_s4	1719	ENU	m_Alkylating Agent
+MSM0.25	MSM0.25_s1	353	Cyclophosphamide	l_Drug Therapy
+MSM0.25	MSM0.25_s2	316	Cyclophosphamide	l_Drug Therapy
+MSM0.26	MSM0.26_s1	532	BaP	f_PAH
+MSM0.26	MSM0.26_s2	660	BaP	f_PAH
+MSM0.26	MSM0.26_s3	610	BaP	f_PAH
+MSM0.27	MSM0.27_s1	658	6-Nitrochrysene	e_Nitro-PAH
+MSM0.27	MSM0.27_s2	396	6-Nitrochrysene	e_Nitro-PAH
+MSM0.27	MSM0.27_s3	622	6-Nitrochrysene	e_Nitro-PAH
+MSM0.28	MSM0.28_s2	287	NiCl2	c_Metal Salts
+MSM0.28	MSM0.28_s4	248	NiCl2	c_Metal Salts
+MSM0.29	MSM0.29_s1	273	1-Nitropyrene	e_Nitro-PAH
+MSM0.29	MSM0.29_s2	273	1-Nitropyrene	e_Nitro-PAH
+MSM0.3	MSM0.3_s1	1008	AAI	b_Other
+MSM0.3	MSM0.3_s2	762	AAI	b_Other
+MSM0.3	MSM0.3_s3	1644	AAI	b_Other
+MSM0.30	MSM0.30_s2	331	K2CrO4	c_Metal Salts
+MSM0.30	MSM0.30_s6	211	K2CrO4	c_Metal Salts
+MSM0.31	MSM0.31_s4	282	Styrene oxide	b_Other
+MSM0.31	MSM0.31_s5	310	Styrene oxide	b_Other
+MSM0.31	MSM0.31_s6	260	Styrene oxide	b_Other
+MSM0.32	MSM0.32_s1	171	Ellipticine	l_Drug Therapy
+MSM0.32	MSM0.32_s5	202	Ellipticine	l_Drug Therapy
+MSM0.33	MSM0.33_s1	215	Bleomycin	l_Drug Therapy
+MSM0.33	MSM0.33_s2	207	Bleomycin	l_Drug Therapy
+MSM0.34	MSM0.34_s1	251	Formaldehyde	n_Aldehydes
+MSM0.34	MSM0.34_s2	184	Formaldehyde	n_Aldehydes
+MSM0.34	MSM0.34_s3	224	Formaldehyde	n_Aldehydes
+MSM0.35	MSM0.35_s1	451	Potassium bromate	d_ROS/NOS
+MSM0.35	MSM0.35_s3	531	Potassium bromate	d_ROS/NOS
+MSM0.35	MSM0.35_s4	387	Potassium bromate	d_ROS/NOS
+MSM0.36	MSM0.36_s1	207	Pb(C2H3O2)2	c_Metal Salts
+MSM0.36	MSM0.36_s2	215	Pb(C2H3O2)2	c_Metal Salts
+MSM0.36	MSM0.36_s3	253	Pb(C2H3O2)2	c_Metal Salts
+MSM0.37	MSM0.37_s1	260	DMSO Control	a_Control
+MSM0.37	MSM0.37_s2	259	DMSO Control	a_Control
+MSM0.38	MSM0.38_s1	187	1,4-Benzoquinone	b_Other
+MSM0.38	MSM0.38_s3	206	1,4-Benzoquinone	b_Other
+MSM0.39	MSM0.39_s1	208	Pb(NO3)2	c_Metal Salts
+MSM0.39	MSM0.39_s2	182	Pb(NO3)2	c_Metal Salts
+MSM0.4	MSM0.4_s1	232	DMSO Control	a_Control
+MSM0.4	MSM0.4_s2	175	DMSO Control	a_Control
+MSM0.40	MSM0.40_s1	1149	6-Nitrochrysene	e_Nitro-PAH
+MSM0.40	MSM0.40_s2	2121	6-Nitrochrysene	e_Nitro-PAH
+MSM0.40	MSM0.40_s5	1046	6-Nitrochrysene	e_Nitro-PAH
+MSM0.41	MSM0.41_s1	427	Ellipticine	l_Drug Therapy
+MSM0.41	MSM0.41_s2	664	Ellipticine	l_Drug Therapy
+MSM0.41	MSM0.41_s3	591	Ellipticine	l_Drug Therapy
+MSM0.41	MSM0.41_s4	213	Ellipticine	l_Drug Therapy
+MSM0.42	MSM0.42_s1	1663	DBA	f_PAH
+MSM0.42	MSM0.42_s2	1060	DBA	f_PAH
+MSM0.42	MSM0.42_s3	1307	DBA	f_PAH
+MSM0.43	MSM0.43_s1	178	4-ABP	j_Aromatic Amine
+MSM0.43	MSM0.43_s2	221	4-ABP	j_Aromatic Amine
+MSM0.44	MSM0.44_s1	277	PhIP	i_Heterocyclic Amine
+MSM0.44	MSM0.44_s2	656	PhIP	i_Heterocyclic Amine
+MSM0.44	MSM0.44_s3	359	PhIP	i_Heterocyclic Amine
+MSM0.44	MSM0.44_s4	489	PhIP	i_Heterocyclic Amine
+MSM0.45	MSM0.45_s1	229	H2O Control	a_Control
+MSM0.45	MSM0.45_s2	257	H2O Control	a_Control
+MSM0.46	MSM0.46_s1	233	CoCl2	c_Metal Salts
+MSM0.46	MSM0.46_s5	225	CoCl2	c_Metal Salts
+MSM0.47	MSM0.47_s1	133	MMS	m_Alkylating Agent
+MSM0.47	MSM0.47_s3	352	MMS	m_Alkylating Agent
+MSM0.48	MSM0.48_s1	224	Camptothecin	l_Drug Therapy
+MSM0.48	MSM0.48_s2	259	Camptothecin	l_Drug Therapy
+MSM0.49	MSM0.49_s1	494	AFB1	b_Other
+MSM0.49	MSM0.49_s2	225	AFB1	b_Other
+MSM0.5	MSM0.5_s1	475	3-NBA	e_Nitro-PAH
+MSM0.5	MSM0.5_s2	461	3-NBA	e_Nitro-PAH
+MSM0.5	MSM0.5_s3	550	3-NBA	e_Nitro-PAH
+MSM0.50	MSM0.50_s1	398	1,6-DNP	e_Nitro-PAH
+MSM0.50	MSM0.50_s2	397	1,6-DNP	e_Nitro-PAH
+MSM0.50	MSM0.50_s3	343	1,6-DNP	e_Nitro-PAH
+MSM0.51	MSM0.51_s1	214	Catechol	b_Other
+MSM0.51	MSM0.51_s2	226	Catechol	b_Other
+MSM0.52	MSM0.52_s1	227	Acrylamide	b_Other
+MSM0.52	MSM0.52_s2	243	Acrylamide	b_Other
+MSM0.53	MSM0.53_s2	740	GLY	b_Other
+MSM0.53	MSM0.53_s5	28	GLY	b_Other
+MSM0.53	MSM0.53_s6	97	GLY	b_Other
+MSM0.54	MSM0.54_s1	1351	5-Methylchrysene	f_PAH
+MSM0.54	MSM0.54_s2	1520	5-Methylchrysene	f_PAH
+MSM0.54	MSM0.54_s3	1335	5-Methylchrysene	f_PAH
+MSM0.55	MSM0.55_s1	297	Furan	b_Other
+MSM0.55	MSM0.55_s2	402	Furan	b_Other
+MSM0.55	MSM0.55_s3	292	Furan	b_Other
+MSM0.56	MSM0.56_s4	2598	SSR	h_Radiation
+MSM0.56	MSM0.56_s5	1897	SSR	h_Radiation
+MSM0.56	MSM0.56_s6	1209	SSR	h_Radiation
+MSM0.57	MSM0.57_s1	253	Acrolein	b_Other
+MSM0.57	MSM0.57_s2	212	Acrolein	b_Other
+MSM0.58	MSM0.58_s4	404	AAII	b_Other
+MSM0.58	MSM0.58_s5	327	AAII	b_Other
+MSM0.58	MSM0.58_s6	268	AAII	b_Other
+MSM0.59	MSM0.59_s2	173	Olaparib	l_Drug Therapy
+MSM0.59	MSM0.59_s3	197	Olaparib	l_Drug Therapy
+MSM0.6	MSM0.6_s1	240	NaCl Control	a_Control
+MSM0.6	MSM0.6_s2	174	NaCl Control	a_Control
+MSM0.60	MSM0.60_s1	278	o-Anisidine	j_Aromatic Amine
+MSM0.60	MSM0.60_s5	216	o-Anisidine	j_Aromatic Amine
+MSM0.61	MSM0.61_s1	214	MeAaC	i_Heterocyclic Amine
+MSM0.61	MSM0.61_s2	281	MeAaC	i_Heterocyclic Amine
+MSM0.62	MSM0.62_s1	285	IQ	i_Heterocyclic Amine
+MSM0.62	MSM0.62_s2	270	IQ	i_Heterocyclic Amine
+MSM0.63	MSM0.63_s1	1033	Propylene oxide	b_Other
+MSM0.63	MSM0.63_s2	691	Propylene oxide	b_Other
+MSM0.63	MSM0.63_s3	735	Propylene oxide	b_Other
+MSM0.64	MSM0.64_s1	391	N-Nitrosopyrrolidine	g_Nitrosamine
+MSM0.64	MSM0.64_s2	334	N-Nitrosopyrrolidine	g_Nitrosamine
+MSM0.64	MSM0.64_s3	271	N-Nitrosopyrrolidine	g_Nitrosamine
+MSM0.65	MSM0.65_s1	266	MeIQX	i_Heterocyclic Amine
+MSM0.65	MSM0.65_s3	303	MeIQX	i_Heterocyclic Amine
+MSM0.65	MSM0.65_s4	263	MeIQX	i_Heterocyclic Amine
+MSM0.66	MSM0.66_s1	345	Mechlorethamine	l_Drug Therapy
+MSM0.66	MSM0.66_s2	339	Mechlorethamine	l_Drug Therapy
+MSM0.66	MSM0.66_s3	338	Mechlorethamine	l_Drug Therapy
+MSM0.67	MSM0.67_s1	460	DES	m_Alkylating Agent
+MSM0.67	MSM0.67_s2	991	DES	m_Alkylating Agent
+MSM0.67	MSM0.67_s3	647	DES	m_Alkylating Agent
+MSM0.68	MSM0.68_s1	464	DMS	m_Alkylating Agent
+MSM0.68	MSM0.68_s2	492	DMS	m_Alkylating Agent
+MSM0.68	MSM0.68_s3	499	DMS	m_Alkylating Agent
+MSM0.69	MSM0.69_s1	203	o-Toluidine	j_Aromatic Amine
+MSM0.69	MSM0.69_s3	276	o-Toluidine	j_Aromatic Amine
+MSM0.7	MSM0.7_s4	393	Cisplatin	l_Drug Therapy
+MSM0.7	MSM0.7_s5	418	Cisplatin	l_Drug Therapy
+MSM0.7	MSM0.7_s6	344	Cisplatin	l_Drug Therapy
+MSM0.70	MSM0.70_s1	353	OTA	b_Other
+MSM0.70	MSM0.70_s2	315	OTA	b_Other
+MSM0.71	MSM0.71_s1	253	Gamma irradiation	h_Radiation
+MSM0.71	MSM0.71_s2	231	Gamma irradiation	h_Radiation
+MSM0.72	MSM0.72_s1	379	Carboplatin	l_Drug Therapy
+MSM0.72	MSM0.72_s2	399	Carboplatin	l_Drug Therapy
+MSM0.72	MSM0.72_s3	344	Carboplatin	l_Drug Therapy
+MSM0.73	MSM0.73_s1	275	Sudan I	b_Other
+MSM0.73	MSM0.73_s2	244	Sudan I	b_Other
+MSM0.74	MSM0.74_s1	403	DBAC	f_PAH
+MSM0.74	MSM0.74_s2	420	DBAC	f_PAH
+MSM0.74	MSM0.74_s3	394	DBAC	f_PAH
+MSM0.75	MSM0.75_s1	535	Temozolomide	l_Drug Therapy
+MSM0.75	MSM0.75_s2	801	Temozolomide	l_Drug Therapy
+MSM0.8	MSM0.8_s1	233	Media Control	a_Control
+MSM0.8	MSM0.8_s2	200	Media Control	a_Control
+MSM0.80	MSM0.80_s1	255	o-Anisidine	j_Aromatic Amine
+MSM0.80	MSM0.80_s2	271	o-Anisidine	j_Aromatic Amine
+MSM0.81	MSM0.81_s1	211	2-Nitrotoluene	e_Nitro-PAH
+MSM0.81	MSM0.81_s2	244	2-Nitrotoluene	e_Nitro-PAH
+MSM0.82	MSM0.82_s1	262	DBC	f_PAH
+MSM0.82	MSM0.82_s2	279	DBC	f_PAH
+MSM0.83	MSM0.83_s1	974	Cisplatin	l_Drug Therapy
+MSM0.83	MSM0.83_s2	645	Cisplatin	l_Drug Therapy
+MSM0.83	MSM0.83_s3	1083	Cisplatin	l_Drug Therapy
+MSM0.84	MSM0.84_s1	366	AZD7762	k_DNA Damage Response Inhibitors
+MSM0.84	MSM0.84_s2	376	AZD7762	k_DNA Damage Response Inhibitors
+MSM0.85	MSM0.85_s1	262	AZ20	k_DNA Damage Response Inhibitors
+MSM0.85	MSM0.85_s2	235	AZ20	k_DNA Damage Response Inhibitors
+MSM0.86	MSM0.86_s1	258	DMSO Control	a_Control
+MSM0.86	MSM0.86_s2	225	DMSO Control	a_Control
+MSM0.87	MSM0.87_s2	1374	3-NBA	e_Nitro-PAH
+MSM0.87	MSM0.87_s3	935	3-NBA	e_Nitro-PAH
+MSM0.87	MSM0.87_s4	803	3-NBA	e_Nitro-PAH
+MSM0.88	MSM0.88_s1	270	Ellipticine	l_Drug Therapy
+MSM0.88	MSM0.88_s2	228	Ellipticine	l_Drug Therapy
+MSM0.89	MSM0.89_s1	237	Ellipticine	l_Drug Therapy
+MSM0.89	MSM0.89_s2	266	Ellipticine	l_Drug Therapy
+MSM0.9	MSM0.9_s2	242	DMSO Control	a_Control
+MSM0.9	MSM0.9_s3	216	DMSO Control	a_Control
+MSM0.9	MSM0.9_s6	246	DMSO Control	a_Control
+MSM0.90	MSM0.90_s3	625	PhIP	i_Heterocyclic Amine
+MSM0.90	MSM0.90_s4	848	PhIP	i_Heterocyclic Amine
+MSM0.90	MSM0.90_s5	714	PhIP	i_Heterocyclic Amine
+MSM0.91	MSM0.91_s1	256	1-Nitropyrene	e_Nitro-PAH
+MSM0.91	MSM0.91_s2	216	1-Nitropyrene	e_Nitro-PAH
+MSM0.92	MSM0.92_s1	812	BaP	f_PAH
+MSM0.92	MSM0.92_s2	793	BaP	f_PAH
+MSM0.92	MSM0.92_s3	691	BaP	f_PAH
+MSM0.93	MSM0.93_s1	2110	6-Nitrochrysene	e_Nitro-PAH
+MSM0.93	MSM0.93_s2	2573	6-Nitrochrysene	e_Nitro-PAH
+MSM0.94	MSM0.94_s1	2629	6-Nitrochrysene	e_Nitro-PAH
+MSM0.94	MSM0.94_s2	2229	6-Nitrochrysene	e_Nitro-PAH
+MSM0.95	MSM0.95_s1	1647	1,8-DNP	e_Nitro-PAH
+MSM0.95	MSM0.95_s2	1311	1,8-DNP	e_Nitro-PAH
+MSM0.95	MSM0.95_s3	1073	1,8-DNP	e_Nitro-PAH
+MSM0.96	MSM0.96_s1	718	DBPDE	f_PAH
+MSM0.96	MSM0.96_s2	527	DBPDE	f_PAH
+MSM0.96	MSM0.96_s3	1317	DBPDE	f_PAH
+MSM0.97	MSM0.97_s1	256	2-Nitrofluorene	e_Nitro-PAH
+MSM0.97	MSM0.97_s2	251	2-Nitrofluorene	e_Nitro-PAH
+MSM0.97	MSM0.97_s3	265	2-Nitrofluorene	e_Nitro-PAH
+MSM0.98	MSM0.98_s1	227	NiCl2	c_Metal Salts
+MSM0.98	MSM0.98_s2	229	NiCl2	c_Metal Salts
+MSM0.99	MSM0.99_s1	254	DMH	m_Alkylating Agent
+MSM0.99	MSM0.99_s3	247	DMH	m_Alkylating Agent
