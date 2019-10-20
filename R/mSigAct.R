@@ -39,6 +39,12 @@ LLHSpectrumNegBinom <-function(spectrum, expected.counts, nbinom.size) {
                              size=nbinom.size,
                              log = TRUE)
     
+    if (nbinom == -Inf) {
+      stop("nbinom == -Inf for i = ", i, " ", rownames(spectrum)[i],
+           " spectrum[i] = ", spectrum[i], " expected.counts[i] = ",
+           expected.counts[i])
+    }
+    
     loglh <-loglh + nbinom
   }
   stopifnot(mode(loglh) == 'numeric' )
@@ -706,7 +712,9 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
   
   # TEST
-  reconstruction <- round(reconstruction)
+  # reconstruction <- round(reconstruction)
+  # Will cause problems if round of the reconstruction is 0 for
+  # any channel even if the reconstruction > 0.
   
   ## catch errors with NA in the input or in reconstruction.
   if (any(is.na(reconstruction))) {
@@ -902,24 +910,29 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
 SignaturePresenceTest1 <- function(
   spectrum, sigs, target.sig.index, m.opts, eval_f) {
   
-  loglh.with <- one.lh.and.exp(spect  = spectrum,
-                               sigs   = sigs, 
-                               m.opts = m.opts,
-                               eval_f = eval_f)$loglh
+  ret.with <- one.lh.and.exp(spect  = spectrum,
+                             sigs   = sigs, 
+                             m.opts = m.opts,
+                             eval_f = eval_f)
+  loglh.with <- ret.with$loglh
   
-  loglh.without <- one.lh.and.exp(spect  = spectrum, 
-                                  sigs   = sigs[ ,-target.sig.index],
-                                  eval_f = eval_f,
-                                  m.opts = m.opts)$loglh
+  ret.without <- one.lh.and.exp(spect  = spectrum, 
+                                sigs   = sigs[ ,-target.sig.index],
+                                eval_f = eval_f,
+                                m.opts = m.opts)
+  loglh.without <- ret.without$loglh
+  
   statistic <- 2 * (loglh.with - loglh.without)
   chisq.p <- stats::pchisq(statistic, 1, lower.tail = FALSE)
   if (m.opts$trace > 0) 
     message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
   
-  list(with      = loglh.with,
-       without   = loglh.without,
-       statistic = statistic,
-       chisq.p   = chisq.p)
+  list(with       = loglh.with,
+       without    = loglh.without,
+       statistic  = statistic,
+       chisq.p    = chisq.p,
+       exp.with   = ret.with$exp,
+       exp.witout = ret.without$exp)
 }
 
 
