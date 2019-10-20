@@ -189,5 +189,5 @@ LoadToEnvironment <- function(RData, env = new.env()){
   return(env) 
 }
 
-mcf10a <- LoadToEnvironment(
-  "data-raw/spectra.for.background.signature/MCF-10A-background/background_spectra.Rdata")
+# mcf10a <- LoadToEnvironment(
+#   "data-raw/spectra.for.background.signature/MCF-10A-background/background_spectra.Rdata")
