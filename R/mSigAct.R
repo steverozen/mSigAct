@@ -111,23 +111,47 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 
 #' Estimate a signature from experimentally exposed spectra minus a background signature.
 #' 
-#' Let the input spectra be s1, s2, ...
+#' @description 
+#' Let
+#'  
+#' \eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_i g_i = 1}
+#'  be the previously determined, input background signature profile,
 #' 
-#' Find target.signature that maximize the likelihoods:
+#' \eqn{s^i, i \in 1, 2,\ldots} be the input spectra,
+#' from exposed samples, usually only 2 or 3,
 #' 
-#' \preformatted{
-#' max_(b1, target.signature){s1 | 
-#'             b1, target.signature, background.sig, 
-#'             background.sig.nbinom.size, background.sig.count.mu,
-#'      background.sig.count.nbinom.size}
-#' b1 * background.sig + (total-mut1 - b1) * target.sig * prob(b1), \cr
-#' b2 * background.sig + (total-mut2 - b2) * target.sig * prob(b2), \cr
-#' ... 
-#' }
+#' \eqn{b^i, i \in 1, 2,\ldots} be the (to-be-estimated)
+#' numbers of mutations due to the background signature in each
+#' \eqn{s^i}, and
 #' 
+#' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
+#' be the (to-be-estimated) target signatue due to an exposure.
+#' 
+#' We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
+#' \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
+#' 
+#' \eqn{P(b^i)} is estmated from the previously observed
+#' numbers of mutations due to the background muational
+#' process in untreated samples.
+#' 
+#' \eqn{P(s^i|b^i,t)} is estimated as follows.
+#' Let \eqn{|s^i|} denote
+#' the total number of mutations in spectrum \eqn{s^i}, i.e.
+#' \eqn{|s^i| = \Sigma_i s^i_1, s^i_2,\ldots, s^i_{96}}.
+#' The expected
+#' numbers of mutations in each
+#' category are estimated as \eqn{e^i = gb^i + t(|s^i| - b^i)}.
+#' Then \eqn{P(s^i|e^i)} is estimated as
+#' \eqn{\Pi^jP(s^i_j|e^i_j)} given a negative binomial distribution
+#' centered on \eqn{e^i_j}, with dispersion parameter
+#' estimated as described
+#' below (work in progress).
+#'  
+#' 
+#' @details
 #' See \code{\link{ObjFn1}}.
 #' 
-# Note: I guess you could estimate "background" and "target.sig"
+# Ignore this note: I guess you could estimate "background" and "target.sig"
 # at the same time, but then background might be slightly (?)
 # different for each set of input spectra. To do that would
 # include the likelihoods
@@ -137,7 +161,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 # background.sig.nbinom.size
 # ....
 # 
-#' @keywords internal
+#' @export
 
 FindSignatureMinusBackground <-
   function(spectra,
@@ -206,10 +230,13 @@ ObjFn1 <- function(
   bg.sig.profile <- bg.sig.info$background.sig
   len.sig <- nrow(bg.sig.profile)
   est.target.sig <- est.target.sig.and.b[1:len.sig]
+  
   b <- est.target.sig.and.b[(1 + len.sig):length(est.target.sig.and.b)]
+  # b is a vector of the number of mutations contributed
+  # by the background to each spectrum
 
   loglh <- 0
-  for (i in 1:ncol(obs.spectra)) {
+  for (i in 1:ncol(obs.spectra)) { # For each observed spectrum
     obs.spectrum <- obs.spectra[ , i, drop = FALSE]
     total.obs.count <- sum(obs.spectrum)
     expected.counts <- 
@@ -246,7 +273,7 @@ MeanOfSpectraAsSig <- function(spectra) {
   
   mean.sig <- apply(X = sigs, MARGIN = 1, mean)
 
-  mean.sig <- matrix(mean.sig, ncol=1)
+  mean.sig <- matrix(mean.sig, ncol = 1)
   rownames(mean.sig) <- ICAMS::catalog.row.order[["SBS96"]]
   
   mean.sig <- 
@@ -446,7 +473,7 @@ Nloptr1Tumor <- function(spectrum,
     x0       = global.res$solution,
     eval_f   = eval_f,
     lb       = rep(0, ncol(sigs)),
-    ub       = rep(sum(spectrum), ncol(sigs)), 
+    ub       = rep(sum(spectrum)+1e-2, ncol(sigs)), 
     opts     = m.opts$local.opts, 
     spectrum = spectrum,
     sigs     = sigs,

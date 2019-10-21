@@ -2,6 +2,7 @@
 
 export(DefaultManyOpts)
 export(EstimateSignatureFromSpectraLH)
+export(FindSignatureMinusBackground)
 export(LLHSpectrumNegBinom)
 export(SignaturePresenceTest1)
 export(SparseAssignActivity)

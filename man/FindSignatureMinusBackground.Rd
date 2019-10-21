@@ -9,21 +9,41 @@ FindSignatureMinusBackground(spectra, bg.sig.info,
   xtol_rel = 0.001, xtol_abs = 1e-04, start.b.fraction = 0.1)
 }
 \description{
-Let the input spectra be s1, s2, ...
+Let
+ 
+\eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_i g_i = 1}
+ be the previously determined, input background signature profile,
+
+\eqn{s^i, i \in 1, 2,\ldots} be the input spectra,
+from exposed samples, usually only 2 or 3,
+
+\eqn{b^i, i \in 1, 2,\ldots} be the (to-be-estimated)
+numbers of mutations due to the background signature in each
+\eqn{s^i}, and
+
+\eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
+be the (to-be-estimated) target signatue due to an exposure.
+
+We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
+\eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
+
+\eqn{P(b^i)} is estmated from the previously observed
+numbers of mutations due to the background muational
+process in untreated samples.
+
+\eqn{P(s^i|b^i,t)} is estimated as follows.
+Let \eqn{|s^i|} denote
+the total number of mutations in spectrum \eqn{s^i}, i.e.
+\eqn{|s^i| = \Sigma_i s^i_1, s^i_2,\ldots, s^i_{96}}.
+The expected
+numbers of mutations in each
+category are estimated as \eqn{e^i = gb^i + t(|s^i| - b^i)}.
+Then \eqn{P(s^i|e^i)} is estimated as
+\eqn{\Pi^jP(s^i_j|e^i_j)} given a negative binomial distribution
+centered on \eqn{e^i_j}, with dispersion parameter
+estimated as described
+below (work in progress).
 }
 \details{
-Find target.signature that maximize the likelihoods:
-
-\preformatted{
-max_(b1, target.signature){s1 | 
-            b1, target.signature, background.sig, 
-            background.sig.nbinom.size, background.sig.count.mu,
-     background.sig.count.nbinom.size}
-b1 * background.sig + (total-mut1 - b1) * target.sig * prob(b1), \cr
-b2 * background.sig + (total-mut2 - b2) * target.sig * prob(b2), \cr
-... 
-}
-
 See \code{\link{ObjFn1}}.
 }
-\keyword{internal}
