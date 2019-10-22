@@ -166,11 +166,11 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 FindSignatureMinusBackground <-
   function(spectra,
            bg.sig.info,
-           algorithm='NLOPT_LN_COBYLA',
-           maxeval=1000, 
-           print_level=0,
-           xtol_rel=0.001,  # 0.0001,)
-           xtol_abs=0.0001,
+           algorithm =' NLOPT_LN_COBYLA',
+           maxeval = 1000, 
+           print_level = 0,
+           xtol_rel = 0.001,  # 0.0001,)
+           xtol_abs = 0.0001,
            start.b.fraction = 0.1) {
     
     sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
@@ -205,7 +205,12 @@ FindSignatureMinusBackground <-
       obs.spectra = spectra,     
       bg.sig.info = bg.sig.info)
     
-    return(ret)    
+    soln <- ret$solution
+    
+    return(list(target.sig = soln[1:nrow(spectra)],
+                exposures.to.target.sig = 
+                soln[(1 + nrow(spectra)):length(soln)],
+                all.opt.ret = ret))
   }
 
 
@@ -228,6 +233,8 @@ ObjFn1 <- function(
   bg.sig.info   # E.g. HepG2.background.info
 ) {
   bg.sig.profile <- bg.sig.info$background.sig
+  stopifnot(!is.null(bg.sig.profile))
+  stopifnot("matrix" %in% class(bg.sig.profile))
   len.sig <- nrow(bg.sig.profile)
   est.target.sig <- est.target.sig.and.b[1:len.sig]
   
@@ -954,12 +961,12 @@ SignaturePresenceTest1 <- function(
   if (m.opts$trace > 0) 
     message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
   
-  list(with       = loglh.with,
-       without    = loglh.without,
-       statistic  = statistic,
-       chisq.p    = chisq.p,
-       exp.with   = ret.with$exp,
-       exp.witout = ret.without$exp)
+  list(with        = loglh.with,
+       without     = loglh.without,
+       statistic   = statistic,
+       chisq.p     = chisq.p,
+       exp.with    = ret.with$exp,
+       exp.without = ret.without$exp)
 }
 
 

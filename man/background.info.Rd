@@ -4,13 +4,10 @@
 \name{background.info}
 \alias{background.info}
 \alias{HepG2.background.info}
+\alias{kucab.control.bg}
 \title{Specifications of background signatures}
 \format{A list with the elements \enumerate{
 \item \code{background.sig} The background signature profile.
-
-\item \code{mean.sig} Deprecated -- the background signature
-profile computed as the mean of the background spectra; this
-is essentially the same as \code{background.sig}.
 
 \item \code{sig.nbinom.size} The \code{size} argument for
 \code{\link[stats]{NegBinomial}} for sampling error around
@@ -31,6 +28,8 @@ replicate exposed clones.
 }}
 \usage{
 HepG2.background.info
+
+kucab.control.bg
 }
 \description{
 Specifications of background signatures
