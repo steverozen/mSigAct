@@ -26,7 +26,8 @@
 #'
 #' @export
 
-LLHSpectrumNegBinom <-function(spectrum, expected.counts, nbinom.size) {
+LLHSpectrumNegBinom <-
+  function(spectrum, expected.counts, nbinom.size) {
   
   stopifnot(length(spectrum) == length(expected.counts))
   loglh <- 0
@@ -40,7 +41,7 @@ LLHSpectrumNegBinom <-function(spectrum, expected.counts, nbinom.size) {
                              log = TRUE)
     
     if (nbinom == -Inf) {
-      stop("nbinom == -Inf for i = ", i, " ", rownames(spectrum)[i],
+      message("nbinom == -Inf for i = ", i, " ", rownames(spectrum)[i],
            " spectrum[i] = ", spectrum[i], " expected.counts[i] = ",
            expected.counts[i])
     }
@@ -460,7 +461,7 @@ Nloptr1Tumor <- function(spectrum,
   x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
   
   if (TRUE) {
-    set.seed(101010)
+    set.seed(101010, kind = "L'Ecuyer-CMRG")
     global.res <- nloptr::nloptr(
       x0       = x0,
       eval_f   = eval_f,
@@ -471,7 +472,9 @@ Nloptr1Tumor <- function(spectrum,
       sigs     = sigs,
       ...)
   }
-  if (m.opts$trace > 0) message("globa.res$objective = ", global.res$objective)
+  if (m.opts$trace > 0) {
+    message("globa.res$objective = ", global.res$objective)
+  }
   
   # TEST
   
@@ -480,7 +483,7 @@ Nloptr1Tumor <- function(spectrum,
     x0       = global.res$solution,
     eval_f   = eval_f,
     lb       = rep(0, ncol(sigs)),
-    ub       = rep(sum(spectrum)+1e-2, ncol(sigs)), 
+    ub       = rep(sum(spectrum) + 1e-2, ncol(sigs)), 
     opts     = m.opts$local.opts, 
     spectrum = spectrum,
     sigs     = sigs,
@@ -817,6 +820,8 @@ Polish <- function(exp, sig.names, spect) {
 
 SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   
+  # set.seed(1449, kind = "L'Ecuyer-CMRG")
+  
   sig.names <- names(sig.counts)
   
   some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
@@ -879,7 +884,7 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
 }
 
 
-#' Framework for testing \code{\link{SparseAssignActivity1}}.
+#' Framework for testing \code{\link{SparseAssignActivity}}.
 #' 
 #' @param sig.counts A matrix of target exposures:
 #' rows are signatures and columns are tumors.
@@ -983,15 +988,22 @@ Adj.mc.cores <- function(mc.cores) {
 #' @keywords internal
 
 TestSignaturePresenceTest1 <- 
-  function(sig.counts, input.sigs = PCAWG7::signature$genome$SBS96, trace = 0) {
+  function(sig.counts, 
+           input.sigs = PCAWG7::signature$genome$SBS96, 
+           trace = 0) {
   
-  if(!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5", quietly = TRUE)){
-     stop("Please install Bioconductor library  BSgenome.Hsapiens.1000genomes.hs37d5")
-  }
+    if (!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5",
+                          quietly = TRUE)) {
+      stop("Please install Bioconductor library ",
+           "BSgenome.Hsapiens.1000genomes.hs37d5")
+    }
     
-  sig.names <- names(sig.counts)
+    # set.seed(1066, kind = "L'Ecuyer-CMRG")
+    
+    
+    sig.names <- names(sig.counts)
   
-  if(sum(sig.names %in% colnames(input.sigs)) == 0) {
+  if (sum(sig.names %in% colnames(input.sigs)) == 0) {
     stop("sig.names not all in input.sigs")
   }
   
