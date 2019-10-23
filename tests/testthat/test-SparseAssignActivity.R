@@ -6,21 +6,21 @@ test_that("SparseAssignTest1", {
   retval <-  SparseAssignTestGeneric(
     sig.counts = c(SBS1 = 1000, SBS22 = 2000), trace = 0)
   testthat::expect_equal(retval$soln1,
-                         c(SBS1    = 973.2149, 
-                           SBS22   = 2024.7851),
+                         c(SBS1    = 999.2467, 
+                           SBS22   = 1998.7533),
                          tolerance = 1e-2)
   
   testthat::expect_equal(as.numeric(retval$edist1), 
-                         15.25659,
+                         2.881704,
                          tolerance = 1e-2)
   
   testthat::expect_equal(retval$soln2,
-                         c(SBS1  = 1000.105,
-                           SBS22 = 1998.326),
+                         c(SBS1  = 1001.222,
+                           SBS22 = 1999.372),
                          tolerance = 1) # Not sure why this needs to be so large
   
   testthat::expect_equal(as.numeric(retval$edist2),
-                         2.818383,
+                         1.414214,
                          tolerance = 1)
 })
 
@@ -31,28 +31,28 @@ test_that("SparseAssignTest2", {
     trace = 0)
   
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 0, SBS5 = 1023.774, SBS10a = 1990.226),
+                         c(SBS3  = 0, SBS5 = 1011.794, SBS10a = 2002.206),
                          tolerance = 1e-2)
   
   testthat::expect_equal(as.numeric(retval$edist1),
-                         7.335217,
+                         3.176093,
                          tolerance = 1e-2)
   
   testthat::expect_equal(retval$soln2,
-                         c(SBS5  = 1017.847, SBS10a = 2001.123),
+                         c(SBS5  = 1010.586, SBS10a = 2000.802),
                          tolerance = 1e-2)
   
   testthat::expect_equal(as.numeric(retval$edist2), 
-                         3.081548,
+                         2.897068,
                          tolerance = 1e-2)
 })
 
 
 test_that("SparseAssignTest3", {
-  skip("Need to update; omit from standard testing")
+  testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   retval <- SparseAssignTestGeneric(
     sig.counts = 
-      c(SBS3 = 300, SBS5 = 300, SBS4 = 300, SBS29 = 300, SBS24 = 300, SBS8 = 300),
+      c(SBS3=300, SBS5=300, SBS4=300, SBS29=300, SBS24=300, SBS8=300),
     trace = 0)
   
   testthat::expect_equal(retval$soln1,
@@ -84,9 +84,10 @@ test_that("SparseAssignTest3", {
 
 
 test_that("SparseAssignTest4", {
+  testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   retval <- SparseAssignTestGeneric(
     sig.counts = 
-      c(SBS3=100, SBS5=100, SBS4 = 100, SBS29=100, SBS24=100, SBS8=100),
+      c(SBS3=100, SBS5=100, SBS4=100, SBS29=100, SBS24=100, SBS8=100),
     trace = 0)
   
   testthat::expect_equal(retval$soln1,
@@ -156,6 +157,7 @@ test_that("SparseAssignTest6", {
 
 
 test_that("SparseAssignTest7", {
+  testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   input.exp <- matrix(c(1000, 2000, 0, 2000, 10, 1000), ncol = 3)
   rownames(input.exp) <- c("SBS1", "SBS22")
   # Automated testing on Travic-CI does not allow spawning processes.

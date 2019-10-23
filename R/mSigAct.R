@@ -749,7 +749,7 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
   
   # TEST
-  # reconstruction <- round(reconstruction)
+  reconstruction <- round(reconstruction)
   # Will cause problems if round of the reconstruction is 0 for
   # any channel even if the reconstruction > 0.
   
