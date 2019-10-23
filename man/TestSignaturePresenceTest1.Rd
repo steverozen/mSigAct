@@ -4,7 +4,8 @@
 \alias{TestSignaturePresenceTest1}
 \title{Framework for testing \code{\link{SignaturePresenceTest1}}.}
 \usage{
-TestSignaturePresenceTest1(sig.counts, trace = 0)
+TestSignaturePresenceTest1(sig.counts,
+  input.sigs = PCAWG7::signature$genome$SBS96, trace = 0)
 }
 \description{
 Framework for testing \code{\link{SignaturePresenceTest1}}.

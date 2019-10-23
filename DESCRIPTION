@@ -17,6 +17,7 @@ LazyData: true
 Language: en-US
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
+Remotes: github::steverozen/PCAWG7
 biocViews:
 Imports:
     ICAMS,
