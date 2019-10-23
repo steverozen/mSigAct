@@ -16,6 +16,8 @@ test_that("SignaturePresence1 3", {
   input <- c(SBS5 = 13, SBS1 = 1000, SBS22 = 2000)
   retval <- TestSignaturePresenceTest1(sig.counts = input)
   testthat::expect_equal(retval$chisq.p, 0.7847336, tolerance = 1e-5)
+  testthat::expect_equal(retval$with, -225.0482, tolerance = 1e-5)
+  testthat::expect_equal(retval$without, -225.0855, tolerance = 1e-5)
 })
 
 test_that("SignaturePresence1 4", {
