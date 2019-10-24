@@ -18,7 +18,7 @@ Encoding: UTF-8
 LazyData: true
 Language: en-US
 Remotes: github::steverozen/PCAWG7,
-    github::steverozen/ICAMS
+    github::steverozen/ICAMS@master
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
