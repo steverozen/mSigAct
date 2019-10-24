@@ -17,7 +17,8 @@ BugReports: https://github.com/steverozen/mSigAct/issues
 Encoding: UTF-8
 LazyData: true
 Language: en-US
-Remotes: github::steverozen/PCAWG7
+Remotes: github::steverozen/PCAWG7,
+    github::steverozen/ICAMS
 Depends: R (>= 3.5),
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
