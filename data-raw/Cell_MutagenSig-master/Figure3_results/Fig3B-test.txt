@@ -1,2 +1,2 @@
 Sample.Name	NChild	mean	sd	se	Compound	Concentration	S9.mix	Compound.Abbreviation	Group	Treatment	pvalue	P_adjust	profile_SNR	min_simi	max_simi	subclone_num	NA
-MSM0.124	3	261.666666666667	24.1108550933668	16.7431578064991	Methyleugenol	1.25 mM	No	Methyleugenol	b_Other	Methyleugenol (1.25 mM)	0.2205	0.37	8.92030112064345	0.908975646327138	0.962323226991404	3	8.92030112064345
+MSM0.124	3	355	36.8646171823335	16.7431578064991	Methyleugenol	1.25 mM	No	Methyleugenol	b_Other	Methyleugenol (1.25 mM)	0	0	5.22952873592005	0.68782035257214	0.933144613068347	3	5.22952873592005

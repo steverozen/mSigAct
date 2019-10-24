@@ -29,11 +29,16 @@ muts_summary_details <- merge(sub.summary, samples_details, by="Sample.Name")
 #----- SPIKE IN TEST DATA
 
 stopifnot(dim(sub_tab_all_info) == c(172480, 18)) # SR
-# sub_catalogue <- gen_muttype_new(sub_tab_all_info)
+#  sub_catalogue <- gen_muttype_new(sub_tab_all_info) # CAUTION row order is
+#  "A[C>A]A" "A[C>A]C" "A[C>A]G" "A[C>A]T" "A[C>G]A" ,
+#  NOT
+#  A[C>A]A A[C>A]C A[C>A]G A[C>A]T C[C>A]A (mSigAct::kucab.sigs, see
+#  kucab.sigs <- read.table("../../kucab.sigs.from.mendely.2019.10.25/Mutagen53_sub_signature.txt", sep = "\t", header = T)
+#  
 
-# K_sub_catalogue <- sub_catalogue
+# kucab.sub.catalog <- sub_catalogue
 # usethis::use_data(K_sub_catalogue)
-sub_catalogue <- K_sub_catalogue
+sub_catalogue <- mSigAct::kucab.sub.catalog
 stopifnot(dim(sub_catalogue) == c(96, 326)) # SR
 
 # write.table(sub_catalogue,"sub_catalogue.txt",sep = "\t",col.names = T, row.names = F, quote = F)
@@ -145,53 +150,5 @@ stability_all_2 <- as.data.frame(stability_all_2)
 names(stability_all_2) <- c("min_simi","max_simi","Sample.Name","subclone_num")
 Sample_withSig_SNR3 <- merge(Sample_withSig_SNR2,stability_all_2,by="Sample.Name")
 write.table(Sample_withSig_SNR3,"Fig3B-test.txt",sep = "\t",col.names = T, row.names = F, quote = F)
-
-break
-
-#############################################
-# heatmap Fig3C
-#############################################
-Sample_withSig <- read.table("./Fig3B.txt",sep = "\t",header = T, as.is = T,quote = "\"")
-sig_subs_full <- Sample_withSig[Sample_withSig$pvalue<=0.01 & Sample_withSig$profile_SNR>=2,]
-sig_all <- NULL
-for(i in 1:dim(sig_subs_full)[1]){
-  sig_file <- read.table(paste0("subs_",sig_subs_full[i,"Sample.Name"],"_",sig_subs_full[i,"Treatment"],"_exposure.txt"), sep = "\t", header = T, as.is = T)
-  sig_all <- cbind(sig_all,sig_file[,"percentage"])
-  
-}
-control_sig <- read.table("./Fig3A.txt", sep = "\t", header = T, as.is = T)
-control_sig$percentage <- control_sig$mean/sum(control_sig$mean)
-sig_all <- cbind(sig_all,control_sig$percentage)
-sig_all <- t(as.data.frame(sig_all))
-row.names(sig_all) <- c(paste0(sig_subs_full$Compound.Abbreviation,"_",sig_subs_full$Concentration),"control")
-
-colnames(sig_all) <- sig_file$MutationType
-sig_all <- data.matrix(sig_all)
-sig_all <- round(sig_all,2)
-# creates a own color palette from red to green
-my_palette <- colorRampPalette(c("white", "red"))(n = 128)
-
-# (optional) defines the color breaks manually for a "skewed" color transition
-col_breaks = c(0,  # for red
-               0.05,           # for yellow
-               0.2,max(sig_all))             # for green
-
-pdf(file="Fig3C.pdf", h=10, w=15, onefile=TRUE)
-gplots::heatmap.2(sig_all,
-                  hclustfun=function(x) hclust(x,method = 'complete'),
-                  reorderfun=function(d, w) reorder(d, w, agglo.FUN = mean), # Reorder dendrogram by branch means rather than sums
-                  main = "Heatmap of substitution signature", # heat map title
-                  notecol="black",      # change font color of cell labels to black
-                  density.info="none",  # turns off density plot inside color legend
-                  trace="none",         # turns off trace lines inside the heat map
-                  margins =c(12,9),     # widens margins around plot
-                  keysize=1,
-                  col=my_palette,       # use on color palette defined earlier
-                  key = TRUE, 
-                  #      breaks=col_breaks,    # enable color transition at specified limits
-                  dendrogram="row",     # only draw a row dendrogram
-                  Colv="NA")            # turn off column clustering
-dev.off()
-
-
-
+print(Sample_withSig_SNR3)
+setwd("..")

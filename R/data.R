@@ -74,27 +74,52 @@
 #' mutations from 35 biliary tract tumors.
 "BTSG.WGS.PCAWG"
 
-#' @section Data sets from Kucab et al.
-
 #' Kucab spectra -- 2 mutation label columns and 324 data columns.
 #' 
 #' The original format used in Xueqing ZOU's code.
+#' 
+#' The row order is "A[C>A]A" "A[C>A]C" "A[C>A]G" "A[C>A]T" "A[C>G]A" ...
 #'
 #' @source https://github.com/xqzou/Cell_MutagenSig
 #' 
-"K_sub_catalogue"
+"kucab.sub.catalog"
 
-#' Kucab et al., 2019 spectra as a standard \code{ICAMS} count catalog.
+#' Kucab et al., 2019 signatures in the row order as found on
 #'
-#' @source https://github.com/xqzou/Cell_MutagenSig
+#' @source https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
 #' 
-"kucab.spectra"
+#' The row labels are in column 1 in the order
+#' 
+#' A[C>A]A A[C>A]C A[C>A]G A[C>A]T C[C>A]A ...
+#' 
+"kucab.sigs.orig.row.order"
+
+#' Kucab et al., 2019 signatures in the same row order as kucab.sub.catalog.
+#' 
+#' The mutation type is in column 1, e.g. A[C>A]A A[C>A]C A[C>A]G A[C>A]T A[C>G]A ...
+#'
+#' @source https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
+#' 
+"kucab.sigs"
+
+#' Informationa on the control samples from Kucab et al., 2019
+#' 
+"kucab.muts.control"
+
 
 #' Kucab et al., 2019 signatures as a standard \code{ICAMS} counts.signature catalog.
 #'
 #' @source https://github.com/xqzou/Cell_MutagenSig
 #' 
-"kucab.sigs"
+"kucab.sigs.ICAMS"
+
+#' Kucab et al., 2019 spectra as a standard \code{ICAMS} count catalog.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+#' 
+"kucab.spectra.ICAMS"
+
+
 
 
 #' Background information from the controls in Kucab et al., 2019.
@@ -110,7 +135,8 @@
 #' Control spectra from Kucab et al., 2019
 #' 
 #' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog with 35 samples.
-"kucab.controls"
+"kucab.control.spectra.ICAMS"
+# "kucab.controls"
 
 #' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
 #' 
