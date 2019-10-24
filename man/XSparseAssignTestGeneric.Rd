@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{XSparseAssignTestGeneric}
 \alias{XSparseAssignTestGeneric}
-\title{Framework for testing \code{\link{SparseAssignActivity1}}.}
+\title{Framework for testing \code{\link{SparseAssignActivity}}.}
 \usage{
 XSparseAssignTestGeneric(sig.counts, trace = 0, mc.cores = NULL)
 }
@@ -13,6 +13,6 @@ rows are signatures and columns are tumors.}
 \item{trace}{If > 0 print progress messages.}
 }
 \description{
-Framework for testing \code{\link{SparseAssignActivity1}}.
+Framework for testing \code{\link{SparseAssignActivity}}.
 }
 \keyword{internal}

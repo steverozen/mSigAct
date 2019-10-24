@@ -1,7 +1,5 @@
 context("SignaturePresenceTest for SBS192")
 
-all.abundance <- ICAMS::all.abundance
-
 test_that("SignaturePresence1 SBS192 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
   retval <- TestSignaturePresenceTest1(
@@ -35,7 +33,7 @@ test_that("SignaturePresence1 SBS192 4", {
   testthat::expect_equal(retval$chisq.p, 0.03175961, tolerance = 1e-5)
 })
 
-test_that("SignaturePresence1 6", {
+test_that("SignaturePresence1 SBS192 6", {
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   input <- c(SBS5 = 800, SBS3 = 10000, SBS22 = 20000)
   retval <- TestSignaturePresenceTest1(
@@ -44,7 +42,7 @@ test_that("SignaturePresence1 6", {
   testthat::expect_equal(retval$chisq.p, 0.266199, tolerance = 1e-5)
 })
 
-test_that("SignaturePresence1 7", {
+test_that("SignaturePresence1 SBS192 7", {
   input <- c(SBS5 = 800, SBS3 = 10000, SBS22 = 20000, SBS40 = 1000)
   retval <- TestSignaturePresenceTest1(
     sig.counts = input, 

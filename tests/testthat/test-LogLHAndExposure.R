@@ -1,7 +1,5 @@
 context("LogLHAndExposure")
 
-all.abundance <- ICAMS::all.abundance
-
 PrepOneSynSpectrum <- function(sig.counts,
                                input.sigs = PCAWG7::signature$genome$SBS96) {
   sig.names <- names(sig.counts)
@@ -49,7 +47,6 @@ TestOneLLHetc <- function(sig.counts,
  
   return(c(retval, list(m.opts = m.opts)))
 }
-
 
 test_that("LogLHAndExposure 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)

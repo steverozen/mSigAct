@@ -378,13 +378,23 @@ PlotFactorizations <- function(out.dir,
                     target.sig.count = total.counts - b))
 }
 
+FindSigMinusBGOpt <- function() {
+  return(
+    list(          algorithm =' NLOPT_LN_COBYLA',
+                   maxeval = 1000, 
+                   print_level = 0,
+                   xtol_rel = 0.001,  # 0.0001,)
+                   xtol_abs = 0.0001,)
+  )
+}
+
 DefaultGlobalOpts <- function() {
   return(
-    list(algorithm="NLOPT_GN_DIRECT",
-         xtol_rel=1e-9,
+    list(algorithm    = "NLOPT_GN_DIRECT",
+         xtol_rel      = 1e-9,
          # print_level = print_level,
-         print_level = 0,
-         maxeval = 1000))
+         print_level   = 0,
+         maxeval       = 1000))
 }
 
 DefaultLocalOpts <- function() {
@@ -1033,7 +1043,7 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = mSigAct:::ObjFnBinomMaxLH,
+    eval_f           = mSigAct::ObjFnBinomMaxLH,
     m.opts           = m.opts)
   
   return(retval)

@@ -125,19 +125,6 @@ MakeSynTestGrid <-
   return(output)
 }
 
-MakeAndSaveHepG2Tests <- function(num.replicates = 20) {
-
-    sig.names.to.test <- c("SBS40", "SBS4", "SBS58", "SBS6")
-    contribution <- c(0.1, 0.5, 0.9)
-    
-    HepG2.bg.tests.no.noise <-
-      MakeSynTestGrid(sig.names.to.test = sig.names.to.test,
-                      contribution      = contribution,
-                      bg.sig.info       = mSigAct::HepG2.background.info,
-                      num.replicates    = num.replicates)
-    usethis::use_data(HepG2.bg.tests.no.noise, overwrite = TRUE)
-}
-
 TestTable2TestInput <- function(test.table, 
                                 num.replicates,
                                 num.spectra.per.replicate) {
@@ -183,7 +170,7 @@ TestTable2TestInput <- function(test.table,
 #' @param xtol_abs    See \code{FindSignatureMinusBackground}.
 #' @param print_level See \code{FindSignatureMinusBackground}.
 #' @param algorithm   See \code{FindSignatureMinusBackground}.
-#' @param If \code{TRUE} print some progress information.
+#' @param verbose If \code{TRUE} print some progress information.
 RunTests <- function(test.table, 
                      num.replicates,
                      num.spectra.per.replicate,
@@ -242,8 +229,9 @@ RunTests <- function(test.table,
   return(output)
 }
 
-RunHepG2Tests <- function(maxeval = 40000, algorithm, mc.cores = 10, rows = NULL) {
-  if (is.null(rows)) rows <- 1:nrow(HepG2.bg.tests.no.noise)
+RunHepG2Tests <- function(maxeval = 40000, algorithm, 
+                          mc.cores = 10, rows = NULL) {
+  if (is.null(rows)) rows <- 1:nrow(mSigAct::HepG2.bg.tests.no.noise)
   output <- RunTests(
     test.table = mSigAct::HepG2.bg.tests.no.noise[rows, ],
     num.replicates = 1,
@@ -253,7 +241,8 @@ RunHepG2Tests <- function(maxeval = 40000, algorithm, mc.cores = 10, rows = NULL
     maxeval = maxeval,
     print_level = 0,
     verbose = TRUE,
-    algorithm = algorithm
+    algorithm = algorithm,
+    out.dir = "HepG2.tests.output"
   )
   invisible(output)
 }

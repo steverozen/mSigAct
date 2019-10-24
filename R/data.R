@@ -30,9 +30,6 @@
 #' 
 "HepG2.background.info"
 
-#' @name background.info
-"kucab.control.bg"
-
 #' Mutational spectra of cisplatin exposed HepG2 cells.
 #' 
 #' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.
@@ -89,4 +86,25 @@
 #' @format An \code{\link[ICAMS]{ICAMS}} catalog with 
 #' mutations from 35 biliary tract tumors.
 "BTSG.WGS.PCAWG"
+
+#' @section Data sets from Kucab et al.
+
+#' Kucab spectra -- 2 mutation label columns and 324 data columns.
+#' The original format used in Xueqing ZOU's code.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+"K_sub_catalogue"
+
+#' Kucab et al., 2019 spectra as a standard \code{ICAMS} count catalog.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+"kucab.spectra"
+
+#' Background information from the controls in Kucab et al., 2019.
+#'
+#' Estiamte from the control specta in \code{\link{kucab.spectra}}
+"kucab.control.bg"
+
+#' A deprecated version of \code{\link{kucab.control.bg}}
+"kucab.bg"
 
