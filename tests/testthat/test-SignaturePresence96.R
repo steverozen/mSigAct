@@ -1,6 +1,6 @@
 context("SignaturePresenceTest")
 
-# FYI:S ys.setenv(MSIGACT_TEST_LEN = "long")
+# FYI: Sys.setenv(MSIGACT_TEST_LEN = "long")
 # 
 all.abundance <- ICAMS::all.abundance
 
