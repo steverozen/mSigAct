@@ -37,7 +37,7 @@ In the future we could take multiple samples.}
 
 \item{algorithm}{See \code{FindSignatureMinusBackground}.}
 
-\item{If}{\code{TRUE} print some progress information.}
+\item{verbose}{If \code{TRUE} print some progress information.}
 }
 \description{
 Run a suite of tests given data specfied in \code{test.table}

@@ -4,7 +4,6 @@
 \name{background.info}
 \alias{background.info}
 \alias{HepG2.background.info}
-\alias{kucab.control.bg}
 \title{Specifications of background signatures}
 \format{A list with the elements \enumerate{
 \item \code{background.sig} The background signature profile.
@@ -28,8 +27,6 @@ replicate exposed clones.
 }}
 \usage{
 HepG2.background.info
-
-kucab.control.bg
 }
 \description{
 Specifications of background signatures
