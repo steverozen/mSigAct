@@ -126,13 +126,13 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' \eqn{s^i}, and
 #' 
 #' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
-#' be the (to-be-estimated) target signatue due to an exposure.
+#' be the (to-be-estimated) target signature due to an exposure.
 #' 
 #' We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
 #' \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
 #' 
-#' \eqn{P(b^i)} is estmated from the previously observed
-#' numbers of mutations due to the background muational
+#' \eqn{P(b^i)} is estimated from the previously observed
+#' numbers of mutations due to the background mutational
 #' process in untreated samples.
 #' 
 #' \eqn{P(s^i|b^i,t)} is estimated as follows.
@@ -380,11 +380,11 @@ PlotFactorizations <- function(out.dir,
 
 FindSigMinusBGOpt <- function() {
   return(
-    list(          algorithm =' NLOPT_LN_COBYLA',
-                   maxeval = 1000, 
-                   print_level = 0,
-                   xtol_rel = 0.001,  # 0.0001,)
-                   xtol_abs = 0.0001,)
+    list(algorithm = "NLOPT_LN_COBYLA",
+         maxeval = 1000, 
+         print_level = 0,
+         xtol_rel = 0.001,  # 0.0001,)
+         xtol_abs = 0.0001)
   )
 }
 
@@ -735,23 +735,28 @@ prop.reconstruct <- function(sigs, exp) {
 #' The negative binomial maximum likelihood objective function.
 #' 
 #' For use by \code{\link[nloptr]{nloptr}}
-#
-# exp  is the matrix of exposures ("activities")
-# sigs is the matrix of signatures
-# spectrum is the spectrum to assess
-# nbinom.size is the dispersion parameter for the negative
-#             binomial distribution; smaller is more dispersed
-#
-# The result is
-# -1 * log(likelihood(spectrum | reconstruction))
-# (nloptr minimizes the objective function.)
-#
-# The lower the objective function, the better.
-
-
-#' Objective function for \code{[SparseAssignActivity]}.
+#'
+#' @param exp The matrix of exposures ("activities").
+#' @param spectrum The spectrum to assess.
+#' @param sigs The matrix of signatures.
+#' @param nbinom.size The dispersion parameter for the negative
+#'             binomial distribution; smaller is more dispersed.
+#'
+#' The result is
 #' 
-#' @keywords internal
+#' -1 * log(likelihood(spectrum | reconstruction))
+#'
+#' (nloptr minimizes the objective function.)
+#'
+#' The lower the objective function, the better.
+#'
+#' Can be used as the
+#' objective function for \code{\link{SparseAssignActivity}},
+#' \code{\link{SparseAssignActivity1}}, 
+#' and \code{\link{SignaturePresenceTest1}}.
+#' 
+#' @export
+#' 
 ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
   
   if (any(is.na(exp))) return(Inf)

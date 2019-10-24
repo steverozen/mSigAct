@@ -152,7 +152,7 @@ TestTable2TestInput <- function(test.table,
 }
 
 
-#' Run a suite of tests given data specfied in \code{test.table}
+#' Run a suite of tests given data specified in \code{test.table}
 #' 
 #' @param test.table XXX
 #' @param num.replicates Currently ignored and assumed to be 1.
@@ -163,7 +163,7 @@ TestTable2TestInput <- function(test.table,
 #'                                  for a given target signature and background.
 #'                                  In the future we could take multiple samples.
 #' @param bg.info Information on the background signatures, e.g. \code{HepG2.background.info}.
-#' @param out.dir XXXX
+#' @param out.dir Put the results in this directory.
 #' @param mc.cores    See \code{FindSignatureMinusBackground}.
 #' @param maxeval     See \code{FindSignatureMinusBackground}.
 #' @param xtol_rel    See \code{FindSignatureMinusBackground}.

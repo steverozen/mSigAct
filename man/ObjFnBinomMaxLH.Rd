@@ -6,8 +6,29 @@
 \usage{
 ObjFnBinomMaxLH(exp, spectrum, sigs, nbinom.size)
 }
+\arguments{
+\item{exp}{The matrix of exposures ("activities").}
+
+\item{spectrum}{The spectrum to assess.}
+
+\item{sigs}{The matrix of signatures.}
+
+\item{nbinom.size}{The dispersion parameter for the negative
+            binomial distribution; smaller is more dispersed.
+
+The result is
+
+-1 * log(likelihood(spectrum | reconstruction))
+
+(nloptr minimizes the objective function.)
+
+The lower the objective function, the better.
+
+Can be used as the
+objective function for \code{\link{SparseAssignActivity}},
+\code{\link{SparseAssignActivity1}}, 
+and \code{\link{SignaturePresenceTest1}}.}
+}
 \description{
 For use by \code{\link[nloptr]{nloptr}}
-Objective function for \code{[SparseAssignActivity]}.
 }
-\keyword{internal}

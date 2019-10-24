@@ -2,7 +2,7 @@
 % Please edit documentation in R/SynBGSignatureTests.R
 \name{RunTests}
 \alias{RunTests}
-\title{Run a suite of tests given data specfied in \code{test.table}}
+\title{Run a suite of tests given data specified in \code{test.table}}
 \usage{
 RunTests(test.table, num.replicates, num.spectra.per.replicate, bg.info,
   out.dir, mc.cores = 10, maxeval = 1000, xtol_rel = 0.001/10,
@@ -23,7 +23,7 @@ In the future we could take multiple samples.}
 
 \item{bg.info}{Information on the background signatures, e.g. \code{HepG2.background.info}.}
 
-\item{out.dir}{XXXX}
+\item{out.dir}{Put the results in this directory.}
 
 \item{mc.cores}{See \code{FindSignatureMinusBackground}.}
 
@@ -40,5 +40,5 @@ In the future we could take multiple samples.}
 \item{verbose}{If \code{TRUE} print some progress information.}
 }
 \description{
-Run a suite of tests given data specfied in \code{test.table}
+Run a suite of tests given data specified in \code{test.table}
 }

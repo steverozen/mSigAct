@@ -22,13 +22,13 @@ numbers of mutations due to the background signature in each
 \eqn{s^i}, and
 
 \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
-be the (to-be-estimated) target signatue due to an exposure.
+be the (to-be-estimated) target signature due to an exposure.
 
 We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
 \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
 
-\eqn{P(b^i)} is estmated from the previously observed
-numbers of mutations due to the background muational
+\eqn{P(b^i)} is estimated from the previously observed
+numbers of mutations due to the background mutational
 process in untreated samples.
 
 \eqn{P(s^i|b^i,t)} is estimated as follows.

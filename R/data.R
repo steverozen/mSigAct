@@ -66,6 +66,46 @@
 #' HepG2.bg.tests.no.noise[1:2, 1:10]
 "HepG2.bg.tests.no.noise"
 
+#' Demonstration data: an \code{\link[ICAMS]{ICAMS}} catalog.
+#' 
+#' @source Cite Alexandrov et al, 2019
+#' 
+#' @format An \code{\link[ICAMS]{ICAMS}} catalog with 
+#' mutations from 35 biliary tract tumors.
+"BTSG.WGS.PCAWG"
+
+#' @section Data sets from Kucab et al.
+
+#' Kucab spectra -- 2 mutation label columns and 324 data columns.
+#' 
+#' The original format used in Xueqing ZOU's code.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+#' 
+"K_sub_catalogue"
+
+#' Kucab et al., 2019 spectra as a standard \code{ICAMS} count catalog.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+#' 
+"kucab.spectra"
+
+#' Kucab et al., 2019 signatures as a standard \code{ICAMS} counts.signature catalog.
+#'
+#' @source https://github.com/xqzou/Cell_MutagenSig
+#' 
+"kucab.sigs"
+
+
+#' Background information from the controls in Kucab et al., 2019.
+#'
+#' Estimated from the control spectra in \code{\link{kucab.spectra}}.
+#' 
+"kucab.control.bg"
+
+#' A deprecated version of \code{\link{kucab.control.bg}}
+#' 
+"kucab.bg"
 
 #' Control spectra from Kucab et al., 2019
 #' 
@@ -78,33 +118,4 @@
 #' 10,000 elements, each of which is the mean of total 
 #' mutation counts of 2 to 4 control spectra.
 "kucab.control.dist"
-
-#' Demonstration data: an \code{\link[ICAMS]{ICAMS}} catalog.
-#' 
-#' @source Cite Alexandrov et al, 2019
-#' 
-#' @format An \code{\link[ICAMS]{ICAMS}} catalog with 
-#' mutations from 35 biliary tract tumors.
-"BTSG.WGS.PCAWG"
-
-#' @section Data sets from Kucab et al.
-
-#' Kucab spectra -- 2 mutation label columns and 324 data columns.
-#' The original format used in Xueqing ZOU's code.
-#'
-#' @source https://github.com/xqzou/Cell_MutagenSig
-"K_sub_catalogue"
-
-#' Kucab et al., 2019 spectra as a standard \code{ICAMS} count catalog.
-#'
-#' @source https://github.com/xqzou/Cell_MutagenSig
-"kucab.spectra"
-
-#' Background information from the controls in Kucab et al., 2019.
-#'
-#' Estiamte from the control specta in \code{\link{kucab.spectra}}
-"kucab.control.bg"
-
-#' A deprecated version of \code{\link{kucab.control.bg}}
-"kucab.bg"
 
