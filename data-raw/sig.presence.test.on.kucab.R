@@ -106,7 +106,7 @@ me.sig.ICAMS <- kucab.sigs.ICAMS[ , "Methyleugenol_1.25 mM", drop = FALSE]
 
 m.opts <- DefaultManyOpts()
 foo.0.1.p <- mSigAct::SignaturePresenceTest1(
-     spectrum = SPIKE.TEST$test.spectra[ , 1, drop = FALSE],
+     spectrum = test.spectra[ , 1, drop = FALSE],
      sigs    = as.matrix(cbind(mSigAct::kucab.control.bg$background.sig, foo.0.1$target.sig)),
      target.sig.index = 1,
      m.opts = m.opts,
