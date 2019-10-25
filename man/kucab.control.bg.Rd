@@ -9,6 +9,6 @@
 kucab.control.bg
 }
 \description{
-Estimated from the control spectra in \code{\link{kucab.spectra}}.
+Estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
 }
 \keyword{datasets}
