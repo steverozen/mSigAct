@@ -1,7 +1,8 @@
-dir.create("Figure2_results")
+if (!dir.exists("Figure2_results")) dir.create("Figure2_results")
 stopifnot(exists("SPIKE.TEST"))
 setwd("./Figure2_results/")
 source("../Header.R")
+set.seed(101010, kind = "L'Ecuyer-CMRG")
 samples_details <- read.table("../00_data/final_mutagen_info_forR_v4_u.txt",sep = "\t",header = T,as.is = T, quote="\"")
 
 sub_tab_all_info <- read.table("../00_data/denovo_subclone_subs_final.txt",sep = "\t",header = T, as.is = T)
@@ -133,5 +134,6 @@ Sample_withSig <- Sample_withSig[Sample_withSig$Sample.Name == "MSM0.124", ]
 write.table(Sample_withSig,"Fig2A.tsv",sep = "\t",col.names = T, row.names = F, quote = F)
 
 setwd("..")
+source("Figure3_FORTESTING.R")
 # SR we could save key variables in an envirnment at this point
 

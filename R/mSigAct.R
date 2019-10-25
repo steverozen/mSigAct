@@ -27,7 +27,7 @@
 #' @export
 
 LLHSpectrumNegBinom <-
-  function(spectrum, expected.counts, nbinom.size) {
+  function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {
   
   stopifnot(length(spectrum) == length(expected.counts))
   loglh <- 0
@@ -35,18 +35,23 @@ LLHSpectrumNegBinom <-
     # spectrum and sum the log
     # likelihoods.
     
-    nbinom <- stats::dnbinom(x=spectrum[i],
-                             mu = expected.counts[i],
-                             size=nbinom.size,
-                             log = TRUE)
+    nbinom <- stats::dnbinom(x    = spectrum[i],
+                             mu   = expected.counts[i],
+                             size = nbinom.size,
+                             log  = TRUE)
     
-    if (nbinom == -Inf) {
-      message("nbinom == -Inf for i = ", i, " ", rownames(spectrum)[i],
-           " spectrum[i] = ", spectrum[i], " expected.counts[i] = ",
-           expected.counts[i])
+    if (is.nan(nbinom)) {
+      warning("nbinom is Nan, changing to -Inf")
+      nbinom = -Inf
+    }
+    if (nbinom == -Inf && verbose) {
+      message("nbinom == -Inf for mutation class i = ", i, " (",
+              rownames(spectrum)[i],
+              ") spectrum[i] = ", spectrum[i], " expected.counts[i] = ",
+              expected.counts[i])
     }
     
-    loglh <-loglh + nbinom
+    loglh <- loglh + nbinom
   }
   stopifnot(mode(loglh) == 'numeric' )
   return(loglh)

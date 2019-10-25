@@ -1,22 +1,6 @@
-dir.create("Figure3_results")
+if (!dir.exists("Figure3_results")) dir.create("Figure3_results")
 setwd("./Figure3_results/")
 
-if (!exists("samples_details")) {
-source("../Header.R")
-samples_details <- read.table("../00_data/final_mutagen_info_forR_v4_u.txt",sep = "\t",header = T,as.is = T, quote="\"")
-
-sub_tab_all_info <- read.table("../00_data/denovo_subclone_subs_final.txt",sep = "\t",header = T, as.is = T)
-sub_tab_all_info <- sub_tab_all_info[sub_tab_all_info$PM.Tum>=0.2,] # 172480/183133 = 0.94
-sub_tab_all_info$Sample.Name <- sub("\\_.*","",sub_tab_all_info$Sample)
-sub_tab_all_info <- sub_tab_all_info[sub_tab_all_info$Sample.Name!="MSM0",]
-
-sub.summary <- data.frame(table(sub_tab_all_info$Sample))
-names(sub.summary) <- c("Sample","sub_num")
-sub.summary$Sample.Name <- sub("\\_.*","",sub.summary$Sample)
-muts_summary_ddply <- ddply(sub.summary,c("Sample.Name"),summarise,NChild=length(sub_num),mean=mean(sub_num),sd=sd(sub_num),se=sd/sqrt(NChild))
-muts_summary_ddply_details <- merge(muts_summary_ddply, samples_details, by="Sample.Name")
-muts_summary_details <- merge(sub.summary, samples_details, by="Sample.Name")
-}
 
 ###############################################
 #
@@ -107,8 +91,7 @@ for(i in 1:dim(compoundlist)[1]){
   
   compoundlist[i,"profile_SNR"]  <- norm(as.matrix(centroid_compound-centroid_control),"f")/(sd_compound+sd_control)
 }
-# Sample_withSig_SNR <- read.table("../Figure2_results/Fig2A.tsv",sep = "\t",header = T, as.is = T, quote="\"")
-# all.equal(Sample_withSig_SNR,Sample_withSig, check.attributes = FALSE)
+
 Sample_withSig_SNR <- Sample_withSig
 
 Sample_withSig_SNR2 <- merge(Sample_withSig_SNR,compoundlist[,c("Sample.Name","profile_SNR")],by="Sample.Name")
@@ -141,9 +124,6 @@ for(i in 1:dim(compoundlist)[1]){
   
   currentcompound_stability <- ExtractSig_centroid_subs_noerrorbar(control_profile,currentcompound,1000,1.65,muttype_freq_template,4.2,7,paste0("subs_",as.character(compoundlist[i,1]),"_",samples_details[samples_details$Sample.Name==as.character(compoundlist[i,1]),"Treatment"]))
   stability_all <- rbind(stability_all,c(currentcompound_stability))
-  #MCSignature_subs_2_noerrorbar(control_profile,currentcompound,1000,1.65,4.2,7,paste0("subs_",as.character(compoundlist[i,1]),"_",samples_details[samples_details$Sample.Name==as.character(compoundlist[i,1]),"Compound.Abbreviation"]))
-  #compoundlist[i,"P_occurance"] <- current_P_occurance
-  #ChemExposure(controlclones,compoundclones,6,5,paste0("indels_",as.character(compoundlist[i,1]),"_",currentcompound[1,"Compound.Abbreviation"],"_exposure"))
 }
 stability_all_2 <- cbind(stability_all,compoundlist)
 stability_all_2 <- as.data.frame(stability_all_2)
@@ -151,4 +131,12 @@ names(stability_all_2) <- c("min_simi","max_simi","Sample.Name","subclone_num")
 Sample_withSig_SNR3 <- merge(Sample_withSig_SNR2,stability_all_2,by="Sample.Name")
 write.table(Sample_withSig_SNR3,"Fig3B-test.txt",sep = "\t",col.names = T, row.names = F, quote = F)
 print(Sample_withSig_SNR3)
+test.sig.table <- 
+  read.table("subs_MSM0.124_Methyleugenol (1.25 mM)_exposure.txt",
+             header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+cat(lsa::cosine(test.sig.table$percentage, me.sig.ICAMS), "\n")
+# 0.9633224  ratio = 0.5 add.noise = FALSE
+# 0.9570034  ratio = 0.5 add.noise = TRUE
+# 0.6619694   ratio = 0.25 add.noise = TRUE, fails on p_adjust, fails on SNR, fails on max_simi
+# test.sig.table rows are in the *STANDARD* order
 setwd("..")

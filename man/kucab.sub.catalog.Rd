@@ -14,4 +14,7 @@ kucab.sub.catalog
 \description{
 The original format used in Xueqing ZOU's code.
 }
+\details{
+The row order is "A[C>A]A" "A[C>A]C" "A[C>A]G" "A[C>A]T" "A[C>G]A" ...
+}
 \keyword{datasets}

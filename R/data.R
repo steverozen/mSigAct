@@ -94,6 +94,10 @@
 #' 
 "kucab.sigs.orig.row.order"
 
+#' The 35 control spectra using the kucab row order.
+#' 
+"kucab.control.spectra.kucab"
+
 #' Kucab et al., 2019 signatures in the same row order as kucab.sub.catalog.
 #' 
 #' The mutation type is in column 1, e.g. A[C>A]A A[C>A]C A[C>A]G A[C>A]T A[C>G]A ...
@@ -124,7 +128,7 @@
 
 #' Background information from the controls in Kucab et al., 2019.
 #'
-#' Estimated from the control spectra in \code{\link{kucab.spectra}}.
+#' Estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
 #' 
 "kucab.control.bg"
 
@@ -136,7 +140,6 @@
 #' 
 #' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog with 35 samples.
 "kucab.control.spectra.ICAMS"
-# "kucab.controls"
 
 #' Resampled mutations counts for combinations of 2:4 \code{kucab.controls}.
 #' 
@@ -144,4 +147,9 @@
 #' 10,000 elements, each of which is the mean of total 
 #' mutation counts of 2 to 4 control spectra.
 "kucab.control.dist"
+
+#' List of test data for background subtraction based on Kucab 2016 Methyleugenol.
+#'
+"BG.MEG.Test"
+
 
