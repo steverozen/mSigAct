@@ -19,6 +19,8 @@
 #' @param nbinom.size The \code{size} parameter that
 #' governs dispersion. See \code{\link[stats]{NegBinomial}}.
 #' Smaller values correspond to larger dispersion.
+#' 
+#' @param verbose If \code{TRUE} print messages under some circumsances.
 #'
 #' @return \code{log(likelihood(spectrum | expected.counts))}
 #' 

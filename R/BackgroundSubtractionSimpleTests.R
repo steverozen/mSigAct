@@ -6,9 +6,9 @@
 #'    E.g. 1 means the same number of mutations due to the target signatures
 #'    as due to the background signature; 2 means twice as many mutations
 #'    due to the the target signature as due to the background signature.
-#'  @param num.replicates Number of synthetic signatures to generate.
-#'  @param seed Optional random seed.
-#'  @param add.noise If \code{TRUE} and negative binomial noise to the
+#' @param num.replicates Number of synthetic signatures to generate.
+#' @param seed Optional random seed.
+#' @param add.noise If \code{TRUE} and negative binomial noise to the
 #'    proportion of the spectra due to the target signature.
 #'    
 #'  The background contributions are taken randomly from the control
@@ -37,7 +37,7 @@ Generate1KucabSynData <-
     target.spectra.noise <- 
       matrix(sapply(
         round(target.spectra.no.noise),
-        function(mu) rnbinom(n = 1, size = 10000, mu = mu)),
+        function(mu) stats::rnbinom(n = 1, size = 10000, mu = mu)),
         nrow = nrow(target.spectra.no.noise))
     
     test.spectra <- control.spectra + target.spectra.noise
@@ -62,8 +62,10 @@ Generate1KucabSynData <-
 #' @param m The spectra (or signature) as a matrix, with
 #'  rownames e.g. "A[C>A]A", "A[C>G]C", ...
 #'  
+#' @export
+#'  
 KucabToICAMSSpectra <- function(m) {
-  stopifnot(rownames(m) == rownames(kucab.sub.catalog))
+  stopifnot(rownames(m) == rownames(mSigAct::kucab.sub.catalog))
   stopifnot(is.numeric(m[ ,1]))
   new.rownames <- ICAMS:::Unstaple96(rownames(m))
   rownames(m) <- new.rownames
