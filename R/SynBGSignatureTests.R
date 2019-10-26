@@ -33,11 +33,14 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 #' 
 #' @param num.samples Number of synthetic spectra to generate.
 #' 
-MakeSynBackground <- function(background.info, num.samples) {
+MakeSynBackground <- function(background.info, num.samples, 
+                              total.count.nbinom.size = NULL) {
 
   bg.count <- stats::rnbinom(num.samples, 
                              mu   = background.info$count.nbinom.mu,
-                             size = background.info$count.nbinom.size)
+                             size = ifelse(is.null(total.count.nbinom.size),
+                                           background.info$count.nbinom.size,
+                                           total.count.nbinom.size))
   
   bg.sig <- background.info$background.sig
   
@@ -56,20 +59,34 @@ MakeSynBackground <- function(background.info, num.samples) {
   return(retval)
 }
 
-# foo <- MakeSynBackground(HepG2.background.info, 3)
-
 SummarizeBackgroudSpectra <- function(spectra) {
-  total.counts <- rowSums(spectra)
-  
-  retval <- list()
-  retval$count.mad <- mad(total.counts)
-  retval$count.med <- median(total.counts)
-  retval <- c(retval, apply(spectra, MARGIN = 1, mad))
-  retval <- c(retval, apply(spectra, MARGIN = 1, median))
+  total.counts <- colSums(spectra)
+  count.mad <- stats::mad(total.counts)
+  count.med <- stats::median(total.counts)
+  mad <- unlist(apply(spectra, MARGIN = 1, stats::mad))
+  med <- unlist(apply(spectra, MARGIN = 1, stats::median))
+  retval <- data.frame(
+    mad = c(count.mad, mad),
+    med = c(count.med, med)
+  )
+  retval$cv <- retval$mad / retval$med
   return(retval)
 }
 
-
+if (FALSE) {
+  
+  foo <- MakeSynBackground(HepG2.background.info, 1000, 300)
+  stats::mad(colSums(foo))
+  #  108.2298
+  #  mad(colSums(HepG2.background.spectra))  
+  #  103.782
+  #  HepG2.background.info$count.nbinom.size <- 300
+  #  usethis::use_data(HepG2.background.info, overwrite = TRUE)
+  # foo2 <- SummarizeBackgroudSpectra(HepG2.background.spectra)
+  # foo3 <- SummarizeBackgroudSpectra(foo)
+  # mean(foo2(cv)) 0.2878939
+  # mean(foo3(cv)) 0.3367861
+}
 
 MakeTest <- function(replicate, 
                      bg.sig.info,
