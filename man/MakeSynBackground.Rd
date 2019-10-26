@@ -11,6 +11,10 @@ MakeSynBackground(background.info, num.samples,
 \item{background.info}{See for example \code{HepG2.background.info}.}
 
 \item{num.samples}{Number of synthetic spectra to generate.}
+
+\item{total.count.nbinom.size}{If not \code{NULL} then
+override the \code{count.nbinom.size}
+parameter in \code{background.info}.}
 }
 \description{
 Generate \code{num.samples} synthetic background spectra.
