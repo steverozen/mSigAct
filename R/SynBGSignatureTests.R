@@ -58,6 +58,17 @@ MakeSynBackground <- function(background.info, num.samples) {
 
 # foo <- MakeSynBackground(HepG2.background.info, 3)
 
+SummarizeBackgroudSpectra <- function(spectra) {
+  total.counts <- rowSums(spectra)
+  
+  retval <- list()
+  retval$count.mad <- mad(total.counts)
+  retval$count.med <- median(total.counts)
+  retval <- c(retval, apply(spectra, MARGIN = 1, mad))
+  retval <- c(retval, apply(spectra, MARGIN = 1, median))
+  return(retval)
+}
+
 
 
 MakeTest <- function(replicate, 

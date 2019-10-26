@@ -3,6 +3,7 @@ context("Test Background Subtraction on Methyeugenol data from Kucab 2019")
 test_that("Meg, 0.25, Noise", {
   test.spectra <- mSigAct::KucabToICAMSSpectra(
     mSigAct::BG.MEG.Test$x0.25.noise$test.spectra)
+  set.seed(1099,"L'Ecuyer-CMRG")
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
     mSigAct::kucab.control.bg,
@@ -10,7 +11,12 @@ test_that("Meg, 0.25, Noise", {
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),
-    0.9457784, tolerance = 1e-5)
+    0.9457784, 
+    tolerance = 1e-5)
+  testthat::expect_equal(
+    ma.test$exposures.to.target.sig, 
+    c(215.5293, 241.6403, 195.5088),
+    tolerance = 0.5)
 })
 
 test_that("Meg, 0.5, Noise", {
@@ -38,7 +44,8 @@ test_that("Meg, 0.5, No Noise", {
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),
-    0.9805251, tolerance = 1e-5)
+    0.9805251,
+    tolerance = 1e-5)
 })
 
 
