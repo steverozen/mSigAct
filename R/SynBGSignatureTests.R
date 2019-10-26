@@ -33,6 +33,10 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 #' 
 #' @param num.samples Number of synthetic spectra to generate.
 #' 
+#' @param total.count.nbinom.size If not \code{NULL} then
+#'      override the \code{count.nbinom.size}
+#'      parameter in \code{background.info}.
+#' 
 MakeSynBackground <- function(background.info, num.samples, 
                               total.count.nbinom.size = NULL) {
 
