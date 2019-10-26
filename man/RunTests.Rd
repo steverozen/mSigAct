@@ -5,9 +5,7 @@
 \title{Run a suite of tests given data specified in \code{test.table}}
 \usage{
 RunTests(test.table, num.replicates, num.spectra.per.replicate, bg.info,
-  out.dir, mc.cores = 10, maxeval = 1000, xtol_rel = 0.001/10,
-  xtol_abs = 1e-04/10, print_level = 0,
-  algorithm = "NLOPT_LN_COBYLA", verbose = FALSE)
+  out.dir, mc.cores = 10, m.opts, verbose = FALSE)
 }
 \arguments{
 \item{test.table}{XXX}
@@ -27,15 +25,7 @@ In the future we could take multiple samples.}
 
 \item{mc.cores}{See \code{FindSignatureMinusBackground}.}
 
-\item{maxeval}{See \code{FindSignatureMinusBackground}.}
-
-\item{xtol_rel}{See \code{FindSignatureMinusBackground}.}
-
-\item{xtol_abs}{See \code{FindSignatureMinusBackground}.}
-
-\item{print_level}{See \code{FindSignatureMinusBackground}.}
-
-\item{algorithm}{See \code{FindSignatureMinusBackground}.}
+\item{m.opts}{See \code{FindSignatureMinusBackground}.}
 
 \item{verbose}{If \code{TRUE} print some progress information.}
 }

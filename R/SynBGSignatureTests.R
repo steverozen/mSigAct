@@ -14,6 +14,22 @@ DistancesToSPSigs <- function() {
   
 }
 
+#' Generate num.samples background spectra
+#' 
+#' @param background.info
+#' 
+#' @param num.samples
+#' 
+MakeSynBackground <- function(background.info, num.samples) {
+  bg.mu   <- bg.sig.info$count.nbinom.mu
+  size    <- bg.sig.info$count.nbinom.size
+  
+  bg.count <- stats::rnbinom(num.samples, mu = bg.mu, size = size)
+  
+  
+  
+}
+
 
 MakeTest <- function(replicate, 
                      bg.sig.info,
@@ -34,7 +50,7 @@ MakeTest <- function(replicate,
   # size parameters bg.sig.info$count.nbinom.size
   
   bg.mu   <- bg.sig.info$count.nbinom.mu
-  size <- bg.sig.info$count.nbinom.size
+  size    <- bg.sig.info$count.nbinom.size
   
   bg.count <- stats::rnbinom(1, mu = bg.mu, size = size)
   
@@ -165,11 +181,7 @@ TestTable2TestInput <- function(test.table,
 #' @param bg.info Information on the background signatures, e.g. \code{HepG2.background.info}.
 #' @param out.dir Put the results in this directory.
 #' @param mc.cores    See \code{FindSignatureMinusBackground}.
-#' @param maxeval     See \code{FindSignatureMinusBackground}.
-#' @param xtol_rel    See \code{FindSignatureMinusBackground}.
-#' @param xtol_abs    See \code{FindSignatureMinusBackground}.
-#' @param print_level See \code{FindSignatureMinusBackground}.
-#' @param algorithm   See \code{FindSignatureMinusBackground}.
+#' @param m.opts      See \code{FindSignatureMinusBackground}.
 #' @param verbose If \code{TRUE} print some progress information.
 RunTests <- function(test.table, 
                      num.replicates,
@@ -177,12 +189,7 @@ RunTests <- function(test.table,
                      bg.info,
                      out.dir,
                      mc.cores = 10,
-                     maxeval = 1000,
-                     xtol_rel=0.001/10,  # 0.0001,)
-                     xtol_abs=0.0001/10,
-                     print_level = 0,
-                     algorithm = "NLOPT_LN_COBYLA", #
-                     # algorithm = "NLOPT_GN_DIRECT_L", #
+                     m.opts,
                      verbose = FALSE) {
   
   if (Sys.info()["sysname"] == "Windows" &&
@@ -206,12 +213,8 @@ RunTests <- function(test.table,
     
     retval <-
       FindSignatureMinusBackground(spectra, # Defined in mSigAct.R
-                                   bg.sig.info = bg.info,
-                                   maxeval = maxeval, 
-                                   print_level = print_level,
-                                   xtol_rel=xtol_rel,  # 0.0001,)
-                                   xtol_abs=xtol_abs,
-                                   algorithm = algorithm,
+                                   bg.sig.info     = bg.info,
+                                   m.opts          = m.opts,
                                    start.b.fraction = 0.1)
     
     return(list(nloptr.retval = retval, 

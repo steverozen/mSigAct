@@ -23,7 +23,9 @@ test_that("Meg, 0.5, Noise", {
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),
-    0.9761126, tolerance = 1e-5)
+    # 0.9761126, 
+    0.9760834,
+    tolerance = 1e-5)
 })
 
 test_that("Meg, 0.5, No Noise", {
