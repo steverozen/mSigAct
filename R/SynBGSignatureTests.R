@@ -14,6 +14,19 @@ DistancesToSPSigs <- function() {
   
 }
 
+
+AddNoiseToSpectra <- function(spectra, nbinom.size) {
+  
+  spectra.w.noise <- 
+    matrix(sapply(
+      round(spectra),
+      function(mu) stats::rnbinom(n = 1, size = nbinom.size, mu = mu)),
+      nrow = nrow(spectra))
+  
+  return(spectra.w.noise)
+}
+
+
 #' Generate num.samples background spectra
 #' 
 #' @param background.info
@@ -21,14 +34,30 @@ DistancesToSPSigs <- function() {
 #' @param num.samples
 #' 
 MakeSynBackground <- function(background.info, num.samples) {
-  bg.mu   <- bg.sig.info$count.nbinom.mu
-  size    <- bg.sig.info$count.nbinom.size
+
+  bg.count <- stats::rnbinom(num.samples, 
+                             mu   = background.info$count.nbinom.mu,
+                             size = background.info$count.nbinom.size)
   
-  bg.count <- stats::rnbinom(num.samples, mu = bg.mu, size = size)
+  bg.sig <- background.info$background.sig
   
+  spectra.no.noise <- as.matrix(bg.sig) %*% matrix(bg.count, nrow = 1)
   
+  spectra.w.noise <- AddNoiseToSpectra(spectra.no.noise, 
+                                       background.info$sig.nbinom.size)
+  rownames(spectra.w.noise) <- rownames(bg.sig)
+  retval <- ICAMS::as.catalog(spectra.w.noise)
+  colnames(retval) <- paste("Syn.Sample.", 1:num.samples, sep = ".")
+  attr(retval, "region")       <- attr(bg.sig, "region")
+  attr(retval, "catalog.type") <- attr(bg.sig, "catalog.type")
+  attr(retval, "abundance")    <- attr(bg.sig, "abundance")
+  attr(retval, "ref.genome")   <- attr(bg.sig, "ref.genome")
   
+  return(retval)
 }
+
+# foo <- MakeSynBackground(HepG2.background.info, 3)
+
 
 
 MakeTest <- function(replicate, 
@@ -219,7 +248,7 @@ RunTests <- function(test.table,
     
     return(list(nloptr.retval = retval, 
                 test.name = test.name, 
-                algorithm = algorithm,
+                algorithm = m.opts$algorithm,
                 input = test.input.list[[test.name]]))
   } # function Run1Test
   
@@ -235,16 +264,19 @@ RunTests <- function(test.table,
 RunHepG2Tests <- function(maxeval = 40000, algorithm, 
                           mc.cores = 10, rows = NULL) {
   if (is.null(rows)) rows <- 1:nrow(mSigAct::HepG2.bg.tests.no.noise)
+  
+  m.opts           <- FindSigMinusBGOpt
+  m.opts$algorithm <- algorithm
+  m.opts$maxeval   <- maxeval
+  
   output <- RunTests(
     test.table = mSigAct::HepG2.bg.tests.no.noise[rows, ],
     num.replicates = 1,
     num.spectra.per.replicate = 2,
     bg.info = mSigAct::HepG2.background.info,
     mc.cores = mc.cores,
-    maxeval = maxeval,
-    print_level = 0,
+    m.opts = m.opts,
     verbose = TRUE,
-    algorithm = algorithm,
     out.dir = "HepG2.tests.output"
   )
   invisible(output)
