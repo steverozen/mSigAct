@@ -27,6 +27,8 @@ to \code{\link[stats]{NegBinomial}}) and dispersion parameter
 \item{nbinom.size}{The \code{size} parameter that
 governs dispersion. See \code{\link[stats]{NegBinomial}}.
 Smaller values correspond to larger dispersion.}
+
+\item{verbose}{If \code{TRUE} print messages under some circumsances.}
 }
 \value{
 \code{log(likelihood(spectrum | expected.counts))}

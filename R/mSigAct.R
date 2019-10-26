@@ -155,6 +155,16 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' estimated as described
 #' below (work in progress).
 #'  
+#' @param spectra The spectra from which to subtract the background,
+#'   as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.
+#'   
+#' @bg.sig.info Information about the background signature. See for example
+#'   \code{\link{HepG2.background.info}}.
+#'   
+#' @param m.opts Options to pass to \code{\link[nloptr]{nloptr}}.
+#' 
+#' @param start.b.fraction The estamated fraction of the mutations in
+#'   \code{spectra} due to the background signature.
 #' 
 #' @details
 #' See \code{\link{ObjFn1}}.
@@ -171,15 +181,30 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 # 
 #' @export
 
+# FindSigMinusBGOpt <- function() {
+#  return(
+#    list(algorithm = "NLOPT_LN_COBYLA",
+#         maxeval = 1000, 
+#         print_level = 0,
+#         xtol_rel = 0.001,  # 0.0001,)
+#         xtol_abs = 0.0001)
+#  )
+# 
+
+
+
 FindSignatureMinusBackground <-
   function(spectra,
            bg.sig.info,
-           algorithm =' NLOPT_LN_COBYLA',
-           maxeval = 1000, 
-           print_level = 0,
-           xtol_rel = 0.001,  # 0.0001,)
-           xtol_abs = 0.0001,
+           m.opts = NULL,
+           # algorithm =' NLOPT_LN_COBYLA',
+           # maxeval = 1000, 
+           # print_level = 0,
+           # xtol_rel = 0.001,  # 0.0001,)
+           # xtol_abs = 0.0001,
            start.b.fraction = 0.1) {
+    
+    if (is.null(m.opts)) m.opts <- FindSigMinusBGOpt()
     
     sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
     
@@ -206,10 +231,11 @@ FindSignatureMinusBackground <-
       ub          = c(rep(1, nrow(spectra)), # Each element of the singature <= 1
                       colSums(spectra)),     # The contribution of the background 
       # should not exceed the total count (not sure if this exactly correct)
-      opts        = list(algorithm   = algorithm,
-                         xtol_rel    = xtol_rel,
-                         print_level = print_level,
-                         maxeval     = maxeval),
+      # opts        = list(algorithm   = algorithm,
+      #                   xtol_rel    = xtol_rel,
+      #                   print_level = print_level,
+      #                   maxeval     = maxeval), # xtol_abs = 0.0001 was not provided
+      opt = m.opts,
       obs.spectra = spectra,     
       bg.sig.info = bg.sig.info)
     
@@ -391,7 +417,8 @@ FindSigMinusBGOpt <- function() {
          maxeval = 1000, 
          print_level = 0,
          xtol_rel = 0.001,  # 0.0001,)
-         xtol_abs = 0.0001)
+         xtol_abs = 0.000001
+         )
   )
 }
 

@@ -11,13 +11,16 @@ Generate1KucabSynData(target.sig, target.ratio.to.control, num.replicates,
 \item{target.sig}{The sig to test for, in Kucab's format.}
 
 \item{target.ratio.to.control}{The number of target signature
-  mutations as a proporiton of the number of background signatures.
-  E.g. 1 means the same number of mutations due to the target signatures
-  as due to the background signature; 2 means twice as many mutations
-  due to the the target signature as due to the background signature.
-@param num.replicates Number of synthetic signatures to generate.
-@param seed Optional random seed.
-@param add.noise If \code{TRUE} and negative binomial noise to the
+mutations as a proporiton of the number of background signatures.
+E.g. 1 means the same number of mutations due to the target signatures
+as due to the background signature; 2 means twice as many mutations
+due to the the target signature as due to the background signature.}
+
+\item{num.replicates}{Number of synthetic signatures to generate.}
+
+\item{seed}{Optional random seed.}
+
+\item{add.noise}{If \code{TRUE} and negative binomial noise to the
   proportion of the spectra due to the target signature.
   
 The background contributions are taken randomly from the control

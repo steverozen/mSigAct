@@ -6,11 +6,12 @@ test_that("Meg, 0.25, Noise", {
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
     mSigAct::kucab.control.bg,
-    algorithm = 'NLOPT_LN_COBYLA',
-    maxeval = 10000, 
-    print_level = 0,
-    xtol_rel = 0.001,  # 0.0001,)
-    xtol_abs = 0.0001,
+    # algorithm = 'NLOPT_LN_COBYLA',
+    # maxeval = 10000, 
+    # print_level = 0,
+    # xtol_rel = 0.001,  # 0.0001,)
+    # xtol_abs = 0.0001,
+    m.opts = FindSigMinusBGOpt(),
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),
@@ -23,11 +24,12 @@ test_that("Meg, 0.5, Noise", {
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
     mSigAct::kucab.control.bg,
-    algorithm = 'NLOPT_LN_COBYLA',
-    maxeval = 10000, 
-    print_level = 0,
-    xtol_rel = 0.001,  # 0.0001,)
-    xtol_abs = 0.0001,
+    # algorithm = 'NLOPT_LN_COBYLA',
+    # maxeval = 10000, 
+    # print_level = 0,
+    # xtol_rel = 0.001,  # 0.0001,)
+    # xtol_abs = 0.0001,
+    m.opts = FindSigMinusBGOpt(),
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),
@@ -40,11 +42,12 @@ test_that("Meg, 0.5, No Noise", {
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
     mSigAct::kucab.control.bg,
-    algorithm = 'NLOPT_LN_COBYLA',
-    maxeval = 10000, 
-    print_level = 0,
-    xtol_rel = 0.001,  # 0.0001,)
-    xtol_abs = 0.0001,
+    # algorithm = 'NLOPT_LN_COBYLA',
+    # maxeval = 10000, 
+    # print_level = 0,
+    # xtol_rel = 0.001,  # 0.0001,)
+    # xtol_abs = 0.0001,
+    m.opts = FindSigMinusBGOpt(),
     start.b.fraction = 0.67)
   testthat::expect_equal(
     as.vector(lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])),

@@ -3,6 +3,7 @@
 export(DefaultManyOpts)
 export(EstimateSignatureFromSpectraLH)
 export(FindSignatureMinusBackground)
+export(KucabToICAMSSpectra)
 export(LLHSpectrumNegBinom)
 export(ObjFnBinomMaxLH)
 export(SignaturePresenceTest1)
