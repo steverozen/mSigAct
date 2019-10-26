@@ -158,7 +158,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' @param spectra The spectra from which to subtract the background,
 #'   as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.
 #'   
-#' @bg.sig.info Information about the background signature. See for example
+#' @param bg.sig.info Information about the background signature. See for example
 #'   \code{\link{HepG2.background.info}}.
 #'   
 #' @param m.opts Options to pass to \code{\link[nloptr]{nloptr}}.
@@ -181,45 +181,17 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 # 
 #' @export
 
-# FindSigMinusBGOpt <- function() {
-#  return(
-#    list(algorithm = "NLOPT_LN_COBYLA",
-#         maxeval = 1000, 
-#         print_level = 0,
-#         xtol_rel = 0.001,  # 0.0001,)
-#         xtol_abs = 0.0001)
-#  )
-# 
-
-
-
 FindSignatureMinusBackground <-
   function(spectra,
            bg.sig.info,
            m.opts = NULL,
-           # algorithm =' NLOPT_LN_COBYLA',
-           # maxeval = 1000, 
-           # print_level = 0,
-           # xtol_rel = 0.001,  # 0.0001,)
-           # xtol_abs = 0.0001,
            start.b.fraction = 0.1) {
     
     if (is.null(m.opts)) m.opts <- FindSigMinusBGOpt()
     
-    sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
-    
+    # sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
     # Test
     sig0 <- MeanOfSpectraAsSig(spectra)
-    
-    # Test 2 was not good ?
-    if (FALSE) {
-      what.to.subtract <-
-        bg.sig.info$count.nbinom.mu * bg.sig.info$background.sig
-      sub2 <- matrix(rep(what.to.subtract, ncol(spectra)), ncol = ncol(spectra))
-      spectra.remain <- spectra - sub2 
-      sig0 <- MeanOfSpectraAsSig(spectra.remain)[ , 1]
-      sig0[sig0 < 0] <- 0
-    }
     
     b.x0 <- start.b.fraction * colSums(spectra)
     est.target.sig.and.b.x0 <- c(sig0, b.x0)
@@ -228,23 +200,22 @@ FindSignatureMinusBackground <-
       x0          = est.target.sig.and.b.x0,
       eval_f      = ObjFn1,
       lb          = rep(0, length(est.target.sig.and.b.x0)),
-      ub          = c(rep(1, nrow(spectra)), # Each element of the singature <= 1
-                      colSums(spectra)),     # The contribution of the background 
-      # should not exceed the total count (not sure if this exactly correct)
-      # opts        = list(algorithm   = algorithm,
-      #                   xtol_rel    = xtol_rel,
-      #                   print_level = print_level,
-      #                   maxeval     = maxeval), # xtol_abs = 0.0001 was not provided
+      
+      # Each element of the singature <= 1.
+      # The contribution of the background should not exceed the total count
+      # (not sure if this exactly correct)
+      ub          = c(rep(1, nrow(spectra)), colSums(spectra)),
       opt = m.opts,
       obs.spectra = spectra,     
       bg.sig.info = bg.sig.info)
     
     soln <- ret$solution
     
-    return(list(target.sig = soln[1:nrow(spectra)],
+    return(list(target.sig              = soln[1:nrow(spectra)],
                 exposures.to.target.sig = 
-                soln[(1 + nrow(spectra)):length(soln)],
-                all.opt.ret = ret))
+                  soln[(1 + nrow(spectra)):length(soln)],
+                message                 = ret$message,
+                all.opt.ret             = ret))
   }
 
 
@@ -414,10 +385,10 @@ PlotFactorizations <- function(out.dir,
 FindSigMinusBGOpt <- function() {
   return(
     list(algorithm = "NLOPT_LN_COBYLA",
-         maxeval = 1000, 
+         maxeval = 10000, 
          print_level = 0,
-         xtol_rel = 0.001,  # 0.0001,)
-         xtol_abs = 0.000001
+         xtol_rel = 0.0001,  # 0.0001,)
+         xtol_abs = 1e-06
          )
   )
 }

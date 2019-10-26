@@ -4,9 +4,20 @@
 \alias{FindSignatureMinusBackground}
 \title{Estimate a signature from experimentally exposed spectra minus a background signature.}
 \usage{
-FindSignatureMinusBackground(spectra, bg.sig.info,
-  algorithm = " NLOPT_LN_COBYLA", maxeval = 1000, print_level = 0,
-  xtol_rel = 0.001, xtol_abs = 1e-04, start.b.fraction = 0.1)
+FindSignatureMinusBackground(spectra, bg.sig.info, m.opts = NULL,
+  start.b.fraction = 0.1)
+}
+\arguments{
+\item{spectra}{The spectra from which to subtract the background,
+as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.}
+
+\item{bg.sig.info}{Information about the background signature. See for example
+\code{\link{HepG2.background.info}}.}
+
+\item{m.opts}{Options to pass to \code{\link[nloptr]{nloptr}}.}
+
+\item{start.b.fraction}{The estamated fraction of the mutations in
+\code{spectra} due to the background signature.}
 }
 \description{
 Let
