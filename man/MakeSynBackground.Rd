@@ -2,15 +2,15 @@
 % Please edit documentation in R/SynBGSignatureTests.R
 \name{MakeSynBackground}
 \alias{MakeSynBackground}
-\title{Generate num.samples background spectra}
+\title{Generate \code{num.samples} synthetic background spectra.}
 \usage{
 MakeSynBackground(background.info, num.samples)
 }
 \arguments{
-\item{background.info}{}
+\item{background.info}{See for example \code{HepG2.background.info}.}
 
-\item{num.samples}{}
+\item{num.samples}{Number of synthetic spectra to generate.}
 }
 \description{
-Generate num.samples background spectra
+Generate \code{num.samples} synthetic background spectra.
 }

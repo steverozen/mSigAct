@@ -27,11 +27,11 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 }
 
 
-#' Generate num.samples background spectra
+#' Generate \code{num.samples} synthetic background spectra.
 #' 
-#' @param background.info
+#' @param background.info See for example \code{HepG2.background.info}.
 #' 
-#' @param num.samples
+#' @param num.samples Number of synthetic spectra to generate.
 #' 
 MakeSynBackground <- function(background.info, num.samples) {
 
