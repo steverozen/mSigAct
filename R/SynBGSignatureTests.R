@@ -78,18 +78,19 @@ SummarizeBackgroudSpectra <- function(spectra) {
 }
 
 if (FALSE) {
-  
-  foo <- MakeSynBackground(HepG2.background.info, 1000, 300)
+  # Example of estimated background count disperison and
+  # profile dispersion.
+  foo <- MakeSynBackground(mSigAct::HepG2.background.info, 1000, 300)
   stats::mad(colSums(foo))
   #  108.2298
-  #  mad(colSums(HepG2.background.spectra))  
+  stats::mad(colSums(mSigAct::HepG2.background.spectra))  
   #  103.782
   #  HepG2.background.info$count.nbinom.size <- 300
   #  usethis::use_data(HepG2.background.info, overwrite = TRUE)
-  # foo2 <- SummarizeBackgroudSpectra(HepG2.background.spectra)
-  # foo3 <- SummarizeBackgroudSpectra(foo)
-  # mean(foo2(cv)) 0.2878939
-  # mean(foo3(cv)) 0.3367861
+  foo2 <- SummarizeBackgroudSpectra(mSigAct::HepG2.background.spectra)
+  foo3 <- SummarizeBackgroudSpectra(foo)
+  mean(foo2$cv) # 0.2878939
+  mean(foo3$cv) # 0.3367861
 }
 
 MakeTest <- function(replicate, 
