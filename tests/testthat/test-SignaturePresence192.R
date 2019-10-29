@@ -13,8 +13,7 @@ test_that("SignaturePresence1 SBS192 2", {
   retval <- TestSignaturePresenceTest1(
     sig.counts = input, 
     input.sigs = PCAWG7::signature$genome$SBS192)
-  cat("test 2", retval$chisq.p, "\n")
-  testthat::expect_equal(retval$chisq.p, 0.738, tolerance = 1e-3)
+  testthat::expect_equal(retval$chisq.p, 0.7378917, tolerance = 1e-5)
 })
 
 test_that("SignaturePresence1 SBS192 3", {
@@ -33,7 +32,7 @@ test_that("SignaturePresence1 SBS192 4", {
   testthat::expect_equal(retval$chisq.p, 0.03175961, tolerance = 1e-5)
 })
 
-test_that("SignaturePresence1 SBS192 6", {
+test_that("SignaturePresence1 SBS192 5", {
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   input <- c(SBS5 = 800, SBS3 = 10000, SBS22 = 20000)
   retval <- TestSignaturePresenceTest1(
@@ -42,12 +41,11 @@ test_that("SignaturePresence1 SBS192 6", {
   testthat::expect_equal(retval$chisq.p, 0.266199, tolerance = 1e-5)
 })
 
-test_that("SignaturePresence1 SBS192 7", {
+test_that("SignaturePresence1 SBS192 6", {
   input <- c(SBS5 = 800, SBS3 = 10000, SBS22 = 20000, SBS40 = 1000)
   retval <- TestSignaturePresenceTest1(
     sig.counts = input, 
     input.sigs =  PCAWG7::signature$genome$SBS192)
-  cat("test 7", retval$chisq.p, "\n")
-  testthat::expect_equal(retval$chisq.p, 0.411, tolerance = 1e-2)
+  testthat::expect_equal(retval$chisq.p, 0.4110288, tolerance = 1e-5)
 })
 
