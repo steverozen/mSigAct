@@ -2,7 +2,7 @@
 
 
 
-SPIKE.TEST <- BG.MEG.Test$x0.5.noise
+SPIKE.TEST <- BG.MEG.kucab.bg.test$x0.5.noise
 
 # mSigAct tests below
 
@@ -10,7 +10,7 @@ test.spectra <- mSigAct::KucabToICAMSSpectra(SPIKE.TEST$test.spectra)
 options(warn = 2)
 ma.test <- FindSignatureMinusBackground(
   test.spectra, 
-  mSigAct::kucab.control.bg,
+  mSigAct::kucab.background.info,
   algorithm = 'NLOPT_LN_COBYLA',
   # algorithm = "NLOPT_GN_DIRECT", # does not work well
   maxeval = 10000, 
@@ -27,7 +27,8 @@ lsa::cosine(ma.test$target.sig, BG.MEG.Test$sig.ICAMS[ , 1])
 m.opts <- DefaultManyOpts()
 ma.pre <- mSigAct::SignaturePresenceTest1(
      spectrum = test.spectra[ , 1, drop = FALSE],
-     sigs    = as.matrix(cbind(mSigAct::kucab.control.bg$background.sig, ma.test$target.sig)),
+     sigs    = as.matrix(cbind(mSigAct::kucab.background.info$background.sig, 
+                               ma.test$target.sig)),
      target.sig.index = 1,
      m.opts = m.opts,
      eval_f = mSigAct:::ObjFnBinomMaxLH)

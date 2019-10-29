@@ -36,9 +36,13 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 #' @param total.count.nbinom.size If not \code{NULL} then
 #'      override the \code{count.nbinom.size}
 #'      parameter in \code{background.info}.
+#'      
+#' @param sig.nbinom.size If note \code{NULL} the override
+#'      the \code{sig.nbinom.size} parameter in in \code{background.info}.
 #' 
 MakeSynBackground <- function(background.info, num.samples, 
-                              total.count.nbinom.size = NULL) {
+                              total.count.nbinom.size = NULL,
+                              sig.nbinom.size = NULL) {
 
   bg.count <- stats::rnbinom(num.samples, 
                              mu   = background.info$count.nbinom.mu,
@@ -50,8 +54,11 @@ MakeSynBackground <- function(background.info, num.samples,
   
   spectra.no.noise <- as.matrix(bg.sig) %*% matrix(bg.count, nrow = 1)
   
-  spectra.w.noise <- AddNoiseToSpectra(spectra.no.noise, 
-                                       background.info$sig.nbinom.size)
+  sig.nbionm.size = ifelse(is.null(sig.nbinom.size), 
+                           background.info$sig.nbinom.size,
+                           sig.nbinom.size)
+  
+  spectra.w.noise <- AddNoiseToSpectra(spectra.no.noise, sig.nbinom.size)
   rownames(spectra.w.noise) <- rownames(bg.sig)
   retval <- ICAMS::as.catalog(spectra.w.noise)
   colnames(retval) <- paste("Syn.Sample.", 1:num.samples, sep = ".")

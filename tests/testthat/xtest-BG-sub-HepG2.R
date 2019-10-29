@@ -1,11 +1,15 @@
 context("Test Background Subtraction from HepG2")
 
+# Work in progress; need create new version of the input data
+# BG.MEG.HepG2.bg.test.  Rename BG.MEG.kucab.bg.test
+# Will also need BG.MEG.MCF10A.test
+
 test_that("Meg, 0.25, Noise", {
   test.spectra <- mSigAct::KucabToICAMSSpectra(
     mSigAct::BG.MEG.Test$x0.25.noise$test.spectra)
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
-    mSigAct::kucab.control.bg,
+    mSigAct::HepG2.background.info,
     m.opts = FindSigMinusBGOpt(),
     start.b.fraction = 0.67)
   testthat::expect_equal(
@@ -18,7 +22,7 @@ test_that("Meg, 0.5, Noise", {
     mSigAct::BG.MEG.Test$x0.5.noise$test.spectra)
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
-    mSigAct::kucab.control.bg,
+    mSigAct::HepG2.background.info,
     # algorithm = 'NLOPT_LN_COBYLA',
     # maxeval = 10000, 
     # print_level = 0,
@@ -36,7 +40,7 @@ test_that("Meg, 0.5, No Noise", {
     mSigAct::BG.MEG.Test$x0.5.no.noise$test.spectra)
   ma.test <- FindSignatureMinusBackground(
     test.spectra, 
-    mSigAct::kucab.control.bg,
+    mSigAct::HepG2.background.info,
     # algorithm = 'NLOPT_LN_COBYLA',
     # maxeval = 10000, 
     # print_level = 0,

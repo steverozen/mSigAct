@@ -5,7 +5,7 @@
 \title{Generate \code{num.samples} synthetic background spectra.}
 \usage{
 MakeSynBackground(background.info, num.samples,
-  total.count.nbinom.size = NULL)
+  total.count.nbinom.size = NULL, sig.nbinom.size = NULL)
 }
 \arguments{
 \item{background.info}{See for example \code{HepG2.background.info}.}
@@ -15,6 +15,9 @@ MakeSynBackground(background.info, num.samples,
 \item{total.count.nbinom.size}{If not \code{NULL} then
 override the \code{count.nbinom.size}
 parameter in \code{background.info}.}
+
+\item{sig.nbinom.size}{If note \code{NULL} the override
+the \code{sig.nbinom.size} parameter in in \code{background.info}.}
 }
 \description{
 Generate \code{num.samples} synthetic background spectra.
