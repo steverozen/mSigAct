@@ -22,12 +22,12 @@
 #' 
 #' }
 #' 
-#' @source \code{HepG2.background.info} was estimated from the spectra in \code{\link{HepG2.background.spectra}}.
+#' @source \code{HepG2.background.info} was estimated from \code{\link{HepG2.background.spectra}}.
 #'
 #' @name background.info
 #' 
 #' @examples 
-#' HepG2.background.spectra$count.nbinom.mu
+#' HepG2.background.info$count.nbinom.mu
 #' HepG2.background.info$count.nbinom.size
 #' HepG2.background.info$sig.nbinom.size
 #' HepG2.background.info$background.sig[1:3, ]
@@ -35,6 +35,16 @@
 #' 
 #' 
 "HepG2.background.info"
+
+#' Background information for MCF-10A cells.
+#' 
+#' @name background.info
+#' 
+#' @source \code{MCF10A.background.info} was estimated from \code{\link{MCF10A.background.spectra}}
+#' 
+"MCF10A.background.info"
+
+#' Background.info for cells used in Kucab et al, 2019.
 #'
 #' @name background.info
 #'
@@ -51,11 +61,19 @@
 "cisplatin.exposed.HepG2.96"
 
 
-#' Background spectra for HepG2.
+#' Background spectra for HepG2 and MCF-10A
 #' 
 #' @format An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.
 #' 
+#' @name background.spectra
+#' 
 "HepG2.background.spectra"
+
+#' Background spectra for MCF-10A cells
+#' 
+#' @name background.spectra
+#' 
+"MCF10A.background.spectra"
 
 #' SigProfiler 96 SBS \code{counts.signatures} under genome abundance.
 #' @format An \code{[ICAMS]} \code{counts.spectrum} catalog;

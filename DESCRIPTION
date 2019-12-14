@@ -30,6 +30,7 @@ Imports:
     lsa,
     sets
 Suggests: 
+    devtools,
     testthat (>= 2.1.0),
     usethis,
     utils,

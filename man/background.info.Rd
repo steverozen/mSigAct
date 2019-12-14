@@ -4,6 +4,7 @@
 \name{background.info}
 \alias{background.info}
 \alias{HepG2.background.info}
+\alias{MCF10A.background.info}
 \alias{kucab.background.info}
 \title{Specifications of background signatures}
 \format{A list with the elements \enumerate{
@@ -27,20 +28,28 @@ replicate exposed clones.
 
 }}
 \source{
-\code{HepG2.background.info} was estimated from the spectra in \code{\link{HepG2.background.spectra}}.
+\code{HepG2.background.info} was estimated from \code{\link{HepG2.background.spectra}}.
+
+\code{MCF10A.background.info} was estimated from \code{\link{MCF10.background.spectra}}
 
 \code{kucab.background.info} was estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
 }
 \usage{
 HepG2.background.info
 
+MCF10A.background.info
+
 kucab.background.info
 }
 \description{
 Specifications of background signatures
+
+Background information for MCF-10A cells.
+
+Background.info for cells used in Kucab et al, 2019.
 }
 \examples{
-HepG2.background.spectra$count.nbinom.mu
+HepG2.background.info$count.nbinom.mu
 HepG2.background.info$count.nbinom.size
 HepG2.background.info$sig.nbinom.size
 HepG2.background.info$background.sig[1:3, ]

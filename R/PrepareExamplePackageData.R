@@ -1,0 +1,33 @@
+# Spectra from cisplatin exposed HepG2
+
+#' Make spectrum catalog from VCFs from cisplatin exposed HepG2
+#' @keywords internal
+#' @return The catalog
+MakeCisplatinCatalogs <- function() {
+  files <- dir("tests/testthat/test.data/HepG2_Cis/", full.names = TRUE)
+  cats <- ICAMS::StrelkaSBSVCFFilesToCatalog(
+    files = files,
+    ref.genome = "hg19",
+    trans.ranges = 
+      ICAMS::trans.ranges.GRCh37,
+    region = "genome")
+  ICAMS::WriteCatalog(cats$catSBS96, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS96.csv")
+  ICAMS::WriteCatalog(cats$catSBS192, 
+                      file = "tests/testthat/test.data/HepG2_Cis/SBS192.csv")
+  ICAMS::WriteCatalog(cats$catDBS78, 
+                      file = "tests/testthat/test.data/HepG2_Cis/DBS78.csv")
+  ICAMS::PlotCatalogToPdf(cats$catSBS96, 
+                          file = "tests/testthat/test.data/HepG2_Cis/SBS96.pdf")
+  ICAMS::PlotCatalogToPdf(cats$catSBS192, 
+                          file = "tests/testthat/test.data/HepG2_Cis/SBS192.pdf")
+  ICAMS::PlotCatalogToPdf(cats$catDBS78, 
+                          file = "tests/testthat/test.data/HepG2_Cis/DBS78.pdf")
+  
+  return(cats)
+}
+
+LoadToEnvironment <- function(RData, env = new.env()){
+  load(RData, env)
+  return(env) 
+}
