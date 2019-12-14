@@ -4,6 +4,7 @@
 \name{background.info}
 \alias{background.info}
 \alias{HepG2.background.info}
+\alias{kucab.background.info}
 \title{Specifications of background signatures}
 \format{A list with the elements \enumerate{
 \item \code{background.sig} The background signature profile.
@@ -25,14 +26,26 @@ of total counts due to \code{background.sig} across
 replicate exposed clones.
 
 }}
+\source{
+\code{HepG2.background.info} was estimated from the spectra in \code{\link{HepG2.background.spectra}}.
+
+\code{kucab.background.info} was estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
+}
 \usage{
 HepG2.background.info
+
+kucab.background.info
 }
 \description{
 Specifications of background signatures
 }
 \examples{
-# MORE MORE MORE
+HepG2.background.spectra$count.nbinom.mu
+HepG2.background.info$count.nbinom.size
+HepG2.background.info$sig.nbinom.size
+HepG2.background.info$background.sig[1:3, ]
+
+
 
 }
 \keyword{datasets}

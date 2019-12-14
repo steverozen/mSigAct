@@ -1,6 +1,5 @@
 #' Specifications of background signatures
 #'
-#
 #'
 #' @format A list with the elements \enumerate{
 #' \item \code{background.sig} The background signature profile.
@@ -23,12 +22,27 @@
 #' 
 #' }
 #' 
+#' @source \code{HepG2.background.info} was estimated from the spectra in \code{\link{HepG2.background.spectra}}.
+#'
 #' @name background.info
 #' 
 #' @examples 
-#' # MORE MORE MORE
+#' HepG2.background.spectra$count.nbinom.mu
+#' HepG2.background.info$count.nbinom.size
+#' HepG2.background.info$sig.nbinom.size
+#' HepG2.background.info$background.sig[1:3, ]
+#' 
+#' 
 #' 
 "HepG2.background.info"
+#'
+#' @name background.info
+#'
+#' @source \code{kucab.background.info} was estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
+#'   
+"kucab.background.info"
+
+
 
 #' Mutational spectra of cisplatin exposed HepG2 cells.
 #' 
@@ -123,12 +137,6 @@
 #' 
 "kucab.spectra.ICAMS"
 
-
-#' Background information from the controls in Kucab et al., 2019.
-#'
-#' Estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
-#' 
-"kucab.background.info"
 
 #' Control spectra from Kucab et al., 2019
 #' 
