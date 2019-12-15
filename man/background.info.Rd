@@ -30,7 +30,7 @@ replicate exposed clones.
 \source{
 \code{HepG2.background.info} was estimated from \code{\link{HepG2.background.spectra}}.
 
-\code{MCF10A.background.info} was estimated from \code{\link{MCF10.background.spectra}}
+\code{MCF10A.background.info} was estimated from \code{\link{MCF10A.background.spectra}}
 
 \code{kucab.background.info} was estimated from the control spectra in \code{\link{kucab.control.spectra.ICAMS}}.
 }
