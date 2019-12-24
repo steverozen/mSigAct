@@ -3,13 +3,15 @@
 # Find signatures at different distances from 
 # HepG2.background.info$background.sig
 
-DistancesToSPSigs <- function() {
+DistancesToSPSigs <- 
+  function(sigs.to.check = 
+             mSigAct::HepG2.background.info$background.sig) {
   sim <-
-    apply(mSigAct::sp.sigs, MARGIN = 2, 
+    apply(PCAWG7::signature$genome$SBS96, MARGIN = 2, 
           function(ref.sig) {
             lsa::cosine(
               ref.sig, 
-              mSigAct::HepG2.background.info$background.sig)})
+              sigs.to.checi)})
   return(sort(sim, decreasing = TRUE))
   
 }
@@ -37,7 +39,7 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 #'      override the \code{count.nbinom.size}
 #'      parameter in \code{background.info}.
 #'      
-#' @param sig.nbinom.size If note \code{NULL} the override
+#' @param sig.nbinom.size If not \code{NULL} the override
 #'      the \code{sig.nbinom.size} parameter in in \code{background.info}.
 #' 
 MakeSynBackground <- function(background.info, num.samples, 

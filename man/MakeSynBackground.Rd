@@ -16,7 +16,7 @@ MakeSynBackground(background.info, num.samples,
 override the \code{count.nbinom.size}
 parameter in \code{background.info}.}
 
-\item{sig.nbinom.size}{If note \code{NULL} the override
+\item{sig.nbinom.size}{If not \code{NULL} the override
 the \code{sig.nbinom.size} parameter in in \code{background.info}.}
 }
 \description{
