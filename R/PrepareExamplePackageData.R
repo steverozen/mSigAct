@@ -64,14 +64,21 @@ tmp.cats4 <-
 tmp.root <- "data-raw/nitrosamine-example-data.2019.12.14"
 tmp.cats5 <- 
   ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
-    files = c(file.path(tmp.root, "/NDEA_cl1.results/", "passed.somatic.snvs.vcf"),
-              file.path(tmp.root, "/NDEA_cl2.results/", "passed.somatic.snvs.vcf")),
+    files = c(ile.path(tmp.root, "/NDEA_cl1.results/", "passed.somatic.snvs.vcf")),
     ref.genome = "hg19",
     trans.ranges = ICAMS::trans.ranges.GRCh37,
     region = "genome",
-    names.of.VCFs = c("NDEA_cl1", "NDEA_cl2"),
+    names.of.VCFs = c("NDEA_cl1"),
     output.file = tmp.root
   )
+
+tmp.cat6 <- 
+  ICAMS:::strelkaSBSVCFFilesToCatalog(
+    files = c(file.path(tmp.root, 
+                        "/NDEA_cl1.results/", "passed.somatic.snvs.vcf"))
+                                   ref.genome = "hg19",
+                                   trans.ranges = ICAMS::transranges.
+                           region, names.of.VCFs
 
 rm(tmp.files)
 }
