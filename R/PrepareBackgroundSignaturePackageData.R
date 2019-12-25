@@ -15,6 +15,8 @@ LoadArnoudMCF10HepG2 <- function() {
   HepG2.background.spectra <- env$catSBS$catSBS96[ , 1:3]
   MCF10A.background.spectra <- env$catSBS$catSBS96[ , 4:6]
   HepG2.background.spectra
+  attr(HepG2.background.spectra, "ref.genome") <- NULL
+  attr(MCF10A.background.spectra, "ref.genome") <- NULL
   usethis::use_data(HepG2.background.spectra, overwrite = TRUE)
   usethis::use_data(MCF10A.background.spectra, overwrite = TRUE)
 }
