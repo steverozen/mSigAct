@@ -1,7 +1,7 @@
 
-
+if (FALSE) {
 Make.sp.sigs.exome <- function() {
-  tmp <- mSigAct::sp.sigs
+  tmp <- PCAWG7::signature$genome$SBS96 # mSigAct::sp.sigs
   attr(tmp, "abundance") <- ICAMS::all.abundance$BSgenome.Hsapiens.1000genomes.hs37d5$genome$'96'
   sp.sigs.exome <-
     ICAMS::TransformCatalog(
@@ -11,7 +11,7 @@ Make.sp.sigs.exome <- function() {
   usethis::use_data(sp.sigs.exome)
   
 }
-
+}
 
 
 # Part 2, Spectra from cisplatin exposed HepG2 cells.

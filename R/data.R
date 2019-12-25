@@ -75,20 +75,6 @@
 #' 
 "MCF10A.background.spectra"
 
-#' SigProfiler 96 SBS \code{counts.signatures} under genome abundance.
-#' @format An \code{[ICAMS]} \code{counts.spectrum} catalog;
-#'  see Alexandrov et al. 
-#'  \url{https://www.biorxiv.org/content/10.1101/322859v2}.
-#' 
-"sp.sigs"
-
-#' SigProfiler 96 SBS \code{counts.signatures} under exome abundance.
-#' @format An \code{[ICAMS]} \code{counts.spectrum} catalog;
-#'  see Alexandrov et al. 
-#'  \url{https://www.biorxiv.org/content/10.1101/322859v2}.
-#' 
-"sp.sigs.exome"
-
 #' Tests of HepG2 background subtraction
 #' 
 #' @format A data table
