@@ -73,13 +73,18 @@ tmp.cats5 <-
   )
 
 tmp.cat6 <- 
-  ICAMS:::StrelkaSBSVCFFilesToCatalog(
+  ICAMS:::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
     files = c(file.path(tmp.root, 
-                        "/NDEA_cl1.results/", "passed.somatic.snvs.vcf")),
+                        "NDEA_cl1.results", "HepG2_NDEA_cl1_SNVresult.vcf"), # passed.somatic.snvs.vcf"),
+              file.path(tmp.root, 
+                        "NDEA_cl2.results", "HepG2_NDEA_cl2_SNVresult.vcf") # passed.somatic.snvs.vcf")
+              
+              ),
     ref.genome = "hg19",
-    trans.ranges = ICAMS::transranges.GRCh37,
+    trans.ranges = ICAMS::trans.ranges.GRCh37,
     region = "genome", 
-    names.of.VCFs = c("NDEA_cl1"))
+    names.of.VCFs = c("NDEA_cl1", "NDEA_cl1"),
+    output.file = file.path(tmp.root, "NDEA2"))
 
 rm(tmp.files)
 }
