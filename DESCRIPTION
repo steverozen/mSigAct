@@ -3,7 +3,7 @@ Title: mutational Signature Activity analysis ('mSigAct')
 Version: 2.0.0.9004
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
 Maintainer: Steve Rozen <steverozen@gmail.com>
-Description:  Analyze the the "activities" of mutational signatures in one or
+Description: Analyze the the "activities" of mutational signatures in one or
     more mutational spectra. 'mSigAct' stands for mutational Signature 
     Activity. mSigAct can estimate (conservatively) whether there is evidence
     that a particular mutational signature is present in a spectrum and can
@@ -20,7 +20,7 @@ Language: en-US
 Remotes: github::steverozen/PCAWG7,
     github::steverozen/ICAMS@master
 Depends: R (>= 3.5),
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 biocViews:
 Imports:

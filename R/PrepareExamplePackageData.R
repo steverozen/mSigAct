@@ -1,3 +1,59 @@
+if (FALSE) {
+# Spectra from HepG2 exposed to various nitrosamines
+
+# Create the spectra catalogs and plots
+# Cannot find the output -- suspect it is in tempdir(), but cannot find it
+# Actually, creates the files in dir, and then unlinks them. If run in debugger
+# can quit before the unlink and grab the files from dir
+tmp.cats <- 
+  ICAMS::StrelkaSBSVCFFilesToZipFile(
+  dir = "data-raw/nitrosamine-example-data.2019.12.14/SBS",
+  file = tempdir(),
+  zipfile.name = "~/nitrosamine.SBS",
+  ref.genome = "hg19",
+  region = "genome",
+  trans.ranges = ICAMS::trans.ranges.GRCh37,
+  output.file = "nitrosamines",
+  names.of.VCFs = c("NDEA.cl1", "NDEA.cl2", 
+                    "NMDA.cl1", "NMDA.cl2", 
+                    "NPIP.cl1", "NPIP.cl2", 
+                    "NPYR.cl1", "NPYR.cl2")
+  
+  )
+
+ICAMS::StrelkaIDVCFFilesToZipFile(
+  dir = "data-raw/nitrosamine-example-data.2019.12.14/ID",
+  file = tempdir(),
+  zipfile.name = "~/nitrosamine.SBS",
+  ref.genome = "hg19",
+  region = "genome",
+  output.file = "nitrosamines",
+  names.of.VCFs = c("NDEA.cl1", "NDEA.cl2", 
+                    "NMDA.cl1", "NMDA.cl2", 
+                    "NPIP.cl1", "NPIP.cl2", 
+                    "NPYR.cl1", "NPYR.cl2")
+  
+)
+
+
+# Not used
+tmp.files <-grep("\\.vcf$",
+                 list.files("data-raw/nitrosamine-example-data.2019.12.14/SBS",
+                            full.names = TRUE), 
+                 ignore.case = TRUE, value = TRUE) 
+# Not used
+tmp.cats3 <- 
+  ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
+  files = tmp.files,
+  ref.genome = "hg19",
+  # trans.ranges = ICAMS::trans.ranges.GRCh37,
+  region = "genome",
+  names.of.VCFs = sub(".*(N..._cl.).*", "\\1", tmp.files),
+  output.file = "~/nitrosamine/nitrosamines"
+)
+rm(tmp.files)
+}
+
 # Spectra from cisplatin exposed HepG2
 
 #' Make spectrum catalog from VCFs from cisplatin exposed HepG2
