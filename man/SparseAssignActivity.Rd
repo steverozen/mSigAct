@@ -4,8 +4,15 @@
 \alias{SparseAssignActivity}
 \title{Find known signatures that can most sparsely reconstruct each spectrum in a catalog.}
 \usage{
-SparseAssignActivity(spectra, sigs, max.level = 5, p.thresh = 0.5,
-  eval_f = NULL, m.opts = NULL, mc.cores = NULL)
+SparseAssignActivity(
+  spectra,
+  sigs,
+  max.level = 5,
+  p.thresh = 0.5,
+  eval_f = NULL,
+  m.opts = NULL,
+  mc.cores = NULL
+)
 }
 \arguments{
 \item{spectra}{The spectra (multiple spectra) to be reconstructed.}

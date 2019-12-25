@@ -4,8 +4,14 @@
 \alias{SparseAssignActivity1}
 \title{Component of \code{\link{SparseAssignActivity}} for one spectrum.}
 \usage{
-SparseAssignActivity1(spect, sigs, max.level = 5, p.thresh = 0.05,
-  eval_f, m.opts)
+SparseAssignActivity1(
+  spect,
+  sigs,
+  max.level = 5,
+  p.thresh = 0.05,
+  eval_f,
+  m.opts
+)
 }
 \description{
 Component of \code{\link{SparseAssignActivity}} for one spectrum.

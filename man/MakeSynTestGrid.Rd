@@ -4,8 +4,12 @@
 \alias{MakeSynTestGrid}
 \title{Make a "grid" of tests, with various "target signatures" and contribution from background}
 \usage{
-MakeSynTestGrid(sig.names.to.test, contribution, bg.sig.info,
-  num.replicates = 10)
+MakeSynTestGrid(
+  sig.names.to.test,
+  contribution,
+  bg.sig.info,
+  num.replicates = 10
+)
 }
 \value{
 A \code{data.frame}, of which each row is a synthetic

@@ -4,8 +4,7 @@
 \alias{plot.recon.by.range}
 \title{Plot spectrum reconstruction broken up by ranges}
 \usage{
-\method{plot}{recon.by.range}(path, spect, sigs, ex, range, obj.fun,
-  nbinom.size)
+\method{plot}{recon.by.range}(path, spect, sigs, ex, range, obj.fun, nbinom.size)
 }
 \description{
 Plot spectrum reconstruction broken up by ranges

@@ -4,8 +4,13 @@
 \alias{Generate1KucabSynData}
 \title{Genereate Synthetic Data based on control data from Kucab et al., 2019.}
 \usage{
-Generate1KucabSynData(target.sig, target.ratio.to.control, num.replicates,
-  seed = NULL, add.noise = TRUE)
+Generate1KucabSynData(
+  target.sig,
+  target.ratio.to.control,
+  num.replicates,
+  seed = NULL,
+  add.noise = TRUE
+)
 }
 \arguments{
 \item{target.sig}{The sig to test for, in Kucab's format.}

@@ -9,8 +9,7 @@ that each each element of the
 spectrum (i.e., the count for each mutation type e.g. ACT > AAT)
 was generated from expected count for that mutation type.}
 \usage{
-LLHSpectrumNegBinom(spectrum, expected.counts, nbinom.size,
-  verbose = FALSE)
+LLHSpectrumNegBinom(spectrum, expected.counts, nbinom.size, verbose = FALSE)
 }
 \arguments{
 \item{spectrum}{An observed spectrum (a numeric vector)}

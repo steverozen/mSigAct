@@ -11,7 +11,7 @@ DistancesToSPSigs <-
           function(ref.sig) {
             lsa::cosine(
               ref.sig, 
-              sigs.to.checi)})
+              sigs.to.check)})
   return(sort(sim, decreasing = TRUE))
   
 }

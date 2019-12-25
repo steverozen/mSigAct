@@ -4,9 +4,14 @@
 \alias{EstimateSignatureFromSpectraLH}
 \title{Build a signature for background extraction from a matrix of spectra.}
 \usage{
-EstimateSignatureFromSpectraLH(spectra, algorithm = "NLOPT_LN_COBYLA",
-  maxeval = 1000, print_level = 0, xtol_rel = 0.001,
-  xtol_abs = 1e-04)
+EstimateSignatureFromSpectraLH(
+  spectra,
+  algorithm = "NLOPT_LN_COBYLA",
+  maxeval = 1000,
+  print_level = 0,
+  xtol_rel = 0.001,
+  xtol_abs = 1e-04
+)
 }
 \arguments{
 \item{spectra}{An \code{\link[ICAMS]{ICAMS}} \code{catalog} with 

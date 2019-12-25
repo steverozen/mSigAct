@@ -4,8 +4,17 @@
 \alias{mSigOneGroup}
 \title{Analyze and plot a group of spectra}
 \usage{
-mSigOneGroup(spectra, sigs, target.sig.name, path.root, eval_f,
-  m.opts = NULL, trace = 0, col = NULL, mc.cores = 190)
+mSigOneGroup(
+  spectra,
+  sigs,
+  target.sig.name,
+  path.root,
+  eval_f,
+  m.opts = NULL,
+  trace = 0,
+  col = NULL,
+  mc.cores = 190
+)
 }
 \description{
 Analyze and plot a group of spectra

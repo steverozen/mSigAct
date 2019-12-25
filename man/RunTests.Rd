@@ -4,8 +4,16 @@
 \alias{RunTests}
 \title{Run a suite of tests given data specified in \code{test.table}}
 \usage{
-RunTests(test.table, num.replicates, num.spectra.per.replicate, bg.info,
-  out.dir, mc.cores = 10, m.opts, verbose = FALSE)
+RunTests(
+  test.table,
+  num.replicates,
+  num.spectra.per.replicate,
+  bg.info,
+  out.dir,
+  mc.cores = 10,
+  m.opts,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{test.table}{XXX}

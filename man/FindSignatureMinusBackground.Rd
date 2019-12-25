@@ -4,8 +4,12 @@
 \alias{FindSignatureMinusBackground}
 \title{Estimate a signature from experimentally exposed spectra minus a background signature.}
 \usage{
-FindSignatureMinusBackground(spectra, bg.sig.info, m.opts = NULL,
-  start.b.fraction = 0.1)
+FindSignatureMinusBackground(
+  spectra,
+  bg.sig.info,
+  m.opts = NULL,
+  start.b.fraction = 0.1
+)
 }
 \arguments{
 \item{spectra}{The spectra from which to subtract the background,

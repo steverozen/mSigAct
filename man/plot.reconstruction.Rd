@@ -4,8 +4,7 @@
 \alias{plot.reconstruction}
 \title{Plot information about reconstructed spectrum}
 \usage{
-\method{plot}{reconstruction}(signatures, exposures.mat, input.genomes,
-  normalize.recon, padding = 0)
+\method{plot}{reconstruction}(signatures, exposures.mat, input.genomes, normalize.recon, padding = 0)
 }
 \description{
 Plot information about reconstructed spectrum

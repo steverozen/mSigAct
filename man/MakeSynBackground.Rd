@@ -4,8 +4,12 @@
 \alias{MakeSynBackground}
 \title{Generate \code{num.samples} synthetic background spectra.}
 \usage{
-MakeSynBackground(background.info, num.samples,
-  total.count.nbinom.size = NULL, sig.nbinom.size = NULL)
+MakeSynBackground(
+  background.info,
+  num.samples,
+  total.count.nbinom.size = NULL,
+  sig.nbinom.size = NULL
+)
 }
 \arguments{
 \item{background.info}{See for example \code{HepG2.background.info}.}
