@@ -134,7 +134,8 @@ MakeTest <- function(replicate,
   
   target.count <- stats::rnbinom(1, mu = target.mu, size = size)
   
-  ref.sig <- mSigAct::sp.sigs[ , target.sig.name, drop = FALSE]
+  ref.sig <-
+    PCAWG7::signature$genome$SBS96[ , target.sig.name, drop = FALSE]
   
   spectrum <-
     bg.count * bg.sig.info$background.sig + target.count * ref.sig
@@ -170,7 +171,8 @@ MakeSynTestGrid <-
   function(sig.names.to.test, contribution, bg.sig.info,
            num.replicates = 10) {
   dist <- round(DistancesToSPSigs(), digits = 3)
-  sigs.to.test <- mSigAct::sp.sigs[ , sig.names.to.test, drop = FALSE]
+  sigs.to.test <-
+    PCAWG7::signature$genome$SBS96[ , sig.names.to.test, drop = FALSE]
     
   RNGkind(kind = "L'Ecuyer-CMRG")
   set.seed(441441)
@@ -337,7 +339,7 @@ TestOutput2GroundTruthSignature <- function(test.output.item) {
   sig.names <- test.rows[ , "target.sig"]
   sig.name <- unique(sig.names)
   stopifnot(length(sig.name) == 1)
-  return(mSigAct::sp.sigs[ , sig.name, drop = FALSE])
+  return(PCAWG7::signature$genome$SBS96[ , sig.name, drop = FALSE])
 }
 
 

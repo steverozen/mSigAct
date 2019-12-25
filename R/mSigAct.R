@@ -793,7 +793,9 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
 #' @keywords internal
 EDist2SpectRounded <- function(exp, sig.names, spect) {
   reconstruction <- 
-    prop.reconstruct(sigs = mSigAct::sp.sigs[ , sig.names], exp = round(exp))
+    prop.reconstruct(
+      sigs = PCAWG7::signature$genome$SBS96[ , sig.names], 
+      exp = round(exp))
   # TEST
   reconstruction <- round(reconstruction)
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
@@ -806,7 +808,9 @@ EDist2SpectRounded <- function(exp, sig.names, spect) {
 #' @keywords internal
 EDist2Spect <- function(exp, sig.names, spect) {
   reconstruction <- 
-    prop.reconstruct(sigs = mSigAct::sp.sigs[ , sig.names], exp = exp)
+    prop.reconstruct(
+      sigs = 
+        PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
   return(err)
 }
@@ -844,7 +848,8 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   
   sig.names <- names(sig.counts)
   
-  some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
+  some.sigs  <- 
+    PCAWG7::signature$genome$SBS96[ , sig.names, drop = FALSE]
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
@@ -885,8 +890,9 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   recon1 <- round(prop.reconstruct(some.sigs, SA.out))
   recon2 <-
     round(
-      prop.reconstruct(mSigAct::sp.sigs[ , sig.names2, drop = FALSE],
-                       polish.out))
+      prop.reconstruct(
+        PCAWG7::signature$genome$SBS96[ , sig.names2, drop = FALSE],
+        polish.out))
   
   
   return(list(soln1       = SA.out,
@@ -923,7 +929,9 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
   sig.names <- rownames(sig.counts)
   colnames(sig.counts) <- paste0("tumor", 1:ncol(sig.counts))
   
-  some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
+  some.sigs  <- 
+    PCAWG7::signature$genome$SBS96[ , sig.names, drop = FALSE]
+
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
@@ -1027,8 +1035,6 @@ TestSignaturePresenceTest1 <-
     stop("sig.names not all in input.sigs")
   }
   
-  ## old code; seems redundant
-  #some.sigs  <- mSigAct::sp.sigs[ , sig.names, drop = FALSE]
   some.sigs  <- input.sigs[ , sig.names, drop = FALSE]
   
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
