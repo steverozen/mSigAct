@@ -37,20 +37,42 @@ ICAMS::StrelkaIDVCFFilesToZipFile(
 
 
 # Not used
-tmp.files <-grep("\\.vcf$",
+tmp.files <- grep("\\.vcf$",
                  list.files("data-raw/nitrosamine-example-data.2019.12.14/SBS",
                             full.names = TRUE), 
                  ignore.case = TRUE, value = TRUE) 
 # Not used
 tmp.cats3 <- 
-  ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
+  ICAMS::StrelkaSBSVCFFilesToCatalog( # AndPlotToPdf(
   files = tmp.files,
   ref.genome = "hg19",
-  # trans.ranges = ICAMS::trans.ranges.GRCh37,
+  trans.ranges = ICAMS::trans.ranges.GRCh37,
   region = "genome",
-  names.of.VCFs = sub(".*(N..._cl.).*", "\\1", tmp.files),
-  output.file = "~/nitrosamine/nitrosamines"
+  names.of.VCFs = sub(".*(N..._cl.).*", "\\1", tmp.files) # ,
+  # output.file = "data-raw/tmp-n/nitrosamines"
 )
+
+tmp.cats4 <- 
+  ICAMS::StrelkaSBSVCFFilesToCatalog( # AndPlotToPdf(
+    files = c("data-raw/spectra.for.background.signatures/MCF-10A-HepG2-background/background_vcfs/HepG2_SC2_cl1_SNVresult.vcf"),
+    ref.genome = "hg19",
+    trans.ranges = ICAMS::trans.ranges.GRCh37,
+    region = "genome",
+    names.of.VCFs = c("HepG2_SC2_cl1")) # ,
+    # output.file = "data-raw/tmp-n/nitrosamines"
+
+tmp.root <- "data-raw/nitrosamine-example-data.2019.12.14"
+tmp.cats5 <- 
+  ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
+    files = c(file.path(tmp.root, "/NDEA_cl1.results/", "passed.somatic.snvs.vcf"),
+              file.path(tmp.root, "/NDEA_cl2.results/", "passed.somatic.snvs.vcf")),
+    ref.genome = "hg19",
+    trans.ranges = ICAMS::trans.ranges.GRCh37,
+    region = "genome",
+    names.of.VCFs = c("NDEA_cl1", "NDEA_cl2"),
+    output.file = tmp.root
+  )
+
 rm(tmp.files)
 }
 
