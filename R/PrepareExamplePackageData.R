@@ -21,10 +21,38 @@ tmp.cats <-
   
   )
 
+debug(ICAMS::StrelkaIDVCFFilesToZipFile)
+# debug(BSgenome::getSeq)
+options(error = browser)
+options(warn = 3)
+showMethods("getSeq")
+# Function: getSeq (package Biostrings)
+# x="BSgenome"
+# x="FaFile"
+# x="FaFileList"
+# x="TwoBitFile"
+# x="XStringSet"
 ICAMS::StrelkaIDVCFFilesToZipFile(
   dir = "data-raw/nitrosamine-example-data.2019.12.14/ID",
   file = tempdir(),
-  zipfile.name = "~/nitrosamine.SBS",
+  zipfile.name = "~/nitrosamine.ID",
+  ref.genome = BSgenome.Hsapiens.1000genomes.hs37d5, # "hg19",
+  region = "genome",
+  output.file = "nitrosamines",
+  names.of.VCFs = c("NDEA.cl1", "NDEA.cl2", 
+                    "NMDA.cl1", "NMDA.cl2", 
+                    "NPIP.cl1", "NPIP.cl2", 
+                    "NPYR.cl1", "NPYR.cl2")
+  
+)
+assign("last.warning", NULL, envir = baseenv())
+debug(ICAMS:::NormalizeGenomeArg)
+environment(ICAMS:::NormalizeGenomeArg)
+### testing binding to "two bit file" name on Arnoud's computer
+ICAMS::StrelkaIDVCFFilesToZipFile(
+  dir = "data-raw/nitrosamine-example-data.2019.12.14/ID",
+  file = tempdir(),
+  zipfile.name = "~/nitrosamine.ID",
   ref.genome = "hg19",
   region = "genome",
   output.file = "nitrosamines",
@@ -36,7 +64,7 @@ ICAMS::StrelkaIDVCFFilesToZipFile(
 )
 
 
-# Not used
+B?# Not used
 tmp.files <- grep("\\.vcf$",
                  list.files("data-raw/nitrosamine-example-data.2019.12.14/SBS",
                             full.names = TRUE), 
