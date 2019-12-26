@@ -64,7 +64,11 @@ ICAMS::StrelkaIDVCFFilesToZipFile(
 )
 
 
+<<<<<<< HEAD
 B?# Not used
+=======
+?# Not used
+>>>>>>> 4cc4f9e56987df6d015efc160051c0cdecec83f2
 tmp.files <- grep("\\.vcf$",
                  list.files("data-raw/nitrosamine-example-data.2019.12.14/SBS",
                             full.names = TRUE), 
