@@ -2,7 +2,7 @@
 % Please edit documentation in R/BackgroundSubtractionSimpleTests.R
 \name{Generate1KucabSynData}
 \alias{Generate1KucabSynData}
-\title{Genereate Synthetic Data based on control data from Kucab et al., 2019.}
+\title{Generate synthetic data based on control data from Kucab et al., 2019.}
 \usage{
 Generate1KucabSynData(
   target.sig,
@@ -32,5 +32,5 @@ The background contributions are taken randomly from the control
 spectra in Kucab et al., 2019.}
 }
 \description{
-Genereate Synthetic Data based on control data from Kucab et al., 2019.
+Generate synthetic data based on control data from Kucab et al., 2019.
 }

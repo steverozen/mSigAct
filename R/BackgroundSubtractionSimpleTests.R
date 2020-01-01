@@ -1,4 +1,4 @@
-#' Genereate Synthetic Data based on control data from Kucab et al., 2019.
+#' Generate synthetic data based on control data from Kucab et al., 2019.
 #'
 #' @param target.sig The sig to test for, in Kucab's format.
 #' @param target.ratio.to.control The number of target signature

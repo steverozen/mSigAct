@@ -1,6 +1,6 @@
 # mSigAct 2.0.0.0005
 
-* In ObjFnBinomMaxLH2() provide an option to round the reconstruction only if no mutation
+* Create ObjFnBinomMaxLH2() to provide an option to round the reconstruction only if no mutation
   types have 0 counts. (In this case log likelihoods of observed data may be -inf, and the 
   numerical search might not advance.)
 

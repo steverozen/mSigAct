@@ -70,6 +70,7 @@ intron
 IUPAC
 ivity
 Kucab
+Kucab's
 MakeVCFDBSdf
 mer
 mers
@@ -85,6 +86,7 @@ Ng
 nloptr
 NN
 nucleotides
+ObjFnBinomMaxLH
 PCAWG
 pentanucleotide
 POS
@@ -122,6 +124,7 @@ TTGA
 UCSC
 uk
 undeleted
+unrounded
 unstranded
 untranscribed
 VAF
@@ -131,4 +134,5 @@ VCF
 VCFs
 wikipedia
 xqzou
-
+Xueqing
+Zou

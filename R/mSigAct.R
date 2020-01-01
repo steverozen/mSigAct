@@ -20,7 +20,7 @@
 #' governs dispersion. See \code{\link[stats]{NegBinomial}}.
 #' Smaller values correspond to larger dispersion.
 #' 
-#' @param verbose If \code{TRUE} print messages under some circumsances.
+#' @param verbose If \code{TRUE} print messages under some circumstances.
 #'
 #' @return \code{log(likelihood(spectrum | expected.counts))}
 #' 
@@ -745,7 +745,7 @@ prop.reconstruct <- function(sigs, exp) {
 #' @param spectrum The spectrum to assess.
 #' @param sigs The matrix of signatures.
 #' @param nbinom.size The dispersion parameter for the negative
-#'             binomial distribution; smaller is more dispersed.
+#'        binomial distribution; smaller is more dispersed.
 #'
 #' The result is
 #' 
@@ -763,15 +763,55 @@ prop.reconstruct <- function(sigs, exp) {
 #' @export
 #' 
 ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE)
+}
+
+
+#' The negative binomial maximum likelihood objective function.
+#' 
+#' For use by \code{\link[nloptr]{nloptr}}
+#'
+#' @param exp The matrix of exposures ("activities").
+#' @param spectrum The spectrum to assess.
+#' @param sigs The matrix of signatures.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#' @param allow.no.round If \code{TRUE}, allow use of unrounded
+#'        reconstruction if some mutation types would have 0
+#'        counts in the reconstructed spectrum.
+#'
+#' The result is
+#' 
+#' -1 * log(likelihood(spectrum | reconstruction))
+#'
+#' (nloptr minimizes the objective function.)
+#'
+#' The lower the objective function, the better.
+#'
+#' Can be used as the
+#' objective function for \code{\link{SparseAssignActivity}},
+#' \code{\link{SparseAssignActivity1}}, 
+#' and \code{\link{SignaturePresenceTest1}}.
+#' 
+#' @export
+#' 
+ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE) {
   
   if (any(is.na(exp))) return(Inf)
   
   reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
   
-  # TEST
-  reconstruction <- round(reconstruction)
+  reconstruction2 <- round(reconstruction)
   # Will cause problems if round of the reconstruction is 0 for
-  # any channel even if the reconstruction > 0.
+  # any channel even if the reconstruction > 0, because then
+  # log likelihood will be -inf. The situation is especial likely
+  # to occur if mutation counts in the spectrum are low.
+  if (any(reconstruction2 == 0) && allow.no.round) {
+    warning("unrounded reconstruction")
+  } else {
+    reconstruction <- reconstruction2
+  }
+  rm(reconstruction2)
   
   ## catch errors with NA in the input or in reconstruction.
   if (any(is.na(reconstruction))) {
