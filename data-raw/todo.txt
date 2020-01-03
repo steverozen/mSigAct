@@ -3,7 +3,9 @@ To Do
 * Make synthetic data based on hepg2 background SBS40 is closest to background
 SBS4, SBS18, SBS8 worth trying --- is there strand bias in nitrosamine spectra?
 
-* Get hepg2 nitrosamine data -- what is the closest signature
+* Get hepg2 nitrosamine data -- what is the closest signature -- mix this with hepg2 background for synthetic data
+
+for (i in 1:)
 
 
 0.1 Make synthetic data based on Kucab background
