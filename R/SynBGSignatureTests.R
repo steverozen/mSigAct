@@ -31,7 +31,7 @@ AddNoiseToSpectra <- function(spectra, nbinom.size) {
 
 #' Generate \code{num.samples} synthetic background spectra.
 #' 
-#' @param background.info See for example \code{HepG2.background.info}.
+#' @param background.info See, for example, \code{HepG2.background.info}.
 #' 
 #' @param num.samples Number of synthetic spectra to generate.
 #' 
@@ -102,11 +102,22 @@ if (FALSE) {
   mean(foo3$cv) # 0.3367861
 }
 
-MakeTest <- function(replicate, 
-                     bg.sig.info,
-                     bg.contribution,
-                     target.sig.name,
-                     dist.to.bg) {
+
+#' Make a single test spectrum.
+#' 
+#' @param replicate Arbitrary index for this test
+#'
+#' @param bg.sig.info See, for example, \code{HepG2.background.info}.
+#' 
+#' @param bg.contribution Expected proportion of mutations due to the background.
+#' 
+#' @param target.sig.name Name of a standard SigProfiler PCAWG7 signature.
+
+
+MakeTestSpectrum <- function(replicate, 
+                             bg.sig.info,
+                             bg.contribution,
+                             target.sig.name) {
   # To figure out the non-background, do we want
   # to have different background levels based
   # on distribution of intensities, and then
@@ -142,16 +153,45 @@ MakeTest <- function(replicate,
   
   spectrum <- round(spectrum)
   
-  return(cbind(data.frame(target.sig.name = target.sig.name),
-               matrix(c( dist.to.bg      = dist.to.bg,
-                         bg.contribution = bg.contribution,
-                         replicate       = replicate,
-                         bg.mu           = bg.mu,
-                         bg.count        = bg.count, 
-                         target.mu       = target.mu,
-                         target.count    = target.count,
-                         spectrum        = spectrum),
-                      nrow = 1)))
+  spectrum <- 
+    ICAMS::as.catalog(
+      spectrum,
+      catalog.type = "counts",
+      ref.genome =
+        BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5
+    )
+  
+  return(list(
+    bg.contribution = bg.contribution,
+    replicate       = replicate,
+    bg.mu           = bg.mu,
+    bg.count        = bg.count, 
+    target.mu       = target.mu,
+    target.count    = target.count,
+    spectrum        = spectrum))
+}
+
+if (FALSE) {
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+  tmp.test1 <- MakeTestSpectrum(replicate = 1,
+                                bg.sig.info = HepG2.background.info,
+                                bg.contribution = 0.5,
+                                target.sig.name = "SBS40")
+  tmp.test2 <- MakeTestSpectrum(replicate = 1,
+                                bg.sig.info = HepG2.background.info,
+                                bg.contribution = 0.5,
+                                target.sig.name = "SBS40")
+  tmp.test <- cbind(tmp.test1$spectrum, tmp.test2$spectrum)
+  ICAMS::PlotCatalogToPdf(tmp.test, file = "data-raw/test.pdf")
+  tmp.out <-
+    FindSignatureMinusBackground(
+      tmp.test,
+      HepG2.background.info,
+      m.opts = NULL,
+      start.b.fraction = 0.5)
+  
+  
 }
 
 # Note: https://www.r-bloggers.com/populating-data-frame-cells-with-more-than-one-value/
@@ -198,11 +238,12 @@ MakeSynTestGrid <-
       for (replicate in 1:num.replicates) {
         sig.name.i <- sig.names.to.test[i]
         next.row <-
-          MakeTest(replicate       = replicate, 
+          MakeTestSpectrum(replicate       = replicate, 
                    bg.sig.info     = bg.sig.info,
                    bg.contribution = cont,
-                   target.sig.name = sig.name.i,
-                   dist.to.bg      = dist[sig.name.i])
+                   target.sig.name = sig.name.i #,
+                   # dist.to.bg      = dist[sig.name.i]
+                   )
         colnames(next.row) <- colnames(output)
         output <- rbind(output, next.row)
       }

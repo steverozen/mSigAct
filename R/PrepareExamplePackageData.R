@@ -22,7 +22,7 @@ tmp.files <- grep("\\.vcf$",
                             full.names = TRUE), 
                  ignore.case = TRUE, value = TRUE) 
 # Important
-tmp.cats3 <- 
+nitrosamine.examples <- 
   ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
   files = tmp.files,
   ref.genome = 
@@ -32,6 +32,45 @@ tmp.cats3 <-
   names.of.VCFs = sub(".*(N..._cl.).*", "\\1", tmp.files),
   output.file = file.path(SBS.dir, "nitrosamines")
 )
+
+usethis::use_data(nitrosamine.examples)
+rm(tmp.files)
+rm(SBS.dir)
+}
+
+ClosestCosSig <- function(spectrum) {
+  cos <- 
+    apply(PCAWG7::signature$genome$SBS96, 
+          MARGIN = 2, 
+          FUN = 
+            function(sig) {
+              lsa::cosine(as.vector(sig), as.vector(spectrum))})
+  max.cos <- which(cos == max(cos))
+  return(cos[max.cos])
+  
+}
+
+
+ClosestCosSigDensity <- function(spectrum) {
+  spec <- 
+    ICAMS::TransformCatalog(
+      spectrum,
+      target.catalog.type = "density")
+
+   sigs <- 
+     ICAMS::TransformCatalog(
+       PCAWG7::signature$genome$SBS96,
+       target.catalog.type = "density.signature")
+   
+    cos <- 
+    apply(sigs, 
+          MARGIN = 2, 
+          FUN = 
+            function(sig) {
+              lsa::cosine(as.vector(sig), as.vector(spec))})
+  max.cos <- which(cos == max(cos))
+  return(cos[max.cos])
+  
 }
 
 # Spectra from cisplatin exposed HepG2
