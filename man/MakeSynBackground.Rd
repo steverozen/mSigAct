@@ -12,7 +12,7 @@ MakeSynBackground(
 )
 }
 \arguments{
-\item{background.info}{See for example \code{HepG2.background.info}.}
+\item{background.info}{See, for example, \code{HepG2.background.info}.}
 
 \item{num.samples}{Number of synthetic spectra to generate.}
 
