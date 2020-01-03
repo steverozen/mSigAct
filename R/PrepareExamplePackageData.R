@@ -73,9 +73,10 @@ tmp.files <- grep("\\.vcf$",
                  ignore.case = TRUE, value = TRUE) 
 # Not used
 tmp.cats3 <- 
-  ICAMS::StrelkaSBSVCFFilesToCatalog( # AndPlotToPdf(
+  ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
   files = tmp.files,
-  ref.genome = "hg19",
+  ref.genome = 
+    BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5,
   trans.ranges = ICAMS::trans.ranges.GRCh37,
   region = "genome",
   names.of.VCFs = sub(".*(N..._cl.).*", "\\1", tmp.files) # ,
