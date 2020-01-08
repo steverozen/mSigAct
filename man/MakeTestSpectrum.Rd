@@ -5,23 +5,18 @@
 \title{Make a single test spectrum.}
 \usage{
 MakeTestSpectrum(
-  replicate,
   bg.sig.info,
   bg.contribution,
   target.sig.name = NULL,
-  ref.sig = NULL
+  target.sig = NULL
 )
 }
 \arguments{
-\item{replicate}{Arbitrary index for this test}
-
 \item{bg.sig.info}{See, for example, \code{HepG2.background.info}.}
 
 \item{bg.contribution}{Expected proportion of mutations due to the background.}
 
-\item{target.sig.name}{Name of a standard SigProfiler PCAWG7 signature.}
-
-\item{ref.sig}{Target signature as a signature, rather than string}
+\item{target.sig}{Target signature as a signature.}
 }
 \description{
 Make a single test spectrum.

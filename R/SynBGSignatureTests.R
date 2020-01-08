@@ -109,21 +109,16 @@ GetPCAWG7Sig <- function(sig.name) {
 
 #' Make a single test spectrum.
 #' 
-#' @param replicate Arbitrary index for this test
-#'
 #' @param bg.sig.info See, for example, \code{HepG2.background.info}.
 #' 
 #' @param bg.contribution Expected proportion of mutations due to the background.
 #' 
-#' @param target.sig.name Name of a standard SigProfiler PCAWG7 signature.
-#'
-#' @param ref.sig Target signature as a signature, rather than string
+#' @param target.sig Target signature as a signature. 
 
-MakeTestSpectrum <- function(replicate, 
-                             bg.sig.info,
+MakeTestSpectrum <- function(bg.sig.info,
                              bg.contribution,
                              target.sig.name = NULL,
-                             ref.sig = NULL) {
+                             target.sig = NULL) {
   # To figure out the non-background, do we want
   # to have different background levels based
   # on distribution of intensities, and then
@@ -151,13 +146,8 @@ MakeTestSpectrum <- function(replicate,
   
   target.count <- stats::rnbinom(1, mu = target.mu, size = size)
   
-  if (is.null(ref.sig)) {
-    ref.sig <-
-      PCAWG7::signature$genome$SBS96[ , target.sig.name, drop = FALSE]
-  }
-  
   spectrum <-
-    bg.count * bg.sig.info$background.sig + target.count * ref.sig
+    bg.count * bg.sig.info$background.sig + target.count * target.sig
   
   spectrum <- round(spectrum)
   
@@ -171,7 +161,6 @@ MakeTestSpectrum <- function(replicate,
   
   return(list(
     bg.contribution = bg.contribution,
-    replicate       = replicate,
     bg.mu           = bg.mu,
     bg.count        = bg.count, 
     target.mu       = target.mu,
@@ -184,10 +173,9 @@ BGOneTestInput <- function(bg.info, target.sig, bg.contribution, num.spectra) {
   is.first <- TRUE
   
   for (j in 1:num.spectra) {
-    tmp.test <- MakeTestSpectrum(replicate = 1,
-                                 bg.sig.info = bg.info,
+    tmp.test <- MakeTestSpectrum(bg.sig.info     = bg.info,
                                  bg.contribution = bg.contribution,
-                                 ref.sig = target.sig)
+                                 target.sig      = target.sig)
     if (is.first) {
       retval1 <- tmp.test[1:6]
       spec    <- tmp.test$spectrum
@@ -255,7 +243,7 @@ if (FALSE) {
               target.sig           = GetPCAWG7Sig("SBS40"), 
               bg.contribution      = 0.5, 
               num.spectra.per.test = 2) 
-  
+  all.equal.numeric(as.numeric(foo$sim), 0.9998759, tolerance = 1e-7) 
 
   RNGkind(kind = "L'Ecuyer-CMRG")
   set.seed(441441)
@@ -263,7 +251,8 @@ if (FALSE) {
     BGOneTest(bg.info              = HepG2.background.info,
               target.sig          = GetPCAWG7Sig("SBS5"), 
               bg.contribution      = 0.5, 
-              num.spectra.per.test = 2) 
+              num.spectra.per.test = 2)
+  all.equal.numeric(as.numeric(foo2$sim), 0.9997138, tolerance = 1e-7)
 }
 
 # Below here is older code that needs to be deleted or updated
@@ -312,7 +301,7 @@ MakeSynTestGrid <-
       for (replicate in 1:num.replicates) {
         sig.name.i <- sig.names.to.test[i]
         next.row <-
-          MakeTestSpectrum(replicate       = replicate, 
+          MakeTestSpectrum( 
                    bg.sig.info     = bg.sig.info,
                    bg.contribution = cont,
                    target.sig.name = sig.name.i #,
