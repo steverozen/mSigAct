@@ -102,6 +102,10 @@ if (FALSE) {
   mean(foo3$cv) # 0.3367861
 }
 
+GetPCAWG7Sig <- function(sig.name) {
+  return(PCAWG7::signature$genome$SBS96[ , sig.name, drop = FALSE])
+}
+
 
 #' Make a single test spectrum.
 #' 
@@ -112,12 +116,14 @@ if (FALSE) {
 #' @param bg.contribution Expected proportion of mutations due to the background.
 #' 
 #' @param target.sig.name Name of a standard SigProfiler PCAWG7 signature.
-
+#'
+#' @param ref.sig Target signature as a signature, rather than string
 
 MakeTestSpectrum <- function(replicate, 
                              bg.sig.info,
                              bg.contribution,
-                             target.sig.name) {
+                             target.sig.name = NULL,
+                             ref.sig = NULL) {
   # To figure out the non-background, do we want
   # to have different background levels based
   # on distribution of intensities, and then
@@ -145,8 +151,10 @@ MakeTestSpectrum <- function(replicate,
   
   target.count <- stats::rnbinom(1, mu = target.mu, size = size)
   
-  ref.sig <-
-    PCAWG7::signature$genome$SBS96[ , target.sig.name, drop = FALSE]
+  if (is.null(ref.sig)) {
+    ref.sig <-
+      PCAWG7::signature$genome$SBS96[ , target.sig.name, drop = FALSE]
+  }
   
   spectrum <-
     bg.count * bg.sig.info$background.sig + target.count * ref.sig
@@ -171,50 +179,91 @@ MakeTestSpectrum <- function(replicate,
     spectrum        = spectrum))
 }
 
-if (FALSE) {
-  RNGkind(kind = "L'Ecuyer-CMRG")
-  set.seed(441441)
-  tmp.test1 <- MakeTestSpectrum(replicate = 1,
-                                bg.sig.info = HepG2.background.info,
-                                bg.contribution = 0.5,
-                                target.sig.name = "SBS40")
-  tmp.test2 <- MakeTestSpectrum(replicate = 1,
-                                bg.sig.info = HepG2.background.info,
-                                bg.contribution = 0.5,
-                                target.sig.name = "SBS40")
-  tmp.test <- cbind(tmp.test1$spectrum, tmp.test2$spectrum)
-  ICAMS::PlotCatalogToPdf(tmp.test, file = "data-raw/test.pdf")
+
+BGOneTestInput <- function(bg.info, target.sig, bg.contribution, num.spectra) {
+  is.first <- TRUE
+  
+  for (j in 1:num.spectra) {
+    tmp.test <- MakeTestSpectrum(replicate = 1,
+                                 bg.sig.info = bg.info,
+                                 bg.contribution = bg.contribution,
+                                 ref.sig = target.sig)
+    if (is.first) {
+      retval1 <- tmp.test[1:6]
+      spec    <- tmp.test$spectrum
+      is.first <- FALSE
+    } else {
+      retval1 <- rbind(retval1, tmp.test[1:6])
+      spec    <- cbind(spec, tmp.test$spectrum)
+    }
+  }
+  return(list(info1 = retval1, spectra = spec))
+}
+  
+  
+BGOneTest <- function(bg.info,
+                      target.sig,
+                      bg.contribution,
+                      num.spectra.per.test) {
+  
+  test.data <- BGOneTestInput(bg.info, 
+                              target.sig, 
+                              bg.contribution, 
+                              num.spectra.per.test)
   tmp.out <-
     FindSignatureMinusBackground(
-      tmp.test,
+      test.data$spectra,
       HepG2.background.info,
       m.opts = NULL,
       start.b.fraction = 0.5)
-  cossim(tmp.out$inferred.target.sig, PCAWG7::signature$genome$SBS96[ , "SBS40"])
+
+  
+  return(list(
+    test.data = test.data,
+    sim       = cossim(tmp.out$inferred.target.sig, target.sig)))
+  
+  # Do to, cosim of target counts (?)
+  # Finish BGMultiTest and get stats on cosim and reconstructed target counts
+}
+
+
+# Not finished:
+BGMultiTest <- function(num.tests,
+                        bg.info,
+                        target.sig,
+                        bg.contribution,
+                        num.spectra.per.test) {
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+  for (i in 1:num.tests) {
+    res <- BGOneTest(i, 
+                     bg.info, 
+                     target.sig, 
+                     bg.contribution, 
+                     num.spectra.per.test)
+  }
+  
+}
+
+
+if (FALSE) {
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+
+  foo <- 
+    BGOneTest(bg.info              = HepG2.background.info,
+              target.sig           = GetPCAWG7Sig("SBS40"), 
+              bg.contribution      = 0.5, 
+              num.spectra.per.test = 2) 
   
 
   RNGkind(kind = "L'Ecuyer-CMRG")
   set.seed(441441)
-  tmp.test1 <- MakeTestSpectrum(replicate = 1,
-                                bg.sig.info = HepG2.background.info,
-                                bg.contribution = 0.5,
-                                target.sig.name = "SBS5")
-  tmp.test2 <- MakeTestSpectrum(replicate = 1,
-                                bg.sig.info = HepG2.background.info,
-                                bg.contribution = 0.5,
-                                target.sig.name = "SBS5")
-  tmp.test <- cbind(tmp.test1$spectrum, tmp.test2$spectrum)
-  ICAMS::PlotCatalogToPdf(tmp.test, file = "data-raw/test.pdf")
-  tmp.out <-
-    FindSignatureMinusBackground(
-      tmp.test,
-      HepG2.background.info,
-      m.opts = NULL,
-      start.b.fraction = 0.5)
-  cossim(tmp.out$inferred.target.sig, PCAWG7::signature$genome$SBS96[ , "SBS5"])
-  
-  
-  
+  foo2 <- 
+    BGOneTest(bg.info              = HepG2.background.info,
+              target.sig          = GetPCAWG7Sig("SBS5"), 
+              bg.contribution      = 0.5, 
+              num.spectra.per.test = 2) 
 }
 
 # Below here is older code that needs to be deleted or updated

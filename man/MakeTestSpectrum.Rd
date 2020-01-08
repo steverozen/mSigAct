@@ -4,7 +4,13 @@
 \alias{MakeTestSpectrum}
 \title{Make a single test spectrum.}
 \usage{
-MakeTestSpectrum(replicate, bg.sig.info, bg.contribution, target.sig.name)
+MakeTestSpectrum(
+  replicate,
+  bg.sig.info,
+  bg.contribution,
+  target.sig.name = NULL,
+  ref.sig = NULL
+)
 }
 \arguments{
 \item{replicate}{Arbitrary index for this test}
@@ -14,6 +20,8 @@ MakeTestSpectrum(replicate, bg.sig.info, bg.contribution, target.sig.name)
 \item{bg.contribution}{Expected proportion of mutations due to the background.}
 
 \item{target.sig.name}{Name of a standard SigProfiler PCAWG7 signature.}
+
+\item{ref.sig}{Target signature as a signature, rather than string}
 }
 \description{
 Make a single test spectrum.
