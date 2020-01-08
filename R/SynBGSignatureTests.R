@@ -190,6 +190,29 @@ if (FALSE) {
       HepG2.background.info,
       m.opts = NULL,
       start.b.fraction = 0.5)
+  cossim(tmp.out$inferred.target.sig, PCAWG7::signature$genome$SBS96[ , "SBS40"])
+  
+
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+  tmp.test1 <- MakeTestSpectrum(replicate = 1,
+                                bg.sig.info = HepG2.background.info,
+                                bg.contribution = 0.5,
+                                target.sig.name = "SBS5")
+  tmp.test2 <- MakeTestSpectrum(replicate = 1,
+                                bg.sig.info = HepG2.background.info,
+                                bg.contribution = 0.5,
+                                target.sig.name = "SBS5")
+  tmp.test <- cbind(tmp.test1$spectrum, tmp.test2$spectrum)
+  ICAMS::PlotCatalogToPdf(tmp.test, file = "data-raw/test.pdf")
+  tmp.out <-
+    FindSignatureMinusBackground(
+      tmp.test,
+      HepG2.background.info,
+      m.opts = NULL,
+      start.b.fraction = 0.5)
+  cossim(tmp.out$inferred.target.sig, PCAWG7::signature$genome$SBS96[ , "SBS5"])
+  
   
   
 }
