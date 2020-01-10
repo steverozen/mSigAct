@@ -204,33 +204,48 @@ BGOneTest <- function(bg.info,
       HepG2.background.info,
       m.opts = NULL,
       start.b.fraction = 0.5)
+  
+  if (tmp.out$all.opt.ret$options$maxeval ==
+      tmp.out$all.opt.ret$iterations) {
+    warning("Numerical optimization did not converge: ",
+            "see all.nloptr.out in return value")
+    
+  }
 
-  
   return(list(
-    test.data = test.data,
-    sim       = cossim(tmp.out$inferred.target.sig, target.sig)))
+    test.data               = test.data,
+    sim                     = 
+      cossim(tmp.out$inferred.target.sig, target.sig),
+    target.sig.count.diff   = 
+      tmp.out$exposures.to.target.sig - 
+      unlist(test.data$info1[ , "target.count"]),
+    exposures.to.target.sig = tmp.out$exposures.to.target.sig,
+    all.nloptr.out          = tmp.out$all.opt.ret
+  ))
   
-  # Do to, cosim of target counts (?)
-  # Finish BGMultiTest and get stats on cosim and reconstructed target counts
+  # To Do, cosim of target counts (?)
+  # To Do, get cosim on reconstructed target counts (?)
+  # To Do, test premature stop
 }
 
 
-# Not finished:
 BGMultiTest <- function(num.tests,
                         bg.info,
                         target.sig,
                         bg.contribution,
-                        num.spectra.per.test) {
-  RNGkind(kind = "L'Ecuyer-CMRG")
-  set.seed(441441)
+                        num.spectra.per.test,
+                        verbose = FALSE) {
+  retval <- list()
   for (i in 1:num.tests) {
-    res <- BGOneTest(i, 
-                     bg.info, 
+    if (verbose) message("start ", i)
+    res <- BGOneTest(bg.info, 
                      target.sig, 
                      bg.contribution, 
                      num.spectra.per.test)
+    retval[[i]] <- res
+    if (verbose) message("end ", i)
   }
-  
+  return(retval)
 }
 
 
@@ -253,7 +268,33 @@ if (FALSE) {
               bg.contribution      = 0.5, 
               num.spectra.per.test = 2)
   all.equal.numeric(as.numeric(foo2$sim), 0.9997138, tolerance = 1e-7)
+  
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+  
+  foo5 <- 
+    BGOneTest(bg.info              = HepG2.background.info,
+              target.sig           = GetPCAWG7Sig("SBS40"), 
+              bg.contribution      = 0.1, 
+              num.spectra.per.test = 2)
+  # all.equal.numeric(as.numeric(foo$sim), 0.9998759, tolerance = 1e-7) 
 }
+
+if (FALSE) {
+  RNGkind(kind = "L'Ecuyer-CMRG")
+  set.seed(441441)
+  foo3 <- BGMultiTest(
+    num.tests            = 5,
+    bg.info              = HepG2.background.info,
+    target.sig           = GetPCAWG7Sig("SBS40"),
+    bg.contribution      = 0.5,
+    num.spectra.per.test = 2,
+    verbose              = TRUE
+  )
+  foo4 <- summary(unlist(lapply(foo3,  function(x) x$sim)))
+  all.equal.numeric(as.numeric(foo4["Median"]), 0.998815, tolerance = 1e-7) 
+}
+
 
 # Below here is older code that needs to be deleted or updated
 

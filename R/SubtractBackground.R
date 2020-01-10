@@ -211,9 +211,12 @@ FindSignatureMinusBackground <-
     
     soln <- ret$solution
     
+    bg.exposure <- soln[(1 + nrow(spectra)):length(soln)]
+    obs.counts  <- colSums(spectra)
+    
     return(list(inferred.target.sig     = soln[1:nrow(spectra)],
-                exposures.to.target.sig = 
-                  soln[(1 + nrow(spectra)):length(soln)],
+                exposures.to.target.sig = obs.counts - bg.exposure,
+                  # soln[(1 + nrow(spectra)):length(soln)],
                 message                 = ret$message,
                 all.opt.ret             = ret))
   }
