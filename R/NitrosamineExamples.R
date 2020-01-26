@@ -1,5 +1,9 @@
 if (FALSE) {
   
+  # Find the signature minus background and generate plots and a report
+  # Two parameters, the background info and the spectra
+  # Also location to put the output.
+  
   foo.bg <- HepG2.background.info
   
   NDEA <- mSigAct::nitrosamine.examples$catSBS96[ , 1:2]
