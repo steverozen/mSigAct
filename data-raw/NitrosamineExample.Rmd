@@ -1,0 +1,49 @@
+---
+title: "Nitrosamne Background Subtraction Example"
+author: "Steve Rozen"
+date: "1/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Example of subtracting background signatures
+
+MORE STUFF HERE
+
+```{r}
+library(mSigAct)
+```
+
+```{r subtract}
+NDEA <- mSigAct::nitrosamine.examples$catSBS96[ , 1:2]
+class(NDEA)
+ICAMS::PlotCatalog(NDEA[ , 1, drop = FALSE])
+ICAMS::PlotCatalog(NDEA[ , 2, drop = FALSE])
+  
+```
+
+```{r}
+ret <- 
+  FindSignatureMinusBackground(
+    spectra     = NDEA,
+    bg.sig.info = HepG2.background.info,
+    m.opts      = NULL,
+    start.b.fraction = 0.5)
+```
+
+```{r}
+ret$inferred.targe.sig
+debug(ICAMS::as.catalog)
+inferred.sig <- ICAMS::as.catalog(ret$inferred.target.sig, 
+                                  catalog.type = "counts.signature",
+                                  region = "genome",
+                                  infer.rownames = TRUE)
+```
+
+```{r plot.inferred}
+  ICAMS::PlotCatalog(inferred.sig)
+```
+

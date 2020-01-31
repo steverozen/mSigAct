@@ -1,16 +1,18 @@
 if (FALSE) {
+  # Possibly turn this into a wrapper function that generates multiple plots?
+  # 
+  # Make sure ICAMS can generate the correct plots?
   
   # Find the signature minus background and generate plots and a report
   # Two parameters, the background info and the spectra
   # Also location to put the output.
   
-  foo.bg <- HepG2.background.info
   
   NDEA <- mSigAct::nitrosamine.examples$catSBS96[ , 1:2]
   ret <- 
     FindSignatureMinusBackground(
       spectra     = NDEA,
-      bg.sig.info = foo.bg,
+      bg.sig.info = HepG2.background.info,
       m.opts      = NULL,
       start.b.fraction = 0.5)
   
@@ -19,6 +21,7 @@ if (FALSE) {
                                     region = "genome",
                                     infer.rownames = TRUE)
   ICAMS::PlotCatalogToPdf(inferred.sig, "NDEA.inferred.sig2.pdf")
+  
   inferred.target.spectra <- inferred.sig %*% matrix(ret$exposures.to.target.sig, nrow = 1)
   inferred.target.spectra <- ICAMS::as.catalog(inferred.target.spectra,
                                                catalog.type   = "counts",
@@ -27,7 +30,7 @@ if (FALSE) {
   ICAMS::PlotCatalogToPdf(inferred.target.spectra, "NDEA.inferred.target.spectra2.pdf")
   total.counts <- apply(NDEA, MARGIN = 2, sum)
   bg.counts <- total.counts - ret$exposures.to.target.sig
-  inferred.bg.spectra <- foo.bg$background.sig %*% matrix(bg.counts, nrow = 1)
+  inferred.bg.spectra <- HepG2.background.info$background.sig %*% matrix(bg.counts, nrow = 1)
   inferred.bg.spectra <- ICAMS::as.catalog(inferred.bg.spectra,
                                   catalog.type   = "counts",
                                   region         = "genome",
