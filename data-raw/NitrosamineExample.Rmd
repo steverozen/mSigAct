@@ -31,10 +31,8 @@ pcat <- function(catalog) {
 }
 
 two.sigs.par <- function() {
-  par(fin = c(4, 1.5)， mfrow = c(2, 1), mar = c(3, 2, 3, 2))
-
+  par(fin = c(4, 1.25)， mfrow = c(2, 1), mar = c(3.5, 4, 3, 2))
 }
-
 ```
 
 
