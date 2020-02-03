@@ -39,8 +39,8 @@ if (FALSE) {
   
   total.spectra <- inferred.target.spectra + inferred.bg.spectra
   ICAMS::PlotCatalogToPdf(total.spectra, "NDEA.reconstructed2.pdf")
-  cossim(total.spectra[ ,1], NDEA[ ,1])
-  cossim(total.spectra[ ,2], NDEA[ ,2])
+  mSigAct:::cossim(total.spectra[ ,1], NDEA[ ,1])
+  mSigAct:::cossim(total.spectra[ ,2], NDEA[ ,2])
   dist(rbind(total.spectra[ ,1], NDEA[ ,1]), method = "euclidean")
   dist(rbind(total.spectra[ ,2], NDEA[ ,2]), method = "euclidean")
 }
