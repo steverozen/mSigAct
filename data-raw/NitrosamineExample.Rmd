@@ -22,17 +22,20 @@ library(ICAMS)
 ```
 
 ```{r, utilties}
+
+two.sigs.par <- function() {
+  par(fin = c(4, 1)， mfrow = c(2, 1), mar = c(3.5, 4, 3, 2))
+}
+
 pcat <- function(catalog) {
+  two.sigs.par()
   for (i in 1:ncol(catalog)) {
     ICAMS::PlotCatalog(catalog[ , i, drop = FALSE],
                        upper = (i == 1)，
-                       cex   = 0.3)
+                       cex   = 0.4)
   }
 }
 
-two.sigs.par <- function() {
-  par(fin = c(4, 1.25)， mfrow = c(2, 1), mar = c(3.5, 4, 3, 2))
-}
 ```
 
 
@@ -40,14 +43,12 @@ two.sigs.par <- function() {
 
 ```{r, plot.input.spectra}
 my.nitroso <- mSigAct::nitrosamine.examples$catSBS96[ , 1:2]
-two.sigs.par()
 pcat(my.nitroso)
 ```
 
 ### Input density spectra
 
 ```{r, plot.input.density}
-two.sigs.par()
 pcat(ICAMS::TransformCatalog(my.nitroso, 
                              target.catalog.type = "density"))
 ```
@@ -84,16 +85,12 @@ colnames(inferred.sig) <- "Inferred signature"
 
 two.sigs <- cbind(inferred.sig, 
                   mSigAct::HepG2.background.info$background.sig)
-# attr(two.sigs, "abundance") <- 
- 
-two.sigs.par()
 pcat(two.sigs)
 ```
 
 #### Density signature of inferred nitrosamine and background
 
 ```{r, plot.inferred.density}
-two.sigs.par()
 pcat(ICAMS::TransformCatalog(two.sigs, 
                              target.catalog.type = "density.signature"))
 ```
@@ -110,7 +107,6 @@ inferred.target.spectra <- ICAMS::as.catalog(inferred.target.spectra,
                                              catalog.type   = "counts",
                                              region         = "genome",
                                              infer.rownames = TRUE)
-two.sigs.par()
 pcat(inferred.target.spectra)
 ```
 
@@ -125,8 +121,6 @@ inferred.bg.spectra <- ICAMS::as.catalog(inferred.bg.spectra,
                                          catalog.type   = "counts",
                                          region         = "genome",
                                          infer.rownames = TRUE)
-
-two.sigs.par()
 pcat(inferred.bg.spectra)
 ```
 
@@ -159,14 +153,12 @@ colnames(s.by.s) <- c(
 ##### First replicate
 
 ```{r, plot.replicate1}
-two.sigs.par()
 pcat(s.by.s[ , 1:2])
 ```
 
 ##### Second replicate
 
 ```{r, plot.replcatg2}
-two.sigs.par()
 pcat(s.by.s[ , 3:4])
 ```
 
