@@ -1,22 +1,52 @@
-#' Load spectra rceived from Arnoud on 2019 Oct 23
-#' 
+# To create background information variables, at top level, run
+# the following functions
+# 
+# MakeMCF10HepG2BackgroundVars()
+# SaveHepG2andMCF10ABackgroundInfo()
 
-LoadArnoudMCF10HepG2 <- function() {
-  env <- new.env()
-  load(devtools::package_file(
-    file.path(
-    "data-raw",
-    "spectra.for.background.signatures",
-    "MCF-10A-HepG2-background",
-    "background_spectra.Rdata")),
-    envir = env,
-    verbose = TRUE)
-  attr(env$catSBS$catSBS96, "ref.genome") <- NULL
-  HepG2.background.spectra <- env$catSBS$catSBS96[ , 1:3]
-  MCF10A.background.spectra <- env$catSBS$catSBS96[ , 4:6]
-  HepG2.background.spectra
-  attr(HepG2.background.spectra, "ref.genome") <- NULL
-  attr(MCF10A.background.spectra, "ref.genome") <- NULL
+#' Create spectra from VCFs and load spectra as package variables.
+#' VCFs received from Arnound on 2020 Feb 04
+
+
+MakeMCF10HepG2BackgroundVars <- function() {
+  data.dir <- file.path("data-raw",
+                        "background.signature.spectra", 
+                        "backgroundVCFS-2020-02-04")
+  sbs.files <- dir(path = data.dir, pattern = "SNV", full.names = TRUE)
+  names <- sub(".*((MCF10A|HepG2)_SC._cl.).*", "\\1", sbs.files, perl = TRUE)
+  
+  # No substantial indel background, so will not read these VCFs
+  # id.files  <- dir(path = data.dir, pattern = "INDEL", full.names = TRUE)
+  sbs.cat <- 
+    ICAMS::StrelkaSBSVCFFilesToCatalogAndPlotToPdf(
+      files         = sbs.files, 
+      ref.genome    = BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5,
+      region        = "genome",
+      names.of.VCFs = names,
+      output.file = file.path(data.dir, "MCF10A-and-HepG2-bg"))
+  ICAMS::WriteCatalog(sbs.cat$catSBS96, 
+                      file.path(data.dir, "MCF10A-and-HepG2-bg-SBS96-bg.csv"))
+  ICAMS::WriteCatalog(sbs.cat$catSBS192, 
+                      file.path(data.dir, "MCF10A-and-HepG2-bg-SBS192-bg.csv"))
+  
+  if (FALSE) {
+    # Old code
+    env <- new.env()
+    load(devtools::package_file(
+      file.path(
+        "data-raw",
+        "spectra.for.background.signatures",
+        "MCF-10A-HepG2-background",
+        "background_spectra.Rdata")),
+      envir = env,
+      verbose = TRUE)
+  }
+  
+  # The ref genomes have an arbitrary file path encoded in them
+  attr(sbs.cat$catSBS96, "ref.genome") <- NULL
+
+  HepG2.background.spectra  <- sbs.cat$catSBS96[ , 1:3]
+  MCF10A.background.spectra <- sbs.cat$catSBS96[ , 4:6]
   usethis::use_data(HepG2.background.spectra, overwrite = TRUE)
   usethis::use_data(MCF10A.background.spectra, overwrite = TRUE)
 }
@@ -154,7 +184,7 @@ MakeBackground <- function(bg.spectra, maxeval) {
               count.nbinom.size = count.nbinom.size))
 }
 
-SaveHepG2andMCF10A <- function() {
+SaveHepG2andMCF10ABackgroundInfo <- function() {
   HepG2.background.info <-
     MakeBackground(mSigAct::HepG2.background.spectra, 10000)
   MCF10A.background.info <-
