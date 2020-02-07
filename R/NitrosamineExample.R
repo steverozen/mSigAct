@@ -21,7 +21,7 @@ if (FALSE) {
                     "NPYR")) {
     RenderNitroExample(mynitro, bg.inflate.factor = 8)
   }
-  RenderNitroExample("NDMA", bg.inflate.factor = 2)
+  RenderNitroExample("NPYR", bg.inflate.factor = 16)
 }
 
 

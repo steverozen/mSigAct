@@ -14,6 +14,7 @@ title: '`r paste("Background Subtraction for", params$whichnitro, "and Backgroun
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# params <- list(whichnitro = "NPYR", bgfactor = 16)
 ```
 ### Introduction
 
@@ -31,7 +32,6 @@ level of background signature by a factor of `r params$bgfactor`.
 ```{r, libraries, echo=params$verbose}
 library(mSigAct)
 library(ICAMS)
-
 ```
 
 ```{r, utilties, echo=params$verbose}
@@ -39,6 +39,9 @@ in.ranges <- list(NDEA = 1:2,
                   NDMA = 3:4,
                   NPIP = 5:6,
                   NPYR = 7:8)
+```
+
+```{r, util_func, echo=params$verbose}
 
 spectra <- # The input spectra for one nitrosamine
   mSigAct::nitrosamine.examples$catSBS96[ , in.ranges[[params$whichnitro]]]
@@ -50,20 +53,26 @@ set.initial.par <- function(catalog) {
   par(cex = 0.8)
   par(cex.main = 1.4) 
 }
-last.bottom.mar <- 4.5
 
+last.bottom.mar <- 4.5
+```
+
+```{r, define_pcat1, echo=params$verbose}
 pcat1 <- function(catalog, ylim = NULL) {
   par(pin = c(5, 1))
   par(mar = c(5, 4, 5, 4))
   par(cex = 0.8)
   par(cex.main = 1.4)
   bp <- ICAMS::PlotCatalog(catalog[ , 1, drop = FALSE],
-                           upper = TRUE，
+                           upper   = TRUE,
                            xlabels = TRUE,
-                           ylim)
+                           ylim    = ylim
+                           )
   return(invisible(bp$plot.object))
 }
+```
 
+```{r, define_pcat, echo=params$verbose}
 pcat <- function(catalog) {
   set.initial.par(catalog)
   xlabels <- FALSE
@@ -74,14 +83,23 @@ pcat <- function(catalog) {
     }
     
     ICAMS::PlotCatalog(catalog[ , i, drop = FALSE],
-                       upper = (i == 1)，
+                       upper = (i == 1),
                        xlabels = xlabels)
   }
 }
+```
 
-stacked.pcat <- function(bg.catalog, target.catalog) {
+```{r, define_stacked_pcat, echo=params$verbose}
+stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
+  
+  if (set.neg.zero) {
+    zeros <- which(target.catalog < 0)
+    target.catalog[zeros] <- 0
+  }
+  
   set.initial.par(bg.catalog)
   xlabels <- FALSE
+  
 
   for (i in 1:ncol(bg.catalog)) {
     if (i == ncol(bg.catalog)) {
@@ -148,7 +166,7 @@ ret <-
 }
 ```
 
-```{r inferred.sig.as.catalog}
+```{r inferred_sig_as_catalog}
 inferred.sig <- 
   ICAMS::as.catalog(
     object         = ret$inferred.target.sig, 
@@ -220,7 +238,7 @@ arrow.tops <- apply(sub.target.sig.ests, 1, max)
 arrow.bottoms <- apply(sub.target.sig.ests, 1, min)
 min.sub <- min(arrow.bottoms)
 min.sub
-bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops) + 0.05))
+bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops)))
 add.arrows(bp, arrow.tops, arrow.bottoms)
 ```
 
@@ -236,7 +254,7 @@ min.sub
 bp <- pcat1(
   ICAMS::TransformCatalog(inferred.sig,
                           target.catalog.type = "density.signature"),
-  ylim = c(min.sub, max(arrow.tops) + 0.05))
+  ylim = c(min.sub, max(arrow.tops)))
 add.arrows(bp, arrow.tops, arrow.bottoms)
 
 ```
