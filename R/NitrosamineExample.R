@@ -1,3 +1,30 @@
+RenderNitroExample <- function(whichnitro, bg.inflate.factor = 1) {
+  rmarkdown::render(
+    input = devtools::package_file(
+      file.path("data-raw/NitrosamineExample.Rmd")),
+    output_file = file.path(
+      devtools::package_file("data-raw"),
+      paste0("Nitrosamine-", whichnitro, "-x", bg.inflate.factor, ".html")),
+    output_options = list(title      = paste("Background subtraction for", 
+                                              whichnitro,
+                                              "with bg inflation",
+                                              bg.inflate.factor)),
+    params = list(
+      whichnitro = whichnitro,
+      bgfactor   = bg.inflate.factor))
+}
+
+if (FALSE) {
+  for (mynitro in c("NDEA",
+                    "NDMA",
+                    "NPIP",
+                    "NPYR")) {
+    RenderNitroExample(mynitro, bg.inflate.factor = 8)
+  }
+  RenderNitroExample("NDMA", bg.inflate.factor = 2)
+}
+
+
 if (FALSE) {
   # Possibly turn this into a wrapper function that generates multiple plots?
   # 
