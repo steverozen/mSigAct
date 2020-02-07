@@ -92,14 +92,8 @@ pcat <- function(catalog) {
 ```{r, define_stacked_pcat, echo=params$verbose}
 stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
   
-  if (set.neg.zero) {
-    zeros <- which(target.catalog < 0)
-    target.catalog[zeros] <- 0
-  }
-  
   set.initial.par(bg.catalog)
   xlabels <- FALSE
-  
 
   for (i in 1:ncol(bg.catalog)) {
     if (i == ncol(bg.catalog)) {
@@ -107,19 +101,60 @@ stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
       par(mar = c(last.bottom.mar, 4, 3, 2))
     }
     
-    ICAMS::PlotCatalog(
-      catalog = cbind(bg.catalog[ , i, drop = FALSE],
-                      target.catalog[ , i, drop = FALSE]),
-      upper   = (i == 1),
-      xlabels = xlabels)
+    target.cat.1 <- target.catalog[ , i, drop = FALSE]
+    bg.cat.1     <- bg.catalog[ , i, drop = FALSE]    
     
-    legend("topright", 
-           legend = c(params$whichnitro, "Background"),
-           fill = c("grey35", "red"))
+    zeros <- which(target.cat.1 < 0)
+    neg.catalog <- target.cat.1
+    
+    if (set.neg.zero) {
+      target.cat.1[zeros] <- 0
+    }
+    neg.catalog[-zeros] <- 0
+    neg.catalog <- neg.catalog * -1
+
+    to.plot <- cbind(bg.cat.1, target.cat.1)
+    
+    bp <- ICAMS::PlotCatalog(
+      to.plot,
+      upper   = (i == 1),
+      xlabels = xlabels)$plot.object
+    
+    bpz <- bp[zeros]
+    # message(paste(bpz, collapse = " "))
+
+    y0 <- bg.cat.1[zeros]
+    y1 <- bg.cat.1[zeros] - neg.catalog[zeros]
+    if (attr(target.catalog, "catalog.type") == "density") {
+      # message("adjusting for density")
+      y0 <- y0 * 1e6
+      y1 <- y1 * 1e6
+    }
+
+    # message(paste(y0, collapse = "y"))
+    # message(paste(y1, collapse = "z"))
+    minus.col <- "purple"
+    segments(x0 = bpz, 
+             y0 = y0, 
+             y1 = y1, 
+             col = minus.col,
+             lwd = 3,
+             lty = 1)
+
+    legend.txt <- c(params$whichnitro, "Background")
+    legend.col <- c("grey35", "red")
+    if (length(bpz) > 0) {
+      legend.txt <- c(legend.txt, paste("Background -", params$whichnitro))
+      legend.col <- c(legend.col, minus.col)
+    }
+    legend("topright", legend = legend.txt, fill = legend.col, cex = 0.8)
   }
 }
 
 add.arrows <- function(bp, tops, bottoms) {
+  oldopt <- getOption("warn")
+  on.exit(options(warn = oldopt))
+  options(warn = -1)
   suppressWarnings(
     # Necessary because generates warnings for 0-length arrows
     arrows(
@@ -238,7 +273,7 @@ arrow.tops <- apply(sub.target.sig.ests, 1, max)
 arrow.bottoms <- apply(sub.target.sig.ests, 1, min)
 min.sub <- min(arrow.bottoms)
 min.sub
-bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops)))
+bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops) + 0.005))
 add.arrows(bp, arrow.tops, arrow.bottoms)
 ```
 
@@ -254,7 +289,7 @@ min.sub
 bp <- pcat1(
   ICAMS::TransformCatalog(inferred.sig,
                           target.catalog.type = "density.signature"),
-  ylim = c(min.sub, max(arrow.tops)))
+  ylim = c(min.sub, max(arrow.tops)  + 0.005))
 add.arrows(bp, arrow.tops, arrow.bottoms)
 
 ```
@@ -263,6 +298,7 @@ add.arrows(bp, arrow.tops, arrow.bottoms)
 #### Combined background and target spectra
 
 ```{r, plot.combined.count}
+# debug(stacked.pcat)
 stacked.pcat(inferred.bg.spectra, subtracted.target.spectra)
 ```
 
