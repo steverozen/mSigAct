@@ -3,7 +3,7 @@ if (FALSE) {
 
 options(error = browser)
 options(warn = 3)
-showMethods("getSeq")
+# showMethods("getSeq")
 # Function: getSeq (package Biostrings)
 # x="BSgenome"
 # x="FaFile"
@@ -16,7 +16,8 @@ assign("last.warning", NULL, envir = baseenv())
 
 
 # Important
-SBS.dir <- "data-raw/HepG2-nitrosamines-2019-12-26/SBS"
+SBS.dir <- devtools::package_file(
+  file.path("data-raw", "nitro-vcfs-2020-01-09"))
 tmp.files <- grep("\\.vcf$",
                  list.files(SBS.dir,
                             full.names = TRUE), 
