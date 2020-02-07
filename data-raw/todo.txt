@@ -1,5 +1,14 @@
 To Do
 
+Finish Nitrosamine example with current nitrosamine data (add error bars, try all nitrosamines)
+
+Add new nitrosamine data and re-run examples for various background inflation factors
+
+Render equation in latex
+
+Try notch-ing out value in spectra and see what happens
+
+
 * Make synthetic data based on hepg2 background SBS40 is closest to background
 SBS4, SBS18, SBS8 worth trying --- is there strand bias in nitrosamine spectra?
 

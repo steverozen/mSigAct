@@ -1,66 +1,146 @@
 ---
-title: "Nitrosamine Background Subtraction Example"
 author: "Steve Rozen"
-date: "02/02/2020"
 output: html_document
+date: '`r Sys.Date()`'
+params:
+  whichnitro: NPIP
+  bgfactor: 2
+  showrecon: FALSE
+  showbgspec: FALSE
+  onefhigh: 2.5
+  verbose: FALSE
+title: '`r paste("Background Subtraction for", params$whichnitro, "and Background Inflation Factor", params$bgfactor)`'  
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+### Introduction
 
-MORE STUFF HERE
+This is an example of background subtraction using the mSigAct package.
 
+In this example we subtract the background signature of
+HepG2 cells from the nitrosamine `r params$whichnitro`.
+
+Here we are testing with an artificially increased estimate of the
+level of background signature by a factor of `r params$bgfactor`.
 
 ### Libraries, graphics parameters, and helper functions
 
 
-```{r, libraries}
+```{r, libraries, echo=params$verbose}
 library(mSigAct)
 library(ICAMS)
 
 ```
 
-```{r, utilties}
+```{r, utilties, echo=params$verbose}
+in.ranges <- list(NDEA = 1:2,
+                  NDMA = 3:4,
+                  NPIP = 5:6,
+                  NPYR = 7:8)
 
-two.sigs.par <- function() {
-  par(fin = c(4, 1)， mfrow = c(2, 1), mar = c(3.5, 4, 3, 2))
+spectra <- # The input spectra for one nitrosamine
+  mSigAct::nitrosamine.examples$catSBS96[ , in.ranges[[params$whichnitro]]]
+
+set.initial.par <- function(catalog) {
+  par(pin = c(5, 1))
+  par(mfrow = c(ncol(catalog), 1))
+  par(mar = c(2, 4, 4, 2))
+  par(cex = 0.8)
+  par(cex.main = 1.4) 
+}
+last.bottom.mar <- 4.5
+
+pcat1 <- function(catalog, ylim = NULL) {
+  par(pin = c(5, 1))
+  par(mar = c(5, 4, 5, 4))
+  par(cex = 0.8)
+  par(cex.main = 1.4)
+  bp <- ICAMS::PlotCatalog(catalog[ , 1, drop = FALSE],
+                           upper = TRUE，
+                           xlabels = TRUE,
+                           ylim)
+  return(invisible(bp$plot.object))
 }
 
 pcat <- function(catalog) {
-  two.sigs.par()
+  set.initial.par(catalog)
+  xlabels <- FALSE
   for (i in 1:ncol(catalog)) {
+    if (i == ncol(catalog)) {
+      xlabels <- TRUE
+      par(mar = c(last.bottom.mar, 4, 3, 2))
+    }
+    
     ICAMS::PlotCatalog(catalog[ , i, drop = FALSE],
                        upper = (i == 1)，
-                       cex   = 0.4)
+                       xlabels = xlabels)
   }
 }
 
-```
+stacked.pcat <- function(bg.catalog, target.catalog) {
+  set.initial.par(bg.catalog)
+  xlabels <- FALSE
 
+  for (i in 1:ncol(bg.catalog)) {
+    if (i == ncol(bg.catalog)) {
+      xlabels <- TRUE
+      par(mar = c(last.bottom.mar, 4, 3, 2))
+    }
+    
+    ICAMS::PlotCatalog(
+      catalog = cbind(bg.catalog[ , i, drop = FALSE],
+                      target.catalog[ , i, drop = FALSE]),
+      upper   = (i == 1),
+      xlabels = xlabels)
+    
+    legend("topright", 
+           legend = c(params$whichnitro, "Background"),
+           fill = c("grey35", "red"))
+  }
+}
+
+add.arrows <- function(bp, tops, bottoms) {
+  suppressWarnings(
+    # Necessary because generates warnings for 0-length arrows
+    arrows(
+      x0     = bp,
+      y0     = tops,    # location of up arrow tips
+      y1     = bottoms, # location of down arrow tips
+      angle  = 90,      # use "T" arrow heads
+      code   = 3,       # use arrow heads at both ends
+      length = 0.025    # width of arrow heads
+    ))
+}
+
+```
 
 ### Input count spectra
 
 ```{r, plot.input.spectra}
-my.nitroso <- mSigAct::nitrosamine.examples$catSBS96[ , 1:2]
-pcat(my.nitroso)
+pcat(spectra)
 ```
 
 ### Input density spectra
 
-```{r, plot.input.density}
-pcat(ICAMS::TransformCatalog(my.nitroso, 
+```{r input_spectra_as_density}
+pcat(ICAMS::TransformCatalog(spectra, 
                              target.catalog.type = "density"))
 ```
 
-### Subtract the background to infer the signature of the given nitrosamine
+### Subtract the background to infer the signature of `r params$whichnitro`
 
 ```{r subtract}
-if (FALSE) {
+bg.info <- mSigAct::HepG2.background.info
+bg.info$count.nbinom.mu <- params$bgfactor * bg.info$count.nbinom.mu
+
+# if (params$whichnitro != "NDEA") {
+if (TRUE) {
 ret <- 
   FindSignatureMinusBackground(
-    spectra     = my.nitroso,
-    bg.sig.info = HepG2.background.info,
+    spectra     = spectra,
+    bg.sig.info = bg.info,
     m.opts      = NULL,
     start.b.fraction = 0.5)
 } else {
@@ -74,21 +154,22 @@ inferred.sig <-
     object         = ret$inferred.target.sig, 
     catalog.type   = "counts.signature",
     region         = "genome",
-    abundance      = attr(mSigAct::nitrosamine.examples$catSBS96, "abundance"),
+    abundance      = attr(mSigAct::nitrosamine.examples$catSBS96,
+                          "abundance"),
     infer.rownames = TRUE)
-colnames(inferred.sig) <- "Inferred signature"
+colnames(inferred.sig) <- paste0("Inferred-", params$whichnitro, "-sig")
 ```
 
-#### Counts signature of inferred nitrosamine and background
+#### Inferred `r params$whichnitro` count signature and given HepG2 background signature 
 
-```{r, plot.inferred.my.nitroso.signature}
+```{r, plot.inferred.spectra.signature}
 
-two.sigs <- cbind(inferred.sig, 
-                  mSigAct::HepG2.background.info$background.sig)
+two.sigs <- cbind(inferred.sig, bg.info$background.sig)
 pcat(two.sigs)
 ```
 
-#### Density signature of inferred nitrosamine and background
+#### Inferred `r params$whichnitro` density signature and given HepG2 background signature 
+
 
 ```{r, plot.inferred.density}
 pcat(ICAMS::TransformCatalog(two.sigs, 
@@ -98,51 +179,118 @@ pcat(ICAMS::TransformCatalog(two.sigs,
 
 ### Calculate and plot inferred components of the spectra
 
-#### Inferred spectra due to the given nitrosamine
-
-```{r, plot.inferred.target.spectra}
-inferred.target.spectra <- 
-  round(inferred.sig %*% matrix(ret$exposures.to.target.sig, nrow = 1))
-inferred.target.spectra <- ICAMS::as.catalog(inferred.target.spectra,
-                                             catalog.type   = "counts",
-                                             region         = "genome",
-                                             infer.rownames = TRUE)
-pcat(inferred.target.spectra)
-```
 
 #### Inferred background spectra
 
 ```{r, plot.inferred.background.spectra}
-total.counts <- apply(my.nitroso, MARGIN = 2, sum)
+total.counts <- apply(spectra, MARGIN = 2, sum)
+total.counts
+
 bg.counts <- total.counts - ret$exposures.to.target.sig
+bg.counts
+
 inferred.bg.spectra <- 
-  round(HepG2.background.info$background.sig %*% matrix(bg.counts, nrow = 1))
+  round(bg.info$background.sig %*% matrix(bg.counts, nrow = 1))
 inferred.bg.spectra <- ICAMS::as.catalog(inferred.bg.spectra,
                                          catalog.type   = "counts",
                                          region         = "genome",
+                                         abundance      = attr(spectra, "abundance"),
                                          infer.rownames = TRUE)
+colnames(inferred.bg.spectra) <- paste0(colnames(spectra), "-inf-bg-spect")
+```
+```{r, pl_inferred_bg_spec, eval=params$showbgspec, echo=params$showbgspec}
 pcat(inferred.bg.spectra)
 ```
+#### Inferred spectra due to `r params$whichnitro`
 
-#### Reconstruct spectra
+```{r, plot.inferred.target.spectra}
+subtracted.target.spectra <- spectra - inferred.bg.spectra
+pcat(subtracted.target.spectra)
+```
 
-```{r, get.reconstructed.spectra}
-  total.spectra <- inferred.target.spectra + inferred.bg.spectra
-  c1 <- mSigAct:::cossim(total.spectra[ ,1], my.nitroso[ ,1])
-  c2 <- mSigAct:::cossim(total.spectra[ ,2], my.nitroso[ ,2])
-  dist(rbind(total.spectra[ ,1], my.nitroso[ ,1]), method = "euclidean")
-  dist(rbind(total.spectra[ ,2], my.nitroso[ ,2]), method = "euclidean")
+#### Uncertainty in inferred signature based on variability of inferred spectra
+
+
+```{r, var_infer_sig, fig.height=2.5, warning=FALSE}
+sub.target.sig.ests <- 
+  ICAMS::TransformCatalog(subtracted.target.spectra, 
+                          target.catalog.type = "counts.signature")
+
+arrow.tops <- apply(sub.target.sig.ests, 1, max)
+arrow.bottoms <- apply(sub.target.sig.ests, 1, min)
+min.sub <- min(arrow.bottoms)
+min.sub
+bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops) + 0.05))
+add.arrows(bp, arrow.tops, arrow.bottoms)
+```
+
+```{r, dens_var_infer_sig, fig.height = 2.5, warning=FALSE}
+d.sub.target.sig.ests <- 
+  ICAMS::TransformCatalog(sub.target.sig.ests, 
+                          target.catalog.type = "density.signature")
+
+arrow.tops <- apply(d.sub.target.sig.ests, 1, max)
+arrow.bottoms <- apply(d.sub.target.sig.ests, 1, min)
+min.sub <- min(arrow.bottoms)
+min.sub
+bp <- pcat1(
+  ICAMS::TransformCatalog(inferred.sig,
+                          target.catalog.type = "density.signature"),
+  ylim = c(min.sub, max(arrow.tops) + 0.05))
+add.arrows(bp, arrow.tops, arrow.bottoms)
 
 ```
 
-#### Original and reconstructed spectra side-by-side
 
-```{r, plot.orig.and.recon}
-s.by.s <- cbind(my.nitroso[  , 1, drop = FALSE],
+#### Combined background and target spectra
+
+```{r, plot.combined.count}
+stacked.pcat(inferred.bg.spectra, subtracted.target.spectra)
+```
+
+```{r, plot.combined.density}
+stacked.pcat(
+  ICAMS::TransformCatalog(inferred.bg.spectra,
+                          target.catalog.type = "density"),
+  ICAMS::TransformCatalog(subtracted.target.spectra,
+                          target.catalog.type = "density"))
+
+```
+
+
+`r ifelse(params$showrecon, "#### Reconstruct spectra", "")`
+
+```{r, get.reconstructed.spectra, eval=params$showrecon, echo=params$showrecon}
+reconstructed.target.spectra <- 
+  round(inferred.sig %*% matrix(ret$exposures.to.target.sig, nrow = 1))
+reconstructed.target.spectra <- 
+  ICAMS::as.catalog(
+    reconstructed.target.spectra,
+    catalog.type   = "counts",
+    region         = "genome",
+    abundance      = attr(spectra, "abundance"),
+    infer.rownames = TRUE)
+colnames(reconstructed.target.spectra) <-
+  paste0(colnames(spectra), "-mult-recon-spect")
+pcat(reconstructed.target.spectra)
+
+
+total.spectra <- reconstructed.target.spectra + inferred.bg.spectra
+c1 <- mSigAct:::cossim(total.spectra[ ,1], spectra[ ,1])
+c2 <- mSigAct:::cossim(total.spectra[ ,2], spectra[ ,2])
+dist(rbind(total.spectra[ ,1], spectra[ ,1]), method = "euclidean")
+dist(rbind(total.spectra[ ,2], spectra[ ,2]), method = "euclidean")
+
+```
+`r ifelse(params$showrecon, "#### Original and reconstructed spectra side-by-side", "")`
+
+
+```{r, plot.orig.and.recon, eval=params$showrecon, echo=params$showrecon}
+s.by.s <- cbind(spectra[  , 1, drop = FALSE],
                 total.spectra[ , 1 , drop = FALSE],
-                my.nitroso[   , 2, drop = FALSE],
+                spectra[   , 2, drop = FALSE],
                 total.spectra[ , 2, drop = FALSE])
-onames <- colnames(my.nitroso)
+onames <- colnames(spectra)
 colnames(s.by.s) <- c(
   onames[1],
   paste(onames[1], round(c1, digits = 4), sep = "-"),
@@ -150,15 +298,17 @@ colnames(s.by.s) <- c(
   paste(onames[2], round(c2, digits = 4), sep = "-")
 )
 ```
-##### First replicate
 
-```{r, plot.replicate1}
+`r ifelse(params$showrecon, paste("##### Summary of replicate 1:", colnames(spectra)[1]), "")`
+
+```{r, plot.replicate1, eval=params$showrecon, echo=params$showrecon}
 pcat(s.by.s[ , 1:2])
 ```
 
-##### Second replicate
+`r ifelse(params$showrecon, paste("##### Summary of replicate 2:", colnames(spectra)[2]), "")`
 
-```{r, plot.replcatg2}
+
+```{r, plot_replcate2, eval=params$showrecon, echo=params$showrecon}
 pcat(s.by.s[ , 3:4])
 ```
 
