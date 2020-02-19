@@ -120,9 +120,14 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' Estimate a signature from experimentally exposed spectra minus a background signature.
 #' 
 #' @description 
+#'
+#' We index mutation channels (e.g. \code{ACA > AAA, ACC > AAC, ...}) by \eqn{j}, \eqn{j \in 1...96}.
+#' 
+#' We index input mutational spectra by \eqn{i}. 
+#'
 #' Let
 #'  
-#' \eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_i g_i = 1}
+#' \eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_j g_j = 1}
 #'  be the previously determined, input background signature profile,
 #' 
 #' \eqn{s^i, i \in 1, 2,\ldots} be the input spectra,
@@ -132,28 +137,33 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' numbers of mutations due to the background signature in each
 #' \eqn{s^i}, and
 #' 
-#' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
+#' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_j t_j = 1}
 #' be the (to-be-estimated) target signature due to an exposure.
 #' 
-#' We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
+#' We want to maximize \eqn{\Pi^iP(s^i|b^i,t)P(b^i)} over 
 #' \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
 #' 
-#' \eqn{P(b^i)} is estimated from the previously observed
-#' numbers of mutations due to the background mutational
-#' process in untreated samples.
+#' \eqn{P(b^i)} is estimated from the distribution of previously observed
+#' numbers of mutations in untreated samples.
 #' 
-#' \eqn{P(s^i|b^i,t)} is estimated as follows.
+#' \eqn{P(s^i|b^i,t)} is estimated as follows:
+#' 
 #' Let \eqn{|s^i|} denote
 #' the total number of mutations in spectrum \eqn{s^i}, i.e.
-#' \eqn{|s^i| = \Sigma_i s^i_1, s^i_2,\ldots, s^i_{96}}.
-#' The expected
-#' numbers of mutations in each
-#' category are estimated as \eqn{e^i = gb^i + t(|s^i| - b^i)}.
-#' Then \eqn{P(s^i|e^i)} is estimated as
-#' \eqn{\Pi^jP(s^i_j|e^i_j)} given a negative binomial distribution
-#' centered on \eqn{e^i_j}, with dispersion parameter
+#' \eqn{|s^i| = \Sigma_j s^i_j}, \eqn{j \in 1...96}.
+#' 
+#' The expected number of mutations in each
+#' mutation category, \eqn{j}, is estimated as
+#' 
+#' \eqn{e^i_j = g_jb_j^i + t_j(|s^i| - b^i)}.
+#' 
+#' Then \eqn{P(s^i|e^i)} is estimated as \eqn{\Pi_jP(s^i_j|e^i_j)} 
+#' 
+#' given a negative binomial distribution
+#' centered on each \eqn{e^i_j}, all distributions
+#' with the same dispersion parameter
 #' estimated as described
-#' below (work in progress).
+#' below (need to describe / review).
 #'  
 #' @param spectra The spectra from which to subtract the background,
 #'   as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.
@@ -196,15 +206,22 @@ FindSignatureMinusBackground <-
     b.x0 <- start.b.fraction * colSums(spectra)
     est.target.sig.and.b.x0 <- c(sig0, b.x0)
     
+    # Each element of the singature <= 1.
+    upper.bounds.of.target.sig <- rep(1, nrow(spectra))
+    
     ret <- nloptr::nloptr(
       x0          = est.target.sig.and.b.x0,
+      
       eval_f      = ObjFn1,
+      
       lb          = rep(0, length(est.target.sig.and.b.x0)),
       
-      # Each element of the singature <= 1.
-      # The contribution of the background should not exceed the total count
-      # (not sure if this exactly correct)
-      ub          = c(rep(1, nrow(spectra)), colSums(spectra)),
+      ub          = c(upper.bounds.of.target.sig, 
+                      
+                      colSums(spectra) # The contribution of the background
+                                       # should not exceed the total count
+                                       # of the spectrum
+                      ),
       opt = m.opts,
       obs.spectra = spectra,     
       bg.sig.info = bg.sig.info)
@@ -235,6 +252,8 @@ FindSignatureMinusBackground <-
 #' @param bg.sig.info Information on the background signature. See for example
 #' \code{\link{HepG2.background.info}}.
 #' 
+#' We the caller will seek to minimize the value of this function.
+#' 
 ObjFn1 <- function(
   est.target.sig.and.b, # Parameters to optimize
   obs.spectra,     
@@ -254,17 +273,23 @@ ObjFn1 <- function(
   for (i in 1:ncol(obs.spectra)) { # For each observed spectrum
     obs.spectrum <- obs.spectra[ , i, drop = FALSE]
     total.obs.count <- sum(obs.spectrum)
+    expected.bg.counts <- bg.sig.profile * b[i]
     expected.counts <- 
-      (bg.sig.profile * b[i]) + (est.target.sig * (total.obs.count - b[i]))
+      expected.bg.counts + (est.target.sig * (total.obs.count - b[i]))
+    if (TRUE) { # Experimental code
+      bg.greater.than.spectrum <- which(expected.bg.counts > obs.spectrum)
+      if (length(bg.greater.than.spectrum) > 0) {
+        message("x")
+        return(Inf)
+      } }
     loglh1.i <- LLHSpectrumNegBinom(
       spectrum        = obs.spectrum,
       expected.counts = expected.counts,
-      nbinom.size     = 10)
-        # bg.sig.info$sig.nbinom.size) # TODO(Steve) need to test different values as hyperparameter
-    
+      nbinom.size     = 10)  # This is the dispersion parameter for each channel
+ 
     loglh2.i <- dnbinom(x    = round(b[i]), 
                         mu   = bg.sig.info$count.nbinom.mu,
-                        size = bg.sig.info$count.nbinom.size,
+                        size = bg.sig.info$count.nbinom.size, # This is the dispersion paramater for the number of background signature mutations
                         log  = TRUE)
     
     loglh <- loglh + loglh1.i + loglh2.i

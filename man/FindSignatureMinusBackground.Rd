@@ -24,9 +24,13 @@ as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.}
 \code{spectra} due to the background signature.}
 }
 \description{
+We index mutation channels (e.g. \code{ACA > AAA, ACC > AAC, ...}) by \eqn{j}, \eqn{j \in 1...96}.
+
+We index input mutational spectra by \eqn{i}. 
+
 Let
  
-\eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_i g_i = 1}
+\eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_j g_j = 1}
  be the previously determined, input background signature profile,
 
 \eqn{s^i, i \in 1, 2,\ldots} be the input spectra,
@@ -36,28 +40,33 @@ from exposed samples, usually only 2 or 3,
 numbers of mutations due to the background signature in each
 \eqn{s^i}, and
 
-\eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_i t_i = 1}
+\eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_j t_j = 1}
 be the (to-be-estimated) target signature due to an exposure.
 
-We want to maximize \eqn{\Pi_iP(s^i|b^i,t)P(b^i)} over 
+We want to maximize \eqn{\Pi^iP(s^i|b^i,t)P(b^i)} over 
 \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
 
-\eqn{P(b^i)} is estimated from the previously observed
-numbers of mutations due to the background mutational
-process in untreated samples.
+\eqn{P(b^i)} is estimated from the distribution of previously observed
+numbers of mutations in untreated samples.
 
-\eqn{P(s^i|b^i,t)} is estimated as follows.
+\eqn{P(s^i|b^i,t)} is estimated as follows:
+
 Let \eqn{|s^i|} denote
 the total number of mutations in spectrum \eqn{s^i}, i.e.
-\eqn{|s^i| = \Sigma_i s^i_1, s^i_2,\ldots, s^i_{96}}.
-The expected
-numbers of mutations in each
-category are estimated as \eqn{e^i = gb^i + t(|s^i| - b^i)}.
-Then \eqn{P(s^i|e^i)} is estimated as
-\eqn{\Pi^jP(s^i_j|e^i_j)} given a negative binomial distribution
-centered on \eqn{e^i_j}, with dispersion parameter
+\eqn{|s^i| = \Sigma_j s^i_j}, \eqn{j \in 1...96}.
+
+The expected number of mutations in each
+mutation category, \eqn{j}, is estimated as
+
+\eqn{e^i_j = g_jb_j^i + t_j(|s^i| - b^i)}.
+
+Then \eqn{P(s^i|e^i)} is estimated as \eqn{\Pi_jP(s^i_j|e^i_j)} 
+
+given a negative binomial distribution
+centered on each \eqn{e^i_j}, all distributions
+with the same dispersion parameter
 estimated as described
-below (work in progress).
+below (need to describe / review).
 }
 \details{
 See \code{\link{ObjFn1}}.

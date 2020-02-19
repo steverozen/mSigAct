@@ -4,18 +4,25 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDEA
-  bgfactor: 2
+  bgfactor: 1
   showrecon: FALSE
   showbgspec: FALSE
   onefhigh: 2.5
-  verbose: FALSE
-title: '`r paste("Background Subtraction for", params$whichnitro, "and Background Inflation Factor", params$bgfactor)`'  
+  verbose: TRUE
+  count.nbinom.size: 5
+title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# params <- list(whichnitro = "NPYR", bgfactor = 16)
 ```
+### Parameters
+
+#### Inflation for mean number of background mutations = `r params[["bgfactor"]]`.
+
+#### Dispersion parameter for number of background mutations = `r params[["count.nbinom.size"]]`.
+
+
 ### Introduction
 
 This is an example of background subtraction using the mSigAct package.
@@ -26,7 +33,7 @@ HepG2 cells from the nitrosamine `r params$whichnitro`.
 Here we are testing with an artificially increased estimate of the
 level of background signature by a factor of `r params$bgfactor`.
 
-### Libraries, graphics parameters, and helper functions
+`r ifelse(params$verbose, "### Libraries, graphics parameters, and helper functions", "")`
 
 
 ```{r, libraries, echo=params$verbose}
@@ -79,7 +86,7 @@ pcat <- function(catalog) {
   set.initial.par(catalog)
   xlabels <- FALSE
   for (i in 1:ncol(catalog)) {
-    if (i == ncol(catalog)) {
+    if (FALSE && i == ncol(catalog)) { # FALSE an experiment
       xlabels <- TRUE
       par(mar = c(last.bottom.mar, 4, 3, 2))
     }
@@ -98,7 +105,7 @@ stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
   xlabels <- FALSE
 
   for (i in 1:ncol(bg.catalog)) {
-    if (i == ncol(bg.catalog)) {
+    if (FALSE && i == ncol(bg.catalog)) { # FALSE an experiment
       xlabels <- TRUE
       par(mar = c(last.bottom.mar, 4, 3, 2))
     }
@@ -153,10 +160,11 @@ stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
   }
 }
 
+debug(arrows)
 add.arrows <- function(bp, tops, bottoms) {
   oldopt <- getOption("warn")
   on.exit(options(warn = oldopt))
-  options(warn = -1)
+  options(warn = -1) # Does not seem to turn off warnings
   suppressWarnings(
     # Necessary because generates warnings for 0-length arrows
     arrows(
@@ -167,6 +175,9 @@ add.arrows <- function(bp, tops, bottoms) {
       code   = 3,       # use arrow heads at both ends
       length = 0.025    # width of arrow heads
     ))
+  # Try this to get rid of the warnings:
+  assign("last.warning", NULL, envir = baseenv())
+  
 }
 
 ```
@@ -189,6 +200,7 @@ pcat(ICAMS::TransformCatalog(spectra,
 ```{r subtract}
 bg.info <- mSigAct::HepG2.background.info
 bg.info$count.nbinom.mu <- params$bgfactor * bg.info$count.nbinom.mu
+bg.info$count.nbinom.size <- params[["count.nbinom.size"]]
 
 # if (params$whichnitro != "NDEA") {
 if (TRUE) {

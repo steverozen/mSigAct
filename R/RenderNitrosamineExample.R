@@ -1,22 +1,31 @@
-RenderNitroExample <- function(whichnitro, bg.inflate.factor = 1) {
+RenderNitroExample <- function(whichnitro, bg.inflate.factor = 1, count.nbinom.size = 20) {
+  
   rmarkdown::render(
-    input = devtools::package_file(
-      file.path("data-raw/NitrosamineExample.Rmd")),
-    output_file = file.path(
-      devtools::package_file("data-raw"),
-      paste0("Nitrosamine-", whichnitro, "-x", bg.inflate.factor, ".html")),
-    output_options = list(title      = paste("Background subtraction for", 
-                                              whichnitro,
-                                              "with bg inflation",
-                                              bg.inflate.factor)),
-    params = list(
-      whichnitro = whichnitro,
-      bgfactor   = bg.inflate.factor))
+    
+    input          = 
+      devtools::package_file(
+        file.path("data-raw/NitrosamineExample.Rmd")),
+    
+    output_file    = 
+      file.path(
+        devtools::package_file("data-raw"),
+        paste0("Nitrosamine-", whichnitro, "-x", bg.inflate.factor, ".html")),
+    
+    output_options = list(title = paste("Background subtraction for", 
+                                        whichnitro,
+                                        "with bg inflation",
+                                        bg.inflate.factor)),
+    params         = 
+      list(
+        whichnitro        = whichnitro,
+        bgfactor          = bg.inflate.factor,
+        count.nbinom.size = count.nbinom.size))
 }
 
 RenderAllNitroExample <- function(bg.inflate.factor = 1) {
   for (mynitro in c("NDEA", "NDMA", "NPIP", "NPYR")) {
-    mSigAct:::RenderNitroExample(mynitro, bg.inflate.factor = bg.inflate.factor)
+    RenderNitroExample(mynitro, 
+                                 bg.inflate.factor = bg.inflate.factor)
   }
 }
 
