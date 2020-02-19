@@ -4,12 +4,13 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDEA
-  bgfactor: 1
+  bgfactor: 8
   showrecon: FALSE
   showbgspec: FALSE
   onefhigh: 2.5
   verbose: TRUE
-  count.nbinom.size: 5
+  count.nbinom.size: 20
+  experiment.neg: TRUE
 title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
@@ -160,7 +161,6 @@ stacked.pcat <- function(bg.catalog, target.catalog, set.neg.zero = TRUE) {
   }
 }
 
-debug(arrows)
 add.arrows <- function(bp, tops, bottoms) {
   oldopt <- getOption("warn")
   on.exit(options(warn = oldopt))
@@ -204,6 +204,7 @@ bg.info$count.nbinom.size <- params[["count.nbinom.size"]]
 
 # if (params$whichnitro != "NDEA") {
 if (TRUE) {
+experiment.neg <- params[["experiment.neg"]]
 ret <- 
   FindSignatureMinusBackground(
     spectra     = spectra,

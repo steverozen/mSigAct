@@ -276,7 +276,7 @@ ObjFn1 <- function(
     expected.bg.counts <- bg.sig.profile * b[i]
     expected.counts <- 
       expected.bg.counts + (est.target.sig * (total.obs.count - b[i]))
-    if (TRUE) { # Experimental code
+    if (experiment.neg) { # Experimental code
       bg.greater.than.spectrum <- which(expected.bg.counts > obs.spectrum)
       if (length(bg.greater.than.spectrum) > 0) {
         message("x")
