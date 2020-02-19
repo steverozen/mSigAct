@@ -10,8 +10,6 @@ options(warn = 3)
 # x="TwoBitFile"
 # x="XStringSet"
 
-assign("last.warning", NULL, envir = baseenv())
-
 # Important
 SBS.dir <- devtools::package_file(
   file.path("data-raw", "nitro-vcfs-2020-01-09"))

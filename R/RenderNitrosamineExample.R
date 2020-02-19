@@ -19,9 +19,9 @@ if (FALSE) {
                     "NDMA",
                     "NPIP",
                     "NPYR")) {
-    RenderNitroExample(mynitro, bg.inflate.factor = 8)
+    mSigAct:::RenderNitroExample(mynitro, bg.inflate.factor = 8)
   }
-  RenderNitroExample("NPYR", bg.inflate.factor = 16)
+  mSigAct:::RenderNitroExample("NPYR", bg.inflate.factor = 16)
 }
 
 
