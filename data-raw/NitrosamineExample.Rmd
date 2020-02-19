@@ -3,8 +3,8 @@ author: "Steve Rozen"
 output: html_document
 date: '`r Sys.Date()`'
 params:
-  whichnitro: NPIP
-  bgfactor: 2
+  whichnitro: NDEA
+  bgfactor: 8
   showrecon: FALSE
   showbgspec: FALSE
   onefhigh: 2.5
@@ -47,7 +47,7 @@ spectra <- # The input spectra for one nitrosamine
   mSigAct::nitrosamine.examples$catSBS96[ , in.ranges[[params$whichnitro]]]
 
 set.initial.par <- function(catalog) {
-  par(pin = c(5, 1))
+  par(pin = c(3*ncol(catalog), 1))
   par(mfrow = c(ncol(catalog), 1))
   par(mar = c(2, 4, 4, 2))
   par(cex = 0.8)
@@ -57,7 +57,9 @@ set.initial.par <- function(catalog) {
 last.bottom.mar <- 4.5
 ```
 
+
 ```{r, define_pcat1, echo=params$verbose}
+# Plot a single catalog
 pcat1 <- function(catalog, ylim = NULL) {
   par(pin = c(5, 1))
   par(mar = c(5, 4, 5, 4))

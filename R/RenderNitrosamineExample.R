@@ -21,7 +21,7 @@ if (FALSE) {
                     "NPYR")) {
     mSigAct:::RenderNitroExample(mynitro, bg.inflate.factor = 8)
   }
-  mSigAct:::RenderNitroExample("NPYR", bg.inflate.factor = 16)
+  mSigAct:::RenderNitroExample("NDEA", bg.inflate.factor = 8)
 }
 
 
