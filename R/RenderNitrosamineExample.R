@@ -14,13 +14,11 @@ RenderNitroExample <- function(whichnitro, bg.inflate.factor = 1) {
       bgfactor   = bg.inflate.factor))
 }
 
-RenderAllNitroExample <- function(bg.inflate.factor = 1)
-  for (mynitro in c("NDEA",
-                    "NDMA",
-                    "NPIP",
-                    "NPYR")) {
-    mSigAct:::RenderNitroExample(mynitro, bg.inflate.factor = 1)
+RenderAllNitroExample <- function(bg.inflate.factor = 1) {
+  for (mynitro in c("NDEA", "NDMA", "NPIP", "NPYR")) {
+    mSigAct:::RenderNitroExample(mynitro, bg.inflate.factor = bg.inflate.factor)
   }
+}
 
 
 
