@@ -4,7 +4,7 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDEA
-  bgfactor: 8
+  bgfactor: 2
   showrecon: FALSE
   showbgspec: FALSE
   onefhigh: 2.5
