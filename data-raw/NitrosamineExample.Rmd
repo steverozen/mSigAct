@@ -3,13 +3,13 @@ author: "Steve Rozen"
 output: html_document
 date: '`r Sys.Date()`'
 params:
-  whichnitro: NDEA
+  whichnitro: NDMA
   bgfactor: 8
   showrecon: TRUE
   showbgspec: FALSE
   onefhigh: 2.5
   verbose: TRUE
-  count.nbinom.size: 2
+  count.nbinom.size: 200
 title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
@@ -268,14 +268,14 @@ colnames(inferred.bg.spectra) <- paste0(colnames(spectra), "-inf-bg-spect")
 ```{r, pl_inferred_bg_spec, eval=params$showbgspec, echo=params$showbgspec}
 pcat(inferred.bg.spectra)
 ```
-### Spectra due to `r params$whichnitro` as inferred by subtraction
+### Spectra due to `r params$whichnitro`, as inferred by subtraction
 
 ```{r, plot.inferred.target.spectra}
 subtracted.target.spectra <- spectra - inferred.bg.spectra
 pcat(subtracted.target.spectra)
 ```
 
-### Signature based on subtracted spectra versus directly inferred signature
+### Signature based on subtracted spectra compared to directly inferred signature
 
 ```{r, sub_inferred_vs_direct_inferred}
 
