@@ -4,12 +4,12 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDMA
-  bgfactor: 8
+  bgfactor: 2
   showrecon: TRUE
   showbgspec: FALSE
   onefhigh: 2.5
   verbose: TRUE
-  count.nbinom.size: 200
+  count.nbinom.size: 5
 title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
