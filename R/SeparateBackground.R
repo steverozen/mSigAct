@@ -305,6 +305,7 @@ ObjFn1 <- function(
 #'   mean of all signatures.
 #'   
 #' @export
+#' 
 MeanOfSpectraAsSig <- function(spectra) {
   ctype <- attr(spectra, "catalog.type", exact = TRUE)
   if (ctype == "counts") {

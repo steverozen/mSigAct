@@ -1,4 +1,4 @@
-# mSigAct 2.0.0.0008
+# mSigAct 2.0.0.0009
 
 * Substantially improved separation of background signature, include some tutorial
   examples.

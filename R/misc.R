@@ -1,4 +1,4 @@
-#' Cosine similarity with more forgiving argment types
+#' Cosine similarity with more forgiving argment types.
 #' 
 #' @param v1 A vector or single-column matrix
 #' @param v2 A vector or single-column matrix
