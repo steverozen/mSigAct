@@ -127,7 +127,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #'
 #' Let
 #'  
-#' \eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma_j g_j = 1}
+#' \eqn{g = g_1, g_2,\ldots , g_{96}}, with \eqn{\Sigma g_j = 1},
 #'  be the previously determined, input background signature profile,
 #' 
 #' \eqn{s^i, i \in 1, 2,\ldots} be the input spectra,
@@ -137,34 +137,34 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #' numbers of mutations due to the background signature in each
 #' \eqn{s^i}, and
 #' 
-#' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma_j t_j = 1}
+#' \eqn{t = t_1, t_2,\ldots , t_{96}}, with \eqn{\Sigma t_j = 1},
 #' be the (to-be-estimated) target signature due to an exposure.
 #' 
 #' We want to maximize \eqn{\Pi^iP(s^i|b^i,t)P(b^i)} over 
-#' \eqn{\vec{b} = b^1, b^2,\dots} and \eqn{t}.
+#' \eqn{b^1, b^2,\dots} and \eqn{t}.  (Note that the code
+#' actually minimizes the additive inverse of this.)
 #' 
 #' \eqn{P(b^i)} is estimated from the distribution of previously observed
-#' numbers of mutations in untreated samples.
-#' 
-#' \eqn{P(s^i|b^i,t)} is estimated as follows:
-#' 
-#' Let \eqn{|s^i|} denote
+#' numbers of mutations in untreated samples, with the additional 
+#' constraint that \eqn{b^i \le |s^i|}), where \eqn{|s^i|} is defined as
 #' the total number of mutations in spectrum \eqn{s^i}, i.e.
 #' \eqn{|s^i| = \Sigma_j s^i_j}, \eqn{j \in 1...96}.
+#' 
+#' \eqn{P(s^i|b^i,t)} is estimated as follows:
 #' 
 #' The expected number of mutations in each
 #' mutation category, \eqn{j}, is estimated as
 #' 
-#' \eqn{e^i_j = g_jb_j^i + t_j(|s^i| - b^i)}.
+#' \eqn{e^i_j = g_jb^i + t_j(|s^i| - b^i)}.
 #' 
-#' Then \eqn{P(s^i|e^i)} is estimated as \eqn{\Pi_jP(s^i_j|e^i_j)} 
+#' Then \eqn{P(s^i|e^i)} is estimated as \eqn{\Pi_jP(s^i_j|e^i_j)}.
 #' 
-#' given a negative binomial distribution
-#' centered on each \eqn{e^i_j}, all distributions
-#' with the same dispersion parameter
-#' estimated as described
-#' below (need to describe / review).
-#'  
+#' \eqn{P(s^i_j|e^i_j)} is estimated from a negative binomial distribution
+#' centered on each \eqn{e^i_j}; these distributions all
+#' have a dispersion parameter
+#' of 10 (hard coded in \code{\link{ObjFn1}}), a value chosen based on tests with 
+#' synthetic data. 
+#' 
 #' @param spectra The spectra from which to subtract the background,
 #'   as a matrix or \code{\link[ICAMS]{ICAMS}} catalog.
 #'   
@@ -173,7 +173,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 #'   
 #' @param m.opts Options to pass to \code{\link[nloptr]{nloptr}}.
 #' 
-#' @param start.b.fraction The estamated fraction of the mutations in
+#' @param start.b.fraction The estimated fraction of the mutations in
 #'   \code{spectra} due to the background signature.
 #' 
 #' @details
@@ -191,7 +191,7 @@ NegLLHOfSignature <- function(sig.and.nbinom.size, spectra) {
 # 
 #' @export
 
-FindSignatureMinusBackground <-
+SeparateSignatureFromBackground <-
   function(spectra,
            bg.sig.info,
            m.opts = NULL,
@@ -233,13 +233,13 @@ FindSignatureMinusBackground <-
     
     return(list(inferred.target.sig     = soln[1:nrow(spectra)],
                 exposures.to.target.sig = obs.counts - bg.exposure,
-                  # soln[(1 + nrow(spectra)):length(soln)],
+                exposures.to.bg.sig     = bg.exposure,
                 message                 = ret$message,
                 all.opt.ret             = ret))
   }
 
 
-#' Objective function for \code{\link{FindSignatureMinusBackground}}.
+#' Objective function for \code{\link{SeparateSignatureFromBackground}}.
 #' 
 #' @param est.target.sig.and.b A numeric vector of which elements
 #' 1:96 are the signature (as a vector) and the remaining elements
@@ -276,7 +276,8 @@ ObjFn1 <- function(
     expected.bg.counts <- bg.sig.profile * b[i]
     expected.counts <- 
       expected.bg.counts + (est.target.sig * (total.obs.count - b[i]))
-    if (experiment.neg) { # Experimental code
+    if (FALSE) { # Experimental code, if enabled, does not converge
+                 # (or converges very slowly).
       bg.greater.than.spectrum <- which(expected.bg.counts > obs.spectrum)
       if (length(bg.greater.than.spectrum) > 0) {
         message("x")
@@ -298,7 +299,10 @@ ObjFn1 <- function(
   return(-1 * loglh)
 }
 
-
+#' Return the mean of multiple spectra as a signature
+#' 
+#' @param spectra Convert each spectrum to a signature and then compute the
+#'   mean of all signatures.
 MeanOfSpectraAsSig <- function(spectra) {
   ctype <- attr(spectra, "catalog.type", exact = TRUE)
   if (ctype == "counts") {
@@ -357,59 +361,7 @@ Nloptr2Signature <- function(nloptr.retval, sig.number = 96) {
   return(Solution2Signature(nloptr.retval$solution, sig.number))
 }
 
-Nloptr2ObjFnValue <- function(nloptr.retval) {
-  return(nloptr.retval$objective)
-}
-
-PlotFactorizations <- function(out.dir,
-                               spectra,
-                               bg.sig.info,
-                               solution,
-                               sig.number = 96,
-                               ref.genome = NULL,
-                               region = "genome")
-{
-  if (!dir.exists(out.dir)) {
-    if (!dir.create(out.dir, recursive = TRUE)) {
-      stop("Cannot create ", out.dir)
-    }
-  }
-  sig <- Solution2Signature(solution,
-                             sig.number,
-                             ref.genome,
-                             region)
-  
-  b <- solution[(sig.number + 1):length(solution)]
-  if (length(b) != ncol(spectra)) {
-    stop("The number of estimates of the contribution of the target sequence (",
-         length(b), ")\n",
-         "does not match the number of input spectra (", ncol(spectra), ")")
-  }
-  total.counts <- colSums(spectra)
-  for (i in 1:ncol(spectra)) {
-    bg.counts <- round(b[i] * mSigAct::HepG2.background.info$background.sig)
-    attr(bg.counts, "catalog.type") <- "counts"
-    sig.counts <- round((total.counts[i] - b[i]) * sig)
-    attr(sig, "catalog.type") <- "counts"
-    tmp <- cbind(spectra[ , i, drop = FALSE],
-                 bg.counts,
-                 sig.counts,
-                 spectra[ , i, drop = FALSE] - bg.counts)
-    
-    # TODO(Steve) average the spectra minus the counts and see
-    # what they look like
-    # TODO(get the pcawg signatures and add them in at different
-    # concentrations, with and without noise)
-    name <- colnames(spectra)[i]
-    colnames(tmp) <- c("Orig", "BG", "Exp*Sig", "Orig-BG")
-    ICAMS::PlotCatalogToPdf(tmp, paste0(out.dir, "/", name, ".pdf"))
-  }
-  return(data.frame(sample = colnames(spectra),
-                    spectrum.count = total.counts,
-                    bg.count  = b,
-                    target.sig.count = total.counts - b))
-}
-
+#' Return a default value to pass as the \code{m.opts} argument to \code{\link{SeparateSignatureFromBackground}}.
 FindSigMinusBGOpt <- function() {
   return(
     list(algorithm = "NLOPT_LN_COBYLA",

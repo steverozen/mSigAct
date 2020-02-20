@@ -104,7 +104,7 @@
 
 #' Kucab et al., 2019 signatures in the row order as found on
 #'
-#' @source https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
+#' @source \url{https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85}
 #' 
 #' The row labels are in column 1 in the order
 #' 
@@ -112,19 +112,19 @@
 #' 
 "kucab.sigs.orig.row.order"
 
-#' The 35 control spectra using the kucab row order.
+#' The 35 control spectra using the Kucab row order.
 #' 
 "kucab.control.spectra.kucab"
 
-#' Kucab et al., 2019 signatures in the same row order as kucab.sub.catalog.
+#' Kucab et al., 2019 signatures in the same row order as \code{\link{kucab.sub.catalog}}.
 #' 
 #' The mutation type is in column 1, e.g. A[C>A]A A[C>A]C A[C>A]G A[C>A]T A[C>G]A ...
 #'
-#' @source https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
+#' @source \url{https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85}
 #' 
 "kucab.sigs"
 
-#' Informationa on the control samples from Kucab et al., 2019
+#' Information on the control samples from Kucab et al., 2019
 #' 
 "kucab.muts.control"
 

@@ -3,12 +3,12 @@
 \docType{data}
 \name{kucab.muts.control}
 \alias{kucab.muts.control}
-\title{Informationa on the control samples from Kucab et al., 2019}
+\title{Information on the control samples from Kucab et al., 2019}
 \format{An object of class \code{data.frame} with 35 rows and 9 columns.}
 \usage{
 kucab.muts.control
 }
 \description{
-Informationa on the control samples from Kucab et al., 2019
+Information on the control samples from Kucab et al., 2019
 }
 \keyword{datasets}

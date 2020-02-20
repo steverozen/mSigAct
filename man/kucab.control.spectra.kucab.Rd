@@ -3,12 +3,12 @@
 \docType{data}
 \name{kucab.control.spectra.kucab}
 \alias{kucab.control.spectra.kucab}
-\title{The 35 control spectra using the kucab row order.}
+\title{The 35 control spectra using the Kucab row order.}
 \format{An object of class \code{data.frame} with 96 rows and 35 columns.}
 \usage{
 kucab.control.spectra.kucab
 }
 \description{
-The 35 control spectra using the kucab row order.
+The 35 control spectra using the Kucab row order.
 }
 \keyword{datasets}

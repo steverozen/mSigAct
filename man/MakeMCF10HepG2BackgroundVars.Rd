@@ -3,11 +3,11 @@
 \name{MakeMCF10HepG2BackgroundVars}
 \alias{MakeMCF10HepG2BackgroundVars}
 \title{Create spectra from VCFs and load spectra as package variables.
-VCFs received from Arnound on 2020 Feb 04}
+VCFs received from Arnoud on 2020 Feb 04}
 \usage{
 MakeMCF10HepG2BackgroundVars()
 }
 \description{
 Create spectra from VCFs and load spectra as package variables.
-VCFs received from Arnound on 2020 Feb 04
+VCFs received from Arnoud on 2020 Feb 04
 }

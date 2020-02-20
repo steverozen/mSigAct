@@ -4,27 +4,25 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDEA
-  bgfactor: 8
-  showrecon: FALSE
+  bgfactor: 2
+  showrecon: TRUE
   showbgspec: FALSE
   onefhigh: 2.5
   verbose: TRUE
-  count.nbinom.size: 20
-  experiment.neg: TRUE
+  count.nbinom.size: 5
 title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-### Parameters
+## Parameters
 
-#### Inflation for mean number of background mutations = `r params[["bgfactor"]]`.
+### Inflation for mean number of background mutations = `r params[["bgfactor"]]`.
 
-#### Dispersion parameter for number of background mutations = `r params[["count.nbinom.size"]]`.
+### Dispersion parameter for number of background mutations = `r params[["count.nbinom.size"]]`.
 
-
-### Introduction
+## Introduction
 
 This is an example of background subtraction using the mSigAct package.
 
@@ -34,7 +32,7 @@ HepG2 cells from the nitrosamine `r params$whichnitro`.
 Here we are testing with an artificially increased estimate of the
 level of background signature by a factor of `r params$bgfactor`.
 
-`r ifelse(params$verbose, "### Libraries, graphics parameters, and helper functions", "")`
+`r ifelse(params$verbose, "## Libraries, graphics parameters, and helper functions", "")`
 
 
 ```{r, libraries, echo=params$verbose}
@@ -182,31 +180,32 @@ add.arrows <- function(bp, tops, bottoms) {
 
 ```
 
-### Input count spectra
+## Input spectra
+
+### Input as count spectra
 
 ```{r, plot.input.spectra}
 pcat(spectra)
 ```
 
-### Input density spectra
+### Input as density spectra
 
 ```{r input_spectra_as_density}
 pcat(ICAMS::TransformCatalog(spectra, 
                              target.catalog.type = "density"))
 ```
 
-### Subtract the background to infer the signature of `r params$whichnitro`
+## Decompose the background and the signature of `r params$whichnitro`
 
 ```{r subtract}
 bg.info <- mSigAct::HepG2.background.info
 bg.info$count.nbinom.mu <- params$bgfactor * bg.info$count.nbinom.mu
 bg.info$count.nbinom.size <- params[["count.nbinom.size"]]
 
-# if (params$whichnitro != "NDEA") {
-if (TRUE) {
-experiment.neg <- params[["experiment.neg"]]
+# if (params$whichnitro != "NDEA") { # Temporary, for possible debugging of script
+if (TRUE) { 
 ret <- 
-  FindSignatureMinusBackground(
+  SeparateSignatureFromBackground(
     spectra     = spectra,
     bg.sig.info = bg.info,
     m.opts      = NULL,
@@ -228,7 +227,7 @@ inferred.sig <-
 colnames(inferred.sig) <- paste0("Inferred-", params$whichnitro, "-sig")
 ```
 
-#### Inferred `r params$whichnitro` count signature and given HepG2 background signature 
+### Inferred `r params$whichnitro` count signature and given HepG2 background signature 
 
 ```{r, plot.inferred.spectra.signature}
 
@@ -245,10 +244,10 @@ pcat(ICAMS::TransformCatalog(two.sigs,
 ```
 
 
-### Calculate and plot inferred components of the spectra
+## Calculate and plot inferred components of the spectra
 
 
-#### Inferred background spectra
+### Inferred background spectra
 
 ```{r, plot.inferred.background.spectra}
 total.counts <- apply(spectra, MARGIN = 2, sum)
@@ -269,14 +268,14 @@ colnames(inferred.bg.spectra) <- paste0(colnames(spectra), "-inf-bg-spect")
 ```{r, pl_inferred_bg_spec, eval=params$showbgspec, echo=params$showbgspec}
 pcat(inferred.bg.spectra)
 ```
-#### Inferred spectra due to `r params$whichnitro`
+### Spectra due to `r params$whichnitro` as inferred by subtraction
 
 ```{r, plot.inferred.target.spectra}
 subtracted.target.spectra <- spectra - inferred.bg.spectra
 pcat(subtracted.target.spectra)
 ```
 
-#### Uncertainty in inferred signature based on variability of inferred spectra
+### Uncertainty in inferred signature based on variability of spectra minus inferred background
 
 
 ```{r, var_infer_sig, fig.height=2.5, warning=FALSE}
@@ -287,7 +286,6 @@ sub.target.sig.ests <-
 arrow.tops <- apply(sub.target.sig.ests, 1, max)
 arrow.bottoms <- apply(sub.target.sig.ests, 1, min)
 min.sub <- min(arrow.bottoms)
-min.sub
 bp <- pcat1(inferred.sig, ylim = c(min.sub, max(arrow.tops) + 0.005))
 add.arrows(bp, arrow.tops, arrow.bottoms)
 ```
@@ -300,7 +298,6 @@ d.sub.target.sig.ests <-
 arrow.tops <- apply(d.sub.target.sig.ests, 1, max)
 arrow.bottoms <- apply(d.sub.target.sig.ests, 1, min)
 min.sub <- min(arrow.bottoms)
-min.sub
 bp <- pcat1(
   ICAMS::TransformCatalog(inferred.sig,
                           target.catalog.type = "density.signature"),
@@ -310,7 +307,7 @@ add.arrows(bp, arrow.tops, arrow.bottoms)
 ```
 
 
-#### Combined background and target spectra
+### Show combined background and target spectra
 
 ```{r, plot.combined.count}
 # debug(stacked.pcat)
@@ -327,7 +324,7 @@ stacked.pcat(
 ```
 
 
-`r ifelse(params$showrecon, "#### Reconstruct spectra", "")`
+`r ifelse(params$showrecon, "### Reconstruct spectra", "")`
 
 ```{r, get.reconstructed.spectra, eval=params$showrecon, echo=params$showrecon}
 reconstructed.target.spectra <- 
@@ -345,39 +342,72 @@ pcat(reconstructed.target.spectra)
 
 
 total.spectra <- reconstructed.target.spectra + inferred.bg.spectra
-c1 <- mSigAct:::cossim(total.spectra[ ,1], spectra[ ,1])
-c2 <- mSigAct:::cossim(total.spectra[ ,2], spectra[ ,2])
-dist(rbind(total.spectra[ ,1], spectra[ ,1]), method = "euclidean")
-dist(rbind(total.spectra[ ,2], spectra[ ,2]), method = "euclidean")
+
+
+lapply(1:ncol(spectra), 
+        function(col.index) {
+          return(list(
+            cossim = mSigAct:::cossim(total.spectra[ , col.index], spectra[ , col.index]),
+            e.dist = dist(rbind(total.spectra[ , col.index], spectra[ , col.index]), method = "euclidean")))})
 
 ```
-`r ifelse(params$showrecon, "#### Original and reconstructed spectra side-by-side", "")`
 
+`r ifelse(params$showrecon, "### Original and reconstructed spectra side-by-side", "")`
 
 ```{r, plot.orig.and.recon, eval=params$showrecon, echo=params$showrecon}
-s.by.s <- cbind(spectra[  , 1, drop = FALSE],
-                total.spectra[ , 1 , drop = FALSE],
-                spectra[   , 2, drop = FALSE],
-                total.spectra[ , 2, drop = FALSE])
-onames <- colnames(spectra)
-colnames(s.by.s) <- c(
-  onames[1],
-  paste(onames[1], round(c1, digits = 4), sep = "-"),
-  onames[2],
-  paste(onames[2], round(c2, digits = 4), sep = "-")
-)
-```
+InterleaveMatrices <- function(m1, m2) {
+  stopifnot(dim(m1) == dim(m2))
+  i2 <- 1:ncol(m1) * 2
+  i1 <- 1 + (0:(ncol(m1) - 1) * 2)
+  out <- matrix(nrow = nrow(m1), ncol = 2 * ncol(m1))
+  out[ , i1] <- m1
+  out[ , i2] <- m2
+  c.names <- character(2 * ncol(m1))
+  c.names[i1] <- colnames(m1)
+  c.names[i2] <- colnames(m2)
+  colnames(out) <- c.names
+  return(out)
+  
+}
 
-`r ifelse(params$showrecon, paste("##### Summary of replicate 1:", colnames(spectra)[1]), "")`
+s.by.s <- InterleaveMatrices(spectra, total.spectra)
+```
 
 ```{r, plot.replicate1, eval=params$showrecon, echo=params$showrecon}
-pcat(s.by.s[ , 1:2])
+pcat(s.by.s)
 ```
 
-`r ifelse(params$showrecon, paste("##### Summary of replicate 2:", colnames(spectra)[2]), "")`
+## Sanity check: are both the background and the inferred signature needed?
 
+### Is the inferred signature needed?
 
-```{r, plot_replcate2, eval=params$showrecon, echo=params$showrecon}
-pcat(s.by.s[ , 3:4])
+```{r, sanity_check_1_is_target_needed}
+m.opts <- DefaultManyOpts()
+tmp.fn <- function(spectrum) {
+  retval <- mSigAct::SignaturePresenceTest1(
+    spectrum         = spectrum,
+    sigs             = two.sigs,
+    target.sig.index = 1,
+    eval_f           = mSigAct::ObjFnBinomMaxLH,
+    m.opts           = m.opts)
+  return(list(pval = retval$chisq.p, expwith = retval$exp.with))
+}
+apply(spectra, MARGIN = 2, tmp.fn)
 ```
 
+
+### Is the background signature needed?
+
+```{r, sanity_check_2_is_backgrouind_needed}
+tmp.fn2 <- function(spectrum) {
+  retval <- mSigAct::SignaturePresenceTest1(
+    spectrum         = spectrum,
+    sigs             = two.sigs,
+    target.sig.index = 2,
+    eval_f           = mSigAct::ObjFnBinomMaxLH,
+    m.opts           = m.opts)
+  return(list(pval = retval$chisq.p, expwith = retval$exp.with))
+}
+apply(spectra, MARGIN = 2, tmp.fn2)
+
+```

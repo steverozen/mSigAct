@@ -2,11 +2,10 @@
 
 export(DefaultManyOpts)
 export(EstimateSignatureFromSpectraLH)
-export(FindSignatureMinusBackground)
-export(KucabToICAMSSpectra)
 export(LLHSpectrumNegBinom)
 export(ObjFnBinomMaxLH)
 export(ObjFnBinomMaxLH2)
+export(SeparateSignatureFromBackground)
 export(SignaturePresenceTest1)
 export(SparseAssignActivity)
 importFrom(grDevices,cairo_pdf)

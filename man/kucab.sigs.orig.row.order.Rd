@@ -6,7 +6,7 @@
 \title{Kucab et al., 2019 signatures in the row order as found on}
 \format{An object of class \code{data.frame} with 96 rows and 55 columns.}
 \source{
-https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
+\url{https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85}
 
 The row labels are in column 1 in the order
 

@@ -31,9 +31,9 @@ In the future we could take multiple samples.}
 
 \item{out.dir}{Put the results in this directory.}
 
-\item{mc.cores}{See \code{FindSignatureMinusBackground}.}
+\item{mc.cores}{See \code{SeparateSignatureFromBackground}.}
 
-\item{m.opts}{See \code{FindSignatureMinusBackground}.}
+\item{m.opts}{See \code{SeparateSignatureFromBackground}.}
 
 \item{verbose}{If \code{TRUE} print some progress information.}
 }

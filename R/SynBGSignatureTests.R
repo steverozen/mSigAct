@@ -17,6 +17,11 @@ DistancesToSPSigs <-
 }
 
 
+Nloptr2ObjFnValue <- function(nloptr.retval) {
+  return(nloptr.retval$objective)
+}
+
+
 AddNoiseToSpectra <- function(spectra, nbinom.size) {
   
   spectra.w.noise <- 
@@ -117,7 +122,6 @@ GetPCAWG7Sig <- function(sig.name) {
 
 MakeTestSpectrum <- function(bg.sig.info,
                              bg.contribution,
-                             target.sig.name = NULL,
                              target.sig = NULL) {
   # To figure out the non-background, do we want
   # to have different background levels based
@@ -199,9 +203,9 @@ BGOneTest <- function(bg.info,
                               bg.contribution, 
                               num.spectra.per.test)
   tmp.out <-
-    FindSignatureMinusBackground(
+    SeparateSignatureFromBackground(
       test.data$spectra,
-      HepG2.background.info,
+      mSigAct::HepG2.background.info,
       m.opts = NULL,
       start.b.fraction = 0.5)
   
@@ -340,13 +344,10 @@ MakeSynTestGrid <-
   for (i in 1:length(sig.names.to.test)) {
     for (cont in contribution) {
       for (replicate in 1:num.replicates) {
-        sig.name.i <- sig.names.to.test[i]
         next.row <-
           MakeTestSpectrum( 
                    bg.sig.info     = bg.sig.info,
-                   bg.contribution = cont,
-                   target.sig.name = sig.name.i #,
-                   # dist.to.bg      = dist[sig.name.i]
+                   bg.contribution = cont
                    )
         colnames(next.row) <- colnames(output)
         output <- rbind(output, next.row)
@@ -398,8 +399,8 @@ TestTable2TestInput <- function(test.table,
 #'                                  In the future we could take multiple samples.
 #' @param bg.info Information on the background signatures, e.g. \code{HepG2.background.info}.
 #' @param out.dir Put the results in this directory.
-#' @param mc.cores    See \code{FindSignatureMinusBackground}.
-#' @param m.opts      See \code{FindSignatureMinusBackground}.
+#' @param mc.cores    See \code{SeparateSignatureFromBackground}.
+#' @param m.opts      See \code{SeparateSignatureFromBackground}.
 #' @param verbose If \code{TRUE} print some progress information.
 RunTests <- function(test.table, 
                      num.replicates,
@@ -430,7 +431,7 @@ RunTests <- function(test.table,
     spectra <- test.input.list[[test.name]][["spectra"]]
     
     retval <-
-      FindSignatureMinusBackground(spectra, # Defined in mSigAct.R
+      SeparateSignatureFromBackground(spectra, # Defined in mSigAct.R
                                    bg.sig.info     = bg.info,
                                    m.opts          = m.opts,
                                    start.b.fraction = 0.1)

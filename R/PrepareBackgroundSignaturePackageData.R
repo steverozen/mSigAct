@@ -5,7 +5,7 @@
 # SaveHepG2andMCF10ABackgroundInfo()
 
 #' Create spectra from VCFs and load spectra as package variables.
-#' VCFs received from Arnound on 2020 Feb 04
+#' VCFs received from Arnoud on 2020 Feb 04
 
 
 MakeMCF10HepG2BackgroundVars <- function() {

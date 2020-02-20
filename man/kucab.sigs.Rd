@@ -3,10 +3,10 @@
 \docType{data}
 \name{kucab.sigs}
 \alias{kucab.sigs}
-\title{Kucab et al., 2019 signatures in the same row order as kucab.sub.catalog.}
+\title{Kucab et al., 2019 signatures in the same row order as \code{\link{kucab.sub.catalog}}.}
 \format{An object of class \code{data.frame} with 96 rows and 55 columns.}
 \source{
-https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85
+\url{https://data.mendeley.com/datasets/m7r4msjb4c/2#folder-9f2942fa-935b-4ac3-aa26-35784fb68a85}
 }
 \usage{
 kucab.sigs

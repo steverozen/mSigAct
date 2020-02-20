@@ -8,7 +8,7 @@ SPIKE.TEST <- BG.MEG.kucab.bg.test$x0.5.noise
 
 test.spectra <- mSigAct::KucabToICAMSSpectra(SPIKE.TEST$test.spectra)
 options(warn = 2)
-ma.test <- FindSignatureMinusBackground(
+ma.test <- SeparateSignatureFromBackground(  # Arguments are out of date
   test.spectra, 
   mSigAct::kucab.background.info,
   algorithm = 'NLOPT_LN_COBYLA',

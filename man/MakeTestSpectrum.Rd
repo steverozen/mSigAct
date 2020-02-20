@@ -4,12 +4,7 @@
 \alias{MakeTestSpectrum}
 \title{Make a single test spectrum.}
 \usage{
-MakeTestSpectrum(
-  bg.sig.info,
-  bg.contribution,
-  target.sig.name = NULL,
-  target.sig = NULL
-)
+MakeTestSpectrum(bg.sig.info, bg.contribution, target.sig = NULL)
 }
 \arguments{
 \item{bg.sig.info}{See, for example, \code{HepG2.background.info}.}
