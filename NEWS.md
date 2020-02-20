@@ -1,3 +1,8 @@
+# mSigAct 2.0.0.0008
+
+* Substantially improved separation of background signature, include some tutorial
+  examples.
+
 # mSigAct 2.0.0.0005
 
 * Create ObjFnBinomMaxLH2() to provide an option to round the reconstruction only if no mutation
@@ -6,7 +11,7 @@
 
 # mSigAct 2.0.0.0004
 
-* Adding background subtraction code (not complete).
+* Adding background subtraction code.
 
 # mSigAct 2.0.0 
 

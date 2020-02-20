@@ -279,8 +279,8 @@ pcat(subtracted.target.spectra)
 
 ```{r, sub_inferred_vs_direct_inferred}
 
-sigx <- mSigAct:::MeanOfSpectraAsSig(subtracted.target.spectra)
-mSigAct:::cossim(sigx, inferred.sig)
+sigx <- mSigAct::MeanOfSpectraAsSig(subtracted.target.spectra)
+mSigAct::cossim(sigx, inferred.sig)
 
 ```
 
@@ -357,7 +357,7 @@ total.spectra <- reconstructed.target.spectra + inferred.bg.spectra
 lapply(1:ncol(spectra), 
         function(col.index) {
           return(list(
-            cossim = mSigAct:::cossim(total.spectra[ , col.index], spectra[ , col.index]),
+            cossim = mSigAct::cossim(total.spectra[ , col.index], spectra[ , col.index]),
             e.dist = dist(rbind(total.spectra[ , col.index], spectra[ , col.index]), method = "euclidean")))})
 
 ```
@@ -391,7 +391,6 @@ s.by.s <- ICAMS::as.catalog(s.by.s,
 ```{r, plot.replicate1, eval=params$showrecon, echo=params$showrecon}
 for (i in 0:(ncol(spectra) - 1)) {
   pcat(s.by.s[ , (2 * i + 1):(2 * i + 2) ])
-  # cat( 2 * i + 1, 2 * i + 2)
 }
 ```
 
@@ -400,7 +399,7 @@ for (i in 0:(ncol(spectra) - 1)) {
 ### Is the inferred signature needed?
 
 ```{r, sanity_check_1_is_target_needed}
-m.opts <- DefaultManyOpts()
+m.opts <- mSigAct::DefaultManyOpts()
 tmp.fn <- function(spectrum) {
   retval <- mSigAct::SignaturePresenceTest1(
     spectrum         = spectrum,

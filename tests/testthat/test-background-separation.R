@@ -110,5 +110,6 @@ test_that("Test Separation of Signature from Background 1", {
       0.00304272062222302
     )
   
-  testthat::expect_equal(retval$inferred.target.sig, expected.sig)
+  testthat::expect_equal(retval$inferred.target.sig, expected.sig,
+                         tolerance = 1e-5)
 })

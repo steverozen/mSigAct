@@ -1,3 +1,10 @@
+#' Cosine similarity with more forgiving argment types
+#' 
+#' @param v1 A vector or single-column matrix
+#' @param v2 A vector or single-column matrix
+#' 
+#' @export
+
 cossim <- function(v1, v2) {
   if (!is.null(ncol(v1)))  {
     stopifnot(ncol(v1) == 1)
