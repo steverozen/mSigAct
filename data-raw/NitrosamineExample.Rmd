@@ -4,12 +4,12 @@ output: html_document
 date: '`r Sys.Date()`'
 params:
   whichnitro: NDEA
-  bgfactor: 2
+  bgfactor: 8
   showrecon: TRUE
   showbgspec: FALSE
   onefhigh: 2.5
   verbose: TRUE
-  count.nbinom.size: 5
+  count.nbinom.size: 2
 title: '`r paste("Background Subtraction for", params$whichnitro, "with Parameters Shown Below")`'  
 ---
 
@@ -275,6 +275,16 @@ subtracted.target.spectra <- spectra - inferred.bg.spectra
 pcat(subtracted.target.spectra)
 ```
 
+### Signature based on subtracted spectra versus directly inferred signature
+
+```{r, sub_inferred_vs_direct_inferred}
+
+sigx <- mSigAct:::MeanOfSpectraAsSig(subtracted.target.spectra)
+mSigAct:::cossim(sigx, inferred.sig)
+
+```
+
+
 ### Uncertainty in inferred signature based on variability of spectra minus inferred background
 
 
@@ -366,15 +376,23 @@ InterleaveMatrices <- function(m1, m2) {
   c.names[i1] <- colnames(m1)
   c.names[i2] <- colnames(m2)
   colnames(out) <- c.names
+  rownames(out) <- rownames(m1)
   return(out)
   
 }
 
 s.by.s <- InterleaveMatrices(spectra, total.spectra)
+s.by.s <- ICAMS::as.catalog(s.by.s, 
+                            region = "genome",
+                            catalog.type = "counts",
+                            abundance = attr(spectra, "abundance"))
 ```
 
 ```{r, plot.replicate1, eval=params$showrecon, echo=params$showrecon}
-pcat(s.by.s)
+for (i in 0:(ncol(spectra) - 1)) {
+  pcat(s.by.s[ , (2 * i + 1):(2 * i + 2) ])
+  # cat( 2 * i + 1, 2 * i + 2)
+}
 ```
 
 ## Sanity check: are both the background and the inferred signature needed?

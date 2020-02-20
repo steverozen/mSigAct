@@ -3,7 +3,6 @@ context("Test Separation of Signature from Background")
 test_that("Test Separation of Signature from Background 1", {
   set.seed(1099,"L'Ecuyer-CMRG")
   
-  
   retval <- 
     SeparateSignatureFromBackground(
       spectra     = mSigAct::nitrosamine.examples$catSBS96[ , 1:3],

@@ -303,6 +303,8 @@ ObjFn1 <- function(
 #' 
 #' @param spectra Convert each spectrum to a signature and then compute the
 #'   mean of all signatures.
+#'   
+#' @export
 MeanOfSpectraAsSig <- function(spectra) {
   ctype <- attr(spectra, "catalog.type", exact = TRUE)
   if (ctype == "counts") {
