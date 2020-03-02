@@ -9,6 +9,7 @@ test_that("SignaturePresence1 1", {
 })
 
 test_that("SignaturePresence1 2", {
+  testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   input <- c(SBS5 = 10, SBS1 = 1000, SBS22 = 2000)
   retval <- TestSignaturePresenceTest1(sig.counts = input)
   testthat::expect_equal(retval$chisq.p, 1, tolerance = 1e-5)

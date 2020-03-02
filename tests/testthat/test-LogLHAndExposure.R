@@ -1,7 +1,8 @@
-context("LogLHAndExposure")
+context("test-LogLHAndExposure.R test one.lh.and.exp()")
 
 PrepOneSynSpectrum <- function(sig.counts,
                                input.sigs = PCAWG7::signature$genome$SBS96) {
+  
   sig.names <- names(sig.counts)
   
   if (sum(sig.names %in% colnames(input.sigs)) == 0) {
@@ -29,7 +30,7 @@ PrepOneSynSpectrum <- function(sig.counts,
 
 TestOneLLHetc <- function(sig.counts,
                           input.sigs = PCAWG7::signature$genome$SBS96,
-                          eval_f = ObjFnBinomMaxLH,
+                          eval_f     = ObjFnBinomMaxLHMustRound,
                           trace = 0) {
   
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,
@@ -39,6 +40,7 @@ TestOneLLHetc <- function(sig.counts,
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
   
+  # debug(ObjFnBinomMaxLH2)
   retval <- one.lh.and.exp(
     spect  = test.data$spec,
     sigs   = test.data$sigs, 
@@ -48,8 +50,9 @@ TestOneLLHetc <- function(sig.counts,
   return(c(retval, list(m.opts = m.opts)))
 }
 
-test_that("LogLHAndExposure 1", {
+test_that("test-LogLHAndExposure.R LogLHAndExposure 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
+  set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval <- TestOneLLHetc(sig.counts = input)
   testthat::expect_equal(retval$loglh, -222.7188, tolerance = 1e-5)
   testthat::expect_equal(retval$exposure,

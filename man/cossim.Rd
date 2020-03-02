@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{cossim}
 \alias{cossim}
-\title{Cosine similarity with more forgiving argment types.}
+\title{Cosine similarity with useful argument types..}
 \usage{
 cossim(v1, v2)
 }
@@ -12,5 +12,5 @@ cossim(v1, v2)
 \item{v2}{A vector or single-column matrix}
 }
 \description{
-Cosine similarity with more forgiving argment types.
+Calls \code{\link[lsa]{cosine}}.
 }

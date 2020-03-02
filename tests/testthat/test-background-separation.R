@@ -1,4 +1,4 @@
-context("Test Separation of Signature from Background")
+context("test-background-separation.R Test Separation of Signature from Background")
 
 test_that("Test Separation of Signature from Background 1", {
   set.seed(1099,"L'Ecuyer-CMRG")

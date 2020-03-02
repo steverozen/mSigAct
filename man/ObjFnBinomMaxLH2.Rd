@@ -4,7 +4,14 @@
 \alias{ObjFnBinomMaxLH2}
 \title{The negative binomial maximum likelihood objective function.}
 \usage{
-ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
+ObjFnBinomMaxLH2(
+  exp,
+  spectrum,
+  sigs,
+  nbinom.size,
+  no.round.ok = FALSE,
+  show.warning = FALSE
+)
 }
 \arguments{
 \item{exp}{The matrix of exposures ("activities").}

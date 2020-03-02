@@ -1,4 +1,6 @@
-#' Cosine similarity with more forgiving argment types.
+#' Cosine similarity with useful argument types..
+#' 
+#' Calls \code{\link[lsa]{cosine}}.
 #' 
 #' @param v1 A vector or single-column matrix
 #' @param v2 A vector or single-column matrix

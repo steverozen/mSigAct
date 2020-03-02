@@ -14,8 +14,8 @@ SignaturePresenceTest(
 )
 }
 \arguments{
-\item{spectra}{The catalog (maxtrix) to analyze. This could be
-and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
+\item{spectra}{The catalog (matrix) to analyze. This could be
+an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
 
 \item{sigs}{A catalog of signatures from which to choose.
 This could be

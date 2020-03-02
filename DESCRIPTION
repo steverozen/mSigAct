@@ -10,7 +10,7 @@ Description: Analyze the 3"activities" of mutational signatures in one or
     determine a minimal subset of signatures needed to plausibly reconstruct an
     observed spectrum. The sparse assign signatures functionality in this 
     package is not an all-purpose package for signature attribution, because
-    it is *eliberately biased* toward using as few signatures as possible.
+    it is *deliberately biased* toward using as few signatures as possible.
     Can also separate out the activity of a background mutational signature
     from spectra generated in experiments (usually cell culture experiments).
 License: GPL-3

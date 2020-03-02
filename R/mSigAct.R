@@ -507,9 +507,11 @@ Polish <- function(exp, sig.names, spect) {
 
 #' Framework for testing \code{\link{SparseAssignActivity1}}.
 #' 
+#' Tests only for single spectrum.
+#' 
 #' @keywords internal
 
-SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
+SparseAssignTest1 <- function(sig.counts, trace = 0) {
   
   # set.seed(1449, kind = "L'Ecuyer-CMRG")
   
@@ -586,7 +588,7 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
 #' 
 #' @keywords internal
 
-XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
+SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
   
   if (!is.matrix(sig.counts)) {
     tmp.names <- names(sig.counts)
@@ -681,8 +683,8 @@ Adj.mc.cores <- function(mc.cores) {
 
 #' Test whether a given signature is plausibly present in a catalog
 #' 
-#' @param spectra The catalog (maxtrix) to analyze. This could be
-#'   and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
+#' @param spectra The catalog (matrix) to analyze. This could be
+#'   an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
 #' 
 #' @param sigs A catalog of signatures from which to choose.
 #' This could be
@@ -749,7 +751,8 @@ SignaturePresenceTest <- function(
 TestSignaturePresenceTest1 <- 
   function(sig.counts, 
            input.sigs = PCAWG7::signature$genome$SBS96, 
-           trace = 0) {
+           trace      = 0,
+           eval_f     = ObjFnBinomMaxLHNoRoundOK) {
   
     if (!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5",
                           quietly = TRUE)) {
@@ -790,7 +793,7 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+    eval_f           = eval_f,
     m.opts           = m.opts)
   
   return(retval)

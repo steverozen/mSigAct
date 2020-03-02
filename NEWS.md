@@ -1,6 +1,6 @@
 # mSigAct 2.0.0.0010
 
-* Added AnySigSubsetPresent(), SignaturePresenceTest(), TestAnySubsetPresent(), TestSignaturePresenceTest()
+* Upgraded functions to test for signature presence and associated tests.
 
 # mSigAct 2.0.0.0009
 
