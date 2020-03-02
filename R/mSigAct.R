@@ -420,7 +420,9 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #' 
 #' @export
 #' 
-ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE) {
+ObjFnBinomMaxLH2 <- 
+  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
+           show.warning = FALSE) {
   
   if (any(is.na(exp))) return(Inf)
   
@@ -432,7 +434,7 @@ ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, no.round.ok = FAL
   # log likelihood will be -inf. The situation is especial likely
   # to occur if mutation counts in the spectrum are low.
   if (any(reconstruction2 == 0) && no.round.ok) {
-    warning("unrounded reconstruction")
+    if (show.warning) warning("unrounded reconstruction")
   } else {
     reconstruction <- reconstruction2
   }
@@ -788,7 +790,7 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOk,
+    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK,
     m.opts           = m.opts)
   
   return(retval)
