@@ -352,7 +352,7 @@ prop.reconstruct <- function(sigs, exp) {
 
 #' The negative binomial maximum likelihood objective function.
 #' 
-#' For use by \code{\link[nloptr]{nloptr}}
+#' For use by \code{\link[nloptr]{nloptr}}.
 #'
 #' @param exp The matrix of exposures ("activities").
 #' @param spectrum The spectrum to assess.
@@ -379,6 +379,15 @@ ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
   ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
 }
 
+#' The negative binomial maximum likelihood objective function allowing no rounding.
+#' 
+#' For use by \code{\link[nloptr]{nloptr}}.
+#' For details see \code{\link{ObjFnBinomMaxLHMustRound}}.
+#'
+#' @inheritParams ObjFnBinomMaxLHMustRound
+#'
+#' @export
+#' 
 ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
   ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE)
 }
@@ -439,7 +448,7 @@ ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, no.round.ok = FAL
   loglh <- LLHSpectrumNegBinom(spectrum = spectrum, 
                                 expected.counts = reconstruction,
                                 nbinom.size = nbinom.size)
-  
+
   return(-loglh)
 }
 
@@ -805,12 +814,13 @@ TestSignaturePresenceTest1 <-
 # mutational spectra.
 AnySigSubsetPresent <- 
   function(spect, 
-           all.sigs, 
-           H0.sigs, 
-           more.sigs,
+           all.sigs,           # Matrix of all signtures to consider, including the H0 sigs and the signatures to consider
+           target.sigs.index,  # Indices of target sigs within the matrix all.sigs
            p.thresh = 0.05, 
            eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,  
            m.opts) {
+    
+    H0.sigs <- all.sigs[ , -target.sigs.index, drop = FALSE]
     
     # Args:
     #  spect:    a single spectrum as a column
@@ -819,9 +829,9 @@ AnySigSubsetPresent <-
     #            (i.e., a subset of all.sigs' colnames) that
     #            must be considered for the null hypothesis
     #  more.sigs: XXXXX
-    mode(spect) <-  'numeric' # Todo, why do we need this?
+
     start <- one.lh.and.exp(spect  = spect, 
-                            sigs   = all.sigs[ , H0.sigs, drop = FALSE],
+                            sigs   = H0.sigs,
                             eval_f = eval_f,
                             m.opts = m.opts)
     
@@ -830,23 +840,24 @@ AnySigSubsetPresent <-
     start.exp <- start$exposure
     zero.exposures <- which(start.exp < 0.5)
     if (length(zero.exposures) > 0) {
-      cat("There were some signatures with no expsoures\n")
+      message("There were some signatures with no expsoures in H0\n")
     }
-    # We probably do not need the next 2 lines
-    non.0.exp <- names(start.exp)[which(start.exp > 0.5)] # In case some signatures are useless
-    # H0.sigs <- names(start.exp)[non.0.exp.index]
+    
+    # For information, in case some signatures are useless
+    non.0.exp <- names(start.exp)[which(start.exp > 0.5)]
+
     if (m.opts$trace > 0) {
-      cat('H0 sigs are', paste(H0.sigs, collapse = ','),'\n')
+      message('H0 sigs are', paste(colnames(H0.sigs), collapse = ','),'\n')
     }
     
     # new.subsets contains all non-empty subsets of more.sigs (2^as.set(c()))
     # is the powerset of the empty set, i.e. {{}}).
-    new.subsets <- 2^sets::as.set(more.sigs) - 2^sets::as.set(c())
+    new.subsets <- 2^sets::as.set(target.sigs.index) - 2^sets::as.set(c())
     
     inner.fn <- function(sigs.to.add) {
       df <- sets::set_cardinality(sigs.to.add) # degrees of freedom for likelihood ratio test
       Ha.info <- one.lh.and.exp(spect  = spect,
-                                sigs   = all.sigs[ , c(H0.sigs, unlist(sigs.to.add)), drop = FALSE ],
+                                sigs   = cbind(H0.sigs, all.sigs[ , unlist(sigs.to.add), drop = FALSE ]),
                                 eval_f = eval_f,
                                 m.opts = m.opts)
       statistic <- 2 * (Ha.info$loglh - H0.lh)
@@ -855,7 +866,8 @@ AnySigSubsetPresent <-
                   statistic  = statistic,
                   df         = df,
                   p          = p,
-                  base.sigs  = paste(non.0.exp, collapse = ",")))
+                  base.sigs  = paste(non.0.exp, collapse = ","),
+                  Ha.info    = Ha.info))
     }
     
     out <- lapply(new.subsets, inner.fn)
@@ -863,24 +875,27 @@ AnySigSubsetPresent <-
   }
 
 
+TestEsoSpectra <- function(indices = NULL) {
+  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
+  spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
+  if (!is.null(indices)) {
+    spectra <- spectra[ , indices, drop = FALSE]
+  }
+  return(spectra)
+}
+
+
 TestAnySubsetPresent <- function(idx.to.test = NULL) {
   
   sp96.sig <- PCAWG7::signature$genome$SBS96
-  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
-  eso.spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
   
+  eso.spectra <- TestEsoSpectra()
+    
   if (is.null(idx.to.test)) idx.to.test <- 1:ncol(eso.spectra)
   
-  eso.min.sigs <- c(
-    "SBS1",
-    "SBS3",
-    "SBS5",
-    "SBS18",
-    "SBS28",
-    "SBS40")
+  eso.min.sigs <- TestEsoMin()
   
-  eso.17.H0.sigs <- c(eso.min.sigs, "SBS2", "SBS13")
-  
+  # Set up variables so result can be a data frame.
   sample.id.v <- c()
   df.v <- c()
   statistic.v <- c()
@@ -890,7 +905,7 @@ TestAnySubsetPresent <- function(idx.to.test = NULL) {
   for (sample.id in colnames(eso.spectra)[idx.to.test]) {
     out <- AnySigSubsetPresent(eso.spectra[ , sample.id, drop = FALSE],
                                all.sigs = sp96.sig,
-                               H0.sigs   = eso.17.H0.sigs, 
+                               H0.sigs   = eso.min.sigs, 
                                more.sigs = c("SBS17a", "SBS17b"),
                                m.opts = DefaultManyOpts())
     sample.id.v  <- c(sample.id.v,  rep(sample.id, length(out)))
@@ -915,39 +930,64 @@ if (FALSE) {
   any.test <- TestAnySubsetPresent(c(1,2,6))
 }
 
-
-
-TestSignaturePresenceTest <- function(extra.sig) {
-  sp96.sig <- PCAWG7::signature$genome$SBS96
-  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
-  eso.spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
-  
-  set.seed(101010, kind = "L'Ecuyer-CMRG") 
-  
-  
-  eso.min.sigs <- c(
+TestEsoSigs <- function(extra.sigs = NULL) {
+  sigs <- c(
     "SBS1",
+    "SBS2",
     "SBS3",
     "SBS5",
+    "SBS13",
     "SBS18",
     "SBS28",
     "SBS40")
-  
-  sigs.plus <- sp96.sig[  , c(extra.sig, eso.min.sigs)]
+  if (!is.null(extra.sigs)) {
+    sigs <- c(extra.sigs, sigs)
+  }
+  return(PCAWG7::signature$genome$SBS96[ , sigs])
+}
+
+TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
+
+  eso.spectra <- TestEsoSpectra(eso.indices)
+
+  set.seed(101010, kind = "L'Ecuyer-CMRG") 
+
+  sigs.plus <- TestEsoSigs(extra.sig)
   
   retval <- mSigAct::SignaturePresenceTest(
-    spectra          = eso.spectra[ , c(1,2,6)], 
+    spectra          = eso.spectra, 
     sigs             = sigs.plus,
     target.sig.index = 1, 
     m.opts           = DefaultManyOpts(), 
     eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK, 
     mc.cores         = 1)
   return(retval)
-
 }
 
 if (FALSE) {
-  eso.SBS2 <- TestSignaturePresenceTest("SBS2")
+  eso.17a <- TestSignaturePresenceTest("SBS17a", 1)
+  stopifnot(all.equal(eso.17a$`Eso-AdenoCA::SP111062`$chisq.p, 0.1019716, tolerance = 1e-7))
 
   }
 
+
+TestAny1 <- function(extra.sig, eso.index) {
+
+  eso.spectra <- TestEsoSpectra(eso.index)
+  
+  set.seed(101010, kind = "L'Ecuyer-CMRG") 
+  
+  sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
+  
+  out <- AnySigSubsetPresent(spect             = eso.spectra,
+                             all.sigs          = sigs.plus,
+                             target.sigs.index = 1:length(extra.sig),
+                             eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+                             m.opts            = DefaultManyOpts())
+  
+  return(out)
+}
+
+if (FALSE) {
+  any.17a <- TestAny1("SBS17a", 1)
+}
