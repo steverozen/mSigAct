@@ -74,6 +74,11 @@ Nloptr1Tumor <- function(spectrum,
     stop("nrow(sigs) != length(spectrum), look in file spectrum.sigs.debug.Rdata")
   }
   
+  stopifnot(mode(spectrum) == "numeric")
+  foo <- spectrum
+  storage.mode(spectrum) <- "double"
+  stopifnot(foo == spectrum)
+  
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   
   # x0 is uniform distribution of mutations across signatures
@@ -129,6 +134,9 @@ one.lh.and.exp <- function(spect,
                            sigs, 
                            m.opts,
                            eval_f) {
+  
+  stopifnot(mode(spect) == "numeric")
+
   r <- Nloptr1Tumor(spect, 
                     sigs, 
                     m.opts = m.opts,
@@ -205,7 +213,7 @@ SparseAssignActivity <- function(spectra,
   
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   
-  if (is.null(eval_f)) eval_f <- ObjFnBinomMaxLH
+  if (is.null(eval_f)) eval_f <- ObjFnBinomMaxLHNoRoundOK
   
   mc.cores <- Adj.mc.cores(
     ifelse(is.null(mc.cores), 
@@ -367,10 +375,13 @@ prop.reconstruct <- function(sigs, exp) {
 #' 
 #' @export
 #' 
-ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE)
+ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
 }
 
+ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE)
+}
 
 #' The negative binomial maximum likelihood objective function.
 #' 
@@ -381,7 +392,7 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
 #' @param sigs The matrix of signatures.
 #' @param nbinom.size The dispersion parameter for the negative
 #'        binomial distribution; smaller is more dispersed.
-#' @param allow.no.round If \code{TRUE}, allow use of unrounded
+#' @param no.round.ok If \code{TRUE}, allow use of unrounded
 #'        reconstruction if some mutation types would have 0
 #'        counts in the reconstructed spectrum.
 #'
@@ -400,7 +411,7 @@ ObjFnBinomMaxLH <- function(exp, spectrum, sigs, nbinom.size) {
 #' 
 #' @export
 #' 
-ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE) {
+ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE) {
   
   if (any(is.na(exp))) return(Inf)
   
@@ -411,7 +422,7 @@ ObjFnBinomMaxLH2 <- function(exp, spectrum, sigs, nbinom.size, allow.no.round = 
   # any channel even if the reconstruction > 0, because then
   # log likelihood will be -inf. The situation is especial likely
   # to occur if mutation counts in the spectrum are low.
-  if (any(reconstruction2 == 0) && allow.no.round) {
+  if (any(reconstruction2 == 0) && no.round.ok) {
     warning("unrounded reconstruction")
   } else {
     reconstruction <- reconstruction2
@@ -516,7 +527,7 @@ SparseAssignTestGeneric <- function(sig.counts, trace = 0) {
   
   SA.out <- SparseAssignActivity1(spect      = spect,
                                  sigs        = some.sigs,
-                                 eval_f      = ObjFnBinomMaxLH,
+                                 eval_f      = ObjFnBinomMaxLHMustRound,
                                  m.opts      = m.opts)
   
   zeros <- which(SA.out < 0.5)
@@ -597,7 +608,7 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
   
   SA.out <- SparseAssignActivity(spectra    = spect,
                                   sigs      = some.sigs,
-                                  eval_f    = ObjFnBinomMaxLH,
+                                  eval_f    = ObjFnBinomMaxLHMustRound,
                                   m.opts    = m.opts,
                                   mc.cores  = mc.cores) 
   return(SA.out)
@@ -615,7 +626,8 @@ XSparseAssignTestGeneric <- function(sig.counts, trace = 0, mc.cores = NULL) {
 #' 
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #' 
-#' @param m.opts See \code{\link{DefaultManyOpts}}.
+#' @param m.opts For documentation
+#'    see \code{\link{DefaultManyOpts}}.
 #' 
 #' @export
 
@@ -656,10 +668,73 @@ Adj.mc.cores <- function(mc.cores) {
   return(mc.cores)
 }
 
+#' Test whether a given signature is plausibly present in a catalog
+#' 
+#' @param spectra The catalog (maxtrix) to analyze. This could be
+#'   and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
+#' 
+#' @param sigs A catalog of signatures from which to choose.
+#' This could be
+#'   and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
+#' 
+#' @param target.sig.index The index of the signature the presence
+#' of which we want to test.
+#' 
+#' @param eval_f See \code{\link[nloptr]{nloptr}}.
+#' 
+#' @param m.opts If \code{NULL} use the return from 
+#'    calling \code{\link{DefaultManyOpts}}. For documentation
+#'    see \code{\link{DefaultManyOpts}}.
+#'    
+#' @param mc.cores Number of cores to use. Always silently 
+#'  changed to 1 on Microsoft Windows.
+#' 
+#' @export
+
+SignaturePresenceTest <- function(
+  spectra, sigs, target.sig.index, m.opts = NULL, eval_f, mc.cores = 10) {
+  
+  # check if signatures sum to 1
+  all.col.sums <- colSums(sigs)
+  
+  if (!all.equal(all.col.sums,
+                 rep(1, ncol(sigs)), 
+                 tolerance = 1e-3,
+                 check.names = FALSE)) {
+    stop(
+      "Argument sigs does not seem to be a signature ",
+      "catalog because some columns do not sum to 1")
+  }
+  
+  # Need to match exactly one signature name
+  stopifnot(length(target.sig.index) == 1)
+  
+  spectra.as.list <- split(t(spectra), 1:ncol(spectra))
+  
+  names(spectra.as.list) <- colnames(spectra)
+  
+  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
+
+  mc.cores <- Adj.mc.cores(mc.cores)
+  
+  out.res <-
+    parallel::mclapply(
+      X                = spectra.as.list,
+      FUN              = SignaturePresenceTest1,
+      mc.cores         = mc.cores,
+      sigs             = sigs,
+      target.sig.index = target.sig.index,
+      m.opts           = m.opts,
+      eval_f           = eval_f)
+  
+  return(out.res)
+}
+
+
 #' Framework for testing \code{\link{SignaturePresenceTest1}}.
 #' 
 #' @keywords internal
-
+#'
 TestSignaturePresenceTest1 <- 
   function(sig.counts, 
            input.sigs = PCAWG7::signature$genome$SBS96, 
@@ -704,7 +779,7 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs, 
     target.sig.index = 1,
-    eval_f           = mSigAct::ObjFnBinomMaxLH,
+    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOk,
     m.opts           = m.opts)
   
   return(retval)
@@ -712,4 +787,167 @@ TestSignaturePresenceTest1 <-
 
 
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
+
+
+# Return the P value of the null hypothesis that none of the signatures in Ha.sigs,
+# either singly or in combination **** probabily of a likelihood as good or better
+# generating the spectrum from the H0 signatures **** as opposed to compared to incluing the
+# extra signatures.
+#
+# WARNING: tests all non-empty subsets of more.sigs; will get very slow for
+# large numbers of more.sigs (2^|more.sigs| - 1).
+# START HERE
+# To Do: 1. remove empty set from more.sigs' subsets
+#        2. get test data SBS17 and SBS7 (maybe SBS10); to do this, need PCAWG / SigProfiler sigs and some
+#        pcawg data
+#        3. see if it is reasonable to require all signatures in more.sigs
+# @param spect A numerical matrix an \code{\link[ICAMS]{ICAMS}} catalog containg 
+# mutational spectra.
+AnySigSubsetPresent <- 
+  function(spect, 
+           all.sigs, 
+           H0.sigs, 
+           more.sigs,
+           p.thresh = 0.05, 
+           eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,  
+           m.opts) {
+    
+    # Args:
+    #  spect:    a single spectrum as a column
+    #  all.sigs: a matrix of all signatures to consider
+    #  H0.sigs:  the identifiers of signatures in all.sigs
+    #            (i.e., a subset of all.sigs' colnames) that
+    #            must be considered for the null hypothesis
+    #  more.sigs: XXXXX
+    mode(spect) <-  'numeric' # Todo, why do we need this?
+    start <- one.lh.and.exp(spect  = spect, 
+                            sigs   = all.sigs[ , H0.sigs, drop = FALSE],
+                            eval_f = eval_f,
+                            m.opts = m.opts)
+    
+    
+    H0.lh <- start$loglh  # The likelihood with only H0.sigs
+    start.exp <- start$exposure
+    zero.exposures <- which(start.exp < 0.5)
+    if (length(zero.exposures) > 0) {
+      cat("There were some signatures with no expsoures\n")
+    }
+    # We probably do not need the next 2 lines
+    non.0.exp <- names(start.exp)[which(start.exp > 0.5)] # In case some signatures are useless
+    # H0.sigs <- names(start.exp)[non.0.exp.index]
+    if (m.opts$trace > 0) {
+      cat('H0 sigs are', paste(H0.sigs, collapse = ','),'\n')
+    }
+    
+    # new.subsets contains all non-empty subsets of more.sigs (2^as.set(c()))
+    # is the powerset of the empty set, i.e. {{}}).
+    new.subsets <- 2^sets::as.set(more.sigs) - 2^sets::as.set(c())
+    
+    inner.fn <- function(sigs.to.add) {
+      df <- sets::set_cardinality(sigs.to.add) # degrees of freedom for likelihood ratio test
+      Ha.info <- one.lh.and.exp(spect  = spect,
+                                sigs   = all.sigs[ , c(H0.sigs, unlist(sigs.to.add)), drop = FALSE ],
+                                eval_f = eval_f,
+                                m.opts = m.opts)
+      statistic <- 2 * (Ha.info$loglh - H0.lh)
+      p <- pchisq(statistic, df, lower.tail = FALSE)
+      return(list(sigs.added = paste(as.character(sigs.to.add), collapse = ","),
+                  statistic  = statistic,
+                  df         = df,
+                  p          = p,
+                  base.sigs  = paste(non.0.exp, collapse = ",")))
+    }
+    
+    out <- lapply(new.subsets, inner.fn)
+    return(out)
+  }
+
+
+TestAnySubsetPresent <- function(idx.to.test = NULL) {
+  
+  sp96.sig <- PCAWG7::signature$genome$SBS96
+  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
+  eso.spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
+  
+  if (is.null(idx.to.test)) idx.to.test <- 1:ncol(eso.spectra)
+  
+  eso.min.sigs <- c(
+    "SBS1",
+    "SBS3",
+    "SBS5",
+    "SBS18",
+    "SBS28",
+    "SBS40")
+  
+  eso.17.H0.sigs <- c(eso.min.sigs, "SBS2", "SBS13")
+  
+  sample.id.v <- c()
+  df.v <- c()
+  statistic.v <- c()
+  p.v <- c()
+  sigs.added.v <- c()
+  base.sigs.v  <- c()
+  for (sample.id in colnames(eso.spectra)[idx.to.test]) {
+    out <- AnySigSubsetPresent(eso.spectra[ , sample.id, drop = FALSE],
+                               all.sigs = sp96.sig,
+                               H0.sigs   = eso.17.H0.sigs, 
+                               more.sigs = c("SBS17a", "SBS17b"),
+                               m.opts = DefaultManyOpts())
+    sample.id.v  <- c(sample.id.v,  rep(sample.id, length(out)))
+    sigs.added.v <- c(sigs.added.v, sapply(out, function(x) x$sigs.added))
+    df.v         <- c(df.v,         sapply(out, function(x) x$df))
+    statistic.v  <- c(statistic.v,  sapply(out, function(x) x$statistic))
+    p.v          <- c(p.v,          sapply(out, function(x) x$p))
+    base.sigs.v  <- c(base.sigs.v,  sapply(out, function(x) x$base.sigs))
+  }
+  
+  retval <-
+    data.frame(sample.id = sample.id.v,
+               sigs.added = sigs.added.v,
+               df         = df.v,
+               statistic  = statistic.v,
+               p          = p.v,
+               base.sigs  = base.sigs.v)
+  return(retval)
+}
+
+if (FALSE) {
+  any.test <- TestAnySubsetPresent(c(1,2,6))
+}
+
+
+
+TestSignaturePresenceTest <- function(extra.sig) {
+  sp96.sig <- PCAWG7::signature$genome$SBS96
+  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
+  eso.spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
+  
+  set.seed(101010, kind = "L'Ecuyer-CMRG") 
+  
+  
+  eso.min.sigs <- c(
+    "SBS1",
+    "SBS3",
+    "SBS5",
+    "SBS18",
+    "SBS28",
+    "SBS40")
+  
+  sigs.plus <- sp96.sig[  , c(extra.sig, eso.min.sigs)]
+  
+  retval <- mSigAct::SignaturePresenceTest(
+    spectra          = eso.spectra[ , c(1,2,6)], 
+    sigs             = sigs.plus,
+    target.sig.index = 1, 
+    m.opts           = DefaultManyOpts(), 
+    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK, 
+    mc.cores         = 1)
+  return(retval)
+
+}
+
+if (FALSE) {
+  eso.SBS2 <- TestSignaturePresenceTest("SBS2")
+
+  }
 

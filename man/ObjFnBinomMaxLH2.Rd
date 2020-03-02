@@ -4,7 +4,7 @@
 \alias{ObjFnBinomMaxLH2}
 \title{The negative binomial maximum likelihood objective function.}
 \usage{
-ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE)
+ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
 }
 \arguments{
 \item{exp}{The matrix of exposures ("activities").}
@@ -16,7 +16,7 @@ ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, allow.no.round = FALSE)
 \item{nbinom.size}{The dispersion parameter for the negative
 binomial distribution; smaller is more dispersed.}
 
-\item{allow.no.round}{If \code{TRUE}, allow use of unrounded
+\item{no.round.ok}{If \code{TRUE}, allow use of unrounded
        reconstruction if some mutation types would have 0
        counts in the reconstructed spectrum.
 

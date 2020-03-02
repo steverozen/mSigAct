@@ -1,3 +1,7 @@
+# mSigAct 2.0.0.0010
+
+* Added AnySigSubsetPresent(), SignaturePresenceTest(), TestAnySubsetPresent(), TestSignaturePresenceTest()
+
 # mSigAct 2.0.0.0009
 
 * Substantially improved separation of background signature, include some tutorial

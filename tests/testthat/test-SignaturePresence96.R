@@ -1,7 +1,6 @@
 context("SignaturePresenceTest for SBS96")
 
-# FYI: Sys.setenv(MSIGACT_TEST_LEN = "long")
-# 
+# FYI: to run all tests, execute Sys.setenv(MSIGACT_TEST_LEN = "long")
 
 test_that("SignaturePresence1 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)

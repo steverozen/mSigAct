@@ -14,7 +14,8 @@ SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts, eval_f)
 \item{target.sig.index}{The index of the signature the presence
 of which we want to test.}
 
-\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
+\item{m.opts}{For documentation
+see \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 }
