@@ -320,7 +320,11 @@ MeanOfSpectraAsSig <- function(spectra) {
     stop("Cannot run MeanOfSpectraAsSig when catalog.type is ", ctype)
   }
   
-  sigs <- ICAMS::TransformCatalog(spectra, target.catalog.type = tctype)
+  target.abundance <- attr(spectra, "abundance", exact = TRUE)
+  
+  sigs <- ICAMS::TransformCatalog(spectra, 
+                                  target.catalog.type = tctype,
+                                  target.abundance = target.abundance)
   
   mean.sig <- apply(X = sigs, MARGIN = 1, mean)
 

@@ -455,8 +455,8 @@ EDist2SpectRounded <- function(exp, sig.names, spect) {
     prop.reconstruct(
       sigs = PCAWG7::signature$genome$SBS96[ , sig.names], 
       exp = round(exp))
-  # TEST
   reconstruction <- round(reconstruction)
+  class(spect) <- "matrix"
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
   return(err)
 }
@@ -470,7 +470,7 @@ EDist2Spect <- function(exp, sig.names, spect) {
     prop.reconstruct(
       sigs = 
         PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
-  # HERE
+  class(spect) <- "matrix"
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
   return(err)
 }
