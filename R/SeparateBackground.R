@@ -201,8 +201,6 @@ SeparateSignatureFromBackground <-
     
     if (is.null(m.opts)) m.opts <- SeparateSignatureFromBackgroundOptions()
     
-    # sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
-    # Test
     sig0 <- MeanOfSpectraAsSig(spectra)
     
     b.x0 <- start.b.fraction * colSums(spectra)
@@ -321,6 +319,7 @@ MeanOfSpectraAsSig <- function(spectra) {
   }
   
   target.abundance <- attr(spectra, "abundance", exact = TRUE)
+  stopifnot(!is.null(target.abundance))
   
   sigs <- ICAMS::TransformCatalog(spectra, 
                                   target.catalog.type = tctype,

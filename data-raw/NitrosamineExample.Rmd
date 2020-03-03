@@ -291,7 +291,10 @@ mSigAct::cossim(sigx, inferred.sig)
 ```{r, var_infer_sig, fig.height=2.5, warning=FALSE}
 sub.target.sig.ests <- 
   ICAMS::TransformCatalog(subtracted.target.spectra, 
-                          target.catalog.type = "counts.signature")
+                          target.catalog.type = "counts.signature",
+                          target.abundance = attr(subtracted.target.spectra,
+                                                  "abundance",
+                                                  exact = TRUE))
 
 arrow.tops <- apply(sub.target.sig.ests, 1, max)
 arrow.bottoms <- apply(sub.target.sig.ests, 1, min)
@@ -405,7 +408,7 @@ tmp.fn <- function(spectrum) {
     spectrum         = spectrum,
     sigs             = two.sigs,
     target.sig.index = 1,
-    eval_f           = mSigAct::ObjFnBinomMaxLH,
+    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK,
     m.opts           = m.opts)
   return(list(pval = retval$chisq.p, expwith = retval$exp.with))
 }
@@ -421,7 +424,7 @@ tmp.fn2 <- function(spectrum) {
     spectrum         = spectrum,
     sigs             = two.sigs,
     target.sig.index = 2,
-    eval_f           = mSigAct::ObjFnBinomMaxLH,
+    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK,
     m.opts           = m.opts)
   return(list(pval = retval$chisq.p, expwith = retval$exp.with))
 }
