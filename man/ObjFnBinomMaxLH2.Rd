@@ -24,8 +24,11 @@ ObjFnBinomMaxLH2(
 binomial distribution; smaller is more dispersed.}
 
 \item{no.round.ok}{If \code{TRUE}, allow use of unrounded
-       reconstruction if some mutation types would have 0
-       counts in the reconstructed spectrum.
+reconstruction if some mutation types would have 0
+counts in the reconstructed spectrum.}
+
+\item{show.warning}{If \code{TRUE} print warning if unrounded
+       reconstructons were used.
 
 The result is
 

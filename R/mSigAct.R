@@ -185,11 +185,10 @@ is.superset.of.any <- function(probe, background) {
 #' to retain a signature in a reconstruction.
 #' 
 #' @param eval_f The objective function for
-#'  \code{\link[nloptr]{nloptr}}. If \code{NULL} defaults
-#'  to \code{\link{ObjFnBinomMaxLH}}.
+#'  \code{\link[nloptr]{nloptr}}.
 #'  
-#' @param m.opts If \code{NULL},
-#'   defaults to \code{\link{DefaultManyOpts}()}.
+#' @param m.opts For documentation
+#'    see \code{\link{DefaultManyOpts}}.
 #' 
 #' @param mc.cores The number of cores to use; if \code{NULL} use
 #'  \code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
@@ -234,8 +233,6 @@ SparseAssignActivity <- function(spectra,
   rownames(retval2) <- colnames(sigs)
   
   return(list(exposure = retval2))
-  # return(retval)
-  
 }
 
 #' Component of \code{\link{SparseAssignActivity}} for one spectrum.
@@ -246,7 +243,7 @@ SparseAssignActivity1 <- function(
   mode(spect) <-  'numeric'
   start <- one.lh.and.exp(spect, 
                           sigs,
-                          eval_f     = eval_f,
+                          eval_f  = eval_f,
                           m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
   start.exp <- start$exposure
@@ -410,6 +407,8 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #' @param no.round.ok If \code{TRUE}, allow use of unrounded
 #'        reconstruction if some mutation types would have 0
 #'        counts in the reconstructed spectrum.
+#' @param show.warning If \code{TRUE} print warning if unrounded
+#'        reconstructons were used.
 #'
 #' The result is
 #' 
@@ -929,11 +928,6 @@ TestAny1 <- function(extra.sig, eso.index) {
 }
 
 
-if (FALSE) {
-  any.retval <- TestAny1("SBS17a", 1)
-}
-
-
 TestEsoSigs <- function(extra.sigs = NULL) {
   sigs <- c(
     "SBS1",
@@ -980,9 +974,4 @@ TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
 }
 
 
-if (FALSE) {
-  spt.retval <- TestSignaturePresenceTest("SBS17a", 1)
-  stopifnot(all.equal(eso.17a$`Eso-AdenoCA::SP111062`$chisq.p, 0.1019716, tolerance = 1e-7))
-
-  }
 
