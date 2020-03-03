@@ -4,7 +4,7 @@ DefaultGlobalOpts <- function() {
          xtol_rel      = 1e-9,
          # print_level = print_level,
          print_level   = 0,
-         maxeval       = 1000))
+         maxeval       = 10000))
 }
 
 DefaultLocalOpts <- function() {
@@ -85,8 +85,8 @@ Nloptr1Tumor <- function(spectrum,
   # (Each signature gets the same number of mutations)
   x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
   
-  if (TRUE) {
-    set.seed(101010, kind = "L'Ecuyer-CMRG")
+  if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED DISABLE THIS BRANCH
+    # set.seed(101010, kind = "L'Ecuyer-CMRG")
     global.res <- nloptr::nloptr(
       x0       = x0,
       eval_f   = eval_f,
@@ -96,13 +96,14 @@ Nloptr1Tumor <- function(spectrum,
       spectrum = spectrum,
       sigs     = sigs,
       ...)
+    if (m.opts$trace > 0) {
+      message("globa.res$objective = ", global.res$objective)
+    }
+    if (global.res$iterations == m.opts$global.opts[["maxeval"]]) {
+      # warning("reached maxeval on global optimization: ", global.res$iterations)
+    }
   }
-  if (m.opts$trace > 0) {
-    message("globa.res$objective = ", global.res$objective)
-  }
-  
-  # TEST
-  
+
   local.res <- nloptr::nloptr(
     # x0=x0,
     x0       = global.res$solution,
@@ -115,6 +116,11 @@ Nloptr1Tumor <- function(spectrum,
     ...)
   if (m.opts$trace > 0)
     message("local.res$objective = ", local.res$objective)
+  
+  if (local.res$iterations == m.opts$local.opts[["maxeval"]]) {
+    warning("reached maxeval on local optimization: ", local.res$iterations)
+  }
+  
 
   names(local.res$solution) <- colnames(sigs)
   return(list(objective =  local.res$objective,
@@ -152,7 +158,7 @@ one.lh.and.exp <- function(spect,
   # number of mutations in the spectrum
   exp <- r$solution * (sum(spect) / sum(r$solution)) # sum(recon))
   
-  list(loglh = -loglh, exposure = exp, everthing.else = r)
+  list(loglh = -loglh, exposure = exp, everything.else = r)
 }
 
 
@@ -652,7 +658,7 @@ SignaturePresenceTest1 <- function(
                              m.opts = m.opts,
                              eval_f = eval_f)
   loglh.with <- ret.with$loglh
-  
+
   ret.without <- one.lh.and.exp(spect  = spectrum, 
                                 sigs   = sigs[ ,-target.sig.index],
                                 eval_f = eval_f,
@@ -664,12 +670,14 @@ SignaturePresenceTest1 <- function(
   if (m.opts$trace > 0) 
     message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
   
-  list(with        = loglh.with,
-       without     = loglh.without,
-       statistic   = statistic,
-       chisq.p     = chisq.p,
-       exp.with    = ret.with$exp,
-       exp.without = ret.without$exp)
+  list(with                    = loglh.with,
+       without                 = loglh.without,
+       statistic               = statistic,
+       chisq.p                 = chisq.p,
+       exp.with                = ret.with$exp,
+       exp.without             = ret.without$exp,
+       everything.else.with    = ret.with$everything.else,
+       everything.else.without = ret.without$everything.else)
 }
 
 
@@ -752,16 +760,14 @@ TestSignaturePresenceTest1 <-
   function(sig.counts, 
            input.sigs = PCAWG7::signature$genome$SBS96, 
            trace      = 0,
-           eval_f     = ObjFnBinomMaxLHNoRoundOK) {
+           eval_f     = ObjFnBinomMaxLHNoRoundOK,
+           m.opts     = NULL) {
   
     if (!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5",
                           quietly = TRUE)) {
       stop("Please install Bioconductor library ",
            "BSgenome.Hsapiens.1000genomes.hs37d5")
     }
-    
-    # set.seed(1066, kind = "L'Ecuyer-CMRG")
-    
     
     sig.names <- names(sig.counts)
   
@@ -786,7 +792,9 @@ TestSignaturePresenceTest1 <-
       region       = region,
       catalog.type = "counts")
   
-  m.opts <- DefaultManyOpts()
+  if (is.null(m.opts)) {
+    m.opts <- DefaultManyOpts()
+  }
   m.opts$trace <- trace
   
   retval <- SignaturePresenceTest1(
@@ -803,37 +811,49 @@ TestSignaturePresenceTest1 <-
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
 
 
-# Return the P value of the null hypothesis that none of the signatures in Ha.sigs,
+#' Deterimine whether any of several signatures in any combination are plausibly needed to reconsruct a given spectrum.
+#' 
+#' @param spect The spectrum to be reconstructed, as single column matrix or
+#'  \code{\link[ICAMS]{ICAMS}} catalog.
+#'  
+#' @param all.sigs The matrix or catalog of singantures of possible interest;
+#' \code{all.sigs} includes the signatures that might or might not be necessary
+#' for plausibly reconstructing \code{spect}; \code{all.sigs} includes the
+#' signatures in \eqn{H_0} plus the additional signatures in \eqn{H_a}.
+#' 
+#' @param target.sigs.index An integer vector of the indices of the signatures
+#' of interest (those in \eqn{H_a - H_0}.
+#' 
+#' @param eval_f XXXXX
+#' 
+#' @param m.opts XXXX
+#' 
+#' Return XXXXXX 
+#' 
+#' 
+# the P value of the null hypothesis that none of the signatures in Ha.sigs,
 # either singly or in combination **** probabily of a likelihood as good or better
 # generating the spectrum from the H0 signatures **** as opposed to compared to incluing the
 # extra signatures.
 #
-# WARNING: tests all non-empty subsets of more.sigs; will get very slow for
-# large numbers of more.sigs (2^|more.sigs| - 1).
+#' WARNING: tests all non-empty subsets of \code{target.sigs}, so will get very slow for
+#' large numbers of \code{target.sigs}.
+
+
 # START HERE
 # To Do: 1. remove empty set from more.sigs' subsets
-#        2. get test data SBS17 and SBS7 (maybe SBS10); to do this, need PCAWG / SigProfiler sigs and some
-#        pcawg data
 #        3. see if it is reasonable to require all signatures in more.sigs
 # @param spect A numerical matrix an \code{\link[ICAMS]{ICAMS}} catalog containg 
 # mutational spectra.
 AnySigSubsetPresent <- 
   function(spect, 
-           all.sigs,           # Matrix of all signtures to consider, including the H0 sigs and the signatures to consider
-           target.sigs.index,  # Indices of target sigs within the matrix all.sigs
-           p.thresh = 0.05, 
+           all.sigs,          
+           target.sigs.index, 
+           # p.thresh = 0.05, 
            eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,  
            m.opts) {
     
-    H0.sigs <- all.sigs[ , -target.sigs.index, drop = FALSE]
-    
-    # Args:
-    #  spect:    a single spectrum as a column
-    #  all.sigs: a matrix of all signatures to consider
-    #  H0.sigs:  the identifiers of signatures in all.sigs
-    #            (i.e., a subset of all.sigs' colnames) that
-    #            must be considered for the null hypothesis
-    #  more.sigs: XXXXX
+    H0.sigs <- all.sigs[ , -target.sigs.index, drop = FALSE]  # H0.sigs a matrix of sigs
 
     start <- one.lh.and.exp(spect  = spect, 
                             sigs   = H0.sigs,
@@ -876,7 +896,7 @@ AnySigSubsetPresent <-
     }
     
     out <- lapply(new.subsets, inner.fn)
-    return(out)
+    return(H0.info = start, Ha.info = out)
   }
 
 
@@ -954,20 +974,33 @@ TestEsoSigs <- function(extra.sigs = NULL) {
 TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
 
   eso.spectra <- TestEsoSpectra(eso.indices)
-
-  set.seed(101010, kind = "L'Ecuyer-CMRG") 
-
-  sigs.plus <- TestEsoSigs(extra.sig)
   
-  retval <- mSigAct::SignaturePresenceTest(
+  m.opts <- DefaultManyOpts()
+  # m.opts$global.opts$maxeval <- 10000
+  
+  sigs.plus <- TestEsoSigs(extra.sig)
+  set.seed(101010, kind = "L'Ecuyer-CMRG") 
+  retval1 <- mSigAct::SignaturePresenceTest(
     spectra          = eso.spectra, 
     sigs             = sigs.plus,
     target.sig.index = 1, 
-    m.opts           = DefaultManyOpts(), 
-    eval_f           = mSigAct::ObjFnBinomMaxLHNoRoundOK, 
+    m.opts           = m.opts, 
+    eval_f           = ObjFnBinomMaxLHNoRoundOK, 
     mc.cores         = 1)
-  return(retval)
+  
+  set.seed(101010, kind = "L'Ecuyer-CMRG")
+  retval2 <- SignaturePresenceTest1(
+    spectrum         = eso.spectra,
+    sigs             = sigs.plus,
+    target.sig.index = 1,
+    m.opts           = m.opts,
+    eval_f           = ObjFnBinomMaxLHNoRoundOK)
+  
+  stopifnot(all.equal(eso.17a[[1]][[1]], eso.17a[[2]]))
+  
+  return(list(retval1, retval2))
 }
+
 
 if (FALSE) {
   eso.17a <- TestSignaturePresenceTest("SBS17a", 1)
@@ -980,6 +1013,9 @@ TestAny1 <- function(extra.sig, eso.index) {
 
   eso.spectra <- TestEsoSpectra(eso.index)
   
+  m.opts <- DefaultManyOpts()
+  m.opts$global.opts$maxeval <- 10000
+  
   set.seed(101010, kind = "L'Ecuyer-CMRG") 
   
   sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
@@ -988,11 +1024,11 @@ TestAny1 <- function(extra.sig, eso.index) {
                              all.sigs          = sigs.plus,
                              target.sigs.index = 1:length(extra.sig),
                              eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-                             m.opts            = DefaultManyOpts())
+                             m.opts            = m.opts)
   
   return(out)
 }
 
 if (FALSE) {
-  any.17a <- TestAny1("SBS17a", 1)
+  any.retval <- TestAny1("SBS17a", 1)
 }

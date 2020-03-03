@@ -38,8 +38,9 @@ test_that("SignaturePresence1 5", {
   testthat::expect_equal(retval$chisq.p, 0.08645732, tolerance = 1e-4)
 })
 
-test_that("SignaturePresence1 6", {
+test_that("SignaturePresence1 6", {# TODO Steve update 
+  # testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   input <- c(SBS5 = 800, SBS3 = 10000, SBS22 = 20000)
   retval <- TestSignaturePresenceTest1(sig.counts = input)
-  testthat::expect_equal(retval$chisq.p, 0.009854126, tolerance = 1e-5)
+  testthat::expect_equal(retval$chisq.p, 0.009811629, tolerance = 1e-5)
 })

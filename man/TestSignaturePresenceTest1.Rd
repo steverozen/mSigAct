@@ -8,7 +8,8 @@ TestSignaturePresenceTest1(
   sig.counts,
   input.sigs = PCAWG7::signature$genome$SBS96,
   trace = 0,
-  eval_f = ObjFnBinomMaxLHNoRoundOK
+  eval_f = ObjFnBinomMaxLHNoRoundOK,
+  m.opts = NULL
 )
 }
 \description{
