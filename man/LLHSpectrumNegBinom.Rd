@@ -40,3 +40,4 @@ that each each element of the
 spectrum (i.e., the count for each mutation type e.g. ACT > AAT)
 was generated from expected count for that mutation type.
 }
+\keyword{internal}

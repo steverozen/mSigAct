@@ -26,7 +26,7 @@
 #' 
 #' @importFrom stats dnbinom
 #'
-#' @export
+#' @keywords internal
 
 LLHSpectrumNegBinom <-
   function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {
@@ -70,6 +70,8 @@ LLHSpectrumNegBinom <-
 #' 
 #' @param nbinom.size The \code{size} argument for
 #' \code{\link[stats]{NegBinomial}}.
+#' 
+#' @keywords internal
 #' 
 LLHOfSignatureGivenSpectrum <- function(spectrum, signature, nbinom.size) {
     expected.counts <- sum(spectrum) * signature
@@ -197,7 +199,7 @@ SeparateSignatureFromBackground <-
            m.opts = NULL,
            start.b.fraction = 0.1) {
     
-    if (is.null(m.opts)) m.opts <- FindSigMinusBGOpt()
+    if (is.null(m.opts)) m.opts <- SeparateSignatureFromBackgroundOptions()
     
     # sig0 <- rep(1, nrow(spectra)) / nrow(spectra)
     # Test
@@ -254,6 +256,8 @@ SeparateSignatureFromBackground <-
 #' 
 #' We the caller will seek to minimize the value of this function.
 #' 
+#' @keywords internal
+#' 
 ObjFn1 <- function(
   est.target.sig.and.b, # Parameters to optimize
   obs.spectra,     
@@ -299,7 +303,7 @@ ObjFn1 <- function(
   return(-1 * loglh)
 }
 
-#' Return the mean of multiple spectra as a signature
+#' Return the mean of multiple spectra as a signature.
 #' 
 #' @param spectra Convert each spectrum to a signature and then compute the
 #'   mean of all signatures.
@@ -365,7 +369,7 @@ Nloptr2Signature <- function(nloptr.retval, sig.number = 96) {
 }
 
 #' Return a default value to pass as the \code{m.opts} argument to \code{\link{SeparateSignatureFromBackground}}.
-FindSigMinusBGOpt <- function() {
+SeparateSignatureFromBackgroundOptions <- function() {
   return(
     list(algorithm = "NLOPT_LN_COBYLA",
          maxeval = 10000, 

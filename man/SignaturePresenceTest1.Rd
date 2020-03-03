@@ -22,3 +22,4 @@ see \code{\link{DefaultManyOpts}}.}
 \description{
 Test whether a given signature is plausibly present in a spectrum.
 }
+\keyword{internal}

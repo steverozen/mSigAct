@@ -6,6 +6,8 @@
 
 #' Create spectra from VCFs and load spectra as package variables.
 #' VCFs received from Arnoud on 2020 Feb 04
+#' 
+#' @keywords internal
 
 
 MakeMCF10HepG2BackgroundVars <- function() {
@@ -28,19 +30,6 @@ MakeMCF10HepG2BackgroundVars <- function() {
                       file.path(data.dir, "MCF10A-and-HepG2-bg-SBS96-bg.csv"))
   ICAMS::WriteCatalog(sbs.cat$catSBS192, 
                       file.path(data.dir, "MCF10A-and-HepG2-bg-SBS192-bg.csv"))
-  
-  if (FALSE) {
-    # Old code
-    env <- new.env()
-    load(devtools::package_file(
-      file.path(
-        "data-raw",
-        "spectra.for.background.signatures",
-        "MCF-10A-HepG2-background",
-        "background_spectra.Rdata")),
-      envir = env,
-      verbose = TRUE)
-  }
   
   # The ref genomes have an arbitrary file path encoded in them
   attr(sbs.cat$catSBS96, "ref.genome") <- NULL

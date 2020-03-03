@@ -28,21 +28,9 @@ reconstruction if some mutation types would have 0
 counts in the reconstructed spectrum.}
 
 \item{show.warning}{If \code{TRUE} print warning if unrounded
-       reconstructons were used.
-
-The result is
-
--1 * log(likelihood(spectrum | reconstruction))
-
-(nloptr minimizes the objective function.)
-
-The lower the objective function, the better.
-
-Can be used as the
-objective function for \code{\link{SparseAssignActivity}},
-\code{\link{SparseAssignActivity1}}, 
-and \code{\link{SignaturePresenceTest1}}.}
+reconstructons were used.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}
 }
+\keyword{internal}

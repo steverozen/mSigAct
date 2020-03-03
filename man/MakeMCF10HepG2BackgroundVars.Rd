@@ -11,3 +11,4 @@ MakeMCF10HepG2BackgroundVars()
 Create spectra from VCFs and load spectra as package variables.
 VCFs received from Arnoud on 2020 Feb 04
 }
+\keyword{internal}

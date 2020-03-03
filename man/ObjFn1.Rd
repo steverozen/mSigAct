@@ -23,3 +23,4 @@ We the caller will seek to minimize the value of this function.}
 \description{
 Objective function for \code{\link{SeparateSignatureFromBackground}}.
 }
+\keyword{internal}

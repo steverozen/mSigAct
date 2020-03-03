@@ -30,6 +30,17 @@ nitrosamine.examples <-
     output.file = file.path(SBS.dir, "nitrosamines")
   )
 
+# Othersise "two-bit" file locations get cached in the package, and
+# the locations are not correct on the machines using the
+# package.
+attr(nitrosamine.examples$catSBS96, "ref.genome") <- NULL
+attr(nitrosamine.examples$catSBS192, "ref.genome") <- NULL
+attr(nitrosamine.examples$catSBS1536, "ref.genome") <- NULL
+attr(nitrosamine.examples$catID, "ref.genome") <- NULL
+attr(nitrosamine.examples$catDBS136, "ref.genome") <- NULL
+attr(nitrosamine.examples$catDBS78, "ref.genome") <- NULL
+attr(nitrosamine.examples$catDBS144, "ref.genome") <- NULL
+
 usethis::use_data(nitrosamine.examples, overwrite = TRUE)
 rm(tmp.files, SBS.dir, vcf.names, nitrosamine.examples)
 

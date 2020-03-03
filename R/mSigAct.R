@@ -357,12 +357,6 @@ prop.reconstruct <- function(sigs, exp) {
 #' 
 #' For use by \code{\link[nloptr]{nloptr}}.
 #'
-#' @param exp The matrix of exposures ("activities").
-#' @param spectrum The spectrum to assess.
-#' @param sigs The matrix of signatures.
-#' @param nbinom.size The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'
 #' The result is
 #' 
 #' -1 * log(likelihood(spectrum | reconstruction))
@@ -375,7 +369,13 @@ prop.reconstruct <- function(sigs, exp) {
 #' objective function for \code{\link{SparseAssignActivity}},
 #' \code{\link{SparseAssignActivity1}}, 
 #' and \code{\link{SignaturePresenceTest1}}.
-#' 
+#'
+#' @param exp The matrix of exposures ("activities").
+#' @param spectrum The spectrum to assess.
+#' @param sigs The matrix of signatures.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'
 #' @export
 #' 
 ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
@@ -410,20 +410,7 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #' @param show.warning If \code{TRUE} print warning if unrounded
 #'        reconstructons were used.
 #'
-#' The result is
-#' 
-#' -1 * log(likelihood(spectrum | reconstruction))
-#'
-#' (nloptr minimizes the objective function.)
-#'
-#' The lower the objective function, the better.
-#'
-#' Can be used as the
-#' objective function for \code{\link{SparseAssignActivity}},
-#' \code{\link{SparseAssignActivity1}}, 
-#' and \code{\link{SignaturePresenceTest1}}.
-#' 
-#' @export
+#' @keywords internal
 #' 
 ObjFnBinomMaxLH2 <- 
   function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
@@ -656,7 +643,7 @@ SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #' 
-#' @export
+#' @keywords internal
 
 SignaturePresenceTest1 <- function(
   spectrum, sigs, target.sig.index, m.opts, eval_f) {
@@ -906,81 +893,3 @@ AnySigSubsetPresent <-
     out <- lapply(new.subsets, inner.fn)
     return(list(H0.info = start, all.Ha.info = out))
   }
-
-
-TestEsoSpectra <- function(indices = NULL) {
-  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
-  spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
-  if (!is.null(indices)) {
-    spectra <- spectra[ , indices, drop = FALSE]
-  }
-  return(spectra)
-}
-
-
-TestAny1 <- function(extra.sig, eso.index) {
-  
-  eso.spectra <- TestEsoSpectra(eso.index)
-  
-  m.opts <- DefaultManyOpts()
-
-  sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
-
-  set.seed(101010, kind = "L'Ecuyer-CMRG")  
-  out <- AnySigSubsetPresent(spect             = eso.spectra,
-                             all.sigs          = sigs.plus,
-                             target.sigs.index = 1:length(extra.sig),
-                             eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-                             m.opts            = m.opts)
-  
-  return(out)
-}
-
-
-TestEsoSigs <- function(extra.sigs = NULL) {
-  sigs <- c(
-    "SBS1",
-    "SBS2",
-    "SBS3",
-    "SBS5",
-    "SBS13",
-    "SBS18",
-    "SBS28",
-    "SBS40")
-  if (!is.null(extra.sigs)) {
-    sigs <- c(extra.sigs, sigs)
-  }
-  return(PCAWG7::signature$genome$SBS96[ , sigs])
-}
-
-TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
-
-  eso.spectra <- TestEsoSpectra(eso.indices)
-  
-  m.opts <- DefaultManyOpts()
-  
-  sigs.plus <- TestEsoSigs(extra.sig)
-  set.seed(101010, kind = "L'Ecuyer-CMRG") 
-  retval1 <- mSigAct::SignaturePresenceTest(
-    spectra          = eso.spectra, 
-    sigs             = sigs.plus,
-    target.sig.index = 1, 
-    m.opts           = m.opts, 
-    eval_f           = ObjFnBinomMaxLHNoRoundOK, 
-    mc.cores         = 1)
-  
-  set.seed(101010, kind = "L'Ecuyer-CMRG")
-  retval2 <- SignaturePresenceTest1(
-    spectrum         = eso.spectra,
-    sigs             = sigs.plus,
-    target.sig.index = 1,
-    m.opts           = m.opts,
-    eval_f           = ObjFnBinomMaxLHNoRoundOK)
-  
-  stopifnot(all.equal(retval1[[1]][[1]], retval2[[2]]))
-  
-  return(list(retval1, retval2))
-}
-
-
-

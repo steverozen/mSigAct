@@ -14,20 +14,7 @@ ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 \item{sigs}{The matrix of signatures.}
 
 \item{nbinom.size}{The dispersion parameter for the negative
-       binomial distribution; smaller is more dispersed.
-
-The result is
-
--1 * log(likelihood(spectrum | reconstruction))
-
-(nloptr minimizes the objective function.)
-
-The lower the objective function, the better.
-
-Can be used as the
-objective function for \code{\link{SparseAssignActivity}},
-\code{\link{SparseAssignActivity1}}, 
-and \code{\link{SignaturePresenceTest1}}.}
+binomial distribution; smaller is more dispersed.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}.

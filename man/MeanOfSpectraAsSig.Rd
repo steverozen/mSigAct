@@ -2,7 +2,7 @@
 % Please edit documentation in R/SeparateBackground.R
 \name{MeanOfSpectraAsSig}
 \alias{MeanOfSpectraAsSig}
-\title{Return the mean of multiple spectra as a signature}
+\title{Return the mean of multiple spectra as a signature.}
 \usage{
 MeanOfSpectraAsSig(spectra)
 }
@@ -11,5 +11,5 @@ MeanOfSpectraAsSig(spectra)
 mean of all signatures.}
 }
 \description{
-Return the mean of multiple spectra as a signature
+Return the mean of multiple spectra as a signature.
 }
