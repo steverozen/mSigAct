@@ -73,8 +73,12 @@ mSigOneGroup <- function(spectra,
     colnames(check.w.sig) = colnames(s.spectra)[low.pval]
     spec.path <- paste(path.root, 'check.with.sig.pdf', sep = '.')
     
-    ICAMS::PlotCatalogToPdf(catalog = check.w.sig, file = spec.path) # TODO(Steve): is check.w.sig a catalog?
+    catalog <- ICAMS::as.catalog(
+      object = check.w.sig,
+      ref.genome = BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5,
+      region = "exome", catalog.type = "counts")
     
+    ICAMS::PlotCatalogToPdf(catalog = catalog, file = spec.path)
   }
   
   out.exp <- SparseAssignActivity(
@@ -110,14 +114,15 @@ mSigOneGroup <- function(spectra,
                       s.spectra,
                       sigs,
                       out.exp,
-                      range  = ranges #,
-                      # eval_f = eval_f,
-                      # m.opts = m.opts
+                      range  = ranges,
+                      obj.fun = ObjFnBinomMaxLHMustRound,
+                      nbinom.size = DefaultManyOpts()$nbinom.size
                       )
   
   return(list(pval = out.pvals, exposure = out.exp))
 }
 
+# Very slow, calls lots of old code
 mSigAct.basic.test <- function() {
   liver.wes.sigs <-
     structure(
@@ -506,11 +511,11 @@ mSigAct.basic.test <- function() {
   m.opts <- DefaultManyOpts()
   
   short.analysis <-
-    mSigOneGroup(spectra=short.taiwan.hcc2,
+    mSigOneGroup(spectra = short.taiwan.hcc2,
                  sigs            = liver.wes.sigs,
-                 target.sig.name ='Signature.AA',
+                 target.sig.name = 'Signature.AA',
                  path.root       = 'mSigAct.basic.test.short.analysis',
-                 eval_f          = ObjFnBinomMaxLH,
+                 eval_f          = ObjFnBinomMaxLHMustRound,
                  m.opts          = m.opts, 
                  mc.cores        = 1)
   
@@ -559,7 +564,7 @@ mSigAct.basic.test <- function() {
                  sigs            = liver.wes.sigs,
                  target.sig.name = 'Signature.AA',
                  path.root       = 'mSigAct.basic.test.degenerate',
-                 eval_f          = ObjFnBinomMaxLH,
+                 eval_f          = ObjFnBinomMaxLHMustRound,
                  m.opts          = m.opts,
                  mc.cores        = 1)
   
@@ -734,7 +739,6 @@ plot.exposures <-
     
     # note - might be reals > 1, not necessary colSum==1
     s.weights <- as.matrix(s.weights) # in case it is a data frame
-    signature_proportions <- t(s.weights)
     num.sigs = dim(s.weights)[1]
     num.samples = dim(s.weights)[2]
     
@@ -765,15 +769,15 @@ plot.exposures <-
     # add names (if not already set as row.names in the original input frame)
     # for sorting. (needs a "Sample" column in the signature_proportions frame)
     # if (length(colnames(s.weights))==0) colnames(s.weights) = signature_proportions$Sample
-    if (is.null(scale.num)){
+    if (is.null(scale.num)) {
       ylabel = '# mutations'
-    } else { # show as rate instead of count
+    } else {# show as rate instead of count
       if (scale.num < 3000 || scale.num > 3300) {
         warning('assuming "scale.num" should be divisor for human genome. using 3000')
         scale.num = 3000
       }
       s.weights = s.weights/scale.num
-      ylabel ='# mutations/Mbase'
+      ylabel = '# mutations/Mbase'
     }
     l.cex = if (num.sigs > 15) .5 else 1 # char expansion for legend (was 0.7)
     direction = 2 # 1=always horizontal, 2=perpendicular to axis

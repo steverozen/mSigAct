@@ -86,7 +86,7 @@ Nloptr1Tumor <- function(spectrum,
   x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
   
   if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED DISABLE THIS BRANCH
-    # set.seed(101010, kind = "L'Ecuyer-CMRG")
+
     global.res <- nloptr::nloptr(
       x0       = x0,
       eval_f   = eval_f,
@@ -483,6 +483,7 @@ EDist2Spect <- function(exp, sig.names, spect) {
     prop.reconstruct(
       sigs = 
         PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
+  # HERE
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
   return(err)
 }
@@ -490,8 +491,14 @@ EDist2Spect <- function(exp, sig.names, spect) {
 
 #' "Polish" a solution by minimizing Euclidean distance to the input spectrum.
 #' 
+#' This is experimental for testing.
+#' 
 #' @keywords internal
 Polish <- function(exp, sig.names, spect) {
+  class(spect) <- "matrix" # Otherwise cbind will use the ICAMS catalog
+                           # method, which may complain that the reconstructed
+                           # output is not a catalog.
+  
   retval <- nloptr::nloptr(x0 = exp,
                             eval_f = EDist2Spect,
                             lb = rep(0, length(exp)),
@@ -518,7 +525,7 @@ Polish <- function(exp, sig.names, spect) {
 
 SparseAssignTest1 <- function(sig.counts, trace = 0) {
   
-  # set.seed(1449, kind = "L'Ecuyer-CMRG")
+  set.seed(101010, kind = "L'Ecuyer-CMRG")  
   
   sig.names <- names(sig.counts)
   
@@ -557,7 +564,7 @@ SparseAssignTest1 <- function(sig.counts, trace = 0) {
     sig.names2 <- sig.names
   }
   
-  polish.out <- Polish(exp    = SA.out2,
+  polish.out <- Polish(exp       = SA.out2,
                        sig.names = sig.names2,
                        spect     = spect)
   
@@ -594,6 +601,8 @@ SparseAssignTest1 <- function(sig.counts, trace = 0) {
 #' @keywords internal
 
 SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
+  
+  set.seed(101010, kind = "L'Ecuyer-CMRG")  
   
   if (!is.matrix(sig.counts)) {
     tmp.names <- names(sig.counts)
@@ -885,7 +894,7 @@ AnySigSubsetPresent <-
                                 eval_f = eval_f,
                                 m.opts = m.opts)
       statistic <- 2 * (Ha.info$loglh - H0.lh)
-      p <- pchisq(statistic, df, lower.tail = FALSE)
+      p <- stats::pchisq(statistic, df, lower.tail = FALSE)
       return(list(sigs.added = paste(colnames(all.sigs)[unlist(sigs.to.add)], collapse = ","),
                   statistic  = statistic,
                   df         = df,
@@ -968,7 +977,7 @@ TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
     m.opts           = m.opts,
     eval_f           = ObjFnBinomMaxLHNoRoundOK)
   
-  stopifnot(all.equal(eso.17a[[1]][[1]], eso.17a[[2]]))
+  stopifnot(all.equal(retval1[[1]][[1]], retval2[[2]]))
   
   return(list(retval1, retval2))
 }

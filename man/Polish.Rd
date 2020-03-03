@@ -7,6 +7,6 @@
 Polish(exp, sig.names, spect)
 }
 \description{
-"Polish" a solution by minimizing Euclidean distance to the input spectrum.
+This is experimental for testing.
 }
 \keyword{internal}
