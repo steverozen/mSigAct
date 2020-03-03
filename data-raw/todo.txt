@@ -1,32 +1,21 @@
 To Do
 
-Finish Nitrosamine example with current nitrosamine data (add error bars, try all nitrosamines)
+* Finish documenting AnySigSubset present and do example
 
-Add new nitrosamine data and re-run examples for various background inflation factors
+* Test "Separate Background" on synthetic data based on real bacground and known PCAWG7 signatures
 
-Render equation in latex
-
-Try notch-ing out value in spectra and see what happens
-
-
-* Make synthetic data based on hepg2 background SBS40 is closest to background
+** Make synthetic data based on hepg2 background SBS40 is closest to background
 SBS4, SBS18, SBS8 worth trying --- is there strand bias in nitrosamine spectra?
 
-ClosestCosSigDensity(nitrosamine.examples$catSBS96[ , 1, drop = F]) # SBS40
+*** ClosestCosSigDensity(nitrosamine.examples$catSBS96[ , 1, drop = F]) # SBS40
 
 
+
+* Maybe later
 
 0.1 Make synthetic data based on Kucab background
 
 0. Test Kucab background signature approach  and compare to our approach.
-0.01 more clean up; more simple tests
-
-try initial estimate of bg propition max(bg.mut.proportion / spec.mut.proportion), then simply subtract
-
-0.11 Figure out which optimization is best (global vs local? try on cluster!)
-0.2 Test our approach on data in 0.1
-0.3 Test Kucab approach on data in 0.1
-
 
 1. Continue with OtherFunctions.R (currently in data-raw)
 
@@ -34,7 +23,6 @@ try initial estimate of bg propition max(bg.mut.proportion / spec.mut.proportion
 
 3. Enhance sparse assign signature to return all equally good exposure sets with the minimum set cardinality and look into -Inf likelihoods (SparseAssignTest5)
 
-4. Move background subtraction tests to testthat.
 
 5. Clean documentation for SparseAssignActivity.
 
