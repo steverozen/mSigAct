@@ -882,12 +882,12 @@ AnySigSubsetPresent <-
     inner.fn <- function(sigs.to.add) {
       df <- sets::set_cardinality(sigs.to.add) # degrees of freedom for likelihood ratio test
       Ha.info <- one.lh.and.exp(spect  = spect,
-                                sigs   = cbind(H0.sigs, all.sigs[ , unlist(sigs.to.add), drop = FALSE ]),
+                                sigs   = cbind(all.sigs[ , unlist(sigs.to.add), drop = FALSE ], H0.sigs),
                                 eval_f = eval_f,
                                 m.opts = m.opts)
       statistic <- 2 * (Ha.info$loglh - H0.lh)
       p <- pchisq(statistic, df, lower.tail = FALSE)
-      return(list(sigs.added = paste(as.character(sigs.to.add), collapse = ","),
+      return(list(sigs.added = paste(colnames(all.sigs)[unlist(sigs.to.add)], collapse = ","),
                   statistic  = statistic,
                   df         = df,
                   p          = p,
@@ -896,7 +896,7 @@ AnySigSubsetPresent <-
     }
     
     out <- lapply(new.subsets, inner.fn)
-    return(H0.info = start, Ha.info = out)
+    return(list(H0.info = start, all.Ha.info = out))
   }
 
 
@@ -910,50 +910,29 @@ TestEsoSpectra <- function(indices = NULL) {
 }
 
 
-TestAnySubsetPresent <- function(idx.to.test = NULL) {
+TestAny1 <- function(extra.sig, eso.index) {
   
-  sp96.sig <- PCAWG7::signature$genome$SBS96
+  eso.spectra <- TestEsoSpectra(eso.index)
   
-  eso.spectra <- TestEsoSpectra()
-    
-  if (is.null(idx.to.test)) idx.to.test <- 1:ncol(eso.spectra)
+  m.opts <- DefaultManyOpts()
+
+  sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
+
+  set.seed(101010, kind = "L'Ecuyer-CMRG")  
+  out <- AnySigSubsetPresent(spect             = eso.spectra,
+                             all.sigs          = sigs.plus,
+                             target.sigs.index = 1:length(extra.sig),
+                             eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+                             m.opts            = m.opts)
   
-  eso.min.sigs <- TestEsoMin()
-  
-  # Set up variables so result can be a data frame.
-  sample.id.v <- c()
-  df.v <- c()
-  statistic.v <- c()
-  p.v <- c()
-  sigs.added.v <- c()
-  base.sigs.v  <- c()
-  for (sample.id in colnames(eso.spectra)[idx.to.test]) {
-    out <- AnySigSubsetPresent(eso.spectra[ , sample.id, drop = FALSE],
-                               all.sigs = sp96.sig,
-                               H0.sigs   = eso.min.sigs, 
-                               more.sigs = c("SBS17a", "SBS17b"),
-                               m.opts = DefaultManyOpts())
-    sample.id.v  <- c(sample.id.v,  rep(sample.id, length(out)))
-    sigs.added.v <- c(sigs.added.v, sapply(out, function(x) x$sigs.added))
-    df.v         <- c(df.v,         sapply(out, function(x) x$df))
-    statistic.v  <- c(statistic.v,  sapply(out, function(x) x$statistic))
-    p.v          <- c(p.v,          sapply(out, function(x) x$p))
-    base.sigs.v  <- c(base.sigs.v,  sapply(out, function(x) x$base.sigs))
-  }
-  
-  retval <-
-    data.frame(sample.id = sample.id.v,
-               sigs.added = sigs.added.v,
-               df         = df.v,
-               statistic  = statistic.v,
-               p          = p.v,
-               base.sigs  = base.sigs.v)
-  return(retval)
+  return(out)
 }
 
+
 if (FALSE) {
-  any.test <- TestAnySubsetPresent(c(1,2,6))
+  any.retval <- TestAny1("SBS17a", 1)
 }
+
 
 TestEsoSigs <- function(extra.sigs = NULL) {
   sigs <- c(
@@ -976,7 +955,6 @@ TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
   eso.spectra <- TestEsoSpectra(eso.indices)
   
   m.opts <- DefaultManyOpts()
-  # m.opts$global.opts$maxeval <- 10000
   
   sigs.plus <- TestEsoSigs(extra.sig)
   set.seed(101010, kind = "L'Ecuyer-CMRG") 
@@ -1003,32 +981,8 @@ TestSignaturePresenceTest <- function(extra.sig, eso.indices) {
 
 
 if (FALSE) {
-  eso.17a <- TestSignaturePresenceTest("SBS17a", 1)
+  spt.retval <- TestSignaturePresenceTest("SBS17a", 1)
   stopifnot(all.equal(eso.17a$`Eso-AdenoCA::SP111062`$chisq.p, 0.1019716, tolerance = 1e-7))
 
   }
 
-
-TestAny1 <- function(extra.sig, eso.index) {
-
-  eso.spectra <- TestEsoSpectra(eso.index)
-  
-  m.opts <- DefaultManyOpts()
-  m.opts$global.opts$maxeval <- 10000
-  
-  set.seed(101010, kind = "L'Ecuyer-CMRG") 
-  
-  sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
-  
-  out <- AnySigSubsetPresent(spect             = eso.spectra,
-                             all.sigs          = sigs.plus,
-                             target.sigs.index = 1:length(extra.sig),
-                             eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-                             m.opts            = m.opts)
-  
-  return(out)
-}
-
-if (FALSE) {
-  any.retval <- TestAny1("SBS17a", 1)
-}

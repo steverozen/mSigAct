@@ -28,7 +28,11 @@ of interest (those in \eqn{H_a - H_0}.}
 
 \item{m.opts}{XXXX
 
-Return the P value of the null hypothesis that none of the signatures in Ha.sigs,}
+Return XXXXXX 
+
+
+WARNING: tests all non-empty subsets of \code{target.sigs}, so will get very slow for
+large numbers of \code{target.sigs}.}
 }
 \description{
 Deterimine whether any of several signatures in any combination are plausibly needed to reconsruct a given spectrum.
