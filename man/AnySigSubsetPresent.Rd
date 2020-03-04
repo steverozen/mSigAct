@@ -42,8 +42,8 @@ A list with two elements: \describe{
         of the numerical optimation that provided \code{loglh}.}
 }}
 
-\item{\code{all.Ha.info}}{A list with one element of each non-empty subset of
-  \code{Ha.sigs.indices}. Each element is a list with elements that include \describe{
+\item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of
+  \code{Ha.sigs.indices}. Each sub-element is a list with elements that include \describe{
   
   \item{\code{sigs.added}}{The identifiers of the (additional) signatures
        tested.}

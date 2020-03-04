@@ -317,21 +317,40 @@ MeanOfSpectraAsSig <- function(spectra) {
   } else {
     stop("Cannot run MeanOfSpectraAsSig when catalog.type is ", ctype)
   }
+
+  cat("\nMean 1")
   
   target.abundance <- attr(spectra, "abundance", exact = TRUE)
+
+  cat("\nMean 2")
+  
   stopifnot(!is.null(target.abundance))
+
+  cat("\nMean 3")
   
   sigs <- ICAMS::TransformCatalog(spectra, 
                                   target.catalog.type = tctype,
                                   target.abundance = target.abundance)
   
+  cat("\nMean 4")
+  
   mean.sig <- apply(X = sigs, MARGIN = 1, mean)
 
+  cat("\nMean 5")
+  
   mean.sig <- matrix(mean.sig, ncol = 1)
-  rownames(mean.sig) <- ICAMS::catalog.row.order[["SBS96"]]
+  # rownames(mean.sig) <- ICAMS::catalog.row.order[["SBS96"]]
+  
+  cat("\nMean 6")
   
   mean.sig <- 
-    ICAMS::as.catalog(mean.sig, catalog.type = tctype, region = "genome")
+    ICAMS::as.catalog(mean.sig, 
+                      catalog.type = tctype, 
+                      region = "genome", 
+                      infer.rownames = TRUE)
+  
+  cat("\nMean 7")
+  
   
   colnames(mean.sig) <- "mean.spectra.based.sig"
   
