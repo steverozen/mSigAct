@@ -808,21 +808,13 @@ TestSignaturePresenceTest1 <-
 
 #' Determine whether any of several signatures in any combination are plausibly needed to reconstruct a given spectrum.
 #' 
-#' Let \eqn{H_0} be the likelihood that
-#' the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
-#' generated the observed spectrum, \code{spect}.  
-#' For each non-empty subset, \eqn{S},
-#' of \code{Ha.sigs.indices} let \eqn{H_a}
-#' be the likelihood that all the signatures in \eqn{H_0}
-#' plus the signatures specified by \eqn{S} generated \code{spect}.
-#' Return a list with the results of likelihood ratio tests of 
-#' all \eqn{H_a}'s against \eqn{H_0}.
-#'
+#' @description Please see \strong{Details}.
+#' 
 #' @param spect The spectrum to be reconstructed, as single column matrix or
 #'  \code{\link[ICAMS]{ICAMS}} catalog.
 #'  
 #' @param all.sigs The matrix or catalog of all sigatures of possible interest, 
-#' including the exactly the signatures for \eqn{H_0} and the alternative
+#' which conist of the signatures for \eqn{H_0} and for the alternative
 #' hypotheses.
 #' 
 #' @param Ha.sigs.indices An integer vector of the indices of the signatures
@@ -835,6 +827,17 @@ TestSignaturePresenceTest1 <-
 #' @param m.opts Controls the numerical search for maximum likelihood
 #'    reconstructions of \code{spect} plus some additional
 #'    flags; see \code{\link{DefaultManyOpts}}.
+#'    
+#' @details 
+#' Let \eqn{H_0} be the likelihood that
+#' the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
+#' generated the observed spectrum, \code{spect}.  
+#' For each non-empty subset, \eqn{S},
+#' of \code{Ha.sigs.indices} let \eqn{H_a}
+#' be the likelihood that all the signatures in \eqn{H_0}
+#' plus the signatures specified by \eqn{S} generated \code{spect}.
+#' Return a list with the results of likelihood ratio tests of 
+#' all \eqn{H_a}'s against \eqn{H_0}.
 #' 
 #' @return A list with two elements: \describe{
 #' 
