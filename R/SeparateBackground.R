@@ -326,7 +326,7 @@ MeanOfSpectraAsSig <- function(spectra) {
   
   stopifnot(!is.null(target.abundance))
 
-  cat("\nMean 3")
+  stop("\nMean 3")
   
   sigs <- ICAMS::TransformCatalog(spectra, 
                                   target.catalog.type = tctype,
