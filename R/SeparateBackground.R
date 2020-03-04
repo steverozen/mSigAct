@@ -201,7 +201,7 @@ SeparateSignatureFromBackground <-
     
     if (is.null(m.opts)) m.opts <- SeparateSignatureFromBackgroundOptions()
     
-    spectra.catlog.type <- attr(spectra, "catalog.type", exact = TRUE)
+    spectra.catalog.type <- attr(spectra, "catalog.type", exact = TRUE)
     stopifnot(!is.null(spectra.catalog.type))
     sig0 <- MeanOfSpectraAsSig(spectra)
     
