@@ -3,9 +3,19 @@ context("test-background-separation.R Test Separation of Signature from Backgrou
 test_that("Test Separation of Signature from Background 1", {
   set.seed(1099,"L'Ecuyer-CMRG")
   
+  spectra <- mSigAct::nitrosamine.examples$catSBS96[ , 1:3]
+  catalog.type <- attr(spectra, "catalog.type", exact = TRUE)
+  if (is.null(catalog.type)) {
+    # We should not have to do this, but we need
+    # to check if/why the catalog.type seems to be NULL
+    # in Travis-CI. Perhaps"[" works differently on
+    # Travis-CI?
+    attr(spectra, "catalog.type") <- "counts"
+  }
+  
   retval <- 
     SeparateSignatureFromBackground(
-      spectra     = mSigAct::nitrosamine.examples$catSBS96[ , 1:3],
+      spectra     = spectra,
       bg.sig.info = mSigAct::HepG2.background.info,
       m.opts      = NULL,
       start.b.fraction = 0.5)
