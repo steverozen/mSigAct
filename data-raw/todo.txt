@@ -1,13 +1,17 @@
 To Do
 
-* Finish documenting AnySigSubset present and do example
+* Track down bug in Travis-CI testing
+
+* Finish documenting AnySigSubset present and do example markdown document, and test on some synthetic data 
+  (probably in the markdown document).  Use Synsiggen to generate the synthetic data.
+  
+* Print and edit all documentation
 
 * Test "Separate Background" on synthetic data based on real bacground and known PCAWG7 signatures
 
 ** Make synthetic data based on hepg2 background SBS40 is closest to background
-SBS4, SBS18, SBS8 worth trying --- is there strand bias in nitrosamine spectra?
-
-*** ClosestCosSigDensity(nitrosamine.examples$catSBS96[ , 1, drop = F]) # SBS40
+SBS4, SBS18, SBS8 worth trying --- is there strand bias in nitrosamine spectra? Note:
+ClosestCosSigDensity(nitrosamine.examples$catSBS96[ , 1, drop = F]) # SBS40
 
 
 
