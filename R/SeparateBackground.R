@@ -388,9 +388,9 @@ Nloptr2Signature <- function(nloptr.retval, sig.number = 96) {
 SeparateSignatureFromBackgroundOptions <- function() {
   return(
     list(algorithm = "NLOPT_LN_COBYLA",
-         maxeval = 10000, 
+         maxeval = 20000, 
          print_level = 0,
-         xtol_rel = 0.0001,  # 0.0001,)
+         xtol_rel = 0.00001,  # 0.0001,)
          xtol_abs = 1e-06
          )
   )
