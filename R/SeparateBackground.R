@@ -309,16 +309,22 @@ ObjFn1 <- function(
 #' @export
 #' 
 MeanOfSpectraAsSig <- function(spectra) {
+  
+  if (is.null(spectra)) {
+    stop("Input argument of MeanOfSpetra is NULL")
+  }
+  
   ctype <- attr(spectra, "catalog.type", exact = TRUE)
-  if (ctype == "counts") {
+  
+  if (is.null(ctype)) {
+    stop("Cannot call MeanOfSpectraAsSig when catalog.type is NULL")
+  } else if (ctype == "counts") {
     tctype <- "counts.signature"
   } else if (ctype == "density") {
     tctype <- "density.signature"
   } else {
-    stop("Cannot run MeanOfSpectraAsSig when catalog.type is ", ctype)
+    stop("Cannot call MeanOfSpectraAsSig when catalog.type is ", ctype)
   }
-
-  stop("\nMean 1") # TEMPORARY FOR DEBUGGING ON TRAVIS-CI
   
   target.abundance <- attr(spectra, "abundance", exact = TRUE)
 
