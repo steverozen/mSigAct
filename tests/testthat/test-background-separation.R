@@ -4,15 +4,25 @@ test_that("Test Separation of Signature from Background 1", {
   set.seed(1099,"L'Ecuyer-CMRG")
   
   spectra <- mSigAct::nitrosamine.examples$catSBS96[ , 1:3]
-  catalog.type <- attr(spectra, "catalog.type", exact = TRUE)
-  if (is.null(catalog.type)) {
+
+  spectra.catalog.type <- attr(spectra, "catalog.type", exact = TRUE)
+  if (is.null(spectra.catalog.type)) {
     # We should not have to do this, but we need
     # to check if/why the catalog.type seems to be NULL
     # in Travis-CI. Perhaps"[" works differently on
     # Travis-CI?
-    attr(spectra, "catalog.type") <- "counts"
+    warning("is.null(spectra.catalog.type)")
   }
   
+  attr(spectra, "abundance")    <- 
+    attr(mSigAct::nitrosamine.examples$catSBS96, "abundance", exact = TRUE)
+  
+  attr(spectra, "catalog.type") <-
+    attr(mSigAct::nitrosamine.examples$catSBS96, "catalog.type", exact = TRUE)
+
+  attr(spectra, "region") <-
+    attr(mSigAct::nitrosamine.examples$catSBS96, "region", exact = TRUE)
+
   retval <- 
     SeparateSignatureFromBackground(
       spectra     = spectra,
