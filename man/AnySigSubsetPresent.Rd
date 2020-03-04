@@ -2,12 +2,12 @@
 % Please edit documentation in R/mSigAct.R
 \name{AnySigSubsetPresent}
 \alias{AnySigSubsetPresent}
-\title{Deterimine whether any of several signatures in any combination are plausibly needed to reconsruct a given spectrum.}
+\title{Determine whether any of several signatures in any combination are plausibly needed to reconstruct a given spectrum.}
 \usage{
 AnySigSubsetPresent(
   spect,
   all.sigs,
-  target.sigs.index,
+  Ha.sigs.indices,
   eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,
   m.opts
 )
@@ -16,24 +16,59 @@ AnySigSubsetPresent(
 \item{spect}{The spectrum to be reconstructed, as single column matrix or
 \code{\link[ICAMS]{ICAMS}} catalog.}
 
-\item{all.sigs}{The matrix or catalog of singantures of possible interest;
-\code{all.sigs} includes the signatures that might or might not be necessary
-for plausibly reconstructing \code{spect}; \code{all.sigs} includes the
-signatures in \eqn{H_0} plus the additional signatures in \eqn{H_a}.}
+\item{all.sigs}{The matrix or catalog of all sigatures of possible interest, 
+including the exactly the signatures for \eqn{H_0} and the alternative
+hypotheses.}
 
-\item{target.sigs.index}{An integer vector of the indices of the signatures
-of interest (those in \eqn{H_a - H_0}.}
+\item{Ha.sigs.indices}{An integer vector of the indices of the signatures
+that are in the various \eqn{H_a}'s.}
 
-\item{eval_f}{XXXXX}
+\item{eval_f}{Usually one of \code{\link{ObjFnBinomMaxLHNoRoundOK}}
+or \code{\link{ObjFnBinomMaxLHMustRound}}; for
+generalizations see \code{\link[nloptr]{nloptr}}.}
 
-\item{m.opts}{XXXX
+\item{m.opts}{Controls the numerical search for maximum likelihood
+reconstructions of \code{spect} plus some additional
+flags; see \code{\link{DefaultManyOpts}}.}
+}
+\value{
+A list with two elements: \describe{
 
-Return XXXXXX 
+\item{\code{H0.info}}{contains the sub-elements \describe{
+   \item{\code{loglh}}{The log likelihood associated with \eqn{H_0}.}
+   \item{\code{exposure}}{The signature attributions (exposures) corresponding
+        to the \eqn{H_0} log likelihood.}
+   \item{\code{everything.else}}{A sub-list with information on the output
+        of the numerical optimation that provided \code{loglh}.}
+}}
+
+\item{\code{all.Ha.info}}{A list with one element of each non-empty subset of
+  \code{Ha.sigs.indices}. Each element is a list with elements that include \describe{
+  
+  \item{\code{sigs.added}}{The identifiers of the (additional) signatures
+       tested.}
+       
+  \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.}
+  
+  \item{\code{df}}{The degrees of freedom of the likelihood-ratio test 
+     (equal to the number of signatures in \code{sigs.added}).}
+     }
+  
+  
+}}
 
 
-WARNING: tests all non-empty subsets of \code{target.sigs}, so will get very slow for
-large numbers of \code{target.sigs}.}
+WARNING: tests all non-empty subsets of \code{Ha.sigs.indices}, so will get very slow for
+large numbers of \code{Ha.sigs.indices}.
 }
 \description{
-Deterimine whether any of several signatures in any combination are plausibly needed to reconsruct a given spectrum.
+Let \eqn{H_0} be the likelihood that
+the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
+generated the observed spectrum, \code{spect}.  
+For each non-empty subset, \eqn{S},
+of \code{Ha.sigs.indices} let \eqn{H_a}
+be the likelihood that all the signatures in \eqn{H_0}
+plus the signatures specified by \eqn{S} generated \code{spect}.
+Return a list with the results of likelihood ratio tests of 
+all \eqn{H_a}'s against \eqn{H_0}.
 }

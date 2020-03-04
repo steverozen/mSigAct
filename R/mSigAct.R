@@ -408,7 +408,7 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #'        reconstruction if some mutation types would have 0
 #'        counts in the reconstructed spectrum.
 #' @param show.warning If \code{TRUE} print warning if unrounded
-#'        reconstructons were used.
+#'        reconstructions were used.
 #'
 #' @keywords internal
 #' 
@@ -806,49 +806,73 @@ TestSignaturePresenceTest1 <-
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
 
 
-#' Deterimine whether any of several signatures in any combination are plausibly needed to reconsruct a given spectrum.
+#' Determine whether any of several signatures in any combination are plausibly needed to reconstruct a given spectrum.
 #' 
+#' Let \eqn{H_0} be the likelihood that
+#' the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
+#' generated the observed spectrum, \code{spect}.  
+#' For each non-empty subset, \eqn{S},
+#' of \code{Ha.sigs.indices} let \eqn{H_a}
+#' be the likelihood that all the signatures in \eqn{H_0}
+#' plus the signatures specified by \eqn{S} generated \code{spect}.
+#' Return a list with the results of likelihood ratio tests of 
+#' all \eqn{H_a}'s against \eqn{H_0}.
+#'
 #' @param spect The spectrum to be reconstructed, as single column matrix or
 #'  \code{\link[ICAMS]{ICAMS}} catalog.
 #'  
-#' @param all.sigs The matrix or catalog of singantures of possible interest;
-#' \code{all.sigs} includes the signatures that might or might not be necessary
-#' for plausibly reconstructing \code{spect}; \code{all.sigs} includes the
-#' signatures in \eqn{H_0} plus the additional signatures in \eqn{H_a}.
+#' @param all.sigs The matrix or catalog of all sigatures of possible interest, 
+#' including the exactly the signatures for \eqn{H_0} and the alternative
+#' hypotheses.
 #' 
-#' @param target.sigs.index An integer vector of the indices of the signatures
-#' of interest (those in \eqn{H_a - H_0}.
+#' @param Ha.sigs.indices An integer vector of the indices of the signatures
+#' that are in the various \eqn{H_a}'s.
 #' 
-#' @param eval_f XXXXX
+#' @param eval_f Usually one of \code{\link{ObjFnBinomMaxLHNoRoundOK}}
+#'               or \code{\link{ObjFnBinomMaxLHMustRound}}; for
+#'               generalizations see \code{\link[nloptr]{nloptr}}.
 #' 
-#' @param m.opts XXXX
+#' @param m.opts Controls the numerical search for maximum likelihood
+#'    reconstructions of \code{spect} plus some additional
+#'    flags; see \code{\link{DefaultManyOpts}}.
 #' 
-#' Return XXXXXX 
+#' @return A list with two elements: \describe{
+#' 
+#' \item{\code{H0.info}}{contains the sub-elements \describe{
+#'    \item{\code{loglh}}{The log likelihood associated with \eqn{H_0}.}
+#'    \item{\code{exposure}}{The signature attributions (exposures) corresponding
+#'         to the \eqn{H_0} log likelihood.}
+#'    \item{\code{everything.else}}{A sub-list with information on the output
+#'         of the numerical optimation that provided \code{loglh}.}
+#' }}
+#' 
+#' \item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of
+#'   \code{Ha.sigs.indices}. Each sub-element is a list with elements that include \describe{
+#'   
+#'   \item{\code{sigs.added}}{The identifiers of the (additional) signatures
+#'        tested.}
+#'        
+#'   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.}
+#'   
+#'   \item{\code{df}}{The degrees of freedom of the likelihood-ratio test 
+#'      (equal to the number of signatures in \code{sigs.added}).}
+#'      }
+#'   
+#'   
+#' }}
 #' 
 #' 
-# the P value of the null hypothesis that none of the signatures in Ha.sigs,
-# either singly or in combination **** probabily of a likelihood as good or better
-# generating the spectrum from the H0 signatures **** as opposed to compared to incluing the
-# extra signatures.
-#
-#' WARNING: tests all non-empty subsets of \code{target.sigs}, so will get very slow for
-#' large numbers of \code{target.sigs}.
+#' WARNING: tests all non-empty subsets of \code{Ha.sigs.indices}, so will get very slow for
+#' large numbers of \code{Ha.sigs.indices}.
 
-
-# START HERE
-# To Do: 1. remove empty set from more.sigs' subsets
-#        3. see if it is reasonable to require all signatures in more.sigs
-# @param spect A numerical matrix an \code{\link[ICAMS]{ICAMS}} catalog containg 
-# mutational spectra.
 AnySigSubsetPresent <- 
   function(spect, 
            all.sigs,          
-           target.sigs.index, 
-           # p.thresh = 0.05, 
+           Ha.sigs.indices, 
            eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,  
            m.opts) {
     
-    H0.sigs <- all.sigs[ , -target.sigs.index, drop = FALSE]  # H0.sigs a matrix of sigs
+    H0.sigs <- all.sigs[ , -Ha.sigs.indices, drop = FALSE]  # H0.sigs a matrix of sigs
 
     start <- one.lh.and.exp(spect  = spect, 
                             sigs   = H0.sigs,
@@ -872,7 +896,7 @@ AnySigSubsetPresent <-
     
     # new.subsets contains all non-empty subsets of more.sigs (2^as.set(c()))
     # is the powerset of the empty set, i.e. {{}}).
-    new.subsets <- 2^sets::as.set(target.sigs.index) - 2^sets::as.set(c())
+    new.subsets <- 2^sets::as.set(Ha.sigs.indices) - 2^sets::as.set(c())
     
     inner.fn <- function(sigs.to.add) {
       df <- sets::set_cardinality(sigs.to.add) # degrees of freedom for likelihood ratio test

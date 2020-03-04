@@ -66,11 +66,11 @@ TestAny1 <- function(extra.sig, eso.index) {
   sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
   
   set.seed(101010, kind = "L'Ecuyer-CMRG")  
-  out <- AnySigSubsetPresent(spect             = eso.spectra,
-                             all.sigs          = sigs.plus,
-                             target.sigs.index = 1:length(extra.sig),
-                             eval_f            = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-                             m.opts            = m.opts)
+  out <- AnySigSubsetPresent(spect           = eso.spectra,
+                             all.sigs        = sigs.plus,
+                             Ha.sigs.indices = 1:length(extra.sig),
+                             eval_f          = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+                             m.opts          = m.opts)
   
   return(out)
 }

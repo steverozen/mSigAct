@@ -28,7 +28,7 @@ reconstruction if some mutation types would have 0
 counts in the reconstructed spectrum.}
 
 \item{show.warning}{If \code{TRUE} print warning if unrounded
-reconstructons were used.}
+reconstructions were used.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}
