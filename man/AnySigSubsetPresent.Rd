@@ -17,7 +17,7 @@ AnySigSubsetPresent(
 \code{\link[ICAMS]{ICAMS}} catalog.}
 
 \item{all.sigs}{The matrix or catalog of all sigatures of possible interest, 
-including the exactly the signatures for \eqn{H_0} and the alternative
+which conist of the signatures for \eqn{H_0} and for the alternative
 hypotheses.}
 
 \item{Ha.sigs.indices}{An integer vector of the indices of the signatures
@@ -62,6 +62,9 @@ WARNING: tests all non-empty subsets of \code{Ha.sigs.indices}, so will get very
 large numbers of \code{Ha.sigs.indices}.
 }
 \description{
+Please see \strong{Details}.
+}
+\details{
 Let \eqn{H_0} be the likelihood that
 the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
 generated the observed spectrum, \code{spect}.  
