@@ -1,8 +1,8 @@
 To Do
 
-* Track down bug in Travis-CI testing
+* More tests trying to use AnySigSubset
 
-* Finish documenting AnySigSubset present and do example markdown document, and test on some synthetic data 
+* Finish documenting AnySigSubset example markdown document, and test on some synthetic data 
   (probably in the markdown document).  Use Synsiggen to generate the synthetic data.
   
 * Print and edit all documentation

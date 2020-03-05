@@ -7,19 +7,15 @@ test_that("Test Separation of Signature from Background 1", {
 
   spectra.catalog.type <- attr(spectra, "catalog.type", exact = TRUE)
   if (is.null(spectra.catalog.type)) {
-    # We should not have to do this, but we need
-    # to check if/why the catalog.type seems to be NULL
-    # in Travis-CI. Perhaps"[" works differently on
-    # Travis-CI?
     warning("is.null(spectra.catalog.type)")
   }
   
+  # We should not have to do the next 3 assignments, but it seems that "[" works
+  # differently on Travis-CI and the attributes are lost(?)
   attr(spectra, "abundance")    <- 
     attr(mSigAct::nitrosamine.examples$catSBS96, "abundance", exact = TRUE)
-  
   attr(spectra, "catalog.type") <-
     attr(mSigAct::nitrosamine.examples$catSBS96, "catalog.type", exact = TRUE)
-
   attr(spectra, "region") <-
     attr(mSigAct::nitrosamine.examples$catSBS96, "region", exact = TRUE)
 

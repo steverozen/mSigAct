@@ -867,6 +867,8 @@ TestSignaturePresenceTest1 <-
 #' 
 #' WARNING: tests all non-empty subsets of \code{Ha.sigs.indices}, so will get very slow for
 #' large numbers of \code{Ha.sigs.indices}.
+#' 
+#' @export
 
 AnySigSubsetPresent <- 
   function(spect, 
