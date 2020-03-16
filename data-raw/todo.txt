@@ -1,6 +1,14 @@
 To Do
 
 * More tests trying to use AnySigSubset
+ 
+ *** Clean up documentation for SynSigGen::GetSynSigParamsFromExposures to explain why there can be fewer rows than input signatures; 
+ discuss w/ Arnoud -- do we need to test for presence of SBS2 and SBS13?  They are dropped if not helpful.
+ *** Possiby remove similarity functions from SynSigGen?
+ *** Do we need count signatures for
+ Twinstrand opportunity?
+ *** Typo GenearateSyntheticParameters --- missing bases *ON* given parameters
+*** CreateAndWriteCatalog very out of date 
 
 * Finish documenting AnySigSubset example markdown document, and test on some synthetic data 
   (probably in the markdown document).  Use Synsiggen to generate the synthetic data.

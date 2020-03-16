@@ -9,22 +9,75 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Generate synthetic data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The synthetic data are based on human 
+interpretation of a small data set that
+includes SBS1, SBS2, SBS5, SBS13, SBS22, SBS40.
+We generate these from <COSMIC> genome
+signature profiles (which are in the \code{PCAWG7} package).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r build.params}
 
-```{r cars}
-summary(cars)
+params <- 
+  data.frame(
+    SBS1  = c(1,    1000),
+    SBS2  = c(0.3, 10000),
+    SBS5  = c(1,    5000),
+    SBS13 = c(0.3, 10000),
+    SBS22 = c(0.5, 20000),
+    SBS40 = c(1,    1000))
+
+rownames(params) <- c("prob", "mean")
+
+params["mean", ] <- log10(params["mean", ])
+
+params["stdev", ] <- abs(params["mean", ]/2)
+params <- as.matrix(params)
 ```
 
-## Including Plots
+Generate the synthetic exposures
 
-You can also embed plots, for example:
+```{r generate.syn.exposures}
+set.seed(1250520)
+exp <- SynSigGen::GenerateSyntheticExposures(
+  params, 100, "syn") # Fix this so takes a data frame, fix so input is better specified
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Generate the synthetic spectra
+
+```{r generate.syn.spectra}
+
+sigs <- paste0("SBS", c(1, 2, 5, 13, 22, 40))
+all.sigs <- PCAWG7::signature$genome$SBS96[ , sigs]
+spec <- SynSigGen::CreateSynCatalogs(
+  signatures = all.sigs,
+  exposures  = exp)
+write.csv(exp, "rmd.exp.csv")  
+```
+
+Use a fixed set of exposures stored in a .csv file.
+
+```{r, read.exp}
+exp2 <- read.csv(devtools::package_file("data-raw/edited.exp.csv"),
+                 row.names = 1)
+spec2 <- SynSigGen::CreateSynCatalogs(
+  signatures = all.sigs,
+  exposures  = as.matrix(exp2))
+```
+
+Run the test
+
+```{r, any.test}
+test.out <- apply(X = spec2$ground.truth.catalog,
+                  MARGIN = 2,
+                  FUN = mSigAct::AnySigSubsetPresent,
+                  all.sigs = all.sigs,
+                  Ha.sigs.indices = c(2, 4, 5),
+                  m.opts = mSigAct::DefaultManyOpts()
+)
+
+save(test.out, file = "any.subset.test.out.Rdata")
+
+```
