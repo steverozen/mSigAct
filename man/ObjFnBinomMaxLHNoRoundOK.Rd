@@ -14,7 +14,8 @@ ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 \item{sigs}{The matrix of signatures.}
 
 \item{nbinom.size}{The dispersion parameter for the negative
-binomial distribution; smaller is more dispersed.}
+binomial distribution; smaller is more dispersed.
+See \code{\link[stats]{NegBinomial}}.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}.

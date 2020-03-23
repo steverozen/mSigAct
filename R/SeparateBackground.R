@@ -16,9 +16,9 @@
 #' to \code{\link[stats]{NegBinomial}}) and dispersion parameter
 #' \code{nbinom.size}.
 #' 
-#' @param nbinom.size The \code{size} parameter that
-#' governs dispersion. See \code{\link[stats]{NegBinomial}}.
-#' Smaller values correspond to larger dispersion.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
 #' 
 #' @param verbose If \code{TRUE} print messages under some circumstances.
 #'
@@ -68,8 +68,9 @@ LLHSpectrumNegBinom <-
 #' 
 #' @param signature A signature as a numeric vector.
 #' 
-#' @param nbinom.size The \code{size} argument for
-#' \code{\link[stats]{NegBinomial}}.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
 #' 
 #' @keywords internal
 #' 
@@ -93,7 +94,9 @@ LLHOfSignatureGivenSpectrum <- function(spectrum, signature, nbinom.size) {
 #' @keywords internal
 #' 
 #' @param sig.and.nbinom.size Concatenation of signature as a vector and
-#' the negative binomial dispersion parameter.
+#' the negative binomial dispersion parameter.For the dispersion parameter for the negative
+#'        binomial distribution, smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
 #' 
 #' @param spectra The observed spectra as an \code{\link[ICAMS]{ICAMS}}
 #' \code{catalog}.

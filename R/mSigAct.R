@@ -22,10 +22,14 @@ DefaultLocalOpts <- function() {
 #' \describe{
 #'   \item{global.opts}{Options for \code{\link[nloptr]{nloptr}},
 #'   q.v., for the global optimization phase.}
+#'   
 #'   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
 #'   q.v., for the local optimization phase.}
-#'   \item{nbinom.size}{The \code{size}
-#'    parameter used by \code{\link[stats]{NegBinomial}}.}
+#'   
+#'   \item{nbinom.size}{The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.}
+#'    
 #'   \item{trace}{If > 0 print progress messages.}
 #' }
 DefaultManyOpts <- function() {
@@ -201,7 +205,7 @@ is.superset.of.any <- function(probe, background) {
 SparseAssignActivity <- function(spectra,
                                  sigs,
                                  max.level = 5,
-                                 p.thresh  = 0.5,
+                                 p.thresh  = 0.05,
                                  eval_f    = NULL,
                                  m.opts    = NULL,
                                  mc.cores  = NULL) {
@@ -375,7 +379,8 @@ prop.reconstruct <- function(sigs, exp) {
 #' @param sigs The matrix of signatures.
 #' @param nbinom.size The dispersion parameter for the negative
 #'        binomial distribution; smaller is more dispersed.
-#'
+#'        See \code{\link[stats]{NegBinomial}}.
+#'        
 #' @export
 #' 
 ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
@@ -404,6 +409,8 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #' @param sigs The matrix of signatures.
 #' @param nbinom.size The dispersion parameter for the negative
 #'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
+#'
 #' @param no.round.ok If \code{TRUE}, allow use of unrounded
 #'        reconstruction if some mutation types would have 0
 #'        counts in the reconstructed spectrum.
@@ -621,10 +628,12 @@ SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
   m.opts$trace <- trace
   
   SA.out <- SparseAssignActivity(spectra    = spect,
-                                  sigs      = some.sigs,
-                                  eval_f    = ObjFnBinomMaxLHMustRound,
-                                  m.opts    = m.opts,
-                                  mc.cores  = mc.cores) 
+                                 sigs      = some.sigs,
+                                 eval_f    = ObjFnBinomMaxLHMustRound,
+                                 m.opts    = m.opts,
+                                 mc.cores  = mc.cores,
+                                 p.thresh = 0.5 # for backward testing compat.
+  ) 
   return(SA.out)
 }
 
@@ -813,8 +822,8 @@ TestSignaturePresenceTest1 <-
 #' @param spect The spectrum to be reconstructed, as single column matrix or
 #'  \code{\link[ICAMS]{ICAMS}} catalog.
 #'  
-#' @param all.sigs The matrix or catalog of all sigatures of possible interest, 
-#' which conist of the signatures for \eqn{H_0} and for the alternative
+#' @param all.sigs The matrix or catalog of all signatures of possible interest, 
+#' which consist of the signatures for \eqn{H_0} and for the alternative
 #' hypotheses.
 #' 
 #' @param Ha.sigs.indices An integer vector of the indices of the signatures
@@ -827,6 +836,12 @@ TestSignaturePresenceTest1 <-
 #' @param m.opts Controls the numerical search for maximum likelihood
 #'    reconstructions of \code{spect} plus some additional
 #'    flags; see \code{\link{DefaultManyOpts}}.
+#'    
+#' @param max.mc.cores 
+#'   The maximum number of cores to use.
+#'   If \code{NULL} defaults to \eqn{2^{n_a} - 1},
+#'    where \eqn{n_a} is the length of \code{Ha.sigs.indices} -- except on
+#'    MS Windows machines, where it defaults to 1.
 #'    
 #' @details 
 #' Let \eqn{H_0} be the likelihood that
@@ -846,7 +861,7 @@ TestSignaturePresenceTest1 <-
 #'    \item{\code{exposure}}{The signature attributions (exposures) corresponding
 #'         to the \eqn{H_0} log likelihood.}
 #'    \item{\code{everything.else}}{A sub-list with information on the output
-#'         of the numerical optimation that provided \code{loglh}.}
+#'         of the numerical optimization that provided \code{loglh}.}
 #' }}
 #' 
 #' \item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of
@@ -875,7 +890,8 @@ AnySigSubsetPresent <-
            all.sigs,          
            Ha.sigs.indices, 
            eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,  
-           m.opts) {
+           m.opts,
+           max.mc.cores = NULL) {
     
     H0.sigs <- all.sigs[ , -Ha.sigs.indices, drop = FALSE]  # H0.sigs a matrix of sigs
 
@@ -919,6 +935,13 @@ AnySigSubsetPresent <-
                   Ha.info    = Ha.info))
     }
     
-    out <- lapply(new.subsets, inner.fn)
+    if (is.null(max.mc.cores)) {
+       max.mc.cores <- 2^length(Ha.sigs.indices) - 1      
+    }
+    
+    mc.cores <- Adj.mc.cores(max.mc.cores) # Set to 1 if OS is MS Windows
+
+    out <- parallel::mclapply(new.subsets, inner.fn, mc.cores = mc.cores)
+
     return(list(H0.info = start, all.Ha.info = out))
   }

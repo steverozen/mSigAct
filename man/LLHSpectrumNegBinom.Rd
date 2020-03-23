@@ -23,9 +23,9 @@ the given \code{expected.counts} (argument \code{mu}
 to \code{\link[stats]{NegBinomial}}) and dispersion parameter
 \code{nbinom.size}.}
 
-\item{nbinom.size}{The \code{size} parameter that
-governs dispersion. See \code{\link[stats]{NegBinomial}}.
-Smaller values correspond to larger dispersion.}
+\item{nbinom.size}{The dispersion parameter for the negative
+binomial distribution; smaller is more dispersed.
+See \code{\link[stats]{NegBinomial}}.}
 
 \item{verbose}{If \code{TRUE} print messages under some circumstances.}
 }

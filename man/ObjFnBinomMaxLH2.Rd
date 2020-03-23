@@ -21,7 +21,8 @@ ObjFnBinomMaxLH2(
 \item{sigs}{The matrix of signatures.}
 
 \item{nbinom.size}{The dispersion parameter for the negative
-binomial distribution; smaller is more dispersed.}
+binomial distribution; smaller is more dispersed.
+See \code{\link[stats]{NegBinomial}}.}
 
 \item{no.round.ok}{If \code{TRUE}, allow use of unrounded
 reconstruction if some mutation types would have 0

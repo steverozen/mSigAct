@@ -9,15 +9,16 @@ AnySigSubsetPresent(
   all.sigs,
   Ha.sigs.indices,
   eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-  m.opts
+  m.opts,
+  max.mc.cores = NULL
 )
 }
 \arguments{
 \item{spect}{The spectrum to be reconstructed, as single column matrix or
 \code{\link[ICAMS]{ICAMS}} catalog.}
 
-\item{all.sigs}{The matrix or catalog of all sigatures of possible interest, 
-which conist of the signatures for \eqn{H_0} and for the alternative
+\item{all.sigs}{The matrix or catalog of all signatures of possible interest, 
+which consist of the signatures for \eqn{H_0} and for the alternative
 hypotheses.}
 
 \item{Ha.sigs.indices}{An integer vector of the indices of the signatures
@@ -30,6 +31,11 @@ generalizations see \code{\link[nloptr]{nloptr}}.}
 \item{m.opts}{Controls the numerical search for maximum likelihood
 reconstructions of \code{spect} plus some additional
 flags; see \code{\link{DefaultManyOpts}}.}
+
+\item{max.mc.cores}{The maximum number of cores to use.
+If \code{NULL} defaults to \eqn{2^{n_a} - 1},
+ where \eqn{n_a} is the length of \code{Ha.sigs.indices} -- except on
+ MS Windows machines, where it defaults to 1.}
 }
 \value{
 A list with two elements: \describe{
@@ -39,7 +45,7 @@ A list with two elements: \describe{
    \item{\code{exposure}}{The signature attributions (exposures) corresponding
         to the \eqn{H_0} log likelihood.}
    \item{\code{everything.else}}{A sub-list with information on the output
-        of the numerical optimation that provided \code{loglh}.}
+        of the numerical optimization that provided \code{loglh}.}
 }}
 
 \item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of

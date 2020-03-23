@@ -1,24 +1,25 @@
 #' Specifications of background signatures
 #'
 #'
-#' @format A list with the elements \enumerate{
-#' \item \code{background.sig} The background signature profile.
+#' @format A list with the elements \describe{
+#' \item{\code{background.sig}}{The background signature profile.}
 #' 
-#' \item \code{sig.nbinom.size} The \code{size} argument for
-#' \code{\link[stats]{NegBinomial}} for sampling error around
-#' the components of \code{background.sig}.
-#' 
-#' \item \code{count.nbinom.mu} The \code{mu} argument
+#' \item{code{sig.nbinom.size}}{The dispersion parameter for the negative
+#'        binomial distribution for sampling error around
+#'        the components of \code{background.sig}. Smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.}
+#'
+#' \item{code{count.nbinom.mu}}{The \code{mu} argument
 #'  for
 #' \code{\link[stats]{NegBinomial}} for the distribution
 #' of total counts due to \code{background.sig} across
-#' replicate exposed clones.
+#' replicate exposed clones.}
 #' 
-#' \item \code{count.nbinom.size} The \code{size} argument
-#'  for
-#' \code{\link[stats]{NegBinomial}} for the distribution
-#' of total counts due to \code{background.sig} across
-#' replicate exposed clones.
+#' \item{\code{count.nbinom.size}}{The dispersion parameter
+#'  for the negative binomial distribution of sampling error
+#'  for total counts due to \code{background.sig} across
+#'  replicate exposed clones. Smaller is more dispersed.
+#'  See \code{\link[stats]{NegBinomial}}}
 #' 
 #' }
 #' 

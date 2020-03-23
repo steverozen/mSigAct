@@ -8,7 +8,9 @@ NegLLHOfSignature(sig.and.nbinom.size, spectra)
 }
 \arguments{
 \item{sig.and.nbinom.size}{Concatenation of signature as a vector and
-the negative binomial dispersion parameter.}
+the negative binomial dispersion parameter.For the dispersion parameter for the negative
+       binomial distribution, smaller is more dispersed.
+       See \code{\link[stats]{NegBinomial}}.}
 
 \item{spectra}{The observed spectra as an \code{\link[ICAMS]{ICAMS}}
 \code{catalog}.}

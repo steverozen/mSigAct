@@ -11,10 +11,14 @@ A list with the following elements
 \describe{
   \item{global.opts}{Options for \code{\link[nloptr]{nloptr}},
   q.v., for the global optimization phase.}
+  
   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
   q.v., for the local optimization phase.}
-  \item{nbinom.size}{The \code{size}
-   parameter used by \code{\link[stats]{NegBinomial}}.}
+  
+  \item{nbinom.size}{The dispersion parameter for the negative
+       binomial distribution; smaller is more dispersed.
+       See \code{\link[stats]{NegBinomial}}.}
+   
   \item{trace}{If > 0 print progress messages.}
 }
 }
