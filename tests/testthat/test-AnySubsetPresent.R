@@ -70,7 +70,8 @@ TestAny1 <- function(extra.sig, eso.index) {
                              all.sigs        = sigs.plus,
                              Ha.sigs.indices = 1:length(extra.sig),
                              eval_f          = mSigAct::ObjFnBinomMaxLHNoRoundOK,
-                             m.opts          = m.opts)
+                             m.opts          = m.opts,
+                             max.mc.cores    = 1) # Travis-CI will not use multiple cores
   
   return(out)
 }
