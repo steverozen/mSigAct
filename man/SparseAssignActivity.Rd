@@ -8,7 +8,7 @@ SparseAssignActivity(
   spectra,
   sigs,
   max.level = 5,
-  p.thresh = 0.5,
+  p.thresh = 0.05,
   eval_f = NULL,
   m.opts = NULL,
   mc.cores = NULL
