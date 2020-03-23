@@ -1,6 +1,7 @@
-# mSigAct 2.0.0.9013
+# mSigAct 2.0.0.9014
 
 * Added AnySigSubsetPresent() and tests.
+* Parallelized SparseAssignActivity1().
 
 # mSigAct 2.0.0.0010
 

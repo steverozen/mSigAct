@@ -31,7 +31,8 @@ to retain a signature in a reconstruction.}
 \item{m.opts}{For documentation
 see \code{\link{DefaultManyOpts}}.}
 
-\item{mc.cores}{The number of cores to use; if \code{NULL} use
+\item{mc.cores}{TODO:This is no longer correct.
+The number of cores to use; if \code{NULL} use
 \code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
 is always 1.}
 }

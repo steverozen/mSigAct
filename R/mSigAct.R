@@ -194,7 +194,8 @@ is.superset.of.any <- function(probe, background) {
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #' 
-#' @param mc.cores The number of cores to use; if \code{NULL} use
+#' @param mc.cores TODO:This is no longer correct.
+#'  The number of cores to use; if \code{NULL} use
 #'  \code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
 #'  is always 1.
 #' 
@@ -211,11 +212,12 @@ SparseAssignActivity <- function(spectra,
                                  mc.cores  = NULL) {
   f1 <- function(i) {
     retval1 <- SparseAssignActivity1(
-      spect    = spectra[ , i, drop = FALSE],
-      sigs     = sigs,
-      p.thresh = p.thresh,
-      m.opts   = m.opts,
-      eval_f   = eval_f)
+      spect         = spectra[ , i, drop = FALSE],
+      sigs         = sigs,
+      p.thresh     = p.thresh,
+      m.opts       = m.opts,
+      eval_f       = eval_f,
+      max.mc.cores = NULL) # TODO, may want to change this
     
     return(retval1)
   }
@@ -242,7 +244,7 @@ SparseAssignActivity <- function(spectra,
 #' Component of \code{\link{SparseAssignActivity}} for one spectrum.
 #' @keywords internal
 
-SparseAssignActivity1 <- function(
+SparseAssignActivity1OLD <- function(
   spect, sigs, max.level = 5, p.thresh = 0.05, eval_f, m.opts) {
   mode(spect) <-  'numeric'
   start <- one.lh.and.exp(spect, 
