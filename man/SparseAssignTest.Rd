@@ -4,7 +4,12 @@
 \alias{SparseAssignTest}
 \title{Framework for testing \code{\link{SparseAssignActivity}}.}
 \usage{
-SparseAssignTest(sig.counts, trace = 0, mc.cores = NULL)
+SparseAssignTest(
+  sig.counts,
+  trace = 0,
+  mc.cores.per.sample = 1,
+  num.parallel.samples = 1
+)
 }
 \arguments{
 \item{sig.counts}{A matrix of target exposures:

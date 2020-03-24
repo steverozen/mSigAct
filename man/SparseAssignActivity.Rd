@@ -9,9 +9,10 @@ SparseAssignActivity(
   sigs,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f = NULL,
+  eval_f = ObjFnBinomMaxLHNoRoundOK,
   m.opts = NULL,
-  mc.cores = NULL
+  num.parallel.samples = 5,
+  mc.cores.per.sample = NULL
 )
 }
 \arguments{
@@ -31,10 +32,13 @@ to retain a signature in a reconstruction.}
 \item{m.opts}{For documentation
 see \code{\link{DefaultManyOpts}}.}
 
-\item{mc.cores}{TODO:This is no longer correct.
-The number of cores to use; if \code{NULL} use
-\code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
-is always 1.}
+\item{num.parallel.samples}{The (maximum) number of samples to run in parallel; each
+sample in turn can require multiple cores, as governed by
+\code{mc.cores.per.sample}.}
+
+\item{mc.cores.per.sample}{The maximum number of cores to use for each sample.
+If \code{NULL} defaults to \code{2^max.level} -- except on
+MS Windows machines, where it defaults to 1.}
 }
 \value{
 A list with the inferred exposure matrix as element \code{exposure}.
