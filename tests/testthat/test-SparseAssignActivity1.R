@@ -1,5 +1,80 @@
 context("test-SparseAssignActivity1.R")
 
+SparseAssignTest1 <- function(sig.counts, 
+                              trace = 0,
+                              max.mc.cores = 1) {
+  
+  set.seed(101010, kind = "L'Ecuyer-CMRG")  
+  
+  sig.names <- names(sig.counts)
+  
+  some.sigs  <- 
+    PCAWG7::signature$genome$SBS96[ , sig.names, drop = FALSE]
+  ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
+  region     <- attr(some.sigs, "region", exact = TRUE)
+  if (is.null(region)) {
+    message("Null region, why?")
+    region <- "genome"
+  }
+  
+  spect <- round(some.sigs %*% sig.counts)
+  spect <-
+    ICAMS::as.catalog(
+      spect, 
+      ref.genome   = ref.genome,
+      region       = region,
+      catalog.type = "counts")
+  nbinom.size <- 5
+  
+  m.opts <- DefaultManyOpts()
+  m.opts$trace <- trace
+  
+  SA.out <- SparseAssignActivity1(spect       = spect,
+                                  sigs         = some.sigs,
+                                  eval_f       = ObjFnBinomMaxLHMustRound,
+                                  m.opts       = m.opts,
+                                  max.mc.cores = max.mc.cores
+  )
+  
+  zeros <- which(SA.out < 0.5)
+  if (length(zeros) > 0) {
+    SA.out2 <- SA.out[-zeros]
+    sig.names2 <- sig.names[-zeros]
+  } else {
+    SA.out2 <- SA.out
+    sig.names2 <- sig.names
+  }
+  
+  if (FALSE) {
+    
+    polish.out <- Polish(exp       = SA.out2,
+                         sig.names = sig.names2,
+                         spect     = spect)
+  }
+  
+  recon1 <- round(prop.reconstruct(some.sigs, SA.out))
+  
+  if (FALSE) {
+    recon2 <-
+      round(
+        prop.reconstruct(
+          PCAWG7::signature$genome$SBS96[ , sig.names2, drop = FALSE],
+          polish.out))
+  }
+  
+  return(list(soln1       = SA.out,
+              # soln2       = polish.out,
+              truth       = sig.counts,
+              edist1      = EDist2Spect(SA.out, sig.names, spect),
+              edist1r     = EDist2SpectRounded(SA.out, sig.names, spect),
+              LL1         = LLHSpectrumNegBinom(spect, recon1, nbinom.size) #,
+              # LL2         = LLHSpectrumNegBinom(spect, recon2, nbinom.size),
+              # edist2      = EDist2Spect(polish.out, sig.names2, spect),
+              # ed8st2r     = EDist2SpectRounded(polish.out, sig.names2, spect)
+              #, input.spect = spect
+  ))
+  
+}
 
 
 test_that("SparseAssignActivity1 (one spectrum) Test 1", {
