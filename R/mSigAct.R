@@ -193,47 +193,50 @@ is.superset.of.any <- function(probe, background) {
 #'  
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
+#'    
+#' @param num.parallel.samples The (maximum) number of samples to run in parallel; each
+#'    sample in turn can require multiple cores, as governed by
+#'    \code{mc.cores.per.sample}.
 #' 
-#' @param mc.cores TODO:This is no longer correct.
-#'  The number of cores to use; if \code{NULL} use
-#'  \code{min(10, ncol(spectra))}, except on Windows, where \code{mc.cores}
-#'  is always 1.
+#' @param mc.cores.per.sample 
+#'    The maximum number of cores to use for each sample.
+#'    If \code{NULL} defaults to \code{2^max.level} -- except on
+#'    MS Windows machines, where it defaults to 1.
 #' 
 #' @return A list with the inferred exposure matrix as element \code{exposure}.
 #' 
 #' @export
 
-SparseAssignActivity <- function(spectra,
-                                 sigs,
-                                 max.level = 5,
-                                 p.thresh  = 0.05,
-                                 eval_f    = NULL,
-                                 m.opts    = NULL,
-                                 mc.cores  = NULL) {
-  f1 <- function(i) {
-    retval1 <- SparseAssignActivity1(
-      spect         = spectra[ , i, drop = FALSE],
+SparseAssignActivity <- 
+  function(spectra,
+           sigs,
+           max.level            = 5,
+           p.thresh             = 0.05,
+           eval_f               = ObjFnBinomMaxLHNoRoundOK,
+           m.opts               = NULL,
+           num.parallel.samples = 5,
+           mc.cores.per.sample  = NULL) {
+    f1 <- function(i) {
+      retval1 <- SparseAssignActivity1(
+      spect        = spectra[ , i, drop = FALSE],
       sigs         = sigs,
       p.thresh     = p.thresh,
       m.opts       = m.opts,
       eval_f       = eval_f,
-      max.mc.cores = NULL) # TODO, may want to change this
+      max.level    = max.level,
+      max.mc.cores = mc.cores.per.sample)
     
     return(retval1)
   }
   
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   
-  if (is.null(eval_f)) eval_f <- ObjFnBinomMaxLHNoRoundOK
+  num.parallel.samples <- Adj.mc.cores(num.parallel.samples)
   
-  mc.cores <- Adj.mc.cores(
-    ifelse(is.null(mc.cores), 
-           min(10, ncol(spectra)),
-           mc.cores))
-  
-  retval <- parallel::mclapply(1:ncol(spectra), f1, mc.cores = mc.cores)
+  retval <- parallel::mclapply(1:ncol(spectra),
+                               f1, 
+                               mc.cores = num.parallel.samples)
 
-  
   retval2 <- matrix(unlist(retval), ncol = length(retval))
   colnames(retval2) <- colnames(spectra)
   rownames(retval2) <- colnames(sigs)
