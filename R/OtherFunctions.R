@@ -30,7 +30,9 @@ mSigOneGroup <- function(spectra,
                          m.opts = NULL,
                          trace = 0,
                          col = NULL,
-                         mc.cores = 190) {
+                         num.parallel.samples = 5,
+                         sig.presence.mc.cores = 100,
+                         mc.cores.per.sample = NULL) {
   
   target.sig.index <- which(colnames(sigs) == target.sig.name)
   # check if signatures sum to 1
@@ -54,7 +56,7 @@ mSigOneGroup <- function(spectra,
     parallel::mclapply(
       X                = s.spectra.to.list,
       FUN              = SignaturePresenceTest1,
-      mc.cores         = mc.cores,
+      mc.cores         = sig.presence.mc.cores,
       sigs             = sigs,
       target.sig.index = target.sig.index,
       m.opts           = m.opts,
@@ -86,7 +88,8 @@ mSigOneGroup <- function(spectra,
     sigs     = sigs,
     eval_f   = eval_f,
     m.opts   = m.opts,
-    mc.cores = mc.cores)
+    mc.cores.per.sample = mc.cores.per.sample,
+    num.parallel.samples = num.parallel.samples)
 
   out.exp  <-  do.call(cbind, out.exp)
   colnames(out.exp)  <-  colnames(s.spectra)

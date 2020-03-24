@@ -13,7 +13,9 @@ mSigOneGroup(
   m.opts = NULL,
   trace = 0,
   col = NULL,
-  mc.cores = 190
+  num.parallel.samples = 5,
+  sig.presence.mc.cores = 100,
+  mc.cores.per.sample = NULL
 )
 }
 \description{
