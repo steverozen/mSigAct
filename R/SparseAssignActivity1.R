@@ -41,6 +41,7 @@ SparseAssignActivity1 <- function(spect,
             paste(names(start.exp)[non.0.exp.index], collapse = ","),
             '\n')
     message('max.level =', max.level, '\n')
+    message("full -log likelihood is ", lh.w.all)
   }
   if (length(non.0.exp.index) < 2) {
     if (m.opts$trace > 0)
@@ -64,12 +65,20 @@ SparseAssignActivity1 <- function(spect,
     subset.to.remove.v <- as.numeric(subset)
     tmp.set <- setdiff(non.0.exp.index, subset.to.remove.v)
     try.sigs <- sigs[ , tmp.set, drop = FALSE]
+    if (m.opts$trace > 0) {
+      message("\nTesting removal of signature index(s) ",
+              paste(subset.to.remove.v, collapse = ", "),
+              "; name(s) = ",
+              paste(colnames(sigs)[subset.to.remove.v], collapse = ", "))
+    }
     
     # Get the max lh for try.sig
     try <- one.lh.and.exp(spect, 
                           try.sigs,
                           eval_f = eval_f,
                           m.opts = m.opts)
+    
+    # TODO -- deal with case when try$loglh is Inf
 
     statistic <- 2 * (lh.w.all - try$loglh)
     chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
@@ -77,7 +86,7 @@ SparseAssignActivity1 <- function(spect,
   }
 
   for (df in 1:max.level) {
-    if (m.opts$trace > 1) message('df =', df, '\n')
+    if (m.opts$trace > 0) message("\ndf = ", df)
     subsets <- as.list(sets::set_combn(non.0.exp.index, df))
     discard <- lapply(subsets, is.superset.of.any, background = c.r.s)
     subsets2 <- subsets[!(unlist(discard))]
@@ -94,6 +103,13 @@ SparseAssignActivity1 <- function(spect,
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
     xx <- which(p.to.remove == max(p.to.remove))
+    if (length(xx) > 1) {
+      xx <- min(xx)
+      sig.name.to.remove <- colnames(sigs)[xx]
+      warning("Temporary warning, > 1 signature can be removed; ",
+              "selecting the first one arbitrarily (index = ", xx, ",
+              name = ", sig.name.to.remove)
+    }
     best.exp[df] <- list(check.to.remove[[xx]]$exp)
     best.sig.indices[df] <- list(check.to.remove[[xx]]$sig.indices)
   }

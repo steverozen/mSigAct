@@ -43,6 +43,7 @@ SparseAssignTest <- function(sig.counts, trace = 0,
                          m.opts               = m.opts,
                          mc.cores.per.sample  = mc.cores.per.sample,
                          num.parallel.samples = num.parallel.samples,
+                         max.level            = max.level,
                          p.thresh = 0.5 # for backward testing compat.
     ) 
   return(SA.out)
@@ -77,28 +78,30 @@ test_that("SparseAssignActivity (multiple spectra) test 2", {
   testthat::expect_equal(retval$exposure, expected, tolerance = 1e-2)
 })
 
+
 test_that("SparseAssignActivity (multiple spectra) test 3", {
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
-  input <- c(SBS1 = 1000, SBS22 = 2000, SBS3 = 10, SBS40 = 10)
+  input <- c(SBS1 = 1000, SBS22 = 2000, SBS3 = 10, SBS5 = 10, SBS40 = 10)
   # Automated testing on Travic-CI does not allow spawning processes.
   retval <- SparseAssignTest(sig.counts = input, 
                              num.parallel.samples = 1,
-                             mc.cores.per.sample  = 1) 
-  expected <- matrix(c(999.2467, 1998.7533), ncol = 1)
+                             mc.cores.per.sample  = 1,
+                             max.level            = 5) 
+  expected <- matrix(c(1030.96281, 1959.88491, 0, 0, 38.15228), ncol = 1)
   rownames(expected) <- names(input)
   colnames(expected) <- "tumor1"
   testthat::expect_equal(retval$exposure, expected, tolerance = 1e-2)
 })
 
-test_that("SparseAssignActivity (multiple spectra) test 4", {
+test_that("SparseAssignActivity (multiple spectra) test 3", {
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
-  input <- c(SBS1 = 1000, SBS22 = 2000, SBS3 = 10, SBS40 = 10)
+  input <- c(SBS1 = 1000, SBS22 = 2000, SBS3 = 10, SBS5 = 10, SBS40 = 10)
   # Automated testing on Travic-CI does not allow spawning processes.
   retval <- SparseAssignTest(sig.counts = input, 
                              num.parallel.samples = 1,
                              mc.cores.per.sample  = 1,
                              max.level            = 1) 
-  expected <- matrix(c(999.2467, 1998.7533), ncol = 1)
+  expected <- matrix(c(974.62595, 1990.79001, 0, 52.72045, 10.86359), ncol = 1)
   rownames(expected) <- names(input)
   colnames(expected) <- "tumor1"
   testthat::expect_equal(retval$exposure, expected, tolerance = 1e-2)
