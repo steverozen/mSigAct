@@ -514,13 +514,15 @@ mSigAct.basic.test <- function() {
   m.opts <- DefaultManyOpts()
   
   short.analysis <-
-    mSigOneGroup(spectra = short.taiwan.hcc2,
-                 sigs            = liver.wes.sigs,
-                 target.sig.name = 'Signature.AA',
-                 path.root       = 'mSigAct.basic.test.short.analysis',
-                 eval_f          = ObjFnBinomMaxLHMustRound,
-                 m.opts          = m.opts, 
-                 mc.cores        = 1)
+    mSigOneGroup(
+      spectra               = short.taiwan.hcc2,
+      sigs                  = liver.wes.sigs,
+      target.sig.name       = 'Signature.AA',
+      path.root             = 'mSigAct.basic.test.short.analysis',
+      eval_f                = ObjFnBinomMaxLHMustRound,
+      num.parallel.samples  = 1,
+      sig.presence.mc.cores = 1,
+      m.opts                = m.opts)
   
   expected.short.pval <-
     structure(c(0.036297099364187, 0.76185665842143, 0.000540732195433939,
