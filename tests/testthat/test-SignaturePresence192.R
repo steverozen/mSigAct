@@ -40,7 +40,7 @@ test_that("SignaturePresence1 SBS192 4", {
   retval <- TestSignaturePresenceTest1(
     sig.counts = input, 
     input.sigs = PCAWG7::signature$genome$SBS192)
-  testthat::expect_equal(retval$chisq.p, 0.03175961, tolerance = 1e-5)
+  testthat::expect_equal(retval$chisq.p, 0.03175961, tolerance = 1e-4)
 })
 
 test_that("SignaturePresence1 SBS192 5", {
@@ -49,7 +49,7 @@ test_that("SignaturePresence1 SBS192 5", {
   retval <- TestSignaturePresenceTest1(
     sig.counts = input, 
     input.sigs = PCAWG7::signature$genome$SBS192)
-  testthat::expect_equal(retval$chisq.p, 0.266199, tolerance = 1e-5)
+  testthat::expect_equal(retval$chisq.p, 0.266199, tolerance = 1e-3)
 })
 
 test_that("SignaturePresence1 SBS192 6", {
