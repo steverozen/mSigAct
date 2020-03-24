@@ -522,7 +522,9 @@ Polish <- function(exp, sig.names, spect) {
 #' 
 #' @keywords internal
 
-SparseAssignTest1 <- function(sig.counts, trace = 0) {
+SparseAssignTest1OLD <- function(sig.counts, 
+                              trace = 0,
+                              max.mc.cores = 1) {
   
   set.seed(101010, kind = "L'Ecuyer-CMRG")  
   
@@ -549,10 +551,12 @@ SparseAssignTest1 <- function(sig.counts, trace = 0) {
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
   
-  SA.out <- SparseAssignActivity1(spect      = spect,
-                                 sigs        = some.sigs,
-                                 eval_f      = ObjFnBinomMaxLHMustRound,
-                                 m.opts      = m.opts)
+  SA.out <- SparseAssignActivity1(spect       = spect,
+                                 sigs         = some.sigs,
+                                 eval_f       = ObjFnBinomMaxLHMustRound,
+                                 m.opts       = m.opts,
+                                 max.mc.cores = max.mc.cores
+                                 )
   
   zeros <- which(SA.out < 0.5)
   if (length(zeros) > 0) {
@@ -563,27 +567,32 @@ SparseAssignTest1 <- function(sig.counts, trace = 0) {
     sig.names2 <- sig.names
   }
   
+  if (FALSE) {
+  
   polish.out <- Polish(exp       = SA.out2,
                        sig.names = sig.names2,
                        spect     = spect)
+  }
   
   recon1 <- round(prop.reconstruct(some.sigs, SA.out))
+  
+  if (FALSE) {
   recon2 <-
     round(
       prop.reconstruct(
         PCAWG7::signature$genome$SBS96[ , sig.names2, drop = FALSE],
         polish.out))
-  
+  }
   
   return(list(soln1       = SA.out,
-              soln2       = polish.out,
+              # soln2       = polish.out,
               truth       = sig.counts,
               edist1      = EDist2Spect(SA.out, sig.names, spect),
               edist1r     = EDist2SpectRounded(SA.out, sig.names, spect),
-              LL1         = LLHSpectrumNegBinom(spect, recon1, nbinom.size),
-              LL2         = LLHSpectrumNegBinom(spect, recon2, nbinom.size),
-              edist2      = EDist2Spect(polish.out, sig.names2, spect),
-              ed8st2r     = EDist2SpectRounded(polish.out, sig.names2, spect)
+              LL1         = LLHSpectrumNegBinom(spect, recon1, nbinom.size) #,
+              # LL2         = LLHSpectrumNegBinom(spect, recon2, nbinom.size),
+              # edist2      = EDist2Spect(polish.out, sig.names2, spect),
+              # ed8st2r     = EDist2SpectRounded(polish.out, sig.names2, spect)
               #, input.spect = spect
               ))
   
@@ -599,7 +608,9 @@ SparseAssignTest1 <- function(sig.counts, trace = 0) {
 #' 
 #' @keywords internal
 
-SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
+SparseAssignTest <- function(sig.counts, trace = 0, 
+                             mc.cores.per.sample = 1, 
+                             num.parallel.samples = 1) {
   
   set.seed(101010, kind = "L'Ecuyer-CMRG")  
   
@@ -632,12 +643,14 @@ SparseAssignTest <- function(sig.counts, trace = 0, mc.cores = NULL) {
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
   
-  SA.out <- SparseAssignActivity(spectra    = spect,
-                                 sigs      = some.sigs,
-                                 eval_f    = ObjFnBinomMaxLHMustRound,
-                                 m.opts    = m.opts,
-                                 mc.cores  = mc.cores,
-                                 p.thresh = 0.5 # for backward testing compat.
+  SA.out <- 
+    SparseAssignActivity(spectra              = spect,
+                         sigs                 = some.sigs,
+                         eval_f               = ObjFnBinomMaxLHMustRound,
+                         m.opts               = m.opts,
+                         mc.cores.per.sample  = mc.cores.per.sample,
+                         num.parallel.samples = num.parallel.samples,
+                         p.thresh = 0.5 # for backward testing compat.
   ) 
   return(SA.out)
 }
