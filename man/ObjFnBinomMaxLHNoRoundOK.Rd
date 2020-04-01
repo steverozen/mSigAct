@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{ObjFnBinomMaxLHNoRoundOK}
 \alias{ObjFnBinomMaxLHNoRoundOK}
-\title{The negative binomial maximum likelihood objective function allowing no rounding.}
+\title{The preferred negative binomial maximum likelihood objective function.}
 \usage{
 ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 }
@@ -17,7 +17,16 @@ ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 binomial distribution; smaller is more dispersed.
 See \code{\link[stats]{NegBinomial}}.}
 }
+\value{
+-1 * log(likelihood(spectrum | reconstruction))
+
+\code{\link[nloptr]{nloptr}} minimizes the objective function, so the 
+lower the objective function, the better.
+}
 \description{
-For use by \code{\link[nloptr]{nloptr}}.
-For details see \code{\link{ObjFnBinomMaxLHMustRound}}.
+Can be used as the
+objective function for \code{\link{SparseAssignActivity}},
+\code{\link{SparseAssignActivity1}}, 
+and \code{\link{SignaturePresenceTest1}}.
+(Internally used by by \code{\link[nloptr]{nloptr}}.)
 }

@@ -9,7 +9,7 @@ ObjFnBinomMaxLH2(
   spectrum,
   sigs,
   nbinom.size,
-  no.round.ok = FALSE,
+  no.round.ok = TRUE,
   show.warning = FALSE
 )
 }
@@ -26,10 +26,10 @@ See \code{\link[stats]{NegBinomial}}.}
 
 \item{no.round.ok}{If \code{TRUE}, allow use of unrounded
 reconstruction if some mutation types would have 0
-counts in the reconstructed spectrum.}
+counts in the reconstructed spectrum. Deprecated,
+in future will always be \code{TRUE}.}
 
-\item{show.warning}{If \code{TRUE} print warning if unrounded
-reconstructions were used.}
+\item{show.warning}{Deprecated; ignored.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}

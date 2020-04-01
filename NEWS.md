@@ -1,3 +1,9 @@
+# mSigAct 2.0.0.9016
+
+* Improved documentation for AnySigSubsetPresent; 
+  considering deprecating ObjFnBinomMaxLHMustRoun, but need to do more
+  tests first -- is it possible that rounding improves attribution?
+
 # mSigAct 2.0.0.9014
 
 * Added AnySigSubsetPresent() and tests.

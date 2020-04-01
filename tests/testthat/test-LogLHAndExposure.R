@@ -30,6 +30,7 @@ PrepOneSynSpectrum <- function(sig.counts,
 
 TestOneLLHetc <- function(sig.counts,
                           input.sigs = PCAWG7::signature$genome$SBS96,
+                          # eval_f     = ObjFnBinomMaxLHNoRoundOK, 
                           eval_f     = ObjFnBinomMaxLHMustRound,
                           trace = 0) {
   
@@ -40,14 +41,19 @@ TestOneLLHetc <- function(sig.counts,
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
   
-  # debug(ObjFnBinomMaxLH2)
   retval <- one.lh.and.exp(
     spect  = test.data$spec,
     sigs   = test.data$sigs, 
     m.opts = m.opts,
     eval_f = eval_f)
+  
+  new.rec <- 
+    mSigAct:::prop.reconstruct(exp = retval$exposure, sigs = test.data$sigs)
+  
+  xx <- rbind(test.data$spec[ ,1], round(new.rec)[, 1])
+  edist <- stats::dist(xx, method = "euclidean")
  
-  return(c(retval, list(m.opts = m.opts)))
+  return(c(retval, list(m.opts = m.opts, edist = edist)))
 }
 
 test_that("test-LogLHAndExposure.R LogLHAndExposure 1", {

@@ -256,22 +256,36 @@ prop.reconstruct <- function(sigs, exp) {
   return(as.matrix(sigs) %*% exp)
 }
 
-#' The negative binomial maximum likelihood objective function.
+#' A deprecated negative binomial maximum likelihood objective function.
 #' 
-#' For use by \code{\link[nloptr]{nloptr}}.
-#'
-#' The result is
+#' Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
 #' 
-#' -1 * log(likelihood(spectrum | reconstruction))
+#' This function will lead to errors in some situations
+#' when the rounded reconstructed signature contains 0s for
+#' mutations classes for which the target spectrum is > 0.
 #'
-#' (nloptr minimizes the objective function.)
+#' @inheritParams ObjFnBinomMaxLHNoRoundOK
 #'
-#' The lower the objective function, the better.
-#'
+#' @export
+#' 
+ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
+}
+
+#' The preferred negative binomial maximum likelihood objective function.
+#' 
 #' Can be used as the
 #' objective function for \code{\link{SparseAssignActivity}},
 #' \code{\link{SparseAssignActivity1}}, 
 #' and \code{\link{SignaturePresenceTest1}}.
+#' (Internally used by by \code{\link[nloptr]{nloptr}}.)
+#' 
+#' @return 
+#'
+#' -1 * log(likelihood(spectrum | reconstruction))
+#'
+#' \code{\link[nloptr]{nloptr}} minimizes the objective function, so the 
+#' lower the objective function, the better.
 #'
 #' @param exp The matrix of exposures ("activities").
 #' @param spectrum The spectrum to assess.
@@ -279,19 +293,6 @@ prop.reconstruct <- function(sigs, exp) {
 #' @param nbinom.size The dispersion parameter for the negative
 #'        binomial distribution; smaller is more dispersed.
 #'        See \code{\link[stats]{NegBinomial}}.
-#'        
-#' @export
-#' 
-ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
-}
-
-#' The negative binomial maximum likelihood objective function allowing no rounding.
-#' 
-#' For use by \code{\link[nloptr]{nloptr}}.
-#' For details see \code{\link{ObjFnBinomMaxLHMustRound}}.
-#'
-#' @inheritParams ObjFnBinomMaxLHMustRound
 #'
 #' @export
 #' 
@@ -303,54 +304,63 @@ ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
 #' 
 #' For use by \code{\link[nloptr]{nloptr}}
 #'
-#' @param exp The matrix of exposures ("activities").
-#' @param spectrum The spectrum to assess.
-#' @param sigs The matrix of signatures.
-#' @param nbinom.size The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.
+# @param exp The matrix of exposures ("activities").
+# @param spectrum The spectrum to assess.
+# @param sigs The matrix of signatures.
+# @param nbinom.size The dispersion parameter for the negative
+#        binomial distribution; smaller is more dispersed.
+#        See \code{\link[stats]{NegBinomial}}.
+#'        
+#' @inheritParams ObjFnBinomMaxLHNoRoundOK
 #'
 #' @param no.round.ok If \code{TRUE}, allow use of unrounded
 #'        reconstruction if some mutation types would have 0
-#'        counts in the reconstructed spectrum.
-#' @param show.warning If \code{TRUE} print warning if unrounded
-#'        reconstructions were used.
+#'        counts in the reconstructed spectrum. Deprecated,
+#'        in future will always be \code{TRUE}.
+#'        
+#' @param show.warning Deprecated; ignored.
 #'
 #' @keywords internal
 #' 
-ObjFnBinomMaxLH2 <- 
-  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
+NEW.VERSION.ObjFnBinomMaxLH2 <- 
+  function(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE,
            show.warning = FALSE) {
-  
-  if (any(is.na(exp))) return(Inf)
-  
-  reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
-  
-  reconstruction2 <- round(reconstruction)
-  # Will cause problems if round of the reconstruction is 0 for
-  # any channel even if the reconstruction > 0, because then
-  # log likelihood will be -inf. The situation is especial likely
-  # to occur if mutation counts in the spectrum are low.
-  if (any(reconstruction2 == 0) && no.round.ok) {
-    if (show.warning) warning("unrounded reconstruction")
-  } else {
-    reconstruction <- reconstruction2
-  }
-  rm(reconstruction2)
-  
-  ## catch errors with NA in the input or in reconstruction.
-  if (any(is.na(reconstruction))) {
-    save(reconstruction, spectrum, sigs, exp, nbinom.size,
-         file = "reconstruction.error.R")
-  }
-  stopifnot(!any(is.na(reconstruction)))
-  
-  loglh <- LLHSpectrumNegBinom(spectrum = spectrum, 
-                                expected.counts = reconstruction,
-                                nbinom.size = nbinom.size)
+    
+    if (any(is.na(exp))) return(Inf)
+    
+    reconstruction.estimate <-  prop.reconstruct(sigs = sigs, exp = exp)
+    
+    # The reconstruction.estimate is an abstract model of the probabilities of 
+    # the counts of each mutation class given the mixture of exposures in exp
+    # (which are also probabilities) and the signatures. The probabilities of
+    # the counts do not have to be integers.
 
-  return(-loglh)
-}
+    # catch errors with NA in the input or in reconstruction.
+    if (any(is.na(reconstruction.estimate))) {
+      save(reconstruction.estimate, spectrum, sigs, exp, nbinom.size,
+           file = "reconstruction.NA.Rdata")
+      stop("There arevNAs in reconstruction; see reconstruction.NA.Rdata")
+    }
+    
+    if (!no.round.ok) {
+      # There can be problems if the rounded reconstruction is 0 for
+      # any channel (even if the unrounded reconstruction > 0), because then
+      # log likelihood will be -inf. The situation is especial likely
+      # to occur if mutation counts in the spectrum are low.
+      if (any(round(reconstruction.estimate)[spectrum > 0] == 0)) {
+        # warning("Possible problem in rounding reconstucted spectrum; ",
+        #        "use eval_f = ObjFnBinomMaxLHNoRoundOK")
+      } 
+      # Use the rounded reconstruction estimate
+      reconstruction.estimate <- round(reconstruction.estimate)      
+    }
+    
+    loglh <- LLHSpectrumNegBinom(spectrum = spectrum, 
+                                 expected.counts = reconstruction.estimate,
+                                 nbinom.size = nbinom.size)
+    
+    return(-loglh)
+  }
 
 
 #' Euclidean reconstruction error.
@@ -587,7 +597,7 @@ TestSignaturePresenceTest1 <-
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
 
 
-#' Determine whether any of several signatures in any combination are plausibly needed to reconstruct a given spectrum.
+#' For each combination of several signatures, determine if the combination is plausibly needed to reconstruct a spectrum.
 #' 
 #' @description Please see \strong{Details}.
 #' 
@@ -602,8 +612,9 @@ TestSignaturePresenceTest1 <-
 #' that are in the various \eqn{H_a}'s.
 #' 
 #' @param eval_f Usually one of \code{\link{ObjFnBinomMaxLHNoRoundOK}}
-#'               or \code{\link{ObjFnBinomMaxLHMustRound}}; for
-#'               generalizations see \code{\link[nloptr]{nloptr}}.
+#'               or \code{\link{ObjFnBinomMaxLHMustRound}}. 
+#'               For
+#'               background see \code{\link[nloptr]{nloptr}}.
 #' 
 #' @param m.opts Controls the numerical search for maximum likelihood
 #'    reconstructions of \code{spect} plus some additional
@@ -642,7 +653,15 @@ TestSignaturePresenceTest1 <-
 #'   \item{\code{sigs.added}}{The identifiers of the (additional) signatures
 #'        tested.}
 #'        
-#'   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.}
+#'   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.} This
+#'   this \eqn{p} value can be \code{NaN} when the likelihoods of (\eqn{H_0} and \eqn{H_a})
+#'   are both \code{-Inf}. This can occur if there are are mutation classes in the spectra
+#'   that are > 0 but that have 0 probability in all the available input signatures.
+#'   This is unlikely to occur, since most spectra have non-0 (albeit very small)
+#'   probabilities for most mutation classes. This is not an error is using 
+#'   \code{eval_f = ObjFnBinomMaxLHNoRoundOK}. However, if \code{p == NaN}
+#'   when using \code{eval_f = ObjFnBinomMaxLHMustRound}, switch to 
+#'   \code{ObjFnBinomMaxLHNoRoundOK}.
 #'   
 #'   \item{\code{df}}{The degrees of freedom of the likelihood-ratio test 
 #'      (equal to the number of signatures in \code{sigs.added}).}

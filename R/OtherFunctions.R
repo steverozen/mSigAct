@@ -56,7 +56,6 @@ mSigOneGroup <- function(spectra,
     parallel::mclapply(
       X                = s.spectra.to.list,
       FUN              = SignaturePresenceTest1,
-      mc.cores         = sig.presence.mc.cores,
       sigs             = sigs,
       target.sig.index = target.sig.index,
       m.opts           = m.opts,
@@ -565,13 +564,13 @@ mSigAct.basic.test <- function() {
   rownames(degenerate.spectrum) <-  row.names(short.taiwan.hcc2)
   
   degenerate.analysis <-
-    mSigOneGroup(spectra         = degenerate.spectrum,
-                 sigs            = liver.wes.sigs,
-                 target.sig.name = 'Signature.AA',
-                 path.root       = 'mSigAct.basic.test.degenerate',
-                 eval_f          = ObjFnBinomMaxLHMustRound,
-                 m.opts          = m.opts,
-                 mc.cores        = 1)
+    mSigOneGroup(spectra             = degenerate.spectrum,
+                 sigs                = liver.wes.sigs,
+                 target.sig.name     = 'Signature.AA',
+                 path.root           = 'mSigAct.basic.test.degenerate',
+                 eval_f              = ObjFnBinomMaxLHMustRound,
+                 m.opts              = m.opts,
+                 mc.cores.per.sample = 1)
   
   degenerate.expected <-
     structure(list(pval = structure(c(2.59102885448936e-167, 3.85329163031964e-123

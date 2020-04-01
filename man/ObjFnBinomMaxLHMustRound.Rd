@@ -2,7 +2,7 @@
 % Please edit documentation in R/mSigAct.R
 \name{ObjFnBinomMaxLHMustRound}
 \alias{ObjFnBinomMaxLHMustRound}
-\title{The negative binomial maximum likelihood objective function.}
+\title{A deprecated negative binomial maximum likelihood objective function.}
 \usage{
 ObjFnBinomMaxLHMustRound(exp, spectrum, sigs, nbinom.size)
 }
@@ -18,19 +18,10 @@ binomial distribution; smaller is more dispersed.
 See \code{\link[stats]{NegBinomial}}.}
 }
 \description{
-For use by \code{\link[nloptr]{nloptr}}.
+Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
 }
 \details{
-The result is
-
--1 * log(likelihood(spectrum | reconstruction))
-
-(nloptr minimizes the objective function.)
-
-The lower the objective function, the better.
-
-Can be used as the
-objective function for \code{\link{SparseAssignActivity}},
-\code{\link{SparseAssignActivity1}}, 
-and \code{\link{SignaturePresenceTest1}}.
+This function will lead to errors in some situations
+when the rounded reconstructed signature contains 0s for
+mutations classes for which the target spectrum is > 0.
 }

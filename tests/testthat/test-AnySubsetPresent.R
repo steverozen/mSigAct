@@ -99,4 +99,3 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
                0.001310515)
 })
 
-# TODO STeve: test spectrum 6 and rounded reconstruction; is there a better way to decide not to use rounded reconstructon?

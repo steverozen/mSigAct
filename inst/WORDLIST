@@ -96,6 +96,7 @@ NPIP
 NPYR
 nucleotides
 ObjFnBinomMaxLH
+ObjFnBinomMaxLHMustRound
 PCAWG
 pentanucleotide
 POS
