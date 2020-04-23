@@ -6,7 +6,8 @@
 \alias{HepG2.background.info}
 \alias{MCF10A.background.info}
 \title{Specifications of background signatures}
-\format{A list with the elements \describe{
+\format{
+A list with the elements \describe{
 \item{\code{background.sig}}{The background signature profile.}
 
 \item{code{sig.nbinom.size}}{The dispersion parameter for the negative
@@ -26,7 +27,10 @@ replicate exposed clones.}
  replicate exposed clones. Smaller is more dispersed.
  See \code{\link[stats]{NegBinomial}}}
 
-}}
+}
+
+An object of class \code{list} of length 5.
+}
 \source{
 \code{HepG2.background.info} was estimated from \code{\link{HepG2.background.spectra}}.
 
