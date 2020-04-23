@@ -6,7 +6,11 @@
 \alias{HepG2.background.spectra}
 \alias{MCF10A.background.spectra}
 \title{Background spectra for HepG2 and MCF-10A}
-\format{An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.}
+\format{
+An \code{\link[ICAMS]{ICAMS}} \code{counts} catalog.
+
+An object of class \code{SBS96Catalog} (inherits from \code{matrix}) with 96 rows and 3 columns.
+}
 \usage{
 HepG2.background.spectra
 
