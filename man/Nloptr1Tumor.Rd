@@ -7,18 +7,28 @@
 Nloptr1Tumor(spectrum, sigs, m.opts = NULL, eval_f, ...)
 }
 \arguments{
-\item{spectrum}{A single mutational spectrum a numeric vector or
-single-column numeric matrix.}
+\item{spectrum}{The spectrum to be reconsructed.}
 
-\item{sigs}{A matrix of mutational signatures.}
+\item{sigs}{The available signatures.}
 
-\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
+\item{m.opts}{Options that govern the numerical optimizaiton. 
+For documentation see \code{\link{DefaultManyOpts}}.}
 
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
+\item{eval_f}{The objective function for
+\code{\link[nloptr]{nloptr}}. We have only tested
+\code{\link{ObjFnBinomMaxLHNoRoundOK}} and
+\code{\link{ObjFnBinomMaxLHMustRound}}.}
 
-\item{...}{Additional arguments for \code{eval_f}.}
+\item{...}{Additional arguments for \code{eval_f}.
 
-\item{local.opts}{See \code{\link[nloptr]{nloptr}}.}
+Returns a list with elements \describe{
+\item{\code{loglh}}{The log likelihood of the best solution (set of exposures) found.
+      For a more general objective function this might be \code{NULL}.}
+\item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e. 
+   the number of mutations ascribed to each signature.}
+\item{\code{obj.fn.value}}{The objective function value associated with \code{exposure}.}
+\item{\code{everything.else}}{Everything returned by the function \code{\link{Nloptr1Tumor}.} }
+}}
 }
 \description{
 Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.

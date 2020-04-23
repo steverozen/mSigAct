@@ -43,18 +43,7 @@ DefaultManyOpts <- function() {
 
 #' Optimize assignment of a fixed set of signature activities for a \strong{single} tumor. 
 #'
-#' @param spectrum A single mutational spectrum a numeric vector or
-#' single-column numeric matrix.
-#' 
-#' @param sigs A matrix of mutational signatures.
-#' 
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#' 
-#' @param m.opts See \code{\link{DefaultManyOpts}}.
-#' 
-#' @param local.opts See \code{\link[nloptr]{nloptr}}.
-#' 
-#' @param ... Additional arguments for \code{eval_f}.
+#' @inheritParams OptimizeExposure 
 #' 
 #' @keywords internal
 Nloptr1Tumor <- function(spectrum, 
@@ -125,7 +114,6 @@ Nloptr1Tumor <- function(spectrum,
     warning("reached maxeval on local optimization: ", local.res$iterations)
   }
   
-
   names(local.res$solution) <- colnames(sigs)
   return(list(objective =  local.res$objective,
               solution   = local.res$solution,
@@ -133,38 +121,62 @@ Nloptr1Tumor <- function(spectrum,
               local.res  = local.res))
 }
 
-#' Returns a list with elements:
+#' Optimize the reconstruction of a spectrum from a set of signatures.
+#' 
+#' @param spectrum The spectrum to be reconsructed.
+#' 
+#' @param sigs The available signatures.
+#' 
+#' @param m.opts Options that govern the numerical optimizaiton. 
+#'    For documentation see \code{\link{DefaultManyOpts}}.
+#' 
+#' @param eval_f The objective function for
+#'  \code{\link[nloptr]{nloptr}}. We have only tested
+#'  \code{\link{ObjFnBinomMaxLHNoRoundOK}} and
+#'  \code{\link{ObjFnBinomMaxLHMustRound}}.
+#'  
+#' @param ... Additional arguments for \code{eval_f}.
 #'
-#' \code{loglh}    - the log likelihood of the best solution (set of exposures) found
-#' \code{exposure}  - the vector of exposures that generate \code{loglh}, in this case
-#' this is the number of mutations ascribed to each signature.
-#'
-#' @keywords internal
-one.lh.and.exp <- function(spect,
-                           sigs, 
-                           m.opts,
-                           eval_f) {
+#' Returns a list with elements \describe{
+#' \item{\code{loglh}}{The log likelihood of the best solution (set of exposures) found.
+#'       For a more general objective function this might be \code{NULL}.}
+#' \item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e. 
+#'    the number of mutations ascribed to each signature.}
+#' \item{\code{obj.fn.value}}{The objective function value associated with \code{exposure}.}
+#' \item{\code{everything.else}}{Everything returned by the function \code{\link{Nloptr1Tumor}.} }
+#' }
+#' 
+#' @keywords export
+OptimizeExposure <- function(spectrum,
+                             sigs, 
+                             m.opts,
+                             eval_f,
+                             ...) {
   
-  stopifnot(mode(spect) == "numeric")
-
-  r <- Nloptr1Tumor(spect, 
+  stopifnot(mode(spectrum) == "numeric")
+  
+  r <- Nloptr1Tumor(spectrum = spectrum, 
                     sigs, 
                     m.opts = m.opts,
                     eval_f      = eval_f,
-                    nbinom.size = m.opts$nbinom.size)
+                    nbinom.size = m.opts$nbinom.size,
+                    ...)
   loglh <- r$objective
   
   if (loglh == Inf && m.opts$trace > 0)
     message("Got -Inf in one.lh.and.exp\n")
   
-  # sum(recon) is likely to be close to, but not equal to the number
+  # sum(r$solution) is likely to be close to, but not equal to the number
   # of mutations in the spectrum, so we scale exposures to get the
   # number of mutations in the spectrum
-  exp <- r$solution * (sum(spect) / sum(r$solution)) # sum(recon))
+  exp <- r$solution * (sum(spectrum) / sum(r$solution)) # sum(recon))
   
-  list(loglh = -loglh, exposure = exp, everything.else = r)
+  # TODO, there is redudant info in everything.else
+  return(list(loglh = -loglh, exposure = exp, obj.fn.value = r$objective, everything.else = r))
 }
 
+#' @keywords  internal
+one.lh.and.exp <- function(...) OptimizeExposure(...) 
 
 #' Is the set 'probe' a superset of any set in 'background'?
 #' 

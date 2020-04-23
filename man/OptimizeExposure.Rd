@@ -4,10 +4,10 @@
 \alias{OptimizeExposure}
 \title{Optimize the reconstruction of a spectrum from a set of signatures.}
 \usage{
-OptimizeExposure(spect, sigs, m.opts, eval_f, ...)
+OptimizeExposure(spectrum, sigs, m.opts, eval_f, ...)
 }
 \arguments{
-\item{spect}{The spectrum to be reconsructed.}
+\item{spectrum}{The spectrum to be reconsructed.}
 
 \item{sigs}{The available signatures.}
 
@@ -21,11 +21,14 @@ For documentation see \code{\link{DefaultManyOpts}}.}
 
 \item{...}{Additional arguments for \code{eval_f}.
 
-Returns a list with elements：
-
-\code{loglh}    - the log likelihood of the best solution (set of exposures) found
-\code{exposure}  - the vector of exposures that generate \code{loglh}, in this case
-this is the number of mutations ascribed to each signature.}
+Returns a list with elements \describe{
+\item{\code{loglh}}{The log likelihood of the best solution (set of exposures) found.
+      For a more general objective function this might be \code{NULL}.}
+\item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e. 
+   the number of mutations ascribed to each signature.}
+\item{\code{obj.fn.value}}{The objective function value associated with \code{exposure}.}
+\item{\code{everything.else}}{Everything returned by the function \code{\link{Nloptr1Tumor}.} }
+}}
 }
 \description{
 Optimize the reconstruction of a spectrum from a set of signatures.
