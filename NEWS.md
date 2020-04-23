@@ -1,3 +1,8 @@
+# mSigact 2.0.0.9017
+
+* Aliased one.lh.and.exp as OptimizeExposure and made
+  OptimizeExposure public.
+
 # mSigAct 2.0.0.9016
 
 * Improved documentation for AnySigSubsetPresent; 
