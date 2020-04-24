@@ -33,4 +33,3 @@ Returns a list with elements \describe{
 \description{
 Optimize the reconstruction of a spectrum from a set of signatures.
 }
-\keyword{export}

@@ -1,4 +1,8 @@
-# mSigact 2.0.0.9017
+# mSigAct 2.0.0.9018
+
+* Had previously failed to export OptimizeExposure.
+
+# mSigAct 2.0.0.9017
 
 * Aliased one.lh.and.exp as OptimizeExposure and made
   OptimizeExposure public.

@@ -146,7 +146,8 @@ Nloptr1Tumor <- function(spectrum,
 #' \item{\code{everything.else}}{Everything returned by the function \code{\link{Nloptr1Tumor}.} }
 #' }
 #' 
-#' @keywords export
+#' @export
+#' 
 OptimizeExposure <- function(spectrum,
                              sigs, 
                              m.opts,
