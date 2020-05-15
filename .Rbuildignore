@@ -1,6 +1,7 @@
 ^mSigAct\.Rproj$
 ^mSig\.Rproj$
 ^\.Rproj\.user$
-data-raw
-README.Rmd
+^data-raw$
+^README.Rmd$
 ^\.travis\.yml$
+^mSigAct_.*\.pdf$

@@ -5,7 +5,7 @@ Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description: Analyze the "activities" of mutational signatures in one or more mutational spectra.
     'mSigAct' stands for mutational Signature Activity. mSigAct can estimate (conservatively) 
-    whether there is evidence that a particular set of mutational signatures are present in a 
+    whether there is evidence that a particular set of mutational signatures is present in a 
     spectrum. It can also determine a *minimal* subset of signatures needed to plausibly 
     reconstruct an observed spectrum. This sparse assign signatures functionality is 
     *deliberately biased* toward using as few signatures as possible.This package does not 
