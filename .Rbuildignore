@@ -4,3 +4,4 @@
 data-raw
 README.Rmd
 ^\.travis\.yml$
+^mSigAct_2\.0\.0\.pdf$
