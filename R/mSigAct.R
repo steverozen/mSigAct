@@ -368,9 +368,9 @@ NEW.VERSION.ObjFnBinomMaxLH2 <-
       reconstruction.estimate <- round(reconstruction.estimate)      
     }
     
-    loglh <- LLHSpectrumNegBinom(spectrum = spectrum, 
-                                 expected.counts = reconstruction.estimate,
-                                 nbinom.size = nbinom.size)
+    loglh <- mSigBG::LLHSpectrumNegBinom(spectrum = spectrum, 
+                                         expected.counts = reconstruction.estimate,
+                                         nbinom.size = nbinom.size)
     
     return(-loglh)
   }

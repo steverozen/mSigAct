@@ -44,9 +44,9 @@ ObjFnBinomMaxLH2 <-
   }
   stopifnot(!any(is.na(reconstruction)))
   
-  loglh <- LLHSpectrumNegBinom(spectrum = spectrum, 
-                                expected.counts = reconstruction,
-                                nbinom.size = nbinom.size)
-
+  loglh <- mSigBG::LLHSpectrumNegBinom(spectrum = spectrum, 
+                                       expected.counts = reconstruction,
+                                       nbinom.size = nbinom.size)
+  
   return(-loglh)
-}
+  }

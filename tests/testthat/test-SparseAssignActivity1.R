@@ -67,7 +67,7 @@ SparseAssignTest1 <- function(sig.counts,
               truth       = sig.counts,
               edist1      = EDist2Spect(SA.out, sig.names, spect),
               edist1r     = EDist2SpectRounded(SA.out, sig.names, spect),
-              LL1         = LLHSpectrumNegBinom(spect, recon1, nbinom.size) #,
+              LL1         = mSigBG::LLHSpectrumNegBinom(spect, recon1, nbinom.size) #,
               # LL2         = LLHSpectrumNegBinom(spect, recon2, nbinom.size),
               # edist2      = EDist2Spect(polish.out, sig.names2, spect),
               # ed8st2r     = EDist2SpectRounded(polish.out, sig.names2, spect)
