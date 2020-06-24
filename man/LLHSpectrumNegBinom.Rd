@@ -2,7 +2,7 @@
 % Please edit documentation in R/SeparateBackground.R
 \name{LLHSpectrumNegBinom}
 \alias{LLHSpectrumNegBinom}
-\title{Likelihood that \strong{1} observed spectrum was generated from a vector of expected counts.
+\title{Likelihood that \strong{1} observed spectrum was generated from a vector of expected mutation counts.
  
 Returns the sum of the negative binomial likelihoods
 that each each element of the
@@ -33,7 +33,7 @@ See \code{\link[stats]{NegBinomial}}.}
 \code{log(likelihood(spectrum | expected.counts))}
 }
 \description{
-Likelihood that \strong{1} observed spectrum was generated from a vector of expected counts.
+Likelihood that \strong{1} observed spectrum was generated from a vector of expected mutation counts.
  
 Returns the sum of the negative binomial likelihoods
 that each each element of the

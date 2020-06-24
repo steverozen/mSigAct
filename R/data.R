@@ -4,12 +4,12 @@
 #' @format A list with the elements \describe{
 #' \item{\code{background.sig}}{The background signature profile.}
 #' 
-#' \item{code{sig.nbinom.size}}{The dispersion parameter for the negative
+#' \item{\code{sig.nbinom.size}}{The dispersion parameter for the negative
 #'        binomial distribution for sampling error around
 #'        the components of \code{background.sig}. Smaller is more dispersed.
 #'        See \code{\link[stats]{NegBinomial}}.}
 #'
-#' \item{code{count.nbinom.mu}}{The \code{mu} argument
+#' \item{\code{count.nbinom.mu}}{The \code{mu} argument
 #'  for
 #' \code{\link[stats]{NegBinomial}} for the distribution
 #' of total counts due to \code{background.sig} across

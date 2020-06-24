@@ -1,4 +1,4 @@
-#' Likelihood that \strong{1} observed spectrum was generated from a vector of expected counts.
+#' Likelihood that \strong{1} observed spectrum was generated from a vector of expected mutation counts.
 #'  
 #' Returns the sum of the negative binomial likelihoods
 #' that each each element of the
@@ -211,7 +211,7 @@ SeparateSignatureFromBackground <-
     b.x0 <- start.b.fraction * colSums(spectra)
     est.target.sig.and.b.x0 <- c(sig0, b.x0)
     
-    # Each element of the singature <= 1.
+    # Each element of the signature <= 1.
     upper.bounds.of.target.sig <- rep(1, nrow(spectra))
     
     ret <- nloptr::nloptr(
@@ -284,7 +284,7 @@ ObjFn1 <- function(
     expected.counts <- 
       expected.bg.counts + (est.target.sig * (total.obs.count - b[i]))
     if (FALSE) { # Experimental code, if enabled, does not converge
-                 # (or converges very slowly).
+      # (or converges very slowly).
       bg.greater.than.spectrum <- which(expected.bg.counts > obs.spectrum)
       if (length(bg.greater.than.spectrum) > 0) {
         message("x")
@@ -297,7 +297,7 @@ ObjFn1 <- function(
  
     loglh2.i <- dnbinom(x    = round(b[i]), 
                         mu   = bg.sig.info$count.nbinom.mu,
-                        size = bg.sig.info$count.nbinom.size, # This is the dispersion paramater for the number of background signature mutations
+                        size = bg.sig.info$count.nbinom.size, # This is the dispersion parameter for the number of background signature mutations
                         log  = TRUE)
     
     loglh <- loglh + loglh1.i + loglh2.i
