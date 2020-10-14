@@ -1,5 +1,3 @@
-xx
-
 # mSigAct 2.0.0.9018
 
 * Had previously failed to export OptimizeExposure.
