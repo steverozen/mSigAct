@@ -42,6 +42,14 @@ SplitPCAWG7ExposureByType <- function(exp) {
   
 }
 
+ExposureDistributionsAllSigs <- function() {
+  for (signame in rownames(PCAWG7::exposure$PCAWG$SBS96)) {
+    
+    
+    
+  }
+}
+
 if (FALSE) {
   exp.by.type <- SplitPCAWG7ExposureByType(PCAWG7::exposure$PCAWG$SBS96)
   
