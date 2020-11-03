@@ -28,8 +28,7 @@ Imports:
     nloptr,
     stats,
     lsa,
-    sets,
-    mSigBG
+    sets
 Suggests: 
     devtools,
     testthat (>= 2.1.0),
