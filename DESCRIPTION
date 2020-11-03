@@ -20,7 +20,7 @@ Remotes: github::steverozen/PCAWG7,
     github::steverozen/ICAMS@master,
     github::steverozen/mSigBG
 Depends: R (>= 3.5),
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 biocViews:
 Imports:
