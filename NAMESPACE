@@ -2,6 +2,7 @@
 
 export(AnySigSubsetPresent)
 export(DefaultManyOpts)
+export(LLHSpectrumNegBinom)
 export(ObjFnBinomMaxLHMustRound)
 export(ObjFnBinomMaxLHNoRoundOK)
 export(OptimizeExposure)
@@ -23,4 +24,5 @@ importFrom(graphics,plot)
 importFrom(graphics,points)
 importFrom(graphics,text)
 importFrom(stats,cor)
+importFrom(stats,dnbinom)
 importFrom(stats,na.omit)
