@@ -20,6 +20,10 @@
 
   m.opts <- DefaultManyOpts()
 
+  library(profvis)
+
+  ww <- profvis(
+
   SA.out <- SparseAssignActivity1(spect       = spect,
                                   sigs         = some.sigs,
                                   eval_f       = ObjFnBinomMaxLHMustRound,
@@ -27,5 +31,8 @@
                                   max.level            = 1,
                                   max.mc.cores         = 1,
                                   num.parallel.samples = 1
-  )
+  ) )
+
+  htmlwidgets::saveWidget(ww, "0profile.ww.html")
+
 
