@@ -17,7 +17,7 @@ AnySigSubsetPresent(
 \item{spect}{The spectrum to be reconstructed, as single column matrix or
 \code{\link[ICAMS]{ICAMS}} catalog.}
 
-\item{all.sigs}{The matrix or catalog of all signatures of possible interest, 
+\item{all.sigs}{The matrix or catalog of all signatures of possible interest,
 which consist of the signatures for \eqn{H_0} and for the alternative
 hypotheses.}
 
@@ -25,7 +25,7 @@ hypotheses.}
 that are in the various \eqn{H_a}'s.}
 
 \item{eval_f}{Usually one of \code{\link{ObjFnBinomMaxLHNoRoundOK}}
-or \code{\link{ObjFnBinomMaxLHMustRound}}. 
+or \code{\link{ObjFnBinomMaxLHMustRound}}.
 For
 background see \code{\link[nloptr]{nloptr}}.}
 
@@ -51,25 +51,25 @@ A list with two elements: \describe{
 
 \item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of
   \code{Ha.sigs.indices}. Each sub-element is a list with elements that include \describe{
-  
+
   \item{\code{sigs.added}}{The identifiers of the (additional) signatures
        tested.}
-       
+
   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.} This
   this \eqn{p} value can be \code{NaN} when the likelihoods of (\eqn{H_0} and \eqn{H_a})
   are both \code{-Inf}. This can occur if there are are mutation classes in the spectra
   that are > 0 but that have 0 probability in all the available input signatures.
   This is unlikely to occur, since most spectra have non-0 (albeit very small)
-  probabilities for most mutation classes. This is not an error is using 
+  probabilities for most mutation classes. This is not an error is using
   \code{eval_f = ObjFnBinomMaxLHNoRoundOK}. However, if \code{p == NaN}
-  when using \code{eval_f = ObjFnBinomMaxLHMustRound}, switch to 
+  when using \code{eval_f = ObjFnBinomMaxLHMustRound}, switch to
   \code{ObjFnBinomMaxLHNoRoundOK}.
-  
-  \item{\code{df}}{The degrees of freedom of the likelihood-ratio test 
+
+  \item{\code{df}}{The degrees of freedom of the likelihood-ratio test
      (equal to the number of signatures in \code{sigs.added}).}
      }
-  
-  
+
+
 }}
 
 
@@ -82,11 +82,11 @@ Please see \strong{Details}.
 \details{
 Let \eqn{H_0} be the likelihood that
 the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
-generated the observed spectrum, \code{spect}.  
+generated the observed spectrum, \code{spect}.
 For each non-empty subset, \eqn{S},
 of \code{Ha.sigs.indices} let \eqn{H_a}
 be the likelihood that all the signatures in \eqn{H_0}
 plus the signatures specified by \eqn{S} generated \code{spect}.
-Return a list with the results of likelihood ratio tests of 
+Return a list with the results of likelihood ratio tests of
 all \eqn{H_a}'s against \eqn{H_0}.
 }

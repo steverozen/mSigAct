@@ -24,13 +24,13 @@ This could be
 \item{target.sig.index}{The index of the signature the presence
 of which we want to test.}
 
-\item{m.opts}{If \code{NULL} use the return from 
+\item{m.opts}{If \code{NULL} use the return from
 calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 
-\item{mc.cores}{Number of cores to use. Always silently 
+\item{mc.cores}{Number of cores to use. Always silently
 changed to 1 on Microsoft Windows.}
 }
 \description{

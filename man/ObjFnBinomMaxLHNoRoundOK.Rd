@@ -20,13 +20,13 @@ See \code{\link[stats]{NegBinomial}}.}
 \value{
 -1 * log(likelihood(spectrum | reconstruction))
 
-\code{\link[nloptr]{nloptr}} minimizes the objective function, so the 
+\code{\link[nloptr]{nloptr}} minimizes the objective function, so the
 lower the objective function, the better.
 }
 \description{
 Can be used as the
 objective function for \code{\link{SparseAssignActivity}},
-\code{\link{SparseAssignActivity1}}, 
+\code{\link{SparseAssignActivity1}},
 and \code{\link{SignaturePresenceTest1}}.
 (Internally used by by \code{\link[nloptr]{nloptr}}.)
 }
