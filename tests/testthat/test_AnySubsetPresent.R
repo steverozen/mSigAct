@@ -1,5 +1,3 @@
-context("test-AnySubsetPresent.R")
-
 TestEsoSpectra <- function(indices = NULL) {
   eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
   spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
@@ -26,22 +24,22 @@ TestEsoSigs <- function(extra.sigs = NULL) {
 }
 
 TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
-  
+
   stopifnot(length(eso.indices) == 1)
   eso.spectra <- TestEsoSpectra(eso.indices)
-  
+
   m.opts <- DefaultManyOpts()
-  
+
   sigs.plus <- TestEsoSigs(extra.sig)
-  set.seed(101010, kind = "L'Ecuyer-CMRG") 
+  set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval1 <- mSigAct::SignaturePresenceTest(
-    spectra          = eso.spectra, 
+    spectra          = eso.spectra,
     sigs             = sigs.plus,
-    target.sig.index = 1, 
-    m.opts           = m.opts, 
-    eval_f           = ObjFnBinomMaxLHNoRoundOK, 
+    target.sig.index = 1,
+    m.opts           = m.opts,
+    eval_f           = ObjFnBinomMaxLHNoRoundOK,
     mc.cores         = 1)
-  
+
   set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval2 <- SignaturePresenceTest1(
     spectrum         = eso.spectra,
@@ -49,40 +47,39 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
     target.sig.index = 1,
     m.opts           = m.opts,
     eval_f           = ObjFnBinomMaxLHNoRoundOK)
-  
+
   stopifnot(all.equal(
-    retval1$`Eso-AdenoCA::SP111062`$chisq.p, 
+    retval1$`Eso-AdenoCA::SP111062`$chisq.p,
     retval2$chisq.p))
-  
+
   return(list(test = retval1, test1 = retval2))
 }
 
 TestAny1 <- function(extra.sig, eso.index) {
-  
+
   eso.spectra <- TestEsoSpectra(eso.index)
-  
+
   m.opts <- DefaultManyOpts()
-  
+
   sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
-  
-  set.seed(101010, kind = "L'Ecuyer-CMRG")  
+
+  set.seed(101010, kind = "L'Ecuyer-CMRG")
   out <- AnySigSubsetPresent(spect           = eso.spectra,
                              all.sigs        = sigs.plus,
                              Ha.sigs.indices = 1:length(extra.sig),
                              eval_f          = mSigAct::ObjFnBinomMaxLHNoRoundOK,
                              m.opts          = m.opts,
                              max.mc.cores    = 1) # Travis-CI will not use multiple cores
-  
+
   return(out)
 }
 
 test_that("TestAny1 and TestSignaturePresenceTest on SBS17a in esophageal sample 1", {
   any.retval <- TestAny1("SBS17a", 1)
-  expect_equal(any.retval$all.Ha.info[[1]]$p, 0.09520268)
-  # TestSigPresenceTests compares ressults for 
+  expect_equal(any.retval$all.Ha.info[[1]]$p, 0.09483776)
   spt.retval <- TestSignaturePresenceTestDouble("SBS17a", 1)
-  expect_equal(spt.retval$test1$chisq.p, 0.09520268)
- 
+  expect_equal(spt.retval$test1$chisq.p, 0.09483776)
+
 })
 
 test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
@@ -92,10 +89,10 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   expect_equal(any.retval2$all.Ha.info[[1]]$sigs.added,
                "SBS17a")
   expect_equal(any.retval2$all.Ha.info[[1]]$p,
-               0.09520268)
+               0.09483776)
   expect_equal(any.retval2$all.Ha.info[[2]]$p,
                0.0009874463)
   expect_equal(any.retval2$all.Ha.info[[3]]$p,
-               0.001310515)
+               0.001309485)
 })
 

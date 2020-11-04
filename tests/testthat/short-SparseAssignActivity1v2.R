@@ -20,20 +20,15 @@ spect <-
 
 m.opts <- DefaultManyOpts()
 
-library(profvis)
-
-ww <- profvis::profvis(
-
-   SparseAssignActivity1(spect       = spect,
+system.time({
+   SA.out <- SparseAssignActivity1(spect       = spect,
                                   sigs         = some.sigs,
                                   eval_f       = ObjFnBinomMaxLHMustRound,
                                   m.opts       = m.opts,
                                   max.level            = 1,
-                                  max.mc.cores         = 1
-  ))
+                                  max.mc.cores         = 1) })
 
 
-htmlwidgets::saveWidget(ww, "00profile.ww.html")
 
 
 
