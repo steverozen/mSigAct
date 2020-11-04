@@ -18,13 +18,13 @@ spect <-
     region       = region,
     catalog.type = "counts")
 
-m.opts <- DefaultManyOpts()
+m.opts <- mSigAct::DefaultManyOpts()
 
 library(profvis)
 
 ww <- profvis::profvis(
 
-   SparseAssignActivity1(spect       = spect,
+   mSigAct::SparseAssignActivity1(spect       = spect,
                                   sigs         = some.sigs,
                                   eval_f       = ObjFnBinomMaxLHMustRound,
                                   m.opts       = m.opts,
