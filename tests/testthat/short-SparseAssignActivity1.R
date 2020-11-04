@@ -18,19 +18,22 @@ spect <-
     region       = region,
     catalog.type = "counts")
 
+library(mSigAct)
+sessionInfo()
+
 m.opts <- mSigAct::DefaultManyOpts()
 
 library(profvis)
 
 ww <- profvis::profvis(
-
-   mSigAct::SparseAssignActivity1(spect       = spect,
+   mSigAct:::SparseAssignActivity1(spect       = spect,
                                   sigs         = some.sigs,
                                   eval_f       = ObjFnBinomMaxLHMustRound,
                                   m.opts       = m.opts,
                                   max.level            = 1,
-                                  max.mc.cores         = 1
-  ))
+                                  max.mc.cores         = 1),
+    prof_output = "out.Rprof"
+ )
 
 
 htmlwidgets::saveWidget(ww, "00profile.ww.html")
