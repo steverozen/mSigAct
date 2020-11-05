@@ -1,14 +1,12 @@
-context("test-LogLHAndExposure.R test one.lh.and.exp()")
-
 PrepOneSynSpectrum <- function(sig.counts,
                                input.sigs = PCAWG7::signature$genome$SBS96) {
-  
+
   sig.names <- names(sig.counts)
-  
+
   if (sum(sig.names %in% colnames(input.sigs)) == 0) {
     stop("sig.names not all in input.sigs")
   }
-  
+
   some.sigs  <- input.sigs[ , sig.names, drop = FALSE]
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
@@ -16,43 +14,43 @@ PrepOneSynSpectrum <- function(sig.counts,
     message("Null region, why?")
     region <- "genome"
   }
-  
+
   spectrum <- round(some.sigs %*% sig.counts)
   spectrum <-
     ICAMS::as.catalog(
-      object       = spectrum, 
+      object       = spectrum,
       ref.genome   = ref.genome,
       region       = region,
       catalog.type = "counts")
-  
+
   return(list(sigs = some.sigs, spec = spectrum))
 }
 
 TestOneLLHetc <- function(sig.counts,
                           input.sigs = PCAWG7::signature$genome$SBS96,
-                          # eval_f     = ObjFnBinomMaxLHNoRoundOK, 
+                          # eval_f     = ObjFnBinomMaxLHNoRoundOK,
                           eval_f     = ObjFnBinomMaxLHMustRound,
                           trace = 0) {
-  
+
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,
                                   input.sigs = input.sigs)
-  
-  
+
+
   m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
-  
-  retval <- one.lh.and.exp(
+
+  retval <- OptimizeExposure(
     spect  = test.data$spec,
-    sigs   = test.data$sigs, 
+    sigs   = test.data$sigs,
     m.opts = m.opts,
     eval_f = eval_f)
-  
-  new.rec <- 
+
+  new.rec <-
     mSigAct:::prop.reconstruct(exp = retval$exposure, sigs = test.data$sigs)
-  
+
   xx <- rbind(test.data$spec[ ,1], round(new.rec)[, 1])
   edist <- stats::dist(xx, method = "euclidean")
- 
+
   return(c(retval, list(m.opts = m.opts, edist = edist)))
 }
 
