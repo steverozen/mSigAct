@@ -7,7 +7,7 @@
 OptimizeExposure(spectrum, sigs, m.opts, eval_f, ...)
 }
 \arguments{
-\item{spectrum}{The spectrum to be reconsructed.}
+\item{spectrum}{The spectrum to be reconstructed.}
 
 \item{sigs}{The available signatures.}
 

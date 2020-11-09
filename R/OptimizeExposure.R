@@ -33,7 +33,7 @@ OptimizeExposure <- function(spectrum,
 
   stopifnot(mode(spectrum) == "numeric")
 
-  r <- new.Nloptr1Tumor(spectrum = spectrum,
+  r <- Nloptr1Tumor(spectrum = spectrum,
                     sigs,
                     m.opts = m.opts,
                     eval_f      = eval_f,
@@ -60,7 +60,7 @@ OptimizeExposure <- function(spectrum,
 #' @inheritParams OptimizeExposure
 #'
 #' @keywords internal
-new.Nloptr1Tumor <- function(spectrum,
+Nloptr1Tumor <- function(spectrum,
                          sigs,
                          m.opts = NULL,
                          eval_f,
@@ -94,8 +94,9 @@ new.Nloptr1Tumor <- function(spectrum,
     # (Each signature gets the same number of mutations)
     x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
   } else {
+    stop("This branch does not work")
     # We get x0 that minimizes the Frobenius norm
-    x0 <- sum(spectrum) * as.vector(ICAMS.shiny:::findSigExposures(M = spectrum, P = sigs)$exposures)
+    # x0 <- sum(spectrum) * as.vector(ICAMS.shiny:::findSigExposures(M = spectrum, P = sigs)$exposures)
     message("QP estimate is ", paste(x0, collapse = " "))
     m.opts$global.opts$maxeval <- 1
     m.opts$local.opts$maxeval <- 30000  }

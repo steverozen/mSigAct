@@ -51,3 +51,48 @@ ObjFnBinomMaxLH2 <-
 
   return(-loglh)
   }
+
+#' A deprecated negative binomial maximum likelihood objective function.
+#'
+#' Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
+#'
+#' This function will lead to errors in some situations
+#' when the rounded reconstructed signature contains 0s for
+#' mutations classes for which the target spectrum is > 0.
+#'
+#' @inheritParams ObjFnBinomMaxLHNoRoundOK
+#'
+#' @export
+#'
+ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
+}
+
+#' The preferred negative binomial maximum likelihood objective function.
+#'
+#' Can be used as the
+#' objective function for \code{\link{SparseAssignActivity}},
+#' \code{\link{SparseAssignActivity1}},
+#' and \code{\link{SignaturePresenceTest1}}.
+#' (Internally used by by \code{\link[nloptr]{nloptr}}.)
+#'
+#' @return
+#'
+#' -1 * log(likelihood(spectrum | reconstruction))
+#'
+#' \code{\link[nloptr]{nloptr}} minimizes the objective function, so the
+#' lower the objective function, the better.
+#'
+#' @param exp The matrix of exposures ("activities").
+#' @param spectrum The spectrum to assess.
+#' @param sigs The matrix of signatures.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
+#'
+#' @export
+#'
+ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE)
+}
+

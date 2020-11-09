@@ -59,11 +59,22 @@ SparseAssignActivity <-
                                f1,
                                mc.cores = num.parallel.samples)
 
-  # TODO Steve harden by checking for errors in the retval
+  for (i in 1:length(retval)) {
+    if (is.null(retval[[i]])) {
+      stop("Got NULL return for ", colnames(spectra)[i])
+    }
+    if ("try-error" %in% class(retval[[i]])) {
+      message("Got try-error return for ", colnames(spectra)[i])
+      print(retval[i])
+      stop()
+    }
+  }
 
+  other.info <- lapply(retval, attributes)
   retval2 <- matrix(unlist(retval), ncol = length(retval))
   colnames(retval2) <- colnames(spectra)
   rownames(retval2) <- colnames(sigs)
 
-  return(list(exposure = retval2))
+  return(list(exposure = retval2, other.info = other.info))
 }
+

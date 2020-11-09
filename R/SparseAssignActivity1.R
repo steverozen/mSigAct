@@ -32,6 +32,14 @@ SparseAssignActivity1 <- function(spect,
                             eval_f  = eval_f,
                             m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
+  if (lh.w.all == -Inf) {
+    problem <- "Cannot generate spect from sigs"
+    message(problem)
+    rr <- rep(NaN, ncol(sigs))
+    attr(rr, "log.likelihood") <- lh.w.all
+    attr(rr, "problem") <- problem
+    return(rr)
+  }
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
                                             # expsoures； TODO, possibly remove
@@ -115,7 +123,7 @@ SparseAssignActivity1 <- function(spect,
   }
 
   # Need to return the exposures in the context of the
-  # orginal signatures matrix
+  # original signatures matrix
   out.exp <- numeric(ncol(sigs)) #all zeros
   names(out.exp) <- colnames(sigs)
   max.df <- length(best.sig.indices)

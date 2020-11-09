@@ -41,6 +41,87 @@ DefaultManyOpts <- function() {
   ))
 }
 
+#' Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.
+#'
+#' @inheritParams OptimizeExposure
+#'
+#' @keywords internal
+old.Nloptr1Tumor <- function(spectrum,
+                         sigs,
+                         m.opts = NULL,
+                         eval_f,
+                         ... ) {
+  if (!"matrix" %in% class(sigs)) {
+    if (!"numeric" %in% class(sigs)) {
+      stop("Unexpected class argument: ", class(sigs))
+    }
+    # Otherwise sigs is a numeric vector, not a matrix. We assume the caller
+    # intended it as a single column matrix.
+    sigs <- matrix(sigs, ncol = 1)
+  }
+
+  if (nrow(sigs) != length(spectrum)) {
+    # If we get here there is an error. We save specturm and sigs, which seems
+    # useful for debugging in a call to mclapply (multi-core lapply).
+    save(spectrum, sigs, file = 'spectrum.sigs.debug.Rdata')
+    stop("nrow(sigs) != length(spectrum), look in file spectrum.sigs.debug.Rdata")
+  }
+
+  stopifnot(mode(spectrum) == "numeric")
+  foo <- spectrum
+  storage.mode(spectrum) <- "double"
+  stopifnot(foo == spectrum)
+
+  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
+
+  # x0 is uniform distribution of mutations across signatures
+  # (Each signature gets the same number of mutations)
+  x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
+
+  if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED DISABLE THIS BRANCH
+
+    global.res <- nloptr::nloptr(
+      x0       = x0,
+      eval_f   = eval_f,
+      lb       = rep(0, ncol(sigs)),
+      ub       = rep(sum(spectrum), ncol(sigs)),
+      opts     = m.opts$global.opts,
+      spectrum = spectrum,
+      sigs     = sigs,
+      ...)
+    if (m.opts$trace > 0) {
+      message("globa.res$objective = ", global.res$objective)
+    }
+    if (global.res$iterations == m.opts$global.opts[["maxeval"]]) {
+      # warning("reached maxeval on global optimization: ", global.res$iterations)
+    }
+  }
+
+  local.res <- nloptr::nloptr(
+    # x0=x0,
+    x0       = global.res$solution,
+    eval_f   = eval_f,
+    lb       = rep(0, ncol(sigs)),
+    ub       = rep(sum(spectrum) + 1e-2, ncol(sigs)),
+    opts     = m.opts$local.opts,
+    spectrum = spectrum,
+    sigs     = sigs,
+    ...)
+  if (m.opts$trace > 0)
+    message("local.res$objective = ", local.res$objective)
+
+  if (local.res$iterations == m.opts$local.opts[["maxeval"]]) {
+    warning("reached maxeval on local optimization: ", local.res$iterations)
+  }
+
+  names(local.res$solution) <- colnames(sigs)
+  return(list(objective =  local.res$objective,
+              solution   = local.res$solution,
+              global.res = global.res,
+              local.res  = local.res))
+}
+
+
 # Helper function, given signatures (sigs) and exposures (exp), return a
 # *proportional* reconstruction; in general, it is *not necessarily* scaled to
 # the actual spectrum counts.
@@ -50,6 +131,50 @@ DefaultManyOpts <- function() {
 prop.reconstruct <- function(sigs, exp) {
   stopifnot(length(exp) == ncol(sigs))
   return(as.matrix(sigs) %*% exp)
+}
+
+#' A deprecated negative binomial maximum likelihood objective function.
+#'
+#' Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
+#'
+#' This function will lead to errors in some situations
+#' when the rounded reconstructed signature contains 0s for
+#' mutations classes for which the target spectrum is > 0.
+#'
+#' @inheritParams ObjFnBinomMaxLHNoRoundOK
+#'
+#' @export
+#'
+ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
+}
+
+#' The preferred negative binomial maximum likelihood objective function.
+#'
+#' Can be used as the
+#' objective function for \code{\link{SparseAssignActivity}},
+#' \code{\link{SparseAssignActivity1}},
+#' and \code{\link{SignaturePresenceTest1}}.
+#' (Internally used by by \code{\link[nloptr]{nloptr}}.)
+#'
+#' @return
+#'
+#' -1 * log(likelihood(spectrum | reconstruction))
+#'
+#' \code{\link[nloptr]{nloptr}} minimizes the objective function, so the
+#' lower the objective function, the better.
+#'
+#' @param exp The matrix of exposures ("activities").
+#' @param spectrum The spectrum to assess.
+#' @param sigs The matrix of signatures.
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
+#'
+#' @export
+#'
+ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE)
 }
 
 #' Euclidean reconstruction error.
