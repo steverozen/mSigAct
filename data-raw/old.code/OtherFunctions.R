@@ -17,11 +17,13 @@
 
 #' Analyze and plot a group of spectra
 #'
+#' Very old code and not currently tested.
+#'
 #' @keywords internal
-#' 
-#' @importFrom graphics hist 
+#'
+#' @importFrom graphics hist
 #' @importFrom grDevices pdf dev.off
-#' 
+#'
 mSigOneGroup <- function(spectra,
                          sigs,
                          target.sig.name,
@@ -33,25 +35,25 @@ mSigOneGroup <- function(spectra,
                          num.parallel.samples = 5,
                          sig.presence.mc.cores = 100,
                          mc.cores.per.sample = NULL) {
-  
+
   target.sig.index <- which(colnames(sigs) == target.sig.name)
   # check if signatures sum to 1
-  
+
   if (!all.equal(as.vector(colSums(sigs)),
-                 rep(1, ncol(sigs)), 
+                 rep(1, ncol(sigs)),
                  tolerance = 1e-12)) {
     stop("In mSigOneGroup, sigs does not seem to be a signature catalog")
   }
 
   # Need to match exactly one signature name
   stopifnot(length(target.sig.index) == 1)
-  
+
   s.spectra <- sort.spectra.columns(spectra)
   s.spectra.to.list <- split(t(s.spectra), 1:ncol(s.spectra))
-  
+
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
   m.opts$trace <- trace
-  
+
   out.res <-
     parallel::mclapply(
       X                = s.spectra.to.list,
@@ -60,28 +62,28 @@ mSigOneGroup <- function(spectra,
       target.sig.index = target.sig.index,
       m.opts           = m.opts,
       eval_f           = eval_f)
-  
+
   out.pvals  <- lapply(out.res, function(x) x$chisq.p)
   names(out.pvals)  <- colnames(s.spectra)
-  
+
   low.pval <- which(out.pvals < 0.05)
   if (length(low.pval) > 0) {
     # Have to wrap column-wise index of s.spectra in as.matrix in case
     # length(low.pval) == 1, in which case indexing returns a vector
-    
+
     check.w.sig <- s.spectra[, low.pval, drop = FALSE]
     # The column names are lost if length(low.pval) == 1
     colnames(check.w.sig) = colnames(s.spectra)[low.pval]
     spec.path <- paste(path.root, 'check.with.sig.pdf', sep = '.')
-    
+
     catalog <- ICAMS::as.catalog(
       object = check.w.sig,
       ref.genome = BSgenome.Hsapiens.1000genomes.hs37d5::BSgenome.Hsapiens.1000genomes.hs37d5,
       region = "exome", catalog.type = "counts")
-    
+
     ICAMS::PlotCatalogToPdf(catalog = catalog, file = spec.path)
   }
-  
+
   out.exp <- SparseAssignActivity(
     spectra  = s.spectra.to.list,
     sigs     = sigs,
@@ -93,13 +95,13 @@ mSigOneGroup <- function(spectra,
   out.exp  <-  do.call(cbind, out.exp)
   colnames(out.exp)  <-  colnames(s.spectra)
   sanity.check.ex(s.spectra, sigs, out.exp)
-  
+
   # Plotting part
   hist.path <- paste(path.root, 'pval.histogram.pdf', sep = '.')
   pdf(hist.path, useDingbats = F)
   hist(out.pvals, breaks = seq(from = 0, to = 1, by = 0.01))
   dev.off()
-  
+
   approx.num.per.row <- 30
   starts <- seq(from = 1, to = ncol(s.spectra), by = approx.num.per.row)
   ranges <-
@@ -111,16 +113,16 @@ mSigOneGroup <- function(spectra,
   pdf.ex.by.range(exp.path, s.spectra, sigs, exp = out.exp,
                   ranges = ranges, col = col)
   recon.path <- paste(path.root, 'reconstruction.err.pdf', sep = '.')
-  
+
   plot.recon.by.range(recon.path,
                       s.spectra,
                       sigs,
                       out.exp,
                       range  = ranges,
-                      obj.fun = ObjFnBinomMaxLHMustRound,
+                      obj.fun = ObjFnBinomMaxLHNoRoundOK,
                       nbinom.size = DefaultManyOpts()$nbinom.size
                       )
-  
+
   return(list(pval = out.pvals, exposure = out.exp))
 }
 
@@ -421,8 +423,8 @@ mSigAct.basic.test <- function() {
              c("Signature.1", "Signature.4", "Signature.5",
                "Signature.6", "Signature.12", "Signature.16", "Signature.17",
                "Signature.AA", "Signature.23", "Signature.24")))
-  
-  
+
+
   short.taiwan.hcc2 <-
     structure(
       c(0, 2, 0, 3, 0, 1, 0, 1, 0, 0, 0, 1, 1,
@@ -509,20 +511,20 @@ mSigAct.basic.test <- function() {
              c("T68", "T41",
                "T74", "T16", "T46", "T82", "T50", "T15", "T24", "T80", "T95"
              )))
-  
+
   m.opts <- DefaultManyOpts()
-  
+
   short.analysis <-
     mSigOneGroup(
       spectra               = short.taiwan.hcc2,
       sigs                  = liver.wes.sigs,
       target.sig.name       = 'Signature.AA',
       path.root             = 'mSigAct.basic.test.short.analysis',
-      eval_f                = ObjFnBinomMaxLHMustRound,
+      eval_f                = ObjFnBinomMaxLHNoRoundOK,
       num.parallel.samples  = 1,
       sig.presence.mc.cores = 1,
       m.opts                = m.opts)
-  
+
   expected.short.pval <-
     structure(c(0.036297099364187, 0.76185665842143, 0.000540732195433939,
                 0.999999809769497, 0.000672367936677276, 0.999997831038551, 0.120653696546247,
@@ -531,7 +533,7 @@ mSigAct.basic.test <- function() {
                   "T15", "T24", "T80", "T95"))
   #cat(short.analysis$pval)
   stopifnot(all.equal(short.analysis$pval, expected.short.pval, tolerance = 0.005))
-  
+
   expected.exp <-
     structure(c(10.5883215430212, 0, 43.0167421150595, 0, 0, 0, 0,
                 6.39493634191927, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -550,33 +552,33 @@ mSigAct.basic.test <- function() {
              "Signature.17", "Signature.AA", "Signature.23", "Signature.24"
       ), c("T68", "T41", "T74", "T16", "T46", "T82", "T50", "T15",
            "T24", "T80", "T95")))
-  
+
   stopifnot(all(all.equal(short.analysis$exposure, expected.exp, tolerance = 0.005)))
-  
+
   # Create a spectrum that has only one signature, and a matrix of spectra that has only
   # one spectrum. These conditions often exercise errors.
   degenerate.spectrum <-
     matrix(c(round(liver.wes.sigs[ , 'Signature.AA'] * 1000, digits = 0),
              round(liver.wes.sigs[ , 'Signature.AA'] * 500, digits = 0)),
            ncol = 2)
-  
+
   colnames(degenerate.spectrum) <-  c('Test1', 'Test2')
   rownames(degenerate.spectrum) <-  row.names(short.taiwan.hcc2)
-  
+
   degenerate.analysis <-
     mSigOneGroup(spectra             = degenerate.spectrum,
                  sigs                = liver.wes.sigs,
                  target.sig.name     = 'Signature.AA',
                  path.root           = 'mSigAct.basic.test.degenerate',
-                 eval_f              = ObjFnBinomMaxLHMustRound,
+                 eval_f              = ObjFnBinomMaxLHNoRoundOK,
                  m.opts              = m.opts,
                  mc.cores.per.sample = 1)
-  
+
   degenerate.expected <-
     structure(list(pval = structure(c(2.59102885448936e-167, 3.85329163031964e-123
     ), .Names =
       c("Test1", "Test2")),
-    
+
     exposure =
       structure(
         c(0.000000000000000000000000000167494431721009,
@@ -595,9 +597,9 @@ mSigAct.basic.test <- function() {
                  "Signature.24"), c("Test1", "Test2")))),
     .Names = c("pval",
                "exposure"))
-  
+
   stopifnot(all(all.equal(degenerate.analysis, degenerate.expected, tolerance = 0.005)))
-  
+
 }
 
 # works for spectrum or exposure matrices (columns are samples)
@@ -655,7 +657,7 @@ plot.ex.by.range <- function(spectrum,
                      ylab = ylab, xlab = xlab)
       first = FALSE
     } else {
-      plot.exposures(exp[ ,range], signatures = sigs, 
+      plot.exposures(exp[ ,range], signatures = sigs,
                      input.genomes = spectrum[ , range],
                      plot.proprtion = FALSE,
                      plot.legend = FALSE,
@@ -692,7 +694,7 @@ plot.recon.by.range <- function(path, spect, sigs, ex, range,
     mar=c(1.5,1.1,4.6,1), # space between plot and figure, for axis labels etc
     oma=c(4,6,3,3) # outer margin between figure and device.
   )
-  
+
   for (r in range) {
     plot.recon.and.loglh(spect, sigs, ex, r #,
                          #eval_f = eval_f,
@@ -706,14 +708,14 @@ plot.recon.by.range <- function(path, spect, sigs, ex, range,
 plot.recon.and.loglh <- function(spect, sigs, ex, range #,
                                  # obj.fun,
                                  # nbinom.size
-                                  ) { 
+                                  ) {
   plot.reconstruction(signatures      = sigs,
                       exposures.mat   = ex[ , range, drop = FALSE],
                       input.genomes   = spect[ , range, drop = FALSE],
                       normalize.recon = T)
-  
-  
-  
+
+
+
   # neg.ll <- compute.all.neg.log.lh(spect[ ,range,drop=F], sigs=sigs,
   #                                 exp = ex[ , range, drop=F],
   #                                 obj.fun=obj.fun,
@@ -725,7 +727,7 @@ plot.recon.and.loglh <- function(spect, sigs, ex, range #,
   #abline(v=l.range, lty=3)
 }
 
-plot.exposures <- 
+plot.exposures <-
   function(s.weights, # This is actually the exposure "counts"
            # (or floats approximating the exposure counts)
            signames=NULL,
@@ -740,17 +742,17 @@ plot.exposures <-
            xlab=NULL,
            col=NULL
   ) {
-    
+
     # note - might be reals > 1, not necessary colSum==1
     s.weights <- as.matrix(s.weights) # in case it is a data frame
     num.sigs = dim(s.weights)[1]
     num.samples = dim(s.weights)[2]
-    
+
     if (is.null(col)) {
       if (num.sigs <= 8) {
         col = # c('skyblue', 'black', 'grey', 'yellow', 'blue', 'brown', 'green4', 'red')
           c('red', 'black', 'grey', 'yellow', 'blue', 'brown', 'green4', 'skyblue')
-        
+
       } else {
         # lots of signatures; use shaded lines to differentiate
         col = rainbow(num.sigs)
@@ -769,7 +771,7 @@ plot.exposures <-
     num.repeats = ceiling(num.sigs/length(p.dense))
     p.dense.rev = rev(rep(p.dense,num.repeats)[1:num.sigs])
     p.angle.rev = rev(rep(p.angle,num.repeats)[1:num.sigs])
-    
+
     # add names (if not already set as row.names in the original input frame)
     # for sorting. (needs a "Sample" column in the signature_proportions frame)
     # if (length(colnames(s.weights))==0) colnames(s.weights) = signature_proportions$Sample
@@ -785,13 +787,13 @@ plot.exposures <-
     }
     l.cex = if (num.sigs > 15) .5 else 1 # char expansion for legend (was 0.7)
     direction = 2 # 1=always horizontal, 2=perpendicular to axis
-    
+
     # if we weights file and counts file have samples in different order
     if (!all(colnames(s.weights)==colnames(input.genomes))) {
       input.genomes = input.genomes[,colnames(s.weights)]
       warning('weights file and counts file are ordered differently; re-ordering counts.')
     }
-    
+
     # ignore column names; we'll plot them separately to make them fit
     bp = barplot(s.weights,
                  ylim=ylim,
@@ -804,11 +806,11 @@ plot.exposures <-
                  density=p.dense, angle=p.angle,
                  border=ifelse(num.samples>200,NA,1),
                  main=main, cex.main=1.2)
-    
+
     # get max y values for plot region, put legend at top right
     dims = par('usr') # c(x.min, x.max, y.min, y.max)
     y.max = dims[4]
-    
+
     if (plot.legend) {
       # less space between rows (y.intersp), and between box & label (x.intersp)
       # reverse the order, so sig 1 is at bottom (to match bargraph)
@@ -823,7 +825,7 @@ plot.exposures <-
              bty='n', cex=l.cex * 0.9)
       text(x=legend.x, y = legend.y, "Mutational signature", adj=-0.09)
     }
-    
+
     # now add sample names, rotated to hopefully fit
     # don't even try to show all if there are too many
     if (num.samples <= 200) {
@@ -835,7 +837,7 @@ plot.exposures <-
       else size.adj = .3
       mtext(colnames(s.weights), side=1, at=bp, las=direction, cex=size.adj)
     }
-    
+
     if (plot.proprtion) {
       # add proportion panel; eg col should sum() to 1. matrix divided by
       # a vector goes col-wise, not row-wise, so transpose twice :(
@@ -843,13 +845,13 @@ plot.exposures <-
                    density=p.dense, angle=p.angle.rev,
                    main='', axisnames=F, border=NA)
     }
-    
+
   }
 
 #' Plot information about reconstructed spectrum
-#' 
+#'
 #' @keywords internal
-#' 
+#'
 #' @importFrom graphics barplot legend mtext points text
 #' @importFrom stats cor na.omit
 #' @importFrom grDevices rainbow
@@ -860,20 +862,20 @@ plot.reconstruction <-
            normalize.recon, # Normalize to the number of mutations in the spectrum
            padding=0          # How many samples wide the plot should be. (we'll add empty
   ) {
-    
+
     num.sigs = ncol(signatures)
     num.samples = ncol(input.genomes)
     recon = signatures %*% exposures.mat
     # original matrix with mutation class counts per sample
     mat = input.genomes # as.matrix(input.genomes)
-    
+
     # Calculate reconstruction errors
     cos.sim = sapply(1:num.samples, function(i) lsa::cosine(mat[,i], recon[,i]) )
     pearson.cor = sapply(1:num.samples, function(i) cor(mat[,i], recon[,i], method='pearson') )
-    
+
     # Euclidian distance
     Eu.dist = apply(mat - recon, 2, function(x) sqrt(sum((x)^2)) ) # raw dist
-    
+
     # KL divergence:
     norm.mat = mat/colSums(mat) # normalized by total number of mutations
     norm.recon = recon/sum(recon)
@@ -887,12 +889,12 @@ plot.reconstruction <-
                        log(norm.mat[!zero,i]/norm.recon[!zero,i]) )
       }
     }
-    
+
     if (normalize.recon) {
       Eu.dist <- Eu.dist / colSums(mat)
       # kl <- kl / colSums(mat)
     }
-    
+
     if (padding && ncol(mat) < padding) {
       # add empty columns so that reconstruction error plots have the
       # samples lined up with the exposure/proportion plots. (Eg if plotting
@@ -907,13 +909,13 @@ plot.reconstruction <-
     # don't need so much top/bottom margin space for these 2 plots
     # new.mar = par('mar'); new.mar[1] = 2; new.mar[3] = 2
     # old.pars = par(mar=new.mar)
-    
+
     # plot the cosine and pearson on the same figure, since they are both 0<=x<=1
-    
+
     y.low <- min(c(cos.sim, pearson.cor)) - 0.1
-    
+
     if (is.na(y.low)) {y.low = 0}
-    
+
     plot(cos.sim, type='p', pch=16, col='grey50', main='Reconstruction error',
          ylim=c(y.low, 1),
          xlab='',
@@ -929,8 +931,8 @@ plot.reconstruction <-
     legend(0.1 * length(cos.sim), y.low + (1 - y.low) * .25,
            legend=c('Cosine similarity',"Pearson corr."),
            col=c('grey50','black'), pch=c(16,1), xpd=NA, bty='n')
-    
-    
+
+
     if (normalize.recon) {
       Eu.label = 'Euclidean dist / number of mutations'
       # kl.label = 'KL divergence / number of mutations'
@@ -955,8 +957,8 @@ plot.reconstruction <-
     legend(0.1 * length(kl), 0.25 * eu.max,legend=c(Eu.label, kl.label),
            col=c('red', 'blue'), pch=16, xpd=NA, bty='n')
     ## add text to second y axis
-    
+
     axis(4, ylim=c(0, eu.max), col.axis='red', las=1)
-    
+
   }
 

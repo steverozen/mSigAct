@@ -10,7 +10,8 @@ ObjFnBinomMaxLH2(
   sigs,
   nbinom.size,
   no.round.ok = FALSE,
-  show.warning = FALSE
+  show.warning = FALSE,
+  always.round = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ counts in the reconstructed spectrum.}
 
 \item{show.warning}{If \code{TRUE} print warning if unrounded
 reconstructions were used.}
+
+\item{always.round}{Ignore \code{no.round.ok} and always
+round; for experimenting and may be removed in future versions.}
 }
 \description{
 For use by \code{\link[nloptr]{nloptr}}

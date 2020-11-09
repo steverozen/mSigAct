@@ -4,7 +4,7 @@
 #'
 #' @param sigs The available signatures.
 #'
-#' @param m.opts Options that govern the numerical optimizaiton.
+#' @param m.opts Options that govern the numerical optimization.
 #'    For documentation see \code{\link{DefaultManyOpts}}.
 #'
 #' @param eval_f The objective function for

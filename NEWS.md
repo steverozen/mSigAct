@@ -1,3 +1,7 @@
+# mSigAct 2.0.4.9000
+
+* Multiple changes, mostly backward compatible
+
 # mSigAct 2.0.0.9018
 
 * Had previously failed to export OptimizeExposure.

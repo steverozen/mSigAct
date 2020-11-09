@@ -15,27 +15,32 @@
 #' @param show.warning If \code{TRUE} print warning if unrounded
 #'        reconstructions were used.
 #'
+#' @param always.round Ignore \code{no.round.ok} and always
+#'        round; for experimenting and may be removed in future versions.
+#'
 #' @keywords internal
 #'
 ObjFnBinomMaxLH2 <-
   function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
-           show.warning = FALSE) {
+           show.warning = FALSE, always.round = FALSE) {
 
   if (any(is.na(exp))) return(Inf)
 
   reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
 
-  reconstruction2 <- round(reconstruction)
-  # Will cause problems if round of the reconstruction is 0 for
-  # any channel even if the reconstruction > 0, because then
-  # log likelihood will be -inf. The situation is especial likely
-  # to occur if mutation counts in the spectrum are low.
-  if (any(reconstruction2 == 0) && no.round.ok) {
-    if (show.warning) warning("unrounded reconstruction")
-  } else {
-    reconstruction <- reconstruction2
+  if (!always.round) {
+    reconstruction2 <- round(reconstruction)
+    # Will cause problems if round of the reconstruction is 0 for
+    # any channel even if the reconstruction > 0, because then
+    # log likelihood will be -inf. The situation is especial likely
+    # to occur if mutation counts in the spectrum are low.
+    if (any(reconstruction2 == 0) && no.round.ok) {
+      if (show.warning) warning("unrounded reconstruction")
+    } else {
+      reconstruction <- reconstruction2
+    }
+    rm(reconstruction2)
   }
-  rm(reconstruction2)
 
   ## catch errors with NA in the input or in reconstruction.
   if (any(is.na(reconstruction))) {

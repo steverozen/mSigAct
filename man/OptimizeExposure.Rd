@@ -11,7 +11,7 @@ OptimizeExposure(spectrum, sigs, m.opts, eval_f, ...)
 
 \item{sigs}{The available signatures.}
 
-\item{m.opts}{Options that govern the numerical optimizaiton.
+\item{m.opts}{Options that govern the numerical optimization.
 For documentation see \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{The objective function for

@@ -146,6 +146,7 @@ prop.reconstruct <- function(sigs, exp) {
 #' @export
 #'
 ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
+  message("ObjFnBinomMaxLHMustRound is deprecated, use ObjFnBinomMaxLHNoRoundOK")
   ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
 }
 
