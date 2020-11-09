@@ -60,6 +60,7 @@ TestAny1 <- function(extra.sig, eso.index) {
   eso.spectra <- TestEsoSpectra(eso.index)
 
   m.opts <- DefaultManyOpts()
+  m.opts$trace <- 100
 
   sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus
 

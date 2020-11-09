@@ -46,7 +46,7 @@ DefaultManyOpts <- function() {
 #' @inheritParams OptimizeExposure
 #'
 #' @keywords internal
-Nloptr1Tumor <- function(spectrum,
+old.Nloptr1Tumor <- function(spectrum,
                          sigs,
                          m.opts = NULL,
                          eval_f,
