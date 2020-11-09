@@ -21,7 +21,7 @@
 #' @keywords internal
 #'
 ObjFnBinomMaxLH2 <-
-  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
+  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE, # TODO: Steve Change this to TRUE and remove the other "NoRoundOK" function
            show.warning = FALSE, always.round = FALSE) {
 
   if (any(is.na(exp))) return(Inf)
