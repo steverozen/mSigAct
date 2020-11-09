@@ -1,26 +1,29 @@
 catSBS96.1 <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]
-catSBS192.1 <- PCAWG7::spectra$PCAWG$SBS192[, 1, drop = FALSE]
+
+
+# catSBS192.1 <- PCAWG7::spectra$PCAWG$SBS192[, 1, drop = FALSE]
+
 my.exposure.SBS96 <- PCAWG7::exposure$PCAWG$SBS96[, 1, drop = FALSE]
 
-catDBS78.1 <- PCAWG7::spectra$PCAWG$DBS78[, 1, drop = FALSE]
+# catDBS78.1 <- PCAWG7::spectra$PCAWG$DBS78[, 1, drop = FALSE]
 my.exposure.DBS78 <- PCAWG7::exposure$PCAWG$DBS78[, 1, drop = FALSE]
 
-catID.1 <- PCAWG7::spectra$PCAWG$ID[, 1, drop = FALSE]
-my.exposure.ID <- PCAWG7::exposure$PCAWG$ID[, 1, drop = FALSE]
+# catID.1 <- PCAWG7::spectra$PCAWG$ID[, 1, drop = FALSE]
+# my.exposure.ID <- PCAWG7::exposure$PCAWG$ID[, 1, drop = FALSE]
 
 my.sig.SBS96 <-
-  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
-                        sig.type = "SBS96", region = "genome")
-my.sig.SBS192 <-
-  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
-                        sig.type = "SBS192", region = "genome")
-my.sig.DBS78 <-
-  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
-                        sig.type = "DBS78", region = "genome")
+  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA")
+# my.sig.SBS192 <-
+#  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
+#                         sig.type = "SBS192", region = "genome")
 
-my.sig.ID <-
-  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
-                        sig.type = "ID", region = "genome")
+# my.sig.DBS78 <-
+#  CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
+#                        sig.type = "DBS78", region = "genome")
+
+# my.sig.ID <-
+#   CancerTypeToSigSubset(ca.type = "Biliary-AdenoCA", tumor.cohort = "PCAWG",
+#                        sig.type = "ID", region = "genome")
 
 
 exposures.SBS96 <- GetExposureAndPlotToPdf(catalog = catSBS96.1,

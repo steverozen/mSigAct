@@ -1,0 +1,53 @@
+gamma distribution notes
+
+try getting exposure mean and set to gamma distributin mean
+gamma distribution mean is shape * scale
+keeping shape * scale constant, larger shape is more compact but the effect is not great
+try shape = 5
+
+
+
+hist(rgamma(1000, shape = 2, scale = 2))
+> hist(rgamma(1000, shape = 2, scale = 20))
+> hist(rgamma(1000, shape = 2, scale = 1000))
+> hist(rgamma(1000, shape = 4, scale = 1000))
+> min(rgamma(1000, shape = 4, scale = 1000))
+[1] 332.6529
+> min(rgamma(10000, shape = 4, scale = 1000))
+[1] 115.7602
+> max(rgamma(10000, shape = 4, scale = 1000))
+[1] 17078.45
+> dgamma(0, shape = 4, scale = 1000))
+Error: unexpected ')' in "dgamma(0, shape = 4, scale = 1000))"
+> dgamma(0, shape = 4, scale = 1000)
+[1] 0
+> dgamma(100, shape = 4, scale = 1000)
+[1] 1.508062e-07
+> dgamma(40000, shape = 4, scale = 1000)
+[1] 4.531578e-17
+> hist(rgamma(1000, shape = 5, scale = 1000))
+> dgamma(40000, shape = 5, scale = 1000)
+[1] 4.531578e-16
+> dgamma(0, shape = 5, scale = 1000)
+[1] 0
+> dgamma(500, shape = 5, scale = 1000)
+[1] 1.579507e-06
+> dgamma(1000, shape = 5, scale = 1000)
+[1] 1.532831e-05
+> dgamma(100000, shape = 5, scale = 1000)
+[1] 1.550032e-40
+> dgamma(100000, shape = 5, scale = 2000)
+[1] 2.511393e-20
+> hist(rgamma(100000, shape = 5, scale = 2000))
+> mean(rgamma(100000, shape = 5, scale = 2000))
+[1] 10030.66
+> mean(rgamma(100000, shape = 5, scale = 1000))
+[1] 5005.575
+> mean(rgamma(100000, shape = 4, scale = 1000))
+[1] 4007.089
+> summary(rgamma(100000, shape = 4, scale = 1000))
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  111.9  2544.1  3670.4  3997.0  5094.8 24745.2
+> summary(rgamma(100000, shape = 4, scale = 2000))
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  302.7  5084.0  7350.1  8001.7 10200.1 40403.2
