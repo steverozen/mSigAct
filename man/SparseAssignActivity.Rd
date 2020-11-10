@@ -37,7 +37,7 @@ sample in turn can require multiple cores, as governed by
 \code{mc.cores.per.sample}.}
 
 \item{mc.cores.per.sample}{The maximum number of cores to use for each sample.
-If \code{NULL} defaults to \code{2^max.level} -- except on
+If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
 MS Windows machines, where it defaults to 1.}
 }
 \value{

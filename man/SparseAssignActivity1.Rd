@@ -28,7 +28,7 @@ SparseAssignActivity1(
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{max.mc.cores}{The maximum number of cores to use.
-If \code{NULL} defaults to \code{2^max.level} -- except on
+If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
  MS Windows machines, where it defaults to 1.)}
 }
 \description{

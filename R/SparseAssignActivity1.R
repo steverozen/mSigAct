@@ -15,7 +15,7 @@
 #'
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
-#'   If \code{NULL} defaults to \code{2^max.level} -- except on
+#'   If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
 #'    MS Windows machines, where it defaults to 1.)
 
 
@@ -26,6 +26,9 @@ SparseAssignActivity1 <- function(spect,
                                   eval_f,
                                   m.opts,
                                   max.mc.cores = NULL) {
+  max.sig.index <- ncol(sigs)
+  if (m.opts$trace > 10)
+    message("SparseAssignActivity1: number of signatures = ", max.sig.index)
   mode(spect) <-  'numeric'
   start <- OptimizeExposure(spect,
                             sigs,
@@ -42,14 +45,14 @@ SparseAssignActivity1 <- function(spect,
   }
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
-                                            # expsoures； TODO, possibly remove
-  m.opts$trace <- 100
+                                            # exposures； TODO, possibly remove
+  # m.opts$trace <- 100
   if (m.opts$trace > 0) {
-    message('Starting with ',
+    message('SparseAssignActivity1: Starting with ',
             paste(names(start.exp)[non.0.exp.index], collapse = ","),
             '\n')
-    message('max.level =', max.level, '\n')
-    message("full -log likelihood is ", lh.w.all)
+    message("max.level = ", max.level, '\n')
+    message("log likelihood using all signatures = ", lh.w.all)
   }
   if (length(non.0.exp.index) < 2) {
     if (m.opts$trace > 0)
@@ -59,21 +62,26 @@ SparseAssignActivity1 <- function(spect,
   }
   max.level <- min(max.level, length(non.0.exp.index) - 1)
 
-  if (is.null(max.mc.cores)) { max.mc.cores <- 2^max.level }
+  if (is.null(max.mc.cores)) { max.mc.cores <- min(20, 2^max.level) }
 
   mc.cores <- Adj.mc.cores(max.mc.cores) # Set to 1 if OS is MS Windows
 
-  c.r.s <- sets::set() # subsets of the signature indices that cannot be removed
-
+  # c.r.s is "cannot remove subsets", i.e. subset of the signature indices that
+  # cannot be removed
+  c.r.s <- sets::set()
   best.exp <- list()
   best.sig.indices <- list()
 
   info.of.removed.subset <- function(subset) {
     # subset is of class set (package sets)
     subset.to.remove.v <- as.numeric(subset)
+    if (any(subset.to.remove.v > max.sig.index)) {
+      stop("Got illegal signature index in subset.to.remove = ",
+           paste(subset.to.remove.v, collapse = " "))
+    }
     tmp.set <- setdiff(non.0.exp.index, subset.to.remove.v)
     try.sigs <- sigs[ , tmp.set, drop = FALSE]
-    if (m.opts$trace > 0) {
+    if (m.opts$trace > 10) {
       message("\nTesting removal of signature index(s) ",
               paste(subset.to.remove.v, collapse = ", "),
               "; name(s) = ",
@@ -81,16 +89,17 @@ SparseAssignActivity1 <- function(spect,
     }
 
     # Get the max lh for try.sig
-    try <- OptimizeExposure(spect,
-                          try.sigs,
-                          eval_f = eval_f,
-                          m.opts = m.opts)
+    try.exp <- OptimizeExposure(spect,
+                                try.sigs,
+                                eval_f = eval_f,
+                                m.opts = m.opts)
 
     # TODO -- deal with case when try$loglh is Inf
 
-    statistic <- 2 * (lh.w.all - try$loglh)
+    statistic <- 2 * (lh.w.all - try.exp$loglh)
     chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
-    return(list(p = chisq.p, exp = try$exposure, sig.indices = tmp.set))
+    return(list(p = chisq.p, exp = try.exp$exposure, sig.indices = tmp.set,
+                removed.sig.names = colnames(sigs)[subset.to.remove.v]))
   }
 
   for (df in 1:max.level) {
@@ -100,23 +109,59 @@ SparseAssignActivity1 <- function(spect,
     subsets2 <- subsets[!(unlist(discard))]
     if (length(subsets2) == 0) break;
 
+    if (m.opts$trace > 0) {
+      message("Number of subsets to remove = ", length(subsets2))
+    }
+    time.used <- system.time(
     check.to.remove <-
       parallel::mclapply(X = subsets2,
                          FUN = info.of.removed.subset,
-                         mc.cores = mc.cores)
+                         mc.cores = min(mc.cores, length(subsets2))))
+    if (m.opts$trace > 3) {
+      message("Time used to compute p values for df ", df, ":")
+      print(time.used)
+    }
+    for (i in 1:length(subsets2)) {
+      if (is.null(check.to.remove[[i]])) {
+        stop("SparseAssignActivity1: ",
+             "Null return from mclapply for subset = ",
+             paste(subsets[[i]], collase = " "))
+      }
+      if ("try-error" %in% class(check.to.remove[[i]])) {
+        stop("SparseAssignActivity1: Got try-error return for subset = ",
+             paste(subsets[[i]], collase = " "))
+      }
+    }
 
-    p.to.remove <- unlist(lapply(check.to.remove, function(x) x$p))
-
+    p.to.remove <- unlist(lapply(check.to.remove, `[`, "p"))
+    names(p.to.remove) <-
+      unlist(lapply(check.to.remove,
+                    function(x) paste(x$removed.sig.names, collapse = ",")))
+    if (m.opts$trace > 10) {
+      message("SparseAssignActivity1: p.to.remove =")
+      for (ii in 1:length(p.to.remove)) {
+        message(ii, " ", names(p.to.remove)[ii], " ", p.to.remove[ii])
+      }
+    }
     if (all(p.to.remove < p.thresh)) break;
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
     xx <- which(p.to.remove == max(p.to.remove))
+    if (m.opts$trace > 10) {
+      message("SparseAssignActivity1: xx = ", paste(xx, collapse = ","),
+              "\nmax(p.to.remove = ", max(p.to.remove), ")")
+    }
     if (length(xx) > 1) {
+      possible.sigs <-
+        lapply(X = subsets[xx],
+               function(subset) paste(colnames(sigs)[unlist(subset)], collapse = ","))
       xx <- min(xx)
-      sig.name.to.remove <- colnames(sigs)[xx]
-      warning("Temporary warning, > 1 signature can be removed; ",
+      sig.name.to.remove <- colnames(sigs)[unlist(subsets[[xx]])]
+
+      message("Temporary warning, > 1 signature can be removed; ",
               "selecting the first one arbitrarily (index = ", xx, ",
-              name = ", sig.name.to.remove)
+              name = ", paste(sig.name.to.remove, collapse = ","), ")\n",
+              "Possibilities were\ ", paste(possible.sigs, collapse = "\n"))
     }
     best.exp[df] <- list(check.to.remove[[xx]]$exp)
     best.sig.indices[df] <- list(check.to.remove[[xx]]$sig.indices)

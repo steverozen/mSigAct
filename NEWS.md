@@ -1,3 +1,12 @@
+# mSigAct 2.0.5
+
+* Lots new tracing information in SparseAssign (controlled
+  by the $trace element in argument m.opts; for lots of info
+  set this to e.g. 11)
+  
+* New defaults to keep from spawning too many children from
+  SparseAssignActivity1.
+
 # mSigAct 2.0.4.9000
 
 * Multiple changes, mostly backward compatible

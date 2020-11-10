@@ -22,7 +22,7 @@
 #'
 #' @param mc.cores.per.sample
 #'    The maximum number of cores to use for each sample.
-#'    If \code{NULL} defaults to \code{2^max.level} -- except on
+#'    If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
 #'    MS Windows machines, where it defaults to 1.
 #'
 #' @return A list with the inferred exposure matrix as element \code{exposure}.
