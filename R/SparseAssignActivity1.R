@@ -15,8 +15,7 @@
 #'
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
-#'   If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
-#'    MS Windows machines, where it defaults to 1.)
+#'   On Microsoft Windows machines it is silently changed to 1.)
 
 
 SparseAssignActivity1 <- function(spect,
@@ -25,7 +24,7 @@ SparseAssignActivity1 <- function(spect,
                                   p.thresh     = 0.05,
                                   eval_f,
                                   m.opts,
-                                  max.mc.cores = NULL) {
+                                  max.mc.cores = min(20, 2^max.level)) {
   max.sig.index <- ncol(sigs)
   if (m.opts$trace > 10)
     message("SparseAssignActivity1: number of signatures = ", max.sig.index)
@@ -62,7 +61,7 @@ SparseAssignActivity1 <- function(spect,
   }
   max.level <- min(max.level, length(non.0.exp.index) - 1)
 
-  if (is.null(max.mc.cores)) { max.mc.cores <- min(20, 2^max.level) }
+  # if (is.null(max.mc.cores)) { max.mc.cores <- min(20, 2^max.level) }
 
   mc.cores <- Adj.mc.cores(max.mc.cores) # Set to 1 if OS is MS Windows
 

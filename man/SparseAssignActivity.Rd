@@ -12,7 +12,7 @@ SparseAssignActivity(
   eval_f = ObjFnBinomMaxLHNoRoundOK,
   m.opts = NULL,
   num.parallel.samples = 5,
-  mc.cores.per.sample = NULL
+  mc.cores.per.sample = min(20, 2^max.level)
 )
 }
 \arguments{
@@ -37,8 +37,7 @@ sample in turn can require multiple cores, as governed by
 \code{mc.cores.per.sample}.}
 
 \item{mc.cores.per.sample}{The maximum number of cores to use for each sample.
-If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
-MS Windows machines, where it defaults to 1.}
+On Microsoft Windows machines it is silently changed to 1.}
 }
 \value{
 A list with the inferred exposure matrix as element \code{exposure}.

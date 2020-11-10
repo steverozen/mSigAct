@@ -11,7 +11,7 @@ SparseAssignActivity1(
   p.thresh = 0.05,
   eval_f,
   m.opts,
-  max.mc.cores = NULL
+  max.mc.cores = min(20, 2^max.level)
 )
 }
 \arguments{
@@ -28,8 +28,7 @@ SparseAssignActivity1(
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{max.mc.cores}{The maximum number of cores to use.
-If \code{NULL} defaults to \code{min(20, 2^max.level)} -- except on
- MS Windows machines, where it defaults to 1.)}
+On Microsoft Windows machines it is silently changed to 1.)}
 }
 \description{
 Component of \code{\link{SparseAssignActivity}} for one spectrum.
