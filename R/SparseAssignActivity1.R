@@ -125,19 +125,6 @@ SparseAssignActivity1 <- function(spect,
     }
 
     check.mclapply.result(check.to.remove, "SparseAssignActivity1")
-    if (FALSE) {
-    for (i in 1:length(subsets2)) {
-      if (is.null(check.to.remove[[i]])) {
-        stop("SparseAssignActivity1: ",
-             "Null return from mclapply for subset = ",
-             paste(subsets[[i]], collase = " "))
-      }
-      if ("try-error" %in% class(check.to.remove[[i]])) {
-        stop("SparseAssignActivity1: Got try-error return for subset = ",
-             paste(subsets[[i]], collase = " "))
-      }
-    }
-    }
 
     p.to.remove <- unlist(lapply(check.to.remove, `[`, "p"))
     names(p.to.remove) <-

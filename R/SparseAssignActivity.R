@@ -60,19 +60,6 @@ SparseAssignActivity <-
   check.mclapply.result(
     retval, "SparseAssignActivity", colnames(spectra))
 
-  if (FALSE) {
-  for (i in 1:length(retval)) {
-    if (is.null(retval[[i]])) {
-      stop("Got NULL return for ", colnames(spectra)[i])
-    }
-    if ("try-error" %in% class(retval[[i]])) {
-      message("Got try-error return for ", colnames(spectra)[i])
-      print(retval[i])
-      stop()
-    }
-  }
-  }
-
   other.info <- lapply(retval, attributes)
   retval2 <- matrix(unlist(retval), ncol = length(retval))
   colnames(retval2) <- colnames(spectra)
