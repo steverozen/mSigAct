@@ -9,13 +9,13 @@
 #'
 #' @param eval_f The objective function for
 #'  \code{\link[nloptr]{nloptr}}. We have only tested
-#'  \code{\link{ObjFnBinomMaxLHNoRoundOK}} and
-#'  \code{\link{ObjFnBinomMaxLHMustRound}}.
+#'  \code{\link{ObjFnBinomMaxLHNoRoundOK}}.
 #'
 #' @param ... Additional arguments for \code{eval_f}.
 #'
 #' Returns a list with elements \describe{
-#' \item{\code{loglh}}{The log likelihood of the best solution (set of exposures) found.
+#' \item{\code{loglh}}{-1 times the log likelihood of the best
+#'       solution (set of exposures) found.
 #'       For a more general objective function this might be \code{NULL}.}
 #' \item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e.
 #'    the number of mutations ascribed to each signature.}

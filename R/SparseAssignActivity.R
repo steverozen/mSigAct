@@ -57,7 +57,10 @@ SparseAssignActivity <-
   retval <- parallel::mclapply(1:ncol(spectra),
                                f1,
                                mc.cores = num.parallel.samples)
+  check.mclapply.result(
+    retval, "SparseAssignActivity", colnames(spectra))
 
+  if (FALSE) {
   for (i in 1:length(retval)) {
     if (is.null(retval[[i]])) {
       stop("Got NULL return for ", colnames(spectra)[i])
@@ -67,6 +70,7 @@ SparseAssignActivity <-
       print(retval[i])
       stop()
     }
+  }
   }
 
   other.info <- lapply(retval, attributes)

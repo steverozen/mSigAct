@@ -8,9 +8,8 @@ mm <- DefaultManyOpts()
 mm$trace <- 100
 
 foo <- SparseAssignActivity(spectra = catSBS96.1, sigs = my.sig.SBS96,
-                            max.level = 2, # 16,
+                            max.level = 16, # 16,
                             p.thresh = 0.01,
-                            m.opts = mm)
-,
-                            mc.cores.per.sample = 100)
+                            m.opts = mm #)
+                            , mc.cores.per.sample = 100)
 

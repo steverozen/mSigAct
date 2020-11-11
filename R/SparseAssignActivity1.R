@@ -45,7 +45,6 @@ SparseAssignActivity1 <- function(spect,
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
                                             # exposures； TODO, possibly remove
-  # m.opts$trace <- 100
   if (m.opts$trace > 0) {
     message('SparseAssignActivity1: Starting with ',
             paste(names(start.exp)[non.0.exp.index], collapse = ","),
@@ -61,15 +60,14 @@ SparseAssignActivity1 <- function(spect,
   }
   max.level <- min(max.level, length(non.0.exp.index) - 1)
 
-  # if (is.null(max.mc.cores)) { max.mc.cores <- min(20, 2^max.level) }
-
   mc.cores <- Adj.mc.cores(max.mc.cores) # Set to 1 if OS is MS Windows
 
   # c.r.s is "cannot remove subsets", i.e. subset of the signature indices that
   # cannot be removed
   c.r.s <- sets::set()
-  best.exp <- list()
-  best.sig.indices <- list()
+  best.exp <- list() # Index by level, the expression of the assignments (exposures) at a given level
+  best.sig.indices <- list() # Index by level, the signature indices for the exposures in best.exp
+  # TODO, Should best actually be maximum likelihood or maximum a posteriori?
 
   info.of.removed.subset <- function(subset) {
     # subset is of class set (package sets)
@@ -87,7 +85,7 @@ SparseAssignActivity1 <- function(spect,
               paste(colnames(sigs)[subset.to.remove.v], collapse = ", "))
     }
 
-    # Get the max lh for try.sig
+    # Get the maximum likelihood exposure for try.exp
     try.exp <- OptimizeExposure(spect,
                                 try.sigs,
                                 eval_f = eval_f,
@@ -97,8 +95,12 @@ SparseAssignActivity1 <- function(spect,
 
     statistic <- 2 * (lh.w.all - try.exp$loglh)
     chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
-    return(list(p = chisq.p, exp = try.exp$exposure, sig.indices = tmp.set,
-                removed.sig.names = colnames(sigs)[subset.to.remove.v]))
+    return(list(p                 = chisq.p,
+                exp               = try.exp$exposure,
+                sig.indices       = tmp.set,
+                removed.sig.names = colnames(sigs)[subset.to.remove.v],
+                loglh.of.exp      = try.exp$lloglh
+                ))
   }
 
   for (df in 1:max.level) {
@@ -112,14 +114,18 @@ SparseAssignActivity1 <- function(spect,
       message("Number of subsets to remove = ", length(subsets2))
     }
     time.used <- system.time(
-    check.to.remove <-
-      parallel::mclapply(X = subsets2,
-                         FUN = info.of.removed.subset,
-                         mc.cores = min(mc.cores, length(subsets2))))
+      check.to.remove <-
+        parallel::mclapply(X = subsets2,
+                           FUN = info.of.removed.subset,
+                           mc.cores = max.mc.cores)
+    )
     if (m.opts$trace > 3) {
       message("Time used to compute p values for df ", df, ":")
       print(time.used)
     }
+
+    check.mclapply.result(check.to.remove, "SparseAssignActivity1")
+    if (FALSE) {
     for (i in 1:length(subsets2)) {
       if (is.null(check.to.remove[[i]])) {
         stop("SparseAssignActivity1: ",
@@ -130,6 +136,7 @@ SparseAssignActivity1 <- function(spect,
         stop("SparseAssignActivity1: Got try-error return for subset = ",
              paste(subsets[[i]], collase = " "))
       }
+    }
     }
 
     p.to.remove <- unlist(lapply(check.to.remove, `[`, "p"))
@@ -142,7 +149,11 @@ SparseAssignActivity1 <- function(spect,
         message(ii, " ", names(p.to.remove)[ii], " ", p.to.remove[ii])
       }
     }
-    if (all(p.to.remove < p.thresh)) break;
+    if (all(p.to.remove < p.thresh)) {
+      if (m.opts$trace > 10)
+        message("Cannot remove any subsets at level ", df)
+      break;
+    }
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
     xx <- which(p.to.remove == max(p.to.remove))
@@ -190,3 +201,4 @@ is.superset.of.any <- function(probe, background) {
   }
   return(FALSE)
 }
+
