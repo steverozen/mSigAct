@@ -41,16 +41,6 @@ DefaultManyOpts <- function() {
   ))
 }
 
-# Helper function, given signatures (sigs) and exposures (exp), return a
-# *proportional* reconstruction; in general, it is *not necessarily* scaled to
-# the actual spectrum counts.
-#' error checked (?) function to get reconstructed something?
-#'
-#' @keywords internal
-prop.reconstruct <- function(sigs, exp) {
-  stopifnot(length(exp) == ncol(sigs))
-  return(as.matrix(sigs) %*% exp)
-}
 
 #' Euclidean reconstruction error.
 #'

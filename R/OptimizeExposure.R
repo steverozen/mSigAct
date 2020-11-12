@@ -14,7 +14,7 @@
 #' @param ... Additional arguments for \code{eval_f}.
 #'
 #' Returns a list with elements \describe{
-#' \item{\code{loglh}}{-1 times the log likelihood of the best
+#' \item{\code{loglh}}{The log likelihood of the best
 #'       solution (set of exposures) found.
 #'       For a more general objective function this might be \code{NULL}.}
 #' \item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e.

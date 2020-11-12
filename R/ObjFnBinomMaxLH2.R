@@ -26,7 +26,8 @@ ObjFnBinomMaxLH2 <-
 
   if (any(is.na(exp))) return(Inf)
 
-  reconstruction <-  prop.reconstruct(sigs = sigs, exp = exp)
+  reconstruction <-  sigs %*% exp
+  # Maybe faster than ReconstructSpectrum(sigs = sigs, exp = exp)
 
   if (!always.round) {
     reconstruction2 <- round(reconstruction)

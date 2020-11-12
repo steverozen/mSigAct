@@ -5,6 +5,10 @@
 #'
 #' @param sigs A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.
 #'
+#' @param sigs.presence.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being the same as \code{colnames(sigs)}.
+#'
 #' @param max.level The maximum number of signatures to try removing.
 #'
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
@@ -18,20 +22,22 @@
 #'   On Microsoft Windows machines it is silently changed to 1.)
 
 
-SparseAssignActivity1 <- function(spect,
-                                  sigs,
-                                  max.level    = 5,
-                                  p.thresh     = 0.05,
-                                  eval_f,
-                                  m.opts,
-                                  max.mc.cores = min(20, 2^max.level)) {
+MAPAssignActivity1 <- function(spect,
+                               sigs,
+                               sigs.presence.prop,
+                               max.level    = 5,
+                               p.thresh     = 0.05,
+                               eval_f,
+                               m.opts,
+                               max.mc.cores = min(20, 2^max.level)) {
 
   my.msg <- function(trace.level, ...)
-    if (m.opts$trace >= trace.level) message("SparseAssignActivity1: ", ...)
+    if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
 
   max.sig.index <- ncol(sigs)
-  my.msg(10, "SparseAssignActivity1: number of signatures = ", max.sig.index)
+  my.msg(10, "number of signatures = ", max.sig.index)
   mode(spect) <-  'numeric'
+  stopifnot(colnames(sigs) == names(sigs.presence.prop))
   start <- OptimizeExposure(spect,
                             sigs,
                             eval_f  = eval_f,
@@ -49,8 +55,8 @@ SparseAssignActivity1 <- function(spect,
   non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
                                             # exposures； TODO, possibly remove
   my.msg(0, "Starting with ",
-         paste(names(start.exp)[non.0.exp.index], collapse = ","),
-         "\nmax.level = ", max.level,
+            paste(names(start.exp)[non.0.exp.index], collapse = ","),
+            "\nmax.level = ", max.level,
          "\nlog likelihood using all signatures = ", lh.w.all)
 
   if (length(non.0.exp.index) < 2) {
@@ -83,21 +89,27 @@ SparseAssignActivity1 <- function(spect,
            "; name(s) = ",
            paste(colnames(sigs)[subset.to.remove.v], collapse = ", "))
 
+    try.sigs.names <- colnames(sigs)[try.sigs.indices]
+
     # Get the maximum likelihood exposure for try.sigs
     try.exp <- OptimizeExposure(spect,
                                 try.sigs,
                                 eval_f = eval_f,
                                 m.opts = m.opts)
 
-    # TODO -- deal with case when try$loglh is Inf
+    # TODO -- do we need to deal with case when try.exp$loglh is -Inf
+    # What happens the the call to to pchisq below?
 
     statistic <- 2 * (lh.w.all - try.exp$loglh)
     chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
-    return(list(p                 = chisq.p,
+
+    return(list(sig.names         = paste(colnames(sigs)[try.sigs.indices], collapse = ","),
+                p                 = chisq.p,
                 exp               = try.exp[["exposure"]],
                 sig.indices       = try.sigs.indices,
-                removed.sig.names = colnames(sigs)[subset.to.remove.v],
-                loglh.of.exp      = try.exp[["loglh"]]
+                removed.sig.names = paste(colnames(sigs)[subset.to.remove.v], collapse = ","),
+                loglh.of.exp      = try.exp[["loglh"]],
+                MOP               = try.exp[["loglh"]] + P.of.M(try.sigs.names, )
                 ))
   }
 
@@ -127,7 +139,7 @@ SparseAssignActivity1 <- function(spect,
       unlist(lapply(check.to.remove,
                     function(x) paste(x$removed.sig.names, collapse = ",")))
     if (m.opts$trace > 10) {
-      message("SparseAssignActivity1: p.to.remove =")
+      message("MAPAssignActivity1: p.to.remove =")
       for (ii in 1:length(p.to.remove)) {
         message(ii, " ", names(p.to.remove)[ii], " ", p.to.remove[ii])
       }
@@ -141,6 +153,7 @@ SparseAssignActivity1 <- function(spect,
     xx <- which(p.to.remove == max(p.to.remove))
     my.msg(10, "xx = ", paste(xx, collapse = ","),
            "\nmax(p.to.remove = ", max(p.to.remove), ")")
+
     if (length(xx) > 1) {
       possible.sigs <-
         lapply(X = subsets[xx],
@@ -169,4 +182,22 @@ SparseAssignActivity1 <- function(spect,
   }
   stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
   return(out.exp)
+}
+
+#' Calculate \eqn{P(M)} -- the probabily of a model of which signatures are present in a sample.
+#'
+#' @param model Names of sigs present in a trial exposure
+#'
+#' @param sigs.presence.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being a superset of \code{model}.
+#'
+#' @keywords internal
+#'
+P.of.M <- function(model, sigs.presence.prop) {
+  present <- sigs.presence.prop[model]
+  not.present <- setdiff(sigs.presence.prop, present)
+  not.present <- 1 - not.present
+  rr <- sum(log(c(present, not.present)))
+  return(rr)
 }

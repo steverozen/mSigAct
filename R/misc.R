@@ -1,3 +1,77 @@
+
+List2TibbleRow <- function(a.list) {
+
+  list2 <- lapply(a.list, function(x) {
+    if (length(x) > 1) {
+      return(list(x))
+    } else {
+      return(x)
+    }})
+
+  rr <- do.call("tibble_row", list2)
+  return(rr)
+}
+
+ListOfList2Tibble <- function(list.of.lists) {
+  rr <- lapply(list.of.lists, List2TibbleRow)
+  do.call("rbind", rr)
+}
+
+#' Given signatures (sigs) and exposures (exp), return a spectrum or spectra
+#'
+#' @param sigs Signature as a matrix or or data frame, with each
+#'      row one mutation type (g.e. CCT > CAT or CC > TT) and
+#'      each column a signature.
+#'
+#' @param exp The exposures for one or more samples as a matrix or data.frame,
+#'      with each row a signature and each column a sample.
+#'
+#' @param use.sig.names If \code{TRUE} check that \code{rownames(exp)} is
+#'   a subset of \code{colnames(sigs)}, and use only the columns in \code{sigs}
+#'   that are present in \code{exp}.
+#'
+# @return The matrix product \code{sigs %*% exp} after some error checking.
+#'
+#' @details Does not care or check if \code{colSums(sigs) == 1}.
+#'   Error checking is minimal since this function is called often.
+#'
+#' @export
+#'
+ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
+  if (use.sig.names) {
+    sigs <- sigs[ , rownames(exp)]
+  }
+  stopifnot(length(exp) == ncol(sigs))
+  return(as.matrix(sigs) %*% as.matrix(exp))
+}
+
+
+#' For backward compatibility.
+#'
+#' Use \code{\link{ReconstructSpectrum}} instead.
+#'
+#' @inheritParams ReconstructSpectrum
+#'
+# @return The matrix product \code{sigs %*% exp}.
+#'
+#' @keywords internal
+
+prop.reconstruct <- function(sigs, exp) {
+  return(ReconstructSpectrum(sigs, exp, FALSE))
+}
+
+
+#' Is the set 'probe' a superset of any set in 'background'?
+#'
+#' @keywords internal
+is.superset.of.any <- function(probe, background) {
+  for (b in background) {
+    if (sets::set_is_proper_subset(b, probe)) return(TRUE)
+  }
+  return(FALSE)
+}
+
+
 #' Cosine similarity with useful argument types..
 #'
 #' Calls \code{\link[lsa]{cosine}}.
