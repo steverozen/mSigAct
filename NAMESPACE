@@ -3,6 +3,7 @@
 export(AnySigSubsetPresent)
 export(DefaultManyOpts)
 export(LLHSpectrumNegBinom)
+export(MAPAssignActivity1)
 export(ObjFnBinomMaxLHMustRound)
 export(ObjFnBinomMaxLHNoRoundOK)
 export(OptimizeExposure)

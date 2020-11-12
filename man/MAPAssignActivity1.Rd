@@ -38,4 +38,3 @@ On Microsoft Windows machines it is silently changed to 1.)}
 \description{
 Component of \code{\link{SparseAssignActivity}} for one spectrum.
 }
-\keyword{internal}

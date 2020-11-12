@@ -1,5 +1,6 @@
 #' Component of \code{\link{SparseAssignActivity}} for one spectrum.
-#' @keywords internal
+#'
+#' @export
 #'
 #' @param spect A single spectrum.
 #'
@@ -109,7 +110,8 @@ MAPAssignActivity1 <- function(spect,
                 sig.indices       = try.sigs.indices,
                 removed.sig.names = paste(colnames(sigs)[subset.to.remove.v], collapse = ","),
                 loglh.of.exp      = try.exp[["loglh"]],
-                MOP               = try.exp[["loglh"]] + P.of.M(try.sigs.names, )
+                MOP               =
+                  try.exp[["loglh"]] + P.of.M(try.sigs.names, sigs.presence.prop)
                 ))
   }
 
@@ -196,7 +198,8 @@ MAPAssignActivity1 <- function(spect,
 #'
 P.of.M <- function(model, sigs.presence.prop) {
   present <- sigs.presence.prop[model]
-  not.present <- setdiff(sigs.presence.prop, present)
+  not.present.names <- setdiff(names(sigs.presence.prop), model)
+  not.present <- sigs.presence.prop[not.present.names]
   not.present <- 1 - not.present
   rr <- sum(log(c(present, not.present)))
   return(rr)
