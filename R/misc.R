@@ -1,4 +1,4 @@
-
+#' @importFrom tibble tibble_row
 List2TibbleRow <- function(a.list) {
 
   list2 <- lapply(a.list, function(x) {
@@ -38,6 +38,10 @@ ListOfList2Tibble <- function(list.of.lists) {
 #' @export
 #'
 ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
+  stopifnot(is.matrix(sigs))
+  if (!(is.matrix(exp))) {
+     exp <- as.matrix(exp)
+  }
   if (use.sig.names) {
     sigs <- sigs[ , rownames(exp)]
   }

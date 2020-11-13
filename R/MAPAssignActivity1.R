@@ -38,7 +38,7 @@ MAPAssignActivity1 <- function(spect,
   max.sig.index <- ncol(sigs)
   my.msg(10, "number of signatures = ", max.sig.index)
   mode(spect) <-  'numeric'
-  stopifnot(colnames(sigs) == names(sigs.presence.prop))
+  stopifnot(isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop))))
   start <- OptimizeExposure(spect,
                             sigs,
                             eval_f  = eval_f,
@@ -53,8 +53,17 @@ MAPAssignActivity1 <- function(spect,
     return(rr)
   }
   start.exp <- start$exposure
-  non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
+  non.0.exp.index <- which(start.exp >= 0.5) # indices of signatures with non-zero
                                             # exposures； TODO, possibly remove
+  if (length(non.0.exp.index) < ncol(sigs)) {
+    removed.sig.names <- colnames(sigs)[which(start.exp < 0.5)]
+    my.msg(0, ncol(sigs) - length(non.0.exp.index),
+           " signatures removed at beginning")
+    my.msg(0, " removed signatures are ",
+           paste(removed.sig.names, collapse = ", "))
+  }
+
+
   my.msg(0, "Starting with ",
             paste(names(start.exp)[non.0.exp.index], collapse = ","),
             "\nmax.level = ", max.level,
@@ -103,6 +112,7 @@ MAPAssignActivity1 <- function(spect,
 
     statistic <- 2 * (lh.w.all - try.exp$loglh)
     chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
+    prop.of.model <- P.of.M(try.sigs.names, sigs.presence.prop)
 
     return(list(sig.names         = paste(colnames(sigs)[try.sigs.indices], collapse = ","),
                 p                 = chisq.p,
@@ -110,11 +120,13 @@ MAPAssignActivity1 <- function(spect,
                 sig.indices       = try.sigs.indices,
                 removed.sig.names = paste(colnames(sigs)[subset.to.remove.v], collapse = ","),
                 loglh.of.exp      = try.exp[["loglh"]],
-                MOP               =
-                  try.exp[["loglh"]] + P.of.M(try.sigs.names, sigs.presence.prop)
+                prop.of.model     = prop.of.model,
+                MAP               = try.exp[["loglh"]] + prop.of.model
+
                 ))
   }
 
+  out.list <- list()
   for (df in 1:max.level) {
     my.msg(0, "\ndf = ", df)
     subsets <- as.list(sets::set_combn(non.0.exp.index, df))
@@ -135,6 +147,7 @@ MAPAssignActivity1 <- function(spect,
     }
 
     check.mclapply.result(check.to.remove, "SparseAssignActivity1")
+    out.list <-c(out.list, check.to.remove)
 
     p.to.remove <- unlist(lapply(check.to.remove, `[`, "p"))
     names(p.to.remove) <-
@@ -150,6 +163,7 @@ MAPAssignActivity1 <- function(spect,
       my.msg(10, "Cannot remove any subsets at level ", df)
       break;
     }
+
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
     xx <- which(p.to.remove == max(p.to.remove))
@@ -183,7 +197,7 @@ MAPAssignActivity1 <- function(spect,
     out.exp[unlist(best.sig.indices[[max.df]])] <- unlist(best.exp[[max.df]])
   }
   stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
-  return(out.exp)
+  return(list(exposure = out.exp, everything = out.list))
 }
 
 #' Calculate \eqn{P(M)} -- the probabily of a model of which signatures are present in a sample.
@@ -202,5 +216,6 @@ P.of.M <- function(model, sigs.presence.prop) {
   not.present <- sigs.presence.prop[not.present.names]
   not.present <- 1 - not.present
   rr <- sum(log(c(present, not.present)))
+  # This could be -Inf if one of the signatures is always present in the prior data but absent; probably want to fudge this slightly
   return(rr)
 }

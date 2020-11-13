@@ -7,9 +7,10 @@ library(mSigAct)
 mm <- DefaultManyOpts()
 mm$trace <- 100
 
-foo <- SparseAssignActivity1(spectra = catSBS96.1, sigs = my.sig.SBS96,
-                            max.level = 16, # 16,
+foo <- SparseAssignActivity1(spect = catSBS96.1, sigs = my.sig.SBS96,
+                            max.level = 2, #16, # 16,
+                            eval_f = ObjFnBinomMaxLHNoRoundOK,
                             p.thresh = 0.01,
                             m.opts = mm #)
-                            , mc.cores.per.sample = 100)
+                            , max.mc.cores = 100)
 

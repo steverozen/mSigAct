@@ -13,11 +13,24 @@ sigs.prop <- unlist(sigs.prop[ , 2])
 names(sigs.prop) <- sig.names
 
 
-foo <- mSigAct::MAPAssignActivity1(spect = catSBS96.1, sigs = my.sig.SBS96,
+map.foo2 <- mSigAct::MAPAssignActivity1(spect = catSBS96.1, sigs = my.sig.SBS96,
                          sigs.presence.prop = sigs.prop,
-                            max.level = 16, # 16,
+                            max.level = 16,
                             p.thresh = 0.01,
                             eval_f = ObjFnBinomMaxLHNoRoundOK,
                             m.opts = mm #)
-                            , max.mc.cores = 1 )# mc.cores.per.sample = 100)
+                            , max.mc.cores = 100 )# mc.cores.per.sample = 100)
 
+small.sigs <-my.sig.SBS96[ , 1:7]
+small.prop <- sigs.prop[colnames(small.sigs)]
+small.prop[small.prop == 1] <-  0.99
+
+# todo???
+
+small.x <- mSigAct::MAPAssignActivity1(spect = catSBS96.1, sigs = small.sigs,
+                                        sigs.presence.prop = small.prop,
+                                        max.level = 4,
+                                        p.thresh = 0.9,
+                                        eval_f = ObjFnBinomMaxLHNoRoundOK,
+                                        m.opts = mm #)
+                                        , max.mc.cores = 100 )# mc.cores.per.sample = 100)

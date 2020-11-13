@@ -36,6 +36,7 @@ Suggests:
     knitr,
     PCAWG7,
     profvis,
+    quadprog,
     rmarkdown,
     testthat (>= 2.1.0),   
     usethis,
