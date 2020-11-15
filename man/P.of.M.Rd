@@ -7,7 +7,7 @@
 P.of.M(model, sigs.presence.prop)
 }
 \arguments{
-\item{model}{Names of sigs present in a trial exposure}
+\item{model}{Names of sigs present in a trial exposure. Do not use indices.}
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names

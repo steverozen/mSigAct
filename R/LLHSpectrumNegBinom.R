@@ -33,57 +33,21 @@ LLHSpectrumNegBinom <-
 
     stopifnot(length(spectrum) == length(expected.counts))
 
-    if (TRUE) {
-      loglh0 <- sum(stats::dnbinom(
-        x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
-      if (is.nan(loglh0)) {
-        warning("logl9 is Nan, changing to -Inf")
-        loglh0 = -Inf
-      }
-      if (loglh0 == -Inf && verbose) {
-        message("logh0== -Inf for spectrum = ")
-        message(paste0(spectrum, collapse = " "))
-        message("expected.counts = ")
-        message(paste(expected.counts, collapse = " "))
-      }
-
-      stopifnot(mode(loglh0) == 'numeric' )
-      return(loglh0)
-    } else {
-
-      loglh <- 0
-      for (i in 1:length(spectrum)) {
-        # Iterate over each channel in the
-        # spectrum and sum the log
-        # likelihoods.
-
-        nbinom <- stats::dnbinom(x    = spectrum[i],
-                                 mu   = expected.counts[i],
-                                 size = nbinom.size,
-                                 log  = TRUE)
-
-        # TODO, steve add these checks to the non-for-loop code
-        if (is.nan(nbinom)) {
-          warning("nbinom is Nan, changing to -Inf")
-          nbinom = -Inf
-        }
-        if (nbinom == -Inf && verbose) {
-          message("nbinom == -Inf for mutation class i = ", i, " (",
-                  rownames(spectrum)[i],
-                  ") spectrum[i] = ", spectrum[i], " expected.counts[i] = ",
-                  expected.counts[i])
-        }
-
-        loglh <- loglh + nbinom
-      }
-      stopifnot(mode(loglh) == 'numeric' )
-      return(loglh)
+    loglh0 <- sum(stats::dnbinom(
+      x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
+    if (is.nan(loglh0)) {
+      warning("logl9 is Nan, changing to -Inf")
+      loglh0 = -Inf
     }
-    if (!isTRUE(all.equal(loglh, loglh0, tolerance = 1e-11))) {
-      stop("loglh != loglh0, difference = ", loglh - loglh0)
-
+    if (loglh0 == -Inf && verbose) {
+      message("logh0== -Inf for spectrum = ")
+      message(paste0(spectrum, collapse = " "))
+      message("expected.counts = ")
+      message(paste(expected.counts, collapse = " "))
     }
 
+    stopifnot(mode(loglh0) == 'numeric' )
+    return(loglh0)
   }
 
 

@@ -12,7 +12,8 @@ MAPAssignActivity1(
   p.thresh = 0.05,
   eval_f,
   m.opts,
-  max.mc.cores = min(20, 2^max.level)
+  max.mc.cores = min(20, 2^max.level),
+  max.subsets = 1000
 )
 }
 \arguments{
