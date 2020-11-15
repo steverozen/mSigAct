@@ -9,9 +9,12 @@ OneMAPAssignTest(
   reference.exp,
   cancer.type,
   mutation.type,
+  exposure.mutation.type,
   max.subsets = 1000,
   max.level = 5,
-  max.mc.cores = 100
+  max.mc.cores = 100,
+  out.dir = NULL,
+  p.thresh
 )
 }
 \description{

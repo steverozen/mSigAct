@@ -2,14 +2,16 @@
 % Please edit documentation in R/OneMAPAssignTest.R
 \name{PCAWGMAPTest}
 \alias{PCAWGMAPTest}
-\title{Run MAPAssignSignature on one sample from PCAWG}
+\title{Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.}
 \usage{
 PCAWGMAPTest(
   cancer.type,
   sample.index,
   mutation.type,
   max.level = 5,
-  max.mc.cores
+  max.mc.cores,
+  out.dir = NULL,
+  p.thresh = 0.01
 )
 }
 \arguments{
@@ -17,8 +19,8 @@ PCAWGMAPTest(
 
 \item{sample.index}{The index of the sample within the exposures matrix.}
 
-\item{mutation.type}{One of "SBS96" ...}
+\item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78"}
 }
 \description{
-Run MAPAssignSignature on one sample from PCAWG
+Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.
 }

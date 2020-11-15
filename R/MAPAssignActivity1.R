@@ -106,6 +106,7 @@ MAPAssignActivity1 <- function(spect,
     best.sig.indices <- list() # Index by level, the signature indices for the exposures in best.exp
   }
 
+  # Internal function ====================================================
   info.of.removed.subset <- function(subset) {
     # subset is of class set (package sets)
     subset.to.remove.v <- as.numeric(subset)
@@ -145,17 +146,19 @@ MAPAssignActivity1 <- function(spect,
     }
     prob.of.model <- P.of.M(try.sigs.names, sigs.presence.prop)
 
-    return(list(sig.names            = paste(colnames(sigs)[try.sigs.indices], collapse = ","),
-                p.for.removing.sigs  = chisq.p,
-                exp                  = try.exp[["exposure"]],
-                sig.indices          = try.sigs.indices,
-                removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v], collapse = ","),
-                loglh.of.exp         = try.exp[["loglh"]],
-                prob.of.model        = prob.of.model,
-                MAP                  = try.exp[["loglh"]] + prob.of.model,
-                df                   = df))
-  } # info.of.removed.subset
-
+    return(list(
+      sig.names            = paste(colnames(sigs)[try.sigs.indices],
+                                   collapse = ","),
+      p.for.removing.sigs  = chisq.p,
+      exp                  = try.exp[["exposure"]],
+      sig.indices          = try.sigs.indices,
+      removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
+                                   collapse = ","),
+      loglh.of.exp         = try.exp[["loglh"]],
+      prob.of.model        = prob.of.model,
+      MAP                  = try.exp[["loglh"]] + prob.of.model,
+      df                   = df))
+  } # Internal function info.of.removed.subset ===========================
 
 
   for (df in 1:max.level) {
@@ -183,7 +186,6 @@ MAPAssignActivity1 <- function(spect,
     }
 
     check.mclapply.result(check.to.remove, "SparseAssignActivity1")
-    out.list <-c(out.list, check.to.remove)
 
     p.to.remove <- unlist(lapply(check.to.remove, `[`, "p.for.removing.sigs"))
     names(p.to.remove) <-
@@ -199,6 +201,8 @@ MAPAssignActivity1 <- function(spect,
       my.msg(10, "Cannot remove any subsets at level ", df)
       break;
     }
+    ok.after.removal <- check.to.remove[p.to.remove >= p.thresh]
+    out.list <-c(out.list, ok.after.removal)
 
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
