@@ -17,7 +17,7 @@ cancer.types <- names(p7)
 mm <- mSigAct::DefaultManyOpts()
 mm$trace <- 100
 
-# debug(OneMAPAssignTest)
+ debug(OneMAPAssignTest)
 # debug(MAPAssignActivity1)
 for (tt in cancer.types) {
   message("cancer type = ", tt)

@@ -120,6 +120,7 @@ PCAWGMAPTest <- function(cancer.type,
 #'
 #' @export
 #'
+
 OneMAPAssignTest <- function(spect,
                              reference.exp,
                              cancer.type,
@@ -132,7 +133,6 @@ OneMAPAssignTest <- function(spect,
                              out.dir = NULL,
                              p.thresh,
                              max.presence.proportion) {
-
   if (!is.null(out.dir)) {
     if (!dir.exists(out.dir)) {
       created <- dir.create(out.dir, recursive = TRUE)
@@ -197,7 +197,7 @@ OneMAPAssignTest <- function(spect,
   ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
 
   # select.best and todo compare to PCAWG exposure
-  best <- dplyr::arrange(xx, rlang::.data$MAP)[nrow(xx),  ]
+  best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
   names.best <- names(best[["exp"]])
   best.exp <- best[["exp"]][[1]]
   if (is.null(names(best.exp))) {
@@ -206,7 +206,7 @@ OneMAPAssignTest <- function(spect,
   MAP.best.exp <- tibble::tibble(sig.id = names(best.exp), best.exp )
 
   sparse.best <-
-    dplyr::arrange(xx, rlang::.data$df, rlang::.data$MAP)[nrow(xx), ]
+    dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
   names.sparse.best <- names(sparse.best[["exp"]])
   most.sparse.exp <- sparse.best[["exp"]][[1]]
   if (is.null(names(most.sparse.exp))) {
