@@ -20,7 +20,14 @@
 #'
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
-#'   On Microsoft Windows machines it is silently changed to 1.)
+#'   On Microsoft Windows machines it is silently changed to 1.
+#'
+#' @param max.subsets The maxium number of subsets that can be
+#'   tested for removal from the set of signatures.
+#'
+#'
+#' @param max.presence.proportion The maxium value of the proportion
+#'   of tumors that must have a given signature.
 
 
 MAPAssignActivity1 <- function(spect,
@@ -31,10 +38,14 @@ MAPAssignActivity1 <- function(spect,
                                eval_f,
                                m.opts,
                                max.mc.cores = min(20, 2^max.level),
-                               max.subsets = 1000) {
+                               max.subsets = 1000,
+                               max.presence.proportion = 0.99) {
 
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
+
+  sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
+    max.presence.proportion
 
   max.sig.index <- ncol(sigs)
   my.msg(10, "number of signatures = ", max.sig.index)

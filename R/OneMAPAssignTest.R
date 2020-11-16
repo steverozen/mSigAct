@@ -1,28 +1,10 @@
 if (FALSE) {
-  debug(PCAWGMAPTest)
-
-  debug(MAPAssignActivity1)
-
-  profvis::profvis(
-    PCAWGMAPTest(cancer.type = "Lung-AdenoCA",
-                 sample.index = 1, mutation.type = "SBS96", max.mc.cores = 1, out.dir = TRUE,
-                 max.level = 3)
-  )
-
-  debug(MAPAssignActivity1)
-  debug(OneMAPAssignTest)
-  PCAWGMAPTest(cancer.type = "CNS-PiloAstro", # Lung-AdenoCA",
-               sample.index = 1, mutation.type = "SBS96", max.mc.cores = 100, out.dir = TRUE,
-               max.level = 100)
-}
-
-if (FALSE) {
 
 
-  # mutation.type = "SBS96"
+  mutation.type = "SBS96"
   # mutation.type = "ID"
-  mutation.type = "SBS192"
-  # mutation.type = "DB78"
+  # mutation.type = "SBS192"
+  # mutation.type = "DBS78"
 
   devtools::load_all(".")
 
@@ -32,8 +14,8 @@ if (FALSE) {
   cancer.types <- names(p7)
   # cancer.types <- "Cervix-AdenoCA"
 
-  debug(OneMAPAssignTest)
-  # debug(MAPAssignActivity1)
+  # debug(OneMAPAssignTest)
+  debug(MAPAssignActivity1)
   for (tt in cancer.types) {
     message("cancer type = ", tt)
     PCAWGMAPTest(cancer.type = tt,
@@ -41,7 +23,8 @@ if (FALSE) {
                  mutation.type = mutation.type,
                  max.mc.cores = 100,
                  out.dir = TRUE,
-                 max.level = 100) }
+                 max.level = 100,
+                 reduce.must.have = 0.99) }
 
 
 
@@ -55,6 +38,8 @@ if (FALSE) {
 #'
 #' @param mutation.type One of "SBS96", "SBS192", "ID", "DBS78"
 #'
+#'m
+#'
 #'
 PCAWGMAPTest <- function(cancer.type,
                          sample.index,
@@ -62,7 +47,8 @@ PCAWGMAPTest <- function(cancer.type,
                          max.level = 5,
                          max.mc.cores,
                          out.dir = NULL,
-                         p.thresh = 0.01) {
+                         p.thresh = 0.01,
+                         reduce.must.have = 0.99) {
 
   exposure.mutation.type <-
     ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
@@ -102,7 +88,8 @@ PCAWGMAPTest <- function(cancer.type,
                      max.mc.cores           = max.mc.cores,
                      max.level              = max.level,
                      out.dir                = out.dir,
-                     p.thresh               = p.thresh)
+                     p.thresh               = p.thresh,
+                     reduce.must.have       = reduce.must.have)
 
 }
 
@@ -118,7 +105,8 @@ OneMAPAssignTest <- function(spect,
                              max.level   = 5,
                              max.mc.cores = 100,
                              out.dir = NULL,
-                             p.thresh) {
+                             p.thresh,
+                             reduce.must.have) {
 
   if (!is.null(out.dir)) {
     if (!dir.exists(out.dir)) {
@@ -163,7 +151,8 @@ OneMAPAssignTest <- function(spect,
       eval_f = ObjFnBinomMaxLHNoRoundOK,
       m.opts = mm,
       max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
-      max.subsets = max.subsets)
+      max.subsets = max.subsets,
+      reduce.must.have = reduce.must.have)
   # todo remove p value and other non-useful columns from output
 
   if (is.null(MAPout)) {
@@ -188,20 +177,23 @@ OneMAPAssignTest <- function(spect,
 
   # select.best and todo compare to PCAWG exposure
   best <- dplyr::arrange(xx, MAP)[nrow(xx),  ]
-
+  names.best <- names(best[["exp"]])
   best.exp <- best[["exp"]][[1]]
+  if (is.null(names(best.exp))) {
+    names(best.exp) <- names.best
+  }
   MAP.best.exp <- tibble::tibble(sig.id = names(best.exp), best.exp )
 
   sparse.best <- dplyr::arrange(xx, df, MAP)[nrow(xx), ]
   names.sparse.best <- names(sparse.best[["exp"]])
   most.sparse.exp <- sparse.best[["exp"]][[1]]
-  if (!is.null(names.sparse.best)) {
+  if (is.null(names(most.sparse.exp))) {
     names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
   }
   MAP.most.sparse <-
     tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
 
-  QP.exp <- OptimizeExposureQP(spect, sigs[ , names(best.exp)])
+  QP.exp <- OptimizeExposureQP(spect, sigs[ , names(best.exp), drop = FALSE])
   QP.best.MAP.exp <-
     tibble::tibble(sig.id = names(QP.exp), QP.best.MAP.exp = QP.exp)
 

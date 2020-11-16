@@ -8,16 +8,17 @@ OptimizeExposureQP(spectrum, signatures)
 }
 \arguments{
 \item{spectrum}{Mutational signature spectrum
-as vector or single column data frame or matrix.}
+as a numeric vector or single column data frame or matrix.}
 
 \item{signatures}{Matrix or data frame of signatures from which
 reconstruct \code{spectrum}. Rows are mutation types and
 columns are signatures. Should have column names for
-interpretable results.}
+interpretable results. Cannot be a vector because
+the column names are needed.}
 }
 \value{
 A vector of exposures with names being the colnames from
-  \code{signatures}
+  \code{signatures}.
 Code adapted from \code{SignatureEstimation::decomposeQP}.
 }
 \description{

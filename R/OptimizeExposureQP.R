@@ -1,25 +1,37 @@
 #' Quadratic programming optimization of signature activities
 #'
 #' @param spectrum Mutational signature spectrum
-#'      as vector or single column data frame or matrix.
+#'      as a numeric vector or single column data frame or matrix.
 #'
 #' @param signatures Matrix or data frame of signatures from which
 #'      reconstruct \code{spectrum}. Rows are mutation types and
 #'      columns are signatures. Should have column names for
-#'      interpretable results.
+#'      interpretable results. Cannot be a vector because
+#'      the column names are needed.
 #'
 #' @return A vector of exposures with names being the colnames from
-#'   \code{signatures}
+#'   \code{signatures}.
 
 #' Code adapted from \code{SignatureEstimation::decomposeQP}.
 
 OptimizeExposureQP <- function(spectrum, signatures) {
 
   M <- spectrum / sum(spectrum)
+
+  if (is.data.frame(signatures)) {
+    P <- as.matrix(signatures)
+  }
+  stopifnot(is.matrix(signatures))
   P <- signatures
 
-  # N: how many signatures are selected
+  # N: how many signatures should be considered
   N = ncol(P)
+  if (ncol(P) == 1) {
+    rr <- sum(spectrum)
+    names(rr) <- colnames(P)
+    stopifnot(!is.null(names(rr)))
+    return(rr)
+  }
 
   # Matrix appearing in the quadratic programming objective function
   G = t(P) %*% P
@@ -42,6 +54,7 @@ OptimizeExposureQP <- function(spectrum, signatures) {
   names(exposures) <- colnames(signatures)
   exposures[exposures < 0] <- 0
 
-  return(sum(spectrum) * exposures/sum(exposures))
-
+  rr <- sum(spectrum) * exposures/sum(exposures)
+  stopifnot(!is.null(names(rr)))
+  return(rr)
 }

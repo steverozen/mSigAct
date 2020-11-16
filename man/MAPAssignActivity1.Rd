@@ -13,7 +13,8 @@ MAPAssignActivity1(
   eval_f,
   m.opts,
   max.mc.cores = min(20, 2^max.level),
-  max.subsets = 1000
+  max.subsets = 1000,
+  max.presence.proportion = 0.99
 )
 }
 \arguments{
@@ -34,7 +35,13 @@ being the same as \code{colnames(sigs)}.}
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{max.mc.cores}{The maximum number of cores to use.
-On Microsoft Windows machines it is silently changed to 1.)}
+On Microsoft Windows machines it is silently changed to 1.}
+
+\item{max.subsets}{The maxium number of subsets that can be
+tested for removal from the set of signatures.}
+
+\item{max.presence.proportion}{The maxium value of the proportion
+of tumors that must have a given signature.}
 }
 \description{
 Component of \code{\link{SparseAssignActivity}} for one spectrum.

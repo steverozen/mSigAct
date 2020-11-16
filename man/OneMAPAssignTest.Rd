@@ -14,7 +14,8 @@ OneMAPAssignTest(
   max.level = 5,
   max.mc.cores = 100,
   out.dir = NULL,
-  p.thresh
+  p.thresh,
+  reduce.must.have
 )
 }
 \description{
