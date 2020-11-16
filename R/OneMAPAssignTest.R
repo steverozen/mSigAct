@@ -1,24 +1,31 @@
-#' Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.
+#' Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set.
 #'
-#' @param cancer.type A cancer type from the exposures matrix.
+#' @param cancer.type A cancer type from the PCAWG exposures matrix.
 #'
 #' @param sample.index The index of the sample within the exposures matrix.
 #'
 #' @param mutation.type One of "SBS96", "SBS192", "ID", "DBS78"
 #'
-#' @param max.level XXXX
+#' @param max.level The maximum number of signatures to try removing.
 #'
-#' @param max.mc.cores XXXXX
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @param out.dir XXXXXX
+#' @param out.dir If non-NULL creat this directory if necessary and put
+#'   results there.
 #'
-#' @parm p.thresh xxxxxxx
+#' @param max.mc.cores
+#'   The maximum number of cores to use.
+#'   On Microsoft Windows machines it is silently changed to 1.
+#'
+#' @param p.thresh If
+#'  the p value for a better reconstruction with than without a set of signatures
+#'  is > than \code{p.thresh}, then we can use exposures without this set.
 #'
 #' @param max.presence.proportion xxxxx
 #'
 #' @export
 #'
-#'
+
 PCAWGMAPTest <- function(cancer.type,
                          sample.index,
                          mutation.type,
@@ -26,6 +33,7 @@ PCAWGMAPTest <- function(cancer.type,
                          max.mc.cores,
                          out.dir = NULL,
                          p.thresh = 0.01,
+                         m.opts = DefaultManyOpts(),
                          max.presence.proportion = 0.99) {
 
   exposure.mutation.type <-
@@ -58,43 +66,57 @@ PCAWGMAPTest <- function(cancer.type,
   }
 
   rr <-
-    OneMAPAssignTest(spect                  = one.spect,
-                     reference.exp          = one.ex,
-                     cancer.type            = cancer.type ,
-                     mutation.type          = mutation.type,
-                     exposure.mutation.type = exposure.mutation.type,
-                     max.mc.cores           = max.mc.cores,
-                     max.level              = max.level,
-                     out.dir                = out.dir,
-                     p.thresh               = p.thresh,
-                     max.presence.proportion  = max.presence.proportion)
-
+    OneMAPAssignTest(spect                   = one.spect,
+                     reference.exp           = one.ex,
+                     cancer.type             = cancer.type ,
+                     mutation.type           = mutation.type,
+                     exposure.mutation.type  = exposure.mutation.type,
+                     max.mc.cores            = max.mc.cores,
+                     max.level               = max.level,
+                     out.dir                 = out.dir,
+                     p.thresh                = p.thresh,
+                     m.opts                  = m.opts,
+                     max.presence.proportion = max.presence.proportion)
+  return(rr)
 }
 
 
-#' Run one test of MAPAssignActivity1
+#' Run one test of \code{\link{MAPAssignActivity1}}.
 #'
-#' @param spect xxxx.
+#' @param spect A single spectrum.
 #'
-#' @param reference.exp xxxxx
+#' @param reference.exp Compare the inferred exposures to this.
 #'
-#' @param cancer.type xxxxx
+#' @param cancer.type Character string from a fixed set indicating
+#'   different cancer types, used to look up the set of signatures
+#'   known in that cancer type and the proportion of cancers of that
+#'   type that have the signature. TODO: provide information on
+#'   how to find the allowed cancer types.
 #'
 #' @param mutation.type One of "SBS96", "SBS192", "ID", "DBS78".
 #'
 #' @param exposure.mutation.type One of "SBS96", "ID", "DBS78".
 #'
-#' @param max.subsets xxxxxx,
+#' @param max.level The maximum number of signatures to try removing.
 #'
-#' @param max.level XXXX
+#' @param out.dir If non-NULL creat this directory if necessary and put
+#'   results there.
 #'
-#' @param max.mc.cores XXXXX
+#' @param p.thresh If
+#'  the p value for a better reconstruction with than without a set of signatures
+#'  is > than \code{p.thresh}, then we can use exposures without this set.
 #'
-#' @param out.dir XXXXXX
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @parm p.thresh xxxxxxx
+#' @param max.mc.cores
+#'   The maximum number of cores to use.
+#'   On Microsoft Windows machines it is silently changed to 1.
 #'
-#' @param max.presence.proportion xxxxx
+#' @param max.subsets The maxium number of subsets that can be
+#'   tested for removal from the set of signatures.
+#'
+#' @param max.presence.proportion The maxium value of the proportion
+#'   of tumors that must have a given signature.
 #'
 #' @export
 #'
@@ -106,6 +128,7 @@ OneMAPAssignTest <- function(spect,
                              max.subsets = 1000,
                              max.level   = 5,
                              max.mc.cores = 100,
+                             m.opts = DefaultManyOpts(),
                              out.dir = NULL,
                              p.thresh,
                              max.presence.proportion) {
@@ -116,9 +139,6 @@ OneMAPAssignTest <- function(spect,
       stopifnot(created)
     }
   }
-
-  mm <- DefaultManyOpts()
-  mm$trace <- 100
 
   sigs.prop <- PCAWG7::exposure.stats$PCAWG[[exposure.mutation.type]][[cancer.type]]
   if (is.null(sigs.prop)) {
@@ -151,7 +171,7 @@ OneMAPAssignTest <- function(spect,
       max.level = max.level, # length(sigs.prop) - 1,
       p.thresh = p.thresh,
       eval_f = ObjFnBinomMaxLHNoRoundOK,
-      m.opts = mm,
+      m.opts = m.opts,
       max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
       max.subsets = max.subsets,
       max.presence.proportion = max.presence.proportion)
@@ -177,7 +197,7 @@ OneMAPAssignTest <- function(spect,
   ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
 
   # select.best and todo compare to PCAWG exposure
-  best <- dplyr::arrange(xx, MAP)[nrow(xx),  ]
+  best <- dplyr::arrange(xx, rlang::.data$MAP)[nrow(xx),  ]
   names.best <- names(best[["exp"]])
   best.exp <- best[["exp"]][[1]]
   if (is.null(names(best.exp))) {
@@ -185,7 +205,8 @@ OneMAPAssignTest <- function(spect,
   }
   MAP.best.exp <- tibble::tibble(sig.id = names(best.exp), best.exp )
 
-  sparse.best <- dplyr::arrange(xx, df, MAP)[nrow(xx), ]
+  sparse.best <-
+    dplyr::arrange(xx, rlang::.data$df, rlang::.data$MAP)[nrow(xx), ]
   names.sparse.best <- names(sparse.best[["exp"]])
   most.sparse.exp <- sparse.best[["exp"]][[1]]
   if (is.null(names(most.sparse.exp))) {
@@ -214,7 +235,7 @@ OneMAPAssignTest <- function(spect,
     out.path <- file.path(out.dir, "comparisions.csv")
     cat("\nComparisons of exposure attributions\n", file = out.path)
     suppressWarnings(
-      write.table(comp, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(comp, file = out.path, append = TRUE, sep = ","))
   }
 
   # PCAWG attributions
@@ -247,7 +268,7 @@ OneMAPAssignTest <- function(spect,
   if (!is.null(out.dir)) {
     cat("\nEuclidean distances\n", file = out.path, append = TRUE)
     suppressWarnings(
-      write.table(e.dist, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(e.dist, file = out.path, append = TRUE, sep = ","))
   }
 
   cos.sim <- philentropy::distance(t(sol.matrix),
@@ -257,7 +278,7 @@ OneMAPAssignTest <- function(spect,
   if (!is.null(out.dir)) {
     cat("\nCosine similarities\n", file = out.path, append = TRUE)
     suppressWarnings(
-      write.table(cos.sim, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(cos.sim, file = out.path, append = TRUE, sep = ","))
   }
 
   colnames(sol.matrix) <- paste(colnames(sol.matrix), round(cos.sim[1, ], digits = 4))

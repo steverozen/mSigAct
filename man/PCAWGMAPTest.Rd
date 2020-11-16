@@ -2,7 +2,7 @@
 % Please edit documentation in R/OneMAPAssignTest.R
 \name{PCAWGMAPTest}
 \alias{PCAWGMAPTest}
-\title{Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.}
+\title{Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set.}
 \usage{
 PCAWGMAPTest(
   cancer.type,
@@ -12,24 +12,33 @@ PCAWGMAPTest(
   max.mc.cores,
   out.dir = NULL,
   p.thresh = 0.01,
+  m.opts = DefaultManyOpts(),
   max.presence.proportion = 0.99
 )
 }
 \arguments{
-\item{cancer.type}{A cancer type from the exposures matrix.}
+\item{cancer.type}{A cancer type from the PCAWG exposures matrix.}
 
 \item{sample.index}{The index of the sample within the exposures matrix.}
 
 \item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78"}
 
-\item{max.level}{XXXX}
+\item{max.level}{The maximum number of signatures to try removing.}
 
-\item{max.mc.cores}{XXXXX}
+\item{max.mc.cores}{The maximum number of cores to use.
+On Microsoft Windows machines it is silently changed to 1.}
 
-\item{out.dir}{XXXXXX}
+\item{out.dir}{If non-NULL creat this directory if necessary and put
+results there.}
+
+\item{p.thresh}{If
+the p value for a better reconstruction with than without a set of signatures
+is > than \code{p.thresh}, then we can use exposures without this set.}
+
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{max.presence.proportion}{xxxxx}
 }
 \description{
-Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.
+Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set.
 }

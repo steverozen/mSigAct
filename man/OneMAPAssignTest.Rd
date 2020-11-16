@@ -2,7 +2,7 @@
 % Please edit documentation in R/OneMAPAssignTest.R
 \name{OneMAPAssignTest}
 \alias{OneMAPAssignTest}
-\title{Run one test of MAPAssignActivity1}
+\title{Run one test of \code{\link{MAPAssignActivity1}}.}
 \usage{
 OneMAPAssignTest(
   spect,
@@ -13,32 +13,47 @@ OneMAPAssignTest(
   max.subsets = 1000,
   max.level = 5,
   max.mc.cores = 100,
+  m.opts = DefaultManyOpts(),
   out.dir = NULL,
   p.thresh,
   max.presence.proportion
 )
 }
 \arguments{
-\item{spect}{xxxx.}
+\item{spect}{A single spectrum.}
 
-\item{reference.exp}{xxxxx}
+\item{reference.exp}{Compare the inferred exposures to this.}
 
-\item{cancer.type}{xxxxx}
+\item{cancer.type}{Character string from a fixed set indicating
+different cancer types, used to look up the set of signatures
+known in that cancer type and the proportion of cancers of that
+type that have the signature. TODO: provide information on
+how to find the allowed cancer types.}
 
 \item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78".}
 
 \item{exposure.mutation.type}{One of "SBS96", "ID", "DBS78".}
 
-\item{max.subsets}{xxxxxx,}
+\item{max.subsets}{The maxium number of subsets that can be
+tested for removal from the set of signatures.}
 
-\item{max.level}{XXXX}
+\item{max.level}{The maximum number of signatures to try removing.}
 
-\item{max.mc.cores}{XXXXX}
+\item{max.mc.cores}{The maximum number of cores to use.
+On Microsoft Windows machines it is silently changed to 1.}
 
-\item{out.dir}{XXXXXX}
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
-\item{max.presence.proportion}{xxxxx}
+\item{out.dir}{If non-NULL creat this directory if necessary and put
+results there.}
+
+\item{p.thresh}{If
+the p value for a better reconstruction with than without a set of signatures
+is > than \code{p.thresh}, then we can use exposures without this set.}
+
+\item{max.presence.proportion}{The maxium value of the proportion
+of tumors that must have a given signature.}
 }
 \description{
-Run one test of MAPAssignActivity1
+Run one test of \code{\link{MAPAssignActivity1}}.
 }

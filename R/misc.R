@@ -1,4 +1,4 @@
-#' @importFrom tibble tibble_row
+
 List2TibbleRow <- function(a.list) {
 
   list2 <- lapply(a.list, function(x) {
@@ -8,13 +8,20 @@ List2TibbleRow <- function(a.list) {
       return(x)
     }})
 
-  rr <- do.call("tibble_row", list2)
+  rr <- do.call(tibble::tibble_row, list2)
   return(rr)
 }
 
 ListOfList2Tibble <- function(list.of.lists) {
   rr <- lapply(list.of.lists, List2TibbleRow)
   do.call("rbind", rr)
+}
+
+
+if (FALSE) {
+  testin <- list(list(a = 1, b = 2), list(a = 3, b = 33))
+
+
 }
 
 #' Given signatures (sigs) and exposures (exp), return a spectrum or spectra

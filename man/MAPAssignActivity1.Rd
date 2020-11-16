@@ -28,7 +28,9 @@ being the same as \code{colnames(sigs)}.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
 
-\item{p.thresh}{The p value threshold for deciding if a set of signatures is necessary.}
+\item{p.thresh}{If
+the p value for a better reconstruction with than without a set of signatures
+is > than \code{p.thresh}, then we can use exposures without this set.}
 
 \item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 

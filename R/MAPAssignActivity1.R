@@ -14,7 +14,9 @@
 #'
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #'
-#' @param p.thresh The p value threshold for deciding if a set of signatures is necessary.
+#' @param p.thresh If
+#'  the p value for a better reconstruction with than without a set of signatures
+#'  is > than \code{p.thresh}, then we can use exposures without this set.
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
@@ -24,7 +26,6 @@
 #'
 #' @param max.subsets The maxium number of subsets that can be
 #'   tested for removal from the set of signatures.
-#'
 #'
 #' @param max.presence.proportion The maxium value of the proportion
 #'   of tumors that must have a given signature.
