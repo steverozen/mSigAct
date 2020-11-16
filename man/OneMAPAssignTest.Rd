@@ -15,8 +15,29 @@ OneMAPAssignTest(
   max.mc.cores = 100,
   out.dir = NULL,
   p.thresh,
-  reduce.must.have
+  max.presence.proportion
 )
+}
+\arguments{
+\item{spect}{xxxx.}
+
+\item{reference.exp}{xxxxx}
+
+\item{cancer.type}{xxxxx}
+
+\item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78".}
+
+\item{exposure.mutation.type}{One of "SBS96", "ID", "DBS78".}
+
+\item{max.subsets}{xxxxxx,}
+
+\item{max.level}{XXXX}
+
+\item{max.mc.cores}{XXXXX}
+
+\item{out.dir}{XXXXXX}
+
+\item{max.presence.proportion}{xxxxx}
 }
 \description{
 Run one test of MAPAssignActivity1

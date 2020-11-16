@@ -1,35 +1,3 @@
-if (FALSE) {
-
-
-  mutation.type = "SBS96"
-  # mutation.type = "ID"
-  # mutation.type = "SBS192"
-  # mutation.type = "DBS78"
-
-  devtools::load_all(".")
-
-  p7 <- PCAWG7::SplitPCAWGMatrixByTumorType(
-    PCAWG7::spectra$PCAWG[[mutation.type]])
-
-  cancer.types <- names(p7)
-  # cancer.types <- "Cervix-AdenoCA"
-
-  # debug(OneMAPAssignTest)
-  debug(MAPAssignActivity1)
-  for (tt in cancer.types) {
-    message("cancer type = ", tt)
-    PCAWGMAPTest(cancer.type = tt,
-                 sample.index = 1,
-                 mutation.type = mutation.type,
-                 max.mc.cores = 100,
-                 out.dir = TRUE,
-                 max.level = 100,
-                 reduce.must.have = 0.99) }
-
-
-
-}
-
 #' Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.
 #'
 #' @param cancer.type A cancer type from the exposures matrix.
@@ -38,7 +6,17 @@ if (FALSE) {
 #'
 #' @param mutation.type One of "SBS96", "SBS192", "ID", "DBS78"
 #'
-#'m
+#' @param max.level XXXX
+#'
+#' @param max.mc.cores XXXXX
+#'
+#' @param out.dir XXXXXX
+#'
+#' @parm p.thresh xxxxxxx
+#'
+#' @param max.presence.proportion xxxxx
+#'
+#' @export
 #'
 #'
 PCAWGMAPTest <- function(cancer.type,
@@ -48,7 +26,7 @@ PCAWGMAPTest <- function(cancer.type,
                          max.mc.cores,
                          out.dir = NULL,
                          p.thresh = 0.01,
-                         reduce.must.have = 0.99) {
+                         max.presence.proportion = 0.99) {
 
   exposure.mutation.type <-
     ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
@@ -89,12 +67,36 @@ PCAWGMAPTest <- function(cancer.type,
                      max.level              = max.level,
                      out.dir                = out.dir,
                      p.thresh               = p.thresh,
-                     reduce.must.have       = reduce.must.have)
+                     max.presence.proportion  = max.presence.proportion)
 
 }
 
 
 #' Run one test of MAPAssignActivity1
+#'
+#' @param spect xxxx.
+#'
+#' @param reference.exp xxxxx
+#'
+#' @param cancer.type xxxxx
+#'
+#' @param mutation.type One of "SBS96", "SBS192", "ID", "DBS78".
+#'
+#' @param exposure.mutation.type One of "SBS96", "ID", "DBS78".
+#'
+#' @param max.subsets xxxxxx,
+#'
+#' @param max.level XXXX
+#'
+#' @param max.mc.cores XXXXX
+#'
+#' @param out.dir XXXXXX
+#'
+#' @parm p.thresh xxxxxxx
+#'
+#' @param max.presence.proportion xxxxx
+#'
+#' @export
 #'
 OneMAPAssignTest <- function(spect,
                              reference.exp,
@@ -106,7 +108,7 @@ OneMAPAssignTest <- function(spect,
                              max.mc.cores = 100,
                              out.dir = NULL,
                              p.thresh,
-                             reduce.must.have) {
+                             max.presence.proportion) {
 
   if (!is.null(out.dir)) {
     if (!dir.exists(out.dir)) {
@@ -152,8 +154,7 @@ OneMAPAssignTest <- function(spect,
       m.opts = mm,
       max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
       max.subsets = max.subsets,
-      reduce.must.have = reduce.must.have)
-  # todo remove p value and other non-useful columns from output
+      max.presence.proportion = max.presence.proportion)
 
   if (is.null(MAPout)) {
     message("No result from MAPAssignActivity1")

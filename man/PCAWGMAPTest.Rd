@@ -12,7 +12,7 @@ PCAWGMAPTest(
   max.mc.cores,
   out.dir = NULL,
   p.thresh = 0.01,
-  reduce.must.have = 0.99
+  max.presence.proportion = 0.99
 )
 }
 \arguments{
@@ -20,9 +20,15 @@ PCAWGMAPTest(
 
 \item{sample.index}{The index of the sample within the exposures matrix.}
 
-\item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78"
+\item{mutation.type}{One of "SBS96", "SBS192", "ID", "DBS78"}
 
-m}
+\item{max.level}{XXXX}
+
+\item{max.mc.cores}{XXXXX}
+
+\item{out.dir}{XXXXXX}
+
+\item{max.presence.proportion}{xxxxx}
 }
 \description{
 Run \code{\link{MAPAssignSignature1}} on one sample from the PCAWG platinum data set.
