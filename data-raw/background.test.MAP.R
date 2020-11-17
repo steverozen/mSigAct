@@ -1,9 +1,9 @@
-setwd("tests.id.2/")     # <--------
+setwd("tests.sbs.gobal.eval.1000")     # <--------
 
 library(mSigAct)
 
-# mutation.type = "SBS96"
-mutation.type = "ID"      # <------
+mutation.type = "SBS96"
+# mutation.type = "ID"      # <------
 # mutation.type = "SBS192"
 # mutation.type = "DBS78"
 
@@ -16,9 +16,12 @@ cancer.types <- names(p7)
 
 mm <- mSigAct::DefaultManyOpts()
 mm$trace <- 100
+mm$global.opts$maxeval <- 1000
 
- debug(OneMAPAssignTest)
+# debug(OneMAPAssignTest)
 # debug(MAPAssignActivity1)
+
+total.time <- system.time(
 for (tt in cancer.types) {
   message("cancer type = ", tt)
   mSigAct:::PCAWGMAPTest(cancer.type             = tt,
@@ -28,6 +31,9 @@ for (tt in cancer.types) {
                          out.dir                 = TRUE,
                          m.opts                  = mm,
                          max.level               = 100,
-                         max.presence.proportion = 0.99) }
+                         max.presence.proportion = 0.99) })
 
-# nice R --vanilla < background.test.MAP.R &> tests.sbs192.2/bg.SBS192.x &
+print(total.time)
+
+# nice R --vanilla < background.test.MAP.R &> tests.sbs.gobal.eval.1000/log.txt &
+

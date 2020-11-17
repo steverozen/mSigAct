@@ -81,6 +81,7 @@ PCAWGMAPTest <- function(cancer.type,
 }
 
 
+utils::globalVariables(c(".data"))
 #' Run one test of \code{\link{MAPAssignActivity1}}.
 #'
 #' @param spect A single spectrum.
