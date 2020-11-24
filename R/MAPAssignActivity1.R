@@ -1,6 +1,77 @@
-#' Component of \code{\link{SparseAssignActivity}} for one spectrum.
+#' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
 #'
-#' @export
+#' @keywords internal
+#'
+#' @inheritParams MAPAssignActivityInternal
+#'
+#' @return A list with the elements \describe{
+#'
+#' \item{MAP}{xxxx}
+#'
+#' \item{most.sparse}{xxxx}
+#'
+#' \item{all.tested}{xxxx}
+#'
+#' }
+#'
+#' These elements will be \code{NULL} if \code{max.subsets} is exceeded.
+
+MAPAssignActivity1 <- function(spect,
+                               sigs,
+                               sigs.presence.prop,
+                               max.level    = 5,
+                               p.thresh     = 0.05,
+                               eval_f,
+                               m.opts,
+                               max.mc.cores = min(20, 2^max.level),
+                               max.subsets = 1000,
+                               max.presence.proportion = 0.99) {
+
+  MAPout <- MAPAssignActivityInternal(
+    spect                   = spect,
+    sigs                    = sigs,
+    sigs.presence.prop      = sigs.presence.prop,
+    max.level               = max.level,
+    p.thresh                = p.thresh,
+    eval_f                  = eval_f,
+    m.opts                  = m.opts,
+    max.mc.cores            = max.mc.cores,
+    max.subsets             = max.subsets,
+    max.presence.proportion = max.presence.proportion)
+
+  if (is.null(MAPout)) {
+    message("No result from MAPAssignActivityInternal")
+    list(MAP = NULL, most.sparse = NULL, all.tested = NULL)
+  }
+
+  xx <- ListOfList2Tibble(MAPout)
+
+  best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
+  names.best <- names(best[["exp"]])
+  best.exp <- best[["exp"]][[1]]
+  if (is.null(names(best.exp))) {
+    names(best.exp) <- names.best
+  }
+  MAP <- tibble::tibble(sig.id = names(best.exp), best.exp)
+
+  sparse.best <-
+    dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
+  names.sparse.best <- names(sparse.best[["exp"]])
+  most.sparse.exp <- sparse.best[["exp"]][[1]]
+  if (is.null(names(most.sparse.exp))) {
+    names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
+  }
+
+  most.sparse <-
+    tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
+
+  return(list(MAP = MAP, most.sparse = most.sparse, all.tested = xx))
+
+}
+
+#' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
+#'
+#' @keywords internal
 #'
 #' @param spect A single spectrum.
 #'
@@ -30,17 +101,16 @@
 #' @param max.presence.proportion The maxium value of the proportion
 #'   of tumors that must have a given signature.
 
-
-MAPAssignActivity1 <- function(spect,
-                               sigs,
-                               sigs.presence.prop,
-                               max.level    = 5,
-                               p.thresh     = 0.05,
-                               eval_f,
-                               m.opts,
-                               max.mc.cores = min(20, 2^max.level),
-                               max.subsets = 1000,
-                               max.presence.proportion = 0.99) {
+MAPAssignActivityInternal <- function(spect,
+                                      sigs,
+                                      sigs.presence.prop,
+                                      max.level    = 5,
+                                      p.thresh     = 0.05,
+                                      eval_f,
+                                      m.opts,
+                                      max.mc.cores = min(20, 2^max.level),
+                                      max.subsets = 1000,
+                                      max.presence.proportion = 0.99) {
 
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
@@ -95,7 +165,6 @@ MAPAssignActivity1 <- function(spect,
               MAP                  = lh.w.all + df0.prob.of.model,
               df                   = 0)
 
-
   out.list <- list(df0)
 
   if (length(non.0.exp.index) < 2) {
@@ -110,13 +179,6 @@ MAPAssignActivity1 <- function(spect,
   # c.r.s is "cannot remove subsets", i.e. subset of the signature indices that
   # cannot be removed
   c.r.s <- sets::set()
-
-  old.sparse <- FALSE
-
-  if (old.sparse) {
-    best.exp <- list() # Index by level, the expression of the assignments (exposures) at a given level
-    best.sig.indices <- list() # Index by level, the signature indices for the exposures in best.exp
-  }
 
   # Internal function ====================================================
   info.of.removed.subset <- function(subset) {
@@ -219,43 +281,6 @@ MAPAssignActivity1 <- function(spect,
     cannot.remove <- subsets2[p.to.remove < p.thresh]
     c.r.s <- sets::set_union(c.r.s, sets::as.set(cannot.remove))
 
-    if (old.sparse) {
-      # We keep track of the subset of signatures that are least important
-      xx <- which(p.to.remove == max(p.to.remove))
-      my.msg(10, "xx = ", paste(xx, collapse = ","),
-             "\nmax(p.to.remove = ", max(p.to.remove), ")")
-
-      if (length(xx) > 1) {
-        possible.sigs <-
-          lapply(X = subsets[xx],
-                 function(subset) paste(colnames(sigs)[unlist(subset)], collapse = ","))
-        xx <- min(xx)
-        sig.name.to.remove <- colnames(sigs)[unlist(subsets[[xx]])]
-
-        message("> 1 subset of signatures can be removed; ",
-                "selecting the first one arbitrarily (index = ", xx,
-                ",\nsigs are ", paste(sig.name.to.remove, collapse = ","), ")\n",
-                "Possibilities were\ ", paste(possible.sigs, collapse = "\n"))
-      }
-      best.exp[df] <- list(check.to.remove[[xx]]$exp)
-      best.sig.indices[df] <- list(check.to.remove[[xx]]$sig.indices)
-    }
-
-  }
-
-  if (old.sparse) {
-    # Need to return the exposures in the context of the
-    # original signatures matrix
-    out.exp <- numeric(ncol(sigs)) #all zeros
-    names(out.exp) <- colnames(sigs)
-    max.df <- length(best.sig.indices)
-    if (max.df == 0) {
-      out.exp <- start.exp
-    } else {
-      out.exp[unlist(best.sig.indices[[max.df]])] <- unlist(best.exp[[max.df]])
-    }
-    # stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
-    my.msg(0, "sum(out.exp) - sum(spect) = ", sum(out.exp) - sum(spect))
   }
 
   return(out.list)

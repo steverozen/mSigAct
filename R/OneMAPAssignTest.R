@@ -139,6 +139,16 @@ OneMAPAssignTest <- function(spect,
       created <- dir.create(out.dir, recursive = TRUE)
       stopifnot(created)
     }
+    logfile <- file.path(out.dir, "log.txt")
+    cat("date,\"", date(), "\"\n", file = logfile, sep = "")
+  }
+
+  shortlog <- function(tag, ...) {
+    if (!is.null(out.dir)) {
+      cat(tag,  "\n", sep = "", file = logfile, append = TRUE)
+      capture.output(print(...), file = logfile, append = TRUE)
+      cat("\n", file = logfile, append = TRUE)
+    }
   }
 
   sigs.prop <- PCAWG7::exposure.stats$PCAWG[[exposure.mutation.type]][[cancer.type]]
@@ -162,20 +172,23 @@ OneMAPAssignTest <- function(spect,
 
   sigs <- PCAWG7::signature$genome[[mutation.type]][ , names(sigs.prop), drop = FALSE]
 
-  qp.assign <- OptimizeExposureQP(spect, sigs)
+  # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
 
-  MAPout <-
-    mSigAct::MAPAssignActivity1(
-      spect = spect,
-      sigs = sigs,
-      sigs.presence.prop = sigs.prop,
-      max.level = max.level, # length(sigs.prop) - 1,
-      p.thresh = p.thresh,
-      eval_f = ObjFnBinomMaxLHNoRoundOK,
-      m.opts = m.opts,
-      max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
-      max.subsets = max.subsets,
-      max.presence.proportion = max.presence.proportion)
+  mapout.time <- system.time(
+    MAPout <-
+      mSigAct::MAPAssignActivity1(
+        spect = spect,
+        sigs = sigs,
+        sigs.presence.prop = sigs.prop,
+        max.level = max.level, # length(sigs.prop) - 1,
+        p.thresh = p.thresh,
+        eval_f = ObjFnBinomMaxLHNoRoundOK,
+        m.opts = m.opts,
+        max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
+        max.subsets = max.subsets,
+        max.presence.proportion = max.presence.proportion)
+  )
+  shortlog("Time", mapout.time)
 
   if (is.null(MAPout)) {
     message("No result from MAPAssignActivity1")
@@ -194,10 +207,6 @@ OneMAPAssignTest <- function(spect,
          file = file.path(out.dir, "all.saved.results.Rdata"))
   }
 
-  ref.nonzero <-reference.exp[reference.exp > 0]
-  ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
-
-  # select.best and todo compare to PCAWG exposure
   best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
   names.best <- names(best[["exp"]])
   best.exp <- best[["exp"]][[1]]
@@ -205,6 +214,8 @@ OneMAPAssignTest <- function(spect,
     names(best.exp) <- names.best
   }
   MAP.best.exp <- tibble::tibble(sig.id = names(best.exp), best.exp )
+  shortlog("Bestrow", best)
+  shortlog("Bestexp", best.exp)
 
   sparse.best <-
     dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
@@ -213,8 +224,14 @@ OneMAPAssignTest <- function(spect,
   if (is.null(names(most.sparse.exp))) {
     names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
   }
+  shortlog("Sparsebestrow", sparse.best)
+  shortlog("Sparssebestexp", most.sparse.exp)
+
   MAP.most.sparse <-
     tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
+
+  ref.nonzero <-reference.exp[reference.exp > 0]
+  ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
 
   QP.exp <- OptimizeExposureQP(spect, sigs[ , names(best.exp), drop = FALSE])
   QP.best.MAP.exp <-
@@ -236,8 +253,12 @@ OneMAPAssignTest <- function(spect,
     out.path <- file.path(out.dir, "comparisions.csv")
     cat("\nComparisons of exposure attributions\n", file = out.path)
     suppressWarnings(
-      utils::write.table(comp, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(comp, file = out.path, append = TRUE, sep = ",",
+                         row.names = FALSE))
   }
+
+
+
 
   # PCAWG attributions
   r.p <-
@@ -269,7 +290,8 @@ OneMAPAssignTest <- function(spect,
   if (!is.null(out.dir)) {
     cat("\nEuclidean distances\n", file = out.path, append = TRUE)
     suppressWarnings(
-      utils::write.table(e.dist, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(e.dist, file = out.path, append = TRUE, sep = ",",
+                         col.names = NA, row.names = TRUE))
   }
 
   cos.sim <- philentropy::distance(t(sol.matrix),
@@ -279,7 +301,8 @@ OneMAPAssignTest <- function(spect,
   if (!is.null(out.dir)) {
     cat("\nCosine similarities\n", file = out.path, append = TRUE)
     suppressWarnings(
-      utils::write.table(cos.sim, file = out.path, append = TRUE, sep = ","))
+      utils::write.table(cos.sim, file = out.path, append = TRUE, sep = ",",
+                         col.names = NA, row.names = TRUE))
   }
 
   colnames(sol.matrix) <- paste(colnames(sol.matrix), round(cos.sim[1, ], digits = 4))
