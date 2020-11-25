@@ -190,62 +190,39 @@ OneMAPAssignTest <- function(spect,
   )
   shortlog("Time", mapout.time)
 
-  if (is.null(MAPout)) {
-    message("No result from MAPAssignActivity1")
+  if (!is.null(out.dir)) {
+    save(MAPout, file = file.path(out.dir, "saved.MAPout.Rdata"))
+  }
+
+  if (!MAPout$success) {
+    message("MAPAssignActivity1 did not succeed")
     if (!is.null(out.dir)) {
-      cat("No result\n", file = file.path(out.dir, "no.results.txt"))
+      cat("No result\n", MAPout$messages, "\n",
+          file = file.path(out.dir, "no.results.txt"))
     }
     return(NULL)
   }
 
-  xx <- ListOfList2Tibble(MAPout)
-
-  if (!is.null(out.dir)) {
-    saved.MAPout.list    <- MAPout
-    saved.MAPout.tribble <- xx
-    save(saved.MAPout.list, saved.MAPout.tribble,
-         file = file.path(out.dir, "all.saved.results.Rdata"))
-  }
-
-  best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
-  names.best <- names(best[["exp"]])
-  best.exp <- best[["exp"]][[1]]
-  if (is.null(names(best.exp))) {
-    names(best.exp) <- names.best
-  }
-  MAP.best.exp <- tibble::tibble(sig.id = names(best.exp), best.exp )
-  shortlog("Bestrow", best)
-  shortlog("Bestexp", best.exp)
-
-  sparse.best <-
-    dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
-  names.sparse.best <- names(sparse.best[["exp"]])
-  most.sparse.exp <- sparse.best[["exp"]][[1]]
-  if (is.null(names(most.sparse.exp))) {
-    names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
-  }
-  shortlog("Sparsebestrow", sparse.best)
-  shortlog("Sparssebestexp", most.sparse.exp)
-
-  MAP.most.sparse <-
-    tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
-
   ref.nonzero <-reference.exp[reference.exp > 0]
   ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
 
-  QP.exp <- OptimizeExposureQP(spect, sigs[ , names(best.exp), drop = FALSE])
+  QP.exp <- OptimizeExposureQP(spect,
+                               sigs[ , MAPout$MAP$sig.id,
+                                     drop = FALSE])
   QP.best.MAP.exp <-
     tibble::tibble(sig.id = names(QP.exp), QP.best.MAP.exp = QP.exp)
 
-  qp.sparse <- OptimizeExposureQP(spect, sigs[ , names(most.sparse.exp), drop = FALSE])
+  qp.sparse <- OptimizeExposureQP(spect,
+                                  sigs[ , MAPout$most.sparse$sig.id,
+                                        drop = FALSE])
   QP.sparse.MAP.exp <-
     tibble::tibble(sig.id = names(qp.sparse), QP.sparse.MAP.exp = qp.sparse)
 
   comp <-
     dplyr::full_join(
       dplyr::full_join(
-        dplyr::full_join(ref.exp, MAP.best.exp),
-        dplyr::full_join(MAP.most.sparse, QP.best.MAP.exp)),
+        dplyr::full_join(ref.exp, MAPout$MAP),
+        dplyr::full_join(MAPout$most.sparse, QP.best.MAP.exp)),
       QP.sparse.MAP.exp)
   print(comp)
 
@@ -257,26 +234,23 @@ OneMAPAssignTest <- function(spect,
                          row.names = FALSE))
   }
 
-
-
-
   # PCAWG attributions
   r.p <-
     ReconstructSpectrum(sigs, exp = ref.nonzero, use.sig.names = TRUE)
 
   # Best MAP
   r.b <-
-    ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
+    ReconstructSpectrum(sigs, exp = MAPout$MAP$best.exp, use.sig.names = TRUE)
 
-  # Best MAP re-optimized to a different obective function
+  # Best MAP re-optimized to a different objective function
   r.qp <-
     ReconstructSpectrum(sigs, exp = QP.exp, use.sig.names = TRUE)
 
   # MAP most sparse
   r.sparse.best <-
-    ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
+    ReconstructSpectrum(sigs, exp = MAPout$most.sparse$most.sparse, use.sig.names = TRUE)
 
-  # MAP most sparse re-optimsed to different objective function
+  # MAP most sparse re-optimised to different objective function
     r.qp.sparse <-
       ReconstructSpectrum(sigs, exp = qp.sparse, use.sig.names = TRUE)
 

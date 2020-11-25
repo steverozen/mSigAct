@@ -48,11 +48,15 @@ of tumors that must have a given signature.}
 \value{
 A list with the elements \describe{
 
-\item{MAP}{xxxx}
+\item{MAP}{A 1-column tibble with the attributions with the highest MAP found.}
 
-\item{most.sparse}{xxxx}
+\item{most.sparse}{A 1-column tibble with the most-sparse attributions with the highest MAP.}
 
-\item{all.tested}{xxxx}
+\item{all.tested}{A tibble of all the search results.}
+
+\item{messages}{Possibly empty character vector with messages.}
+
+\item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
 
 }
 

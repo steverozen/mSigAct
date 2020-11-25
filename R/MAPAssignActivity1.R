@@ -6,11 +6,15 @@
 #'
 #' @return A list with the elements \describe{
 #'
-#' \item{MAP}{xxxx}
+#' \item{MAP}{A 1-column tibble with the attributions with the highest MAP found.}
 #'
-#' \item{most.sparse}{xxxx}
+#' \item{most.sparse}{A 1-column tibble with the most-sparse attributions with the highest MAP.}
 #'
-#' \item{all.tested}{xxxx}
+#' \item{all.tested}{A tibble of all the search results.}
+#'
+#' \item{messages}{Possibly empty character vector with messages.}
+#'
+#' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
 #'
 #' }
 #'
@@ -40,8 +44,12 @@ MAPAssignActivity1 <- function(spect,
     max.presence.proportion = max.presence.proportion)
 
   if (is.null(MAPout)) {
-    message("No result from MAPAssignActivityInternal")
-    list(MAP = NULL, most.sparse = NULL, all.tested = NULL)
+    return(
+      list(MAP         = NULL,
+           most.sparse = NULL,
+           all.tested  = NULL,
+           messages    = "max.subsets exceeded",
+           success     = FALSE))
   }
 
   xx <- ListOfList2Tibble(MAPout)
@@ -65,7 +73,11 @@ MAPAssignActivity1 <- function(spect,
   most.sparse <-
     tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
 
-  return(list(MAP = MAP, most.sparse = most.sparse, all.tested = xx))
+  return(list(MAP         = MAP,
+              most.sparse = most.sparse,
+              all.tested  = xx,
+              messages    = c(),
+              success     = TRUE))
 
 }
 
