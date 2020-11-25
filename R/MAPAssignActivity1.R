@@ -1,6 +1,5 @@
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
 #'
-#' @keywords internal
 #'
 #' @inheritParams MAPAssignActivityInternal
 #'

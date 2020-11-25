@@ -65,4 +65,3 @@ These elements will be \code{NULL} if \code{max.subsets} is exceeded.
 \description{
 Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
 }
-\keyword{internal}
