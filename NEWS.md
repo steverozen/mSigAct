@@ -1,10 +1,14 @@
+# mSigAct 2.0.5.9011
+
+* Added MAPAssignActivity1 and tests
+
 # mSigAct 2.0.5.9000
 
 * Minor code cleanup
 
 # mSigAct 2.0.5
 
-* Lots new tracing information in SparseAssign (controlled
+* Lots new tracing information in SparseAssignActivity1 (controlled
   by the $trace element in argument m.opts; for lots of info
   set this to e.g. 11)
   

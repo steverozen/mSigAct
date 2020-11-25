@@ -24,7 +24,7 @@ MAPAssignActivity1(
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
-being the same as \code{colnames(sigs)}.}
+being a subset of \code{colnames(sigs)}.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
 
@@ -39,20 +39,27 @@ is > than \code{p.thresh}, then we can use exposures without this set.}
 \item{max.mc.cores}{The maximum number of cores to use.
 On Microsoft Windows machines it is silently changed to 1.}
 
-\item{max.subsets}{The maxium number of subsets that can be
+\item{max.subsets}{The maximum number of subsets that can be
 tested for removal from the set of signatures.}
 
-\item{max.presence.proportion}{The maxium value of the proportion
+\item{max.presence.proportion}{The maximum value of the proportion
 of tumors that must have a given signature.}
 }
 \value{
 A list with the elements \describe{
 
-\item{MAP}{A 1-column tibble with the attributions with the highest MAP found.}
+\item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
+   Column 1 contains signature ids; column 2 contains the associated counts. }
 
-\item{most.sparse}{A 1-column tibble with the most-sparse attributions with the highest MAP.}
+\item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
 
-\item{all.tested}{A tibble of all the search results.}
+\item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
+     the highest MAP, in the same format as element \code{MAP}.}
+
+\item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
+   most-sparse exposure with the best MAP.}}
+
+\item{all.tested}{A \code{tibble} of all the search results.}
 
 \item{messages}{Possibly empty character vector with messages.}
 

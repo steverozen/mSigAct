@@ -34,7 +34,7 @@ how to find the allowed cancer types.}
 
 \item{exposure.mutation.type}{One of "SBS96", "ID", "DBS78".}
 
-\item{max.subsets}{The maxium number of subsets that can be
+\item{max.subsets}{The maximum number of subsets that can be
 tested for removal from the set of signatures.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
@@ -44,15 +44,18 @@ On Microsoft Windows machines it is silently changed to 1.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
-\item{out.dir}{If non-NULL creat this directory if necessary and put
+\item{out.dir}{If non-NULL create this directory if necessary and put
 results there.}
 
 \item{p.thresh}{If
 the p value for a better reconstruction with than without a set of signatures
 is > than \code{p.thresh}, then we can use exposures without this set.}
 
-\item{max.presence.proportion}{The maxium value of the proportion
-of tumors that must have a given signature.}
+\item{max.presence.proportion}{The maximum value of the proportion
+of tumors that must have a given signature. Used so that it is
+possible to exclude a signature from a spectrum, e.g.
+perhaps all examples of tumor types have SBS5, but we want
+to allow a small chance that SBS5 is not present.}
 }
 \description{
 Run one test of \code{\link{MAPAssignActivity1}}.

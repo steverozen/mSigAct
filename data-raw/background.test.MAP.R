@@ -1,9 +1,9 @@
 
 library(mSigAct)
 
-mutation.type = "SBS96"
+# mutation.type = "SBS96"
 # mutation.type = "ID"      # <------
-# mutation.type = "SBS192"
+mutation.type = "SBS192"
 # mutation.type = "DBS78"
 
 # devtools::load_all(".")
@@ -17,7 +17,7 @@ mm <- mSigAct::DefaultManyOpts()
 mm$trace <- 100
 mm$global.opts$maxeval <- 1000
 
-debug(OneMAPAssignTest)
+# debug(OneMAPAssignTest)
 # debug(MAPAssignActivity1)
 
 total.time <- system.time(

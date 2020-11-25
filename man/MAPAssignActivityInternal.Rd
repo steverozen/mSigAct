@@ -10,8 +10,8 @@ MAPAssignActivityInternal(
   sigs.presence.prop,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f,
-  m.opts,
+  eval_f = ObjFnBinomMaxLHNoRoundOK,
+  m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
   max.subsets = 1000,
   max.presence.proportion = 0.99
@@ -24,7 +24,7 @@ MAPAssignActivityInternal(
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
-being the same as \code{colnames(sigs)}.}
+being a subset of \code{colnames(sigs)}.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
 
@@ -39,10 +39,10 @@ is > than \code{p.thresh}, then we can use exposures without this set.}
 \item{max.mc.cores}{The maximum number of cores to use.
 On Microsoft Windows machines it is silently changed to 1.}
 
-\item{max.subsets}{The maxium number of subsets that can be
+\item{max.subsets}{The maximum number of subsets that can be
 tested for removal from the set of signatures.}
 
-\item{max.presence.proportion}{The maxium value of the proportion
+\item{max.presence.proportion}{The maximum value of the proportion
 of tumors that must have a given signature.}
 }
 \description{

@@ -1,15 +1,23 @@
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
 #'
+#' @export
 #'
 #' @inheritParams MAPAssignActivityInternal
 #'
 #' @return A list with the elements \describe{
 #'
-#' \item{MAP}{A 1-column tibble with the attributions with the highest MAP found.}
+#' \item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
+#'    Column 1 contains signature ids; column 2 contains the associated counts. }
 #'
-#' \item{most.sparse}{A 1-column tibble with the most-sparse attributions with the highest MAP.}
+#' \item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
 #'
-#' \item{all.tested}{A tibble of all the search results.}
+#' \item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
+#'      the highest MAP, in the same format as element \code{MAP}.}
+#'
+#' \item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
+#'    most-sparse exposure with the best MAP.}}
+#'
+#' \item{all.tested}{A \code{tibble} of all the search results.}
 #'
 #' \item{messages}{Possibly empty character vector with messages.}
 #'
@@ -44,11 +52,13 @@ MAPAssignActivity1 <- function(spect,
 
   if (is.null(MAPout)) {
     return(
-      list(MAP         = NULL,
-           most.sparse = NULL,
-           all.tested  = NULL,
-           messages    = "max.subsets exceeded",
-           success     = FALSE))
+      list(MAP             = NULL,
+           MAP.row         = NULL,
+           most.sparse     = NULL,
+           most.sparse.row = NULL,
+           all.tested      = NULL,
+           messages        = "max.subsets exceeded",
+           success         = FALSE))
   }
 
   xx <- ListOfList2Tibble(MAPout)
@@ -59,7 +69,7 @@ MAPAssignActivity1 <- function(spect,
   if (is.null(names(best.exp))) {
     names(best.exp) <- names.best
   }
-  MAP <- tibble::tibble(sig.id = names(best.exp), best.exp)
+  MAP <- tibble::tibble(sig.id = names(best.exp), count = best.exp)
 
   sparse.best <-
     dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
@@ -70,14 +80,15 @@ MAPAssignActivity1 <- function(spect,
   }
 
   most.sparse <-
-    tibble::tibble(sig.id = names(most.sparse.exp), most.sparse = most.sparse.exp)
+    tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
 
-  return(list(MAP         = MAP,
-              most.sparse = most.sparse,
-              all.tested  = xx,
-              messages    = c(),
-              success     = TRUE))
-
+  return(list(MAP             = MAP,
+              MAP.row         = best,
+              best.sparse     = most.sparse,
+              best.sparse.row = sparse.best,
+              all.tested      = xx,
+              messages        = c(),
+              success         = TRUE))
 }
 
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
@@ -90,7 +101,7 @@ MAPAssignActivity1 <- function(spect,
 #'
 #' @param sigs.presence.prop The proportions of samples that contain each
 #'    signature. A numerical vector (values between 0 and 1), with names
-#'    being the same as \code{colnames(sigs)}.
+#'    being a subset of \code{colnames(sigs)}.
 #'
 #' @param max.level The maximum number of signatures to try removing.
 #'
@@ -106,10 +117,10 @@ MAPAssignActivity1 <- function(spect,
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.
 #'
-#' @param max.subsets The maxium number of subsets that can be
+#' @param max.subsets The maximum number of subsets that can be
 #'   tested for removal from the set of signatures.
 #'
-#' @param max.presence.proportion The maxium value of the proportion
+#' @param max.presence.proportion The maximum value of the proportion
 #'   of tumors that must have a given signature.
 
 MAPAssignActivityInternal <- function(spect,
@@ -117,10 +128,10 @@ MAPAssignActivityInternal <- function(spect,
                                       sigs.presence.prop,
                                       max.level    = 5,
                                       p.thresh     = 0.05,
-                                      eval_f,
-                                      m.opts,
+                                      eval_f       = ObjFnBinomMaxLHNoRoundOK,
+                                      m.opts       = DefaultManyOpts(),
                                       max.mc.cores = min(20, 2^max.level),
-                                      max.subsets = 1000,
+                                      max.subsets  = 1000,
                                       max.presence.proportion = 0.99) {
 
   my.msg <- function(trace.level, ...)
@@ -128,6 +139,8 @@ MAPAssignActivityInternal <- function(spect,
 
   sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
     max.presence.proportion
+
+  sigs <- sigs[ , names(sigs.presence.prop), drop = FALSE]
 
   max.sig.index <- ncol(sigs)
   my.msg(10, "number of signatures = ", max.sig.index)
@@ -297,7 +310,7 @@ MAPAssignActivityInternal <- function(spect,
   return(out.list)
 }
 
-#' Calculate \eqn{P(M)} -- the probabily of a model of which signatures are present in a sample.
+#' Calculate \eqn{P(M)} -- the probability of a model of which signatures are present in a sample.
 #'
 #' @param model Names of sigs present in a trial exposure. Do not use indices.
 #'

@@ -28,7 +28,7 @@ PCAWGMAPTest(
 \item{max.mc.cores}{The maximum number of cores to use.
 On Microsoft Windows machines it is silently changed to 1.}
 
-\item{out.dir}{If non-NULL creat this directory if necessary and put
+\item{out.dir}{If non-NULL create this directory if necessary and put
 results there.}
 
 \item{p.thresh}{If
@@ -37,7 +37,11 @@ is > than \code{p.thresh}, then we can use exposures without this set.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
-\item{max.presence.proportion}{xxxxx}
+\item{max.presence.proportion}{The maximum value of the proportion
+of tumors that must have a given signature. Used so that it is
+possible to exclude a signature from a spectrum, e.g.
+perhaps all examples of tumor types have SBS5, but we want
+to allow a small chance that SBS5 is not present.}
 }
 \description{
 Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set.

@@ -67,6 +67,7 @@ ICAMS
 ICAMS’
 indel
 indels
+interpretable
 intron
 IUPAC
 ivity
@@ -74,6 +75,7 @@ Kucab
 Kucab's
 lh
 MakeVCFDBSdf
+MAPAssignActivity
 MCF
 mer
 mers
@@ -102,6 +104,7 @@ OptimizeExposure
 PCAWG
 pentanucleotide
 POS
+Posteriori
 PWM
 PyrPenta
 PyrTri

@@ -10,7 +10,7 @@
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @param out.dir If non-NULL creat this directory if necessary and put
+#' @param out.dir If non-NULL create this directory if necessary and put
 #'   results there.
 #'
 #' @param max.mc.cores
@@ -21,7 +21,11 @@
 #'  the p value for a better reconstruction with than without a set of signatures
 #'  is > than \code{p.thresh}, then we can use exposures without this set.
 #'
-#' @param max.presence.proportion xxxxx
+#' @param max.presence.proportion  The maximum value of the proportion
+#'   of tumors that must have a given signature. Used so that it is
+#'   possible to exclude a signature from a spectrum, e.g.
+#'   perhaps all examples of tumor types have SBS5, but we want
+#'   to allow a small chance that SBS5 is not present.
 #'
 #' @export
 #'
@@ -100,7 +104,7 @@ utils::globalVariables(c(".data"))
 #'
 #' @param max.level The maximum number of signatures to try removing.
 #'
-#' @param out.dir If non-NULL creat this directory if necessary and put
+#' @param out.dir If non-NULL create this directory if necessary and put
 #'   results there.
 #'
 #' @param p.thresh If
@@ -113,11 +117,14 @@ utils::globalVariables(c(".data"))
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.
 #'
-#' @param max.subsets The maxium number of subsets that can be
+#' @param max.subsets The maximum number of subsets that can be
 #'   tested for removal from the set of signatures.
 #'
-#' @param max.presence.proportion The maxium value of the proportion
-#'   of tumors that must have a given signature.
+#' @param max.presence.proportion The maximum value of the proportion
+#'   of tumors that must have a given signature. Used so that it is
+#'   possible to exclude a signature from a spectrum, e.g.
+#'   perhaps all examples of tumor types have SBS5, but we want
+#'   to allow a small chance that SBS5 is not present.
 #'
 #' @export
 #'
@@ -146,7 +153,7 @@ OneMAPAssignTest <- function(spect,
   shortlog <- function(tag, ...) {
     if (!is.null(out.dir)) {
       cat(tag,  "\n", sep = "", file = logfile, append = TRUE)
-      capture.output(print(...), file = logfile, append = TRUE)
+      utils::capture.output(print(...), file = logfile, append = TRUE)
       cat("\n", file = logfile, append = TRUE)
     }
   }
@@ -240,7 +247,7 @@ OneMAPAssignTest <- function(spect,
 
   # Best MAP
   r.b <-
-    ReconstructSpectrum(sigs, exp = MAPout$MAP$best.exp, use.sig.names = TRUE)
+    ReconstructSpectrum(sigs, exp = MAPout$MAP$count, use.sig.names = TRUE)
 
   # Best MAP re-optimized to a different objective function
   r.qp <-
@@ -248,7 +255,8 @@ OneMAPAssignTest <- function(spect,
 
   # MAP most sparse
   r.sparse.best <-
-    ReconstructSpectrum(sigs, exp = MAPout$most.sparse$most.sparse, use.sig.names = TRUE)
+    ReconstructSpectrum(
+      sigs, exp = MAPout$most.sparse$count, use.sig.names = TRUE)
 
   # MAP most sparse re-optimised to different objective function
     r.qp.sparse <-

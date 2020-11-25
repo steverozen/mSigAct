@@ -2,7 +2,7 @@
 % Please edit documentation in R/MAPAssignActivity1.R
 \name{P.of.M}
 \alias{P.of.M}
-\title{Calculate \eqn{P(M)} -- the probabily of a model of which signatures are present in a sample.}
+\title{Calculate \eqn{P(M)} -- the probability of a model of which signatures are present in a sample.}
 \usage{
 P.of.M(model, sigs.presence.prop)
 }
@@ -14,6 +14,6 @@ signature. A numerical vector (values between 0 and 1), with names
 being a superset of \code{model}.}
 }
 \description{
-Calculate \eqn{P(M)} -- the probabily of a model of which signatures are present in a sample.
+Calculate \eqn{P(M)} -- the probability of a model of which signatures are present in a sample.
 }
 \keyword{internal}
