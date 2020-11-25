@@ -54,8 +54,8 @@ MAPAssignActivity1 <- function(spect,
     return(
       list(MAP             = NULL,
            MAP.row         = NULL,
-           most.sparse     = NULL,
-           most.sparse.row = NULL,
+           best.sparse     = NULL,
+           best.sparse.row = NULL,
            all.tested      = NULL,
            messages        = "max.subsets exceeded",
            success         = FALSE))

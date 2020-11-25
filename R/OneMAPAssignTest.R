@@ -158,26 +158,12 @@ OneMAPAssignTest <- function(spect,
     }
   }
 
-  sigs.prop <- PCAWG7::exposure.stats$PCAWG[[exposure.mutation.type]][[cancer.type]]
-  if (is.null(sigs.prop)) {
-    stop("Cannot find exposure information for ",
-         exposure.mutation.type, " for ", cancer.type)
-  }
-  sig.names <- rownames(sigs.prop)
-  sigs.prop <- unlist(sigs.prop[ , 2])
-  names(sigs.prop) <- sig.names
 
-  sigs.no.info <-
-    setdiff(sig.names,
-            colnames(PCAWG7::signature$genome[[mutation.type]]))
+  sigs <- PCAWG7::signature$genome[[mutation.type]]
 
-  for (zz in sigs.no.info) {
-    message("No signature ", zz, " for ", mutation.type)
-    message("Dropping from signature universe")
-    sigs.prop <- sigs.prop[-(which(names(sigs.prop) == zz))]
-  }
-
-  sigs <- PCAWG7::signature$genome[[mutation.type]][ , names(sigs.prop), drop = FALSE]
+  sigs.prop <- ExposureProportions(mutation.type = mutation.type,
+                                   cancer.type   = cancer.type,
+                                   all.sigs = sigs)
 
   # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
 
@@ -220,7 +206,7 @@ OneMAPAssignTest <- function(spect,
     tibble::tibble(sig.id = names(QP.exp), QP.best.MAP.exp = QP.exp)
 
   qp.sparse <- OptimizeExposureQP(spect,
-                                  sigs[ , MAPout$most.sparse$sig.id,
+                                  sigs[ , MAPout$best.sparse$sig.id,
                                         drop = FALSE])
   QP.sparse.MAP.exp <-
     tibble::tibble(sig.id = names(qp.sparse), QP.sparse.MAP.exp = qp.sparse)
@@ -229,7 +215,7 @@ OneMAPAssignTest <- function(spect,
     dplyr::full_join(
       dplyr::full_join(
         dplyr::full_join(ref.exp, MAPout$MAP),
-        dplyr::full_join(MAPout$most.sparse, QP.best.MAP.exp)),
+        dplyr::full_join(MAPout$best.sparse, QP.best.MAP.exp)),
       QP.sparse.MAP.exp)
   print(comp)
 
@@ -256,7 +242,7 @@ OneMAPAssignTest <- function(spect,
   # MAP most sparse
   r.sparse.best <-
     ReconstructSpectrum(
-      sigs, exp = MAPout$most.sparse$count, use.sig.names = TRUE)
+      sigs, exp = MAPout$best.sparse$count, use.sig.names = TRUE)
 
   # MAP most sparse re-optimised to different objective function
     r.qp.sparse <-

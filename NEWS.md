@@ -1,4 +1,8 @@
-# mSigAct 2.0.5.9011
+# 2.0.5.9011
+
+* Corrected minor bugs in testing MAPAssignActivity
+
+# mSigAct 2.0.5.9010
 
 * Added MAPAssignActivity1 and tests
 
