@@ -7,6 +7,7 @@ Nloptr1Tumor <- function(spectrum,
                          sigs,
                          m.opts = NULL,
                          eval_f,
+                         eval_g_ineq,
                          ... ) {
   if (!"matrix" %in% class(sigs)) {
     if (!"numeric" %in% class(sigs)) {
@@ -44,16 +45,17 @@ Nloptr1Tumor <- function(spectrum,
     m.opts$global.opts$maxeval <- 1
     m.opts$local.opts$maxeval <- 30000  }
 
-  if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED DISABLE THIS BRANCH
+  if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED TO DISABLE THIS BRANCH
 
     global.res <- nloptr::nloptr(
-      x0       = x0,
-      eval_f   = eval_f,
-      lb       = rep(0, ncol(sigs)),
-      ub       = rep(sum(spectrum), ncol(sigs)),
-      opts     = m.opts$global.opts,
-      spectrum = spectrum,
-      sigs     = sigs,
+      x0          = x0,
+      eval_f      = eval_f,
+      # eval_g_ineq = eval_g_ineq,
+      lb          = rep(0, ncol(sigs)),
+      ub          = rep(sum(spectrum), ncol(sigs)),
+      opts        = m.opts$global.opts,
+      spectrum    = spectrum,
+      sigs        = sigs,
       ...)
     if (m.opts$trace > 0) {
       message("global.res$objective = ", global.res$objective)
@@ -72,6 +74,7 @@ Nloptr1Tumor <- function(spectrum,
     x0=my.x0,
     # x0       = global.res$solution,
     eval_f   = eval_f,
+    eval_g_ineq = eval_g_ineq,
     lb       = rep(0, ncol(sigs)),
     ub       = rep(sum(spectrum) + 1e-2, ncol(sigs)),
     opts     = m.opts$local.opts,

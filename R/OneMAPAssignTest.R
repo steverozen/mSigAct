@@ -10,6 +10,11 @@
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
+#'
+#' @param eval_f See \code{\link[nloptr]{nloptr}}.
+#'
+#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
+#'
 #' @param out.dir If non-NULL create this directory if necessary and put
 #'   results there.
 #'
@@ -38,6 +43,8 @@ PCAWGMAPTest <- function(cancer.type,
                          out.dir = NULL,
                          p.thresh = 0.01,
                          m.opts = DefaultManyOpts(),
+                         eval_f = ObjFnBinomMaxLHRound,
+                         eval_g_ineq = NULL,
                          max.presence.proportion = 0.99) {
 
   exposure.mutation.type <-
@@ -80,6 +87,8 @@ PCAWGMAPTest <- function(cancer.type,
                      out.dir                 = out.dir,
                      p.thresh                = p.thresh,
                      m.opts                  = m.opts,
+                     eval_f                  = eval_f,
+                     eval_g_ineq             = eval_g_ineq,
                      max.presence.proportion = max.presence.proportion)
   return(rr)
 }
@@ -113,6 +122,10 @@ utils::globalVariables(c(".data"))
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
+#' @param eval_f See \code{\link[nloptr]{nloptr}}.
+#'
+#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
+#'
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.
@@ -134,11 +147,13 @@ OneMAPAssignTest <- function(spect,
                              cancer.type,
                              mutation.type,
                              exposure.mutation.type,
-                             max.subsets = 1000,
-                             max.level   = 5,
+                             max.subsets  = 1000,
+                             max.level    = 5,
                              max.mc.cores = 100,
-                             m.opts = DefaultManyOpts(),
-                             out.dir = NULL,
+                             eval_f       = ObjFnBinomMaxLHRound,
+                             eval_g_ineq  = NULL,
+                             m.opts       = DefaultManyOpts(),
+                             out.dir      = NULL,
                              p.thresh,
                              max.presence.proportion) {
   if (!is.null(out.dir)) {
@@ -170,15 +185,16 @@ OneMAPAssignTest <- function(spect,
   mapout.time <- system.time(
     MAPout <-
       mSigAct::MAPAssignActivity1(
-        spect = spect,
-        sigs = sigs,
-        sigs.presence.prop = sigs.prop,
-        max.level = max.level, # length(sigs.prop) - 1,
-        p.thresh = p.thresh,
-        eval_f = ObjFnBinomMaxLHNoRoundOK,
-        m.opts = m.opts,
-        max.mc.cores = max.mc.cores, # mc.cores.per.sample = 100)
-        max.subsets = max.subsets,
+        spect                   = spect,
+        sigs                    = sigs,
+        sigs.presence.prop      = sigs.prop,
+        max.level               = max.level, # length(sigs.prop) - 1,
+        p.thresh                = p.thresh,
+        eval_f                  = eval_f,
+        eval_g_ineq             = eval_g_ineq,
+        m.opts                  = m.opts,
+        max.mc.cores            = max.mc.cores, # mc.cores.per.sample = 100)
+        max.subsets             = max.subsets,
         max.presence.proportion = max.presence.proportion)
   )
   shortlog("Time", mapout.time)
@@ -271,7 +287,22 @@ OneMAPAssignTest <- function(spect,
     suppressWarnings(
       utils::write.table(cos.sim, file = out.path, append = TRUE, sep = ",",
                          col.names = NA, row.names = TRUE))
+    cat("Log likelihood of spectrum given reconstruction\n")
   }
+
+  for (cname in colnames(sol.matrix)[2:ncol(sol.matrix)]) {
+    logLH <-
+      LLHSpectrumNegBinom(as.vector(spect),
+                          sol.matrix[ , cname, drop = TRUE],
+                          nbinom.size = m.opts$nbinom.size)
+    cat("LogLH of spect from", cname, logLH, "\n")
+    if (!is.null(out.dir)) {
+      cat("spect", cname, logLH, "\n", sep = ",", file = out.path, append = TRUE)
+    }
+  }
+
+  print(MAPout$MAP.row)
+  print(MAPout$MAP.row$loglh.of.exp)
 
   colnames(sol.matrix) <- paste(colnames(sol.matrix), round(cos.sim[1, ], digits = 4))
   colnames(sol.matrix)[1] <- colnames(spect)

@@ -1,6 +1,6 @@
 #' The negative binomial maximum likelihood objective function.
 #'
-#' For use by \code{\link[nloptr]{nloptr}}
+#' For use by \code{\link[nloptr]{nloptr}}.
 #'
 #' @param exp The matrix of exposures ("activities").
 #' @param spectrum The spectrum to assess.
@@ -15,21 +15,21 @@
 #' @param show.warning If \code{TRUE} print warning if unrounded
 #'        reconstructions were used.
 #'
-#' @param always.round Ignore \code{no.round.ok} and always
+#' @param never.round Ignore \code{no.round.ok} and never
 #'        round; for experimenting and may be removed in future versions.
 #'
 #' @keywords internal
 #'
 ObjFnBinomMaxLH2 <-
-  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE, # TODO: Steve Change this to TRUE and remove the other "NoRoundOK" function
-           show.warning = FALSE, always.round = FALSE) {
+  function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
+           show.warning = FALSE, round.ok = FALSE) {
 
   if (any(is.na(exp))) return(Inf)
 
   reconstruction <-  sigs %*% exp
   # Maybe faster than ReconstructSpectrum(sigs = sigs, exp = exp)
 
-  if (!always.round) {
+  if (round.ok) {
     reconstruction2 <- round(reconstruction)
     # Will cause problems if round of the reconstruction is 0 for
     # any channel even if the reconstruction > 0, because then
@@ -52,27 +52,48 @@ ObjFnBinomMaxLH2 <-
 
   # deleted mSigBG:: -- do a diff
   loglh <- LLHSpectrumNegBinom(spectrum = spectrum,
-                                       expected.counts = reconstruction,
-                                       nbinom.size = nbinom.size)
+                               expected.counts = reconstruction,
+                               nbinom.size = nbinom.size)
 
   return(-loglh)
   }
 
 #' A deprecated negative binomial maximum likelihood objective function.
 #'
-#' Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
+#' Use \code{\link{ObjFnBinomMaxLHRound}} instead.
 #'
 #' This function will lead to errors in some situations
 #' when the rounded reconstructed signature contains 0s for
 #' mutations classes for which the target spectrum is > 0.
 #'
-#' @inheritParams ObjFnBinomMaxLHNoRoundOK
+#' @inheritParams ObjFnBinomMaxLHRound
 #'
 #' @export
 #'
 ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE)
+  warning("Called ObjFnBinomMaxLHMustRound")
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE, round.ok = TRUE)
 }
+
+
+#' A deprecated negative binomial maximum likelihood objective function.
+#'
+#' Use \code{\link{ObjFnBinomMaxLHRound}} instead.
+#'
+#' This function rounds sometimes, which leads to
+#' minor differences in log likelihoods of reconstructed spectra
+#' (\code{\link{LLHSpectrumNegBinom}})
+#' compared to the value returned by this function.
+#'
+#' @inheritParams ObjFnBinomMaxLHRound
+#'
+#' @export
+#'
+ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
+  warning("Called ObjFnBinomMaxLHNoRoundOK")
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE, round.ok = TRUE)
+}
+
 
 #' The preferred negative binomial maximum likelihood objective function.
 #'
@@ -89,7 +110,7 @@ ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
 #' \code{\link[nloptr]{nloptr}} minimizes the objective function, so the
 #' lower the objective function, the better.
 #'
-#' @param exp The matrix of exposures ("activities").
+#' @param exp A vector of exposures ("activities").
 #' @param spectrum The spectrum to assess.
 #' @param sigs The matrix of signatures.
 #' @param nbinom.size The dispersion parameter for the negative
@@ -98,7 +119,8 @@ ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
 #'
 #' @export
 #'
-ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE)
+
+ObjFnBinomMaxLHRound <- function(exp, spectrum, sigs, nbinom.size) {
+  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE, round.ok = FALSE)
 }
 

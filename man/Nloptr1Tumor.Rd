@@ -4,7 +4,7 @@
 \alias{Nloptr1Tumor}
 \title{Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.}
 \usage{
-Nloptr1Tumor(spectrum, sigs, m.opts = NULL, eval_f, ...)
+Nloptr1Tumor(spectrum, sigs, m.opts = NULL, eval_f, eval_g_ineq, ...)
 }
 \arguments{
 \item{spectrum}{The spectrum to be reconstructed.}
@@ -15,8 +15,9 @@ Nloptr1Tumor(spectrum, sigs, m.opts = NULL, eval_f, ...)
 For documentation see \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{The objective function for
-\code{\link[nloptr]{nloptr}}. We have only tested
-\code{\link{ObjFnBinomMaxLHNoRoundOK}}.}
+\code{\link[nloptr]{nloptr}}.}
+
+\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{...}{Additional arguments for \code{eval_f}.
 

@@ -7,7 +7,7 @@
 ObjFnBinomMaxLHMustRound(exp, spectrum, sigs, nbinom.size)
 }
 \arguments{
-\item{exp}{The matrix of exposures ("activities").}
+\item{exp}{A vector of exposures ("activities").}
 
 \item{spectrum}{The spectrum to assess.}
 
@@ -18,7 +18,7 @@ binomial distribution; smaller is more dispersed.
 See \code{\link[stats]{NegBinomial}}.}
 }
 \description{
-Use \code{\link{ObjFnBinomMaxLHNoRoundOK}} instead.
+Use \code{\link{ObjFnBinomMaxLHRound}} instead.
 }
 \details{
 This function will lead to errors in some situations

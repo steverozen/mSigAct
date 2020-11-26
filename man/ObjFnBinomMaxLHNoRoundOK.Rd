@@ -2,12 +2,12 @@
 % Please edit documentation in R/ObjFnBinomMaxLH2.R
 \name{ObjFnBinomMaxLHNoRoundOK}
 \alias{ObjFnBinomMaxLHNoRoundOK}
-\title{The preferred negative binomial maximum likelihood objective function.}
+\title{A deprecated negative binomial maximum likelihood objective function.}
 \usage{
 ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 }
 \arguments{
-\item{exp}{The matrix of exposures ("activities").}
+\item{exp}{A vector of exposures ("activities").}
 
 \item{spectrum}{The spectrum to assess.}
 
@@ -17,16 +17,12 @@ ObjFnBinomMaxLHNoRoundOK(exp, spectrum, sigs, nbinom.size)
 binomial distribution; smaller is more dispersed.
 See \code{\link[stats]{NegBinomial}}.}
 }
-\value{
--1 * log(likelihood(spectrum | reconstruction))
-
-\code{\link[nloptr]{nloptr}} minimizes the objective function, so the
-lower the objective function, the better.
-}
 \description{
-Can be used as the
-objective function for \code{\link{SparseAssignActivity}},
-\code{\link{SparseAssignActivity1}},
-and \code{\link{SignaturePresenceTest1}}.
-(Internally used by by \code{\link[nloptr]{nloptr}}.)
+Use \code{\link{ObjFnBinomMaxLHRound}} instead.
+}
+\details{
+This function rounds sometimes, which leads to
+minor differences in log likelihoods of reconstructed spectra
+(\code{\link{LLHSpectrumNegBinom}})
+compared to the value returned by this function.
 }

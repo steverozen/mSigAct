@@ -4,7 +4,7 @@
 \alias{OptimizeExposure}
 \title{Optimize the reconstruction of a spectrum from a set of signatures.}
 \usage{
-OptimizeExposure(spectrum, sigs, m.opts, eval_f, ...)
+OptimizeExposure(spectrum, sigs, m.opts, eval_f, eval_g_ineq = NULL, ...)
 }
 \arguments{
 \item{spectrum}{The spectrum to be reconstructed.}
@@ -15,8 +15,9 @@ OptimizeExposure(spectrum, sigs, m.opts, eval_f, ...)
 For documentation see \code{\link{DefaultManyOpts}}.}
 
 \item{eval_f}{The objective function for
-\code{\link[nloptr]{nloptr}}. We have only tested
-\code{\link{ObjFnBinomMaxLHNoRoundOK}}.}
+\code{\link[nloptr]{nloptr}}.}
+
+\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{...}{Additional arguments for \code{eval_f}.
 

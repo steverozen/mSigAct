@@ -16,6 +16,9 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
   mm <- mSigAct::DefaultManyOpts()
   mm$trace <- 0
   mm$global.opts$maxeval <- 1000 # A small value for testing
+  # mm$local.opts$print_options_doc <- TRUE
+  # mm$local.opts$print_level <- 2
+  mm$local.opts$tol_constraints_ineq <- 10
 
   sigs <-PCAWG7::signature$genome[[sig.mutation.type]]
 
@@ -30,7 +33,9 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
     sigs.presence.prop      = sig.prop,
     max.level               = 100,
     p.thresh                = 0.01,
-    eval_f                  = ObjFnBinomMaxLHNoRoundOK,
+    eval_f                  = ObjFnBinomMaxLHRound,
+    eval_g_ineq             = g_ineq_for_ObjFnBinomMaxLH2,
+    # eval_g_ineq             = NULL,
     m.opts                  = mm,
     max.mc.cores            = 1,
     max.subsets             = 1000,
@@ -42,9 +47,9 @@ test_that("MAPAssignActivity SBS96", {
   retval <- test.fn(spect = sbs96, "SBS96")
   testthat::expect_equal(
     retval$MAP$count,
-    c(SBS1 = 607.467394257416, SBS2 = 1928.08129532108,
-      SBS5 = 8790.25479269756,  SBS8 = 1438.7434903092,
-      SBS13 = 2589.45302741474))
+    c(SBS1 = 635.255985834199, SBS2 = 1939.32173112431,
+      SBS5 = 8705.08084819072,  SBS8 = 1455.34198826826,
+      SBS13 = 2618.99944658252))
 })
 
 test_that("MAPAssignActivity SBS192", {
@@ -52,9 +57,8 @@ test_that("MAPAssignActivity SBS192", {
                     sig.mutation.type = "SBS192")
   testthat::expect_equal(
     retval$MAP$count,
-    c(SBS1 = 423.58411761094, SBS2 = 909.663903564437,
-      SBS5 = 3507.34096266219,  SBS13 = 1437.52703339933,
-      SBS40 = 919.883982763106))
+    c(SBS1 = 509.712341010996, SBS2 = 871.375080961353, SBS5 = 3187.80110383402,
+      SBS13 = 1521.46804094734, SBS40 = 1107.64343324629))
 })
 
 test_that("MAPAssignActivity ID", {
@@ -62,8 +66,9 @@ test_that("MAPAssignActivity ID", {
                     sig.mutation.type = "ID")
   testthat::expect_equal(
     retval$MAP$count,
-    c(ID1 = 88.8228339186561, ID2 = 46.8014893577739, ID3 = 133.642308998551,  ID4 = 20.776077068214,
-      ID5 = 84.3551013208767, ID8 = 70.1783334642418,  ID10 = 15.4238558716867))
+    c(ID1 = 76.1872826514142, ID2 = 41.829148548392, ID3 = 137.178076886561,
+      ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,  ID10 = 18.0505660606712)
+    )
 })
 
 test_that("MAPAssignActivity DBS78", {
@@ -71,6 +76,7 @@ test_that("MAPAssignActivity DBS78", {
                     sig.mutation.type = "DBS78")
   testthat::expect_equal(
     retval$MAP$count,
-    c(DBS2 = 30.532246526113, DBS4 = 9.28230085260111, DBS6 = 11.6572858378546,  DBS11 = 21.5281667834313))
+    c(DBS2 = 28.2327526583232, DBS4 = 9.69903696258126, DBS6 = 12.4508152488636,  DBS11 = 22.617395130232)
+    )
 })
 

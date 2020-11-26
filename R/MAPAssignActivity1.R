@@ -33,6 +33,7 @@ MAPAssignActivity1 <- function(spect,
                                max.level    = 5,
                                p.thresh     = 0.05,
                                eval_f,
+                               eval_g_ineq  = NULL,
                                m.opts,
                                max.mc.cores = min(20, 2^max.level),
                                max.subsets = 1000,
@@ -45,6 +46,7 @@ MAPAssignActivity1 <- function(spect,
     max.level               = max.level,
     p.thresh                = p.thresh,
     eval_f                  = eval_f,
+    eval_g_ineq             = eval_g_ineq,
     m.opts                  = m.opts,
     max.mc.cores            = max.mc.cores,
     max.subsets             = max.subsets,
@@ -107,6 +109,8 @@ MAPAssignActivity1 <- function(spect,
 #'
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #'
+#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
+#'
 #' @param p.thresh If
 #'  the p value for a better reconstruction with than without a set of signatures
 #'  is > than \code{p.thresh}, then we can use exposures without this set.
@@ -128,7 +132,8 @@ MAPAssignActivityInternal <- function(spect,
                                       sigs.presence.prop,
                                       max.level    = 5,
                                       p.thresh     = 0.05,
-                                      eval_f       = ObjFnBinomMaxLHNoRoundOK,
+                                      eval_f       = ObjFnBinomMaxLHRound,
+                                      eval_g_ineq  = g_ineq_for_ObjFnBinomMaxLH2,
                                       m.opts       = DefaultManyOpts(),
                                       max.mc.cores = min(20, 2^max.level),
                                       max.subsets  = 1000,
@@ -149,6 +154,7 @@ MAPAssignActivityInternal <- function(spect,
   start <- OptimizeExposure(spect,
                             sigs,
                             eval_f  = eval_f,
+                            eval_g_ineq = eval_g_ineq,
                             m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
   if (lh.w.all == -Inf) {
@@ -226,6 +232,7 @@ MAPAssignActivityInternal <- function(spect,
     try.exp <- OptimizeExposure(spect,
                                 try.sigs,
                                 eval_f = eval_f,
+                                eval_g_ineq = eval_g_ineq,
                                 m.opts = m.opts)
 
     if (is.infinite(try.exp$loglh)) {

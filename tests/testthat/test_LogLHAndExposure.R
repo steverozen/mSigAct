@@ -27,9 +27,10 @@ PrepOneSynSpectrum <- function(sig.counts,
 }
 
 TestOneLLHetc <- function(sig.counts,
-                          input.sigs = PCAWG7::signature$genome$SBS96,
+                          input.sigs   = PCAWG7::signature$genome$SBS96,
                           # eval_f     = ObjFnBinomMaxLHNoRoundOK,
-                          eval_f     = ObjFnBinomMaxLHMustRound,
+                          eval_f       = ObjFnBinomMaxLHRound,
+                          eval_g_ineq  = g_ineq_for_ObjFnBinomMaxLH2,
                           trace = 0) {
 
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,
@@ -40,10 +41,11 @@ TestOneLLHetc <- function(sig.counts,
   m.opts$trace <- trace
 
   retval <- OptimizeExposure(
-    spect  = test.data$spec,
-    sigs   = test.data$sigs,
-    m.opts = m.opts,
-    eval_f = eval_f)
+    spect       = test.data$spec,
+    sigs        = test.data$sigs,
+    m.opts      = m.opts,
+    eval_f      = eval_f,
+    eval_g_ineq = eval_g_ineq)
 
   new.rec <-
     mSigAct:::prop.reconstruct(exp = retval$exposure, sigs = test.data$sigs)
@@ -58,9 +60,9 @@ test_that("test-LogLHAndExposure.R LogLHAndExposure 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
   set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval <- TestOneLLHetc(sig.counts = input)
-  testthat::expect_equal(retval$loglh, -222.7188, tolerance = 1e-5)
+  testthat::expect_equal(retval$loglh, -225.148790563202, tolerance = 1e-5)
   testthat::expect_equal(retval$exposure,
-                         c(SBS1 = 999.2467, SBS22 = 1998.7533))
+                         c(SBS1 = 974.390342198754, SBS22 = 2023.60965780125))
   testthat::expect_equal(retval$m.opts$nbinom.size, 5)
   testthat::expect_equal(retval$m.opts$global.opts$algorithm,
                          "NLOPT_GN_DIRECT")
