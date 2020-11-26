@@ -52,3 +52,4 @@ colnames(ex2) <- NULL
 
 ICAMSxtra::PlotExposureToPdf(ex2, file = "bad.ex.pdf")
 
+ExposureProportions("SBS96", "Lung-SCC") # Actually add SBS8, SBS18, SBS29, SBS40, SBS44, SBS50
