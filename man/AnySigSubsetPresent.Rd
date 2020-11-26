@@ -8,7 +8,7 @@ AnySigSubsetPresent(
   spect,
   all.sigs,
   Ha.sigs.indices,
-  eval_f = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+  eval_f = ObjFnBinomMaxLHRound,
   m.opts,
   max.mc.cores = NULL
 )
@@ -24,8 +24,7 @@ hypotheses.}
 \item{Ha.sigs.indices}{An integer vector of the indices of the signatures
 that are in the various \eqn{H_a}'s.}
 
-\item{eval_f}{Usually one of \code{\link{ObjFnBinomMaxLHNoRoundOK}}
-or \code{\link{ObjFnBinomMaxLHMustRound}}.
+\item{eval_f}{Usually \code{\link{ObjFnBinomMaxLHRound}}.
 For
 background see \code{\link[nloptr]{nloptr}}.}
 
@@ -60,16 +59,12 @@ A list with two elements: \describe{
   are both \code{-Inf}. This can occur if there are are mutation classes in the spectra
   that are > 0 but that have 0 probability in all the available input signatures.
   This is unlikely to occur, since most spectra have non-0 (albeit very small)
-  probabilities for most mutation classes. This is not an error is using
-  \code{eval_f = ObjFnBinomMaxLHNoRoundOK}. However, if \code{p == NaN}
-  when using \code{eval_f = ObjFnBinomMaxLHMustRound}, switch to
-  \code{ObjFnBinomMaxLHNoRoundOK}.
+  probabilities for most mutation classes. This is not an error if using
+  \code{eval_f = ObjFnBinomMaxLHNoRound}.
 
   \item{\code{df}}{The degrees of freedom of the likelihood-ratio test
      (equal to the number of signatures in \code{sigs.added}).}
      }
-
-
 }}
 
 

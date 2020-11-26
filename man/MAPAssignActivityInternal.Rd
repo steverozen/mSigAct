@@ -10,7 +10,8 @@ MAPAssignActivityInternal(
   sigs.presence.prop,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f = ObjFnBinomMaxLHNoRoundOK,
+  eval_f = ObjFnBinomMaxLHRound,
+  eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2,
   m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
   max.subsets = 1000,
@@ -33,6 +34,8 @@ the p value for a better reconstruction with than without a set of signatures
 is > than \code{p.thresh}, then we can use exposures without this set.}
 
 \item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
+
+\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 

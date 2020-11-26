@@ -9,7 +9,7 @@ SparseAssignActivity(
   sigs,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f = ObjFnBinomMaxLHNoRoundOK,
+  eval_f = ObjFnBinomMaxLHRound,
   m.opts = NULL,
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level)

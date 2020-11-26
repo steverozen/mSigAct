@@ -1,4 +1,4 @@
-context("test-SparseAssignActivity1.R")
+
 
 SparseAssignTest1 <- function(sig.counts,
                               trace = 0,
@@ -31,7 +31,7 @@ SparseAssignTest1 <- function(sig.counts,
 
   SA.out <- SparseAssignActivity1(spect       = spect,
                                   sigs         = some.sigs,
-                                  eval_f       = ObjFnBinomMaxLHMustRound,
+                                  eval_f       = ObjFnBinomMaxLHRound,
                                   m.opts       = m.opts,
                                   max.mc.cores = max.mc.cores
   )
@@ -82,12 +82,12 @@ test_that("SparseAssignActivity1 (one spectrum) Test 1", {
   retval <-  SparseAssignTest1(sig.counts = c(SBS1 = 1000, SBS22 = 2000))
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS1    = 999.2467,
-                           SBS22   = 1998.7533),
+                         c(SBS1    = 973.214846450792,
+                           SBS22   = 2024.78515354921),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         2.881704,
+                         15.2565942258655,
                          tolerance = 1e-2)
 
   if (FALSE) {

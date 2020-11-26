@@ -8,8 +8,9 @@
 #'    For documentation see \code{\link{DefaultManyOpts}}.
 #'
 #' @param eval_f The objective function for
-#'  \code{\link[nloptr]{nloptr}}. We have only tested
-#'  \code{\link{ObjFnBinomMaxLHNoRoundOK}}.
+#'  \code{\link[nloptr]{nloptr}}.
+#'
+#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
 #'
 #' @param ... Additional arguments for \code{eval_f}.
 #'
@@ -29,14 +30,16 @@ OptimizeExposure <- function(spectrum,
                              sigs,
                              m.opts,
                              eval_f,
+                             eval_g_ineq = NULL,
                              ...) {
 
   stopifnot(mode(spectrum) == "numeric")
 
-  r <- Nloptr1Tumor(spectrum = spectrum,
-                    sigs,
-                    m.opts = m.opts,
+  r <- Nloptr1Tumor(spectrum    = spectrum,
+                    sigs        = sigs,
+                    m.opts      = m.opts,
                     eval_f      = eval_f,
+                    eval_g_ineq = eval_g_ineq,
                     nbinom.size = m.opts$nbinom.size,
                     ...)
   loglh <- r$objective
@@ -49,6 +52,8 @@ OptimizeExposure <- function(spectrum,
   # of mutations in the spectrum, so we scale exposures to get the
   # number of mutations in the spectrum
   exp <- r$solution * (sum(spectrum) / sum(r$solution)) # sum(recon))
+
+  message("TEST TEST sum(spectrum) = ", sum(spectrum), "; sum(r$solution) = ", sum(r$solution))
 
   # TODO, there is redundant info in everything.else
   return(list(loglh = -loglh, exposure = exp, obj.fn.value = r$objective, everything.else = r))

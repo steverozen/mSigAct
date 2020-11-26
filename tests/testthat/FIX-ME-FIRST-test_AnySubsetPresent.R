@@ -37,7 +37,7 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
     sigs             = sigs.plus,
     target.sig.index = 1,
     m.opts           = m.opts,
-    eval_f           = ObjFnBinomMaxLHNoRoundOK,
+    eval_f           = ObjFnBinomMaxLHRound,
     mc.cores         = 1)
 
   set.seed(101010, kind = "L'Ecuyer-CMRG")
@@ -46,7 +46,7 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
     sigs             = sigs.plus,
     target.sig.index = 1,
     m.opts           = m.opts,
-    eval_f           = ObjFnBinomMaxLHNoRoundOK)
+    eval_f           = ObjFnBinomMaxLHRound)
 
   stopifnot(all.equal(
     retval1$`Eso-AdenoCA::SP111062`$chisq.p,
@@ -68,7 +68,7 @@ TestAny1 <- function(extra.sig, eso.index) {
   out <- AnySigSubsetPresent(spect           = eso.spectra,
                              all.sigs        = sigs.plus,
                              Ha.sigs.indices = 1:length(extra.sig),
-                             eval_f          = mSigAct::ObjFnBinomMaxLHNoRoundOK,
+                             eval_f          = ObjFnBinomMaxLHRound,
                              m.opts          = m.opts,
                              max.mc.cores    = 1) # Travis-CI will not use multiple cores
 
