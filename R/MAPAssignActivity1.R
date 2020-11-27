@@ -1,4 +1,4 @@
-#' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
+#' Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.
 #'
 #' @export
 #'

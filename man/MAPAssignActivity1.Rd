@@ -2,7 +2,7 @@
 % Please edit documentation in R/MAPAssignActivity1.R
 \name{MAPAssignActivity1}
 \alias{MAPAssignActivity1}
-\title{Find a Maximum A Posteriori assignment of signature exposures for one spectrum.}
+\title{Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.}
 \usage{
 MAPAssignActivity1(
   spect,
@@ -73,5 +73,5 @@ A list with the elements \describe{
 These elements will be \code{NULL} if \code{max.subsets} is exceeded.
 }
 \description{
-Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
+Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.
 }

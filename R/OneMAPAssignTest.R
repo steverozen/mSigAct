@@ -227,11 +227,16 @@ OneMAPAssignTest <- function(spect,
   QP.sparse.MAP.exp <-
     tibble::tibble(sig.id = names(qp.sparse), QP.sparse.MAP.exp = qp.sparse)
 
+  MAP <- MAPout$MAP
+  colnames(MAP)[2] <- "MAP.count"
+  best.sparse <- MAPout$best.sparse
+  colnames(best.sparse)[2] <- "best.sparse.count"
+
   comp <-
     dplyr::full_join(
       dplyr::full_join(
-        dplyr::full_join(ref.exp, MAPout$MAP),
-        dplyr::full_join(MAPout$best.sparse, QP.best.MAP.exp)),
+        dplyr::full_join(ref.exp, MAP),
+        dplyr::full_join(best.sparse, QP.best.MAP.exp)),
       QP.sparse.MAP.exp)
   print(comp)
 
