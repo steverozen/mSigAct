@@ -1,9 +1,9 @@
 
 library(mSigAct)
-# mutation.type <- "SBS96"
-# mutation.type = "ID"      # <------
+mutation.type <- "SBS96"
+# mutation.type <- "ID"
 # mutation.type <- "SBS192"
-mutation.type = "DBS78"
+# mutation.type <- "DBS78"
 
 # devtools::load_all(".")
 
@@ -22,7 +22,7 @@ mm$global.opts$maxeval <- 10000
 total.time <- system.time(
 
   for (tt in cancer.types[21]) {
-    for (ii in 1:min(ncol(p7[tt]),6)) {
+    for (ii in 1:min(ncol(p7[tt]),1)) {
       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
       message("cancer type = ", tt)
       mSigAct:::PCAWGMAPTest(cancer.type             = tt,

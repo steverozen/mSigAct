@@ -1,3 +1,11 @@
+# 2.0.6.9001
+
+* Added additional elements to return list from MAPAssignActivity1
+
+# 2.0.6
+
+* Created a stable branch, added sigs.prop on OneMapAssignTest and PCAWGMAPTest
+
 # 2.0.5.9011
 
 * Corrected minor bugs in testing MAPAssignActivity

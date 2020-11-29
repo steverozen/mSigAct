@@ -36,6 +36,8 @@
 #'    being signature identifiers. Can be the
 #'    return value from \code{\link{ExposureProportions}}.
 #'
+#' @return See \code{\link{OneMAPAssignTest}}.
+#'
 #' @export
 #'
 
@@ -50,7 +52,7 @@ PCAWGMAPTest <- function(cancer.type,
                          eval_f = ObjFnBinomMaxLHRound,
                          eval_g_ineq = NULL,
                          max.presence.proportion = 0.99,
-                         sigs.prop) {
+                         sigs.prop               = NULL) {
 
   exposure.mutation.type <-
     ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
@@ -266,19 +268,19 @@ OneMAPAssignTest <- function(spect,
     ReconstructSpectrum(sigs, exp = ref.nonzero, use.sig.names = TRUE)
 
   # Best MAP
-  r.b <-
-    ReconstructSpectrum(sigs, exp = MAPout$MAP$count, use.sig.names = TRUE)
+  r.b <- MAPout$MAP.recon
+  # ReconstructSpectrum(sigs, exp = MAPout$MAP$count, use.sig.names = TRUE)
 
   # Best MAP re-optimized to a different objective function
   r.qp <-
     ReconstructSpectrum(sigs, exp = QP.exp, use.sig.names = TRUE)
 
   # MAP most sparse
-  r.sparse.best <-
-    ReconstructSpectrum(
-      sigs, exp = MAPout$best.sparse$count, use.sig.names = TRUE)
+  r.sparse.best <- MAPout$sparse.MAP.recon
+  #  ReconstructSpectrum(
+  #    sigs, exp = MAPout$best.sparse$count, use.sig.names = TRUE)
 
-  # MAP most sparse re-optimised to different objective function
+  # MAP most sparse re-optimized to different objective function
     r.qp.sparse <-
       ReconstructSpectrum(sigs, exp = qp.sparse, use.sig.names = TRUE)
 
@@ -325,10 +327,17 @@ OneMAPAssignTest <- function(spect,
   colnames(sol.matrix) <- paste(colnames(sol.matrix), round(cos.sim[1, ], digits = 4))
   colnames(sol.matrix)[1] <- colnames(spect)
   if (!is.null(out.dir)) {
+    tmp.catalog <- ICAMS::as.catalog(round(sol.matrix))
     ICAMS::PlotCatalogToPdf(
-      ICAMS::as.catalog(round(sol.matrix)),
+      tmp.catalog,
       file = file.path(out.dir, "reconstructions.pdf"))
+    ICAMS::WriteCatalog(tmp.catalog,
+                        file = file.path(out.dir, "reconstructions.csv" ))
+
   }
+
+  print(MAPout$MAP.distances)
+  print(MAPout$sparse.MAP.distances)
 
 }
 

@@ -68,6 +68,19 @@ A list with the elements \describe{
 
 \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
 
+\item{time.for.MAP.assign}{Value from \code{system.time} for
+ \code{\link{MAPAssignActivityInternal}}}.
+
+\item{MAP.recon}{Reconstruction based on \code{MAP}}.
+
+\item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
+
+\item{MAP.distances}{Various distances and similarities
+between \code{spect} and \code{MAP.recon}}.
+
+\item{sparse.MAP.distances}{Various distances and similarities
+between \code{spect} and \code{sparse.MAP.recon}}.
+
 }
 
 These elements will be \code{NULL} if \code{max.subsets} is exceeded.

@@ -101,7 +101,9 @@ nucleotides
 ObjFnBinomMaxLH
 ObjFnBinomMaxLHMustRound
 OptimizeExposure
+OneMapAssignTest
 PCAWG
+PCAWGMAPTest
 pentanucleotide
 POS
 Posteriori

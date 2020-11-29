@@ -23,6 +23,19 @@
 #'
 #' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
 #'
+#' \item{time.for.MAP.assign}{Value from \code{system.time} for
+#'  \code{\link{MAPAssignActivityInternal}}}.
+#'
+#' \item{MAP.recon}{Reconstruction based on \code{MAP}}.
+#'
+#' \item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
+#'
+#' \item{MAP.distances}{Various distances and similarities
+#' between \code{spect} and \code{MAP.recon}}.
+#'
+#' \item{sparse.MAP.distances}{Various distances and similarities
+#' between \code{spect} and \code{sparse.MAP.recon}}.
+#'
 #' }
 #'
 #' These elements will be \code{NULL} if \code{max.subsets} is exceeded.
@@ -39,18 +52,19 @@ MAPAssignActivity1 <- function(spect,
                                max.subsets = 1000,
                                max.presence.proportion = 0.99) {
 
-  MAPout <- MAPAssignActivityInternal(
-    spect                   = spect,
-    sigs                    = sigs,
-    sigs.presence.prop      = sigs.presence.prop,
-    max.level               = max.level,
-    p.thresh                = p.thresh,
-    eval_f                  = eval_f,
-    eval_g_ineq             = eval_g_ineq,
-    m.opts                  = m.opts,
-    max.mc.cores            = max.mc.cores,
-    max.subsets             = max.subsets,
-    max.presence.proportion = max.presence.proportion)
+  time.for.MAP.assign <- system.time(
+    MAPout <- MAPAssignActivityInternal(
+      spect                   = spect,
+      sigs                    = sigs,
+      sigs.presence.prop      = sigs.presence.prop,
+      max.level               = max.level,
+      p.thresh                = p.thresh,
+      eval_f                  = eval_f,
+      eval_g_ineq             = eval_g_ineq,
+      m.opts                  = m.opts,
+      max.mc.cores            = max.mc.cores,
+      max.subsets             = max.subsets,
+      max.presence.proportion = max.presence.proportion))
 
   if (is.null(MAPout)) {
     return(
@@ -84,13 +98,33 @@ MAPAssignActivity1 <- function(spect,
   most.sparse <-
     tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
 
-  return(list(MAP             = MAP,
-              MAP.row         = best,
-              best.sparse     = most.sparse,
-              best.sparse.row = sparse.best,
-              all.tested      = xx,
-              messages        = c(),
-              success         = TRUE))
+  # Best MAP
+  MAP.recon <-
+    ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
+
+  # MAP most sparse
+  sparse.MAP.recon <-
+    ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
+
+  MAP.distances <-
+    DistanceMeasures(spect, MAP.recon, m.opts$nbinom.size)
+
+  sparse.MAP.distances <-
+    DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
+
+
+  return(list(MAP                  = MAP,
+              MAP.row              = best,
+              best.sparse          = most.sparse,
+              best.sparse.row      = sparse.best,
+              all.tested           = xx,
+              messages             = c(),
+              success              = TRUE,
+              time.for.MAP.assign  = time.for.MAP.assign,
+              MAP.recon            = MAP.recon,
+              sparse.MAP.recon     = sparse.MAP.recon,
+              MAP.distances        = MAP.distances,
+              sparse.MAP.distances = sparse.MAP.distances))
 }
 
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
@@ -336,4 +370,25 @@ P.of.M <- function(model, sigs.presence.prop) {
   rr <- sum(log(c(present, not.present)))
   # This could be -Inf if one of the signatures is always present in the prior data but absent; probably want to fudge this slightly
   return(rr)
+}
+
+#' Calculate several distance measures between a spectrum and its reconstruction
+#'
+#' @keywords internal
+
+DistanceMeasures <- function(spect, recon, nbinom.size) {
+  my.fn <- function(method) {
+    df <- rbind(as.vector(spect),
+                as.vector(recon))
+    return(philentropy::distance(x = df, method = method, test.na = FALSE))
+  }
+
+  vv <- unlist(lapply(c("euclidean", "cosine"), my.fn))
+  vv <- c(neg.log.likelihood =
+            LLHSpectrumNegBinom(
+              as.vector(spect),
+              as.vector(recon),
+              nbinom.size = nbinom.size),
+          vv)
+  return(tibble::tibble(method = names(vv), value = vv))
 }
