@@ -15,7 +15,8 @@ PCAWGMAPTest(
   m.opts = DefaultManyOpts(),
   eval_f = ObjFnBinomMaxLHRound,
   eval_g_ineq = NULL,
-  max.presence.proportion = 0.99
+  max.presence.proportion = 0.99,
+  sigs.prop
 )
 }
 \arguments{
@@ -48,6 +49,11 @@ of tumors that must have a given signature. Used so that it is
 possible to exclude a signature from a spectrum, e.g.
 perhaps all examples of tumor types have SBS5, but we want
 to allow a small chance that SBS5 is not present.}
+
+\item{sigs.prop}{The proportions of samples that contain each
+signature. A numerical vector (values between 0 and 1), with names
+being signature identifiers. Can be the
+return value from \code{\link{ExposureProportions}}.}
 }
 \description{
 Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set.

@@ -18,7 +18,8 @@ OneMAPAssignTest(
   m.opts = DefaultManyOpts(),
   out.dir = NULL,
   p.thresh,
-  max.presence.proportion
+  max.presence.proportion,
+  sigs.prop = NULL
 )
 }
 \arguments{
@@ -62,6 +63,11 @@ of tumors that must have a given signature. Used so that it is
 possible to exclude a signature from a spectrum, e.g.
 perhaps all examples of tumor types have SBS5, but we want
 to allow a small chance that SBS5 is not present.}
+
+\item{sigs.prop}{The proportions of samples that contain each
+signature. A numerical vector (values between 0 and 1), with names
+being signature identifiers. Can be the
+return value from \code{\link{ExposureProportions}}.}
 }
 \description{
 Run one test of \code{\link{MAPAssignActivity1}}.

@@ -10,7 +10,6 @@
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#'
 #' @param eval_f See \code{\link[nloptr]{nloptr}}.
 #'
 #' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
@@ -32,6 +31,11 @@
 #'   perhaps all examples of tumor types have SBS5, but we want
 #'   to allow a small chance that SBS5 is not present.
 #'
+#' @param sigs.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being signature identifiers. Can be the
+#'    return value from \code{\link{ExposureProportions}}.
+#'
 #' @export
 #'
 
@@ -45,7 +49,8 @@ PCAWGMAPTest <- function(cancer.type,
                          m.opts = DefaultManyOpts(),
                          eval_f = ObjFnBinomMaxLHRound,
                          eval_g_ineq = NULL,
-                         max.presence.proportion = 0.99) {
+                         max.presence.proportion = 0.99,
+                         sigs.prop) {
 
   exposure.mutation.type <-
     ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
@@ -89,7 +94,8 @@ PCAWGMAPTest <- function(cancer.type,
                      m.opts                  = m.opts,
                      eval_f                  = eval_f,
                      eval_g_ineq             = eval_g_ineq,
-                     max.presence.proportion = max.presence.proportion)
+                     max.presence.proportion = max.presence.proportion,
+                     sigs.prop               = sigs.prop)
   return(rr)
 }
 
@@ -139,6 +145,11 @@ utils::globalVariables(c(".data"))
 #'   perhaps all examples of tumor types have SBS5, but we want
 #'   to allow a small chance that SBS5 is not present.
 #'
+#' @param sigs.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being signature identifiers. Can be the
+#'    return value from \code{\link{ExposureProportions}}.
+#'
 #' @export
 #'
 
@@ -155,7 +166,8 @@ OneMAPAssignTest <- function(spect,
                              m.opts       = DefaultManyOpts(),
                              out.dir      = NULL,
                              p.thresh,
-                             max.presence.proportion) {
+                             max.presence.proportion,
+                             sigs.prop    = NULL) {
   if (!is.null(out.dir)) {
     if (!dir.exists(out.dir)) {
       created <- dir.create(out.dir, recursive = TRUE)
@@ -173,12 +185,13 @@ OneMAPAssignTest <- function(spect,
     }
   }
 
-
   sigs <- PCAWG7::signature$genome[[mutation.type]]
 
-  sigs.prop <- ExposureProportions(mutation.type = mutation.type,
-                                   cancer.type   = cancer.type,
-                                   all.sigs = sigs)
+  if (is.null(sigs.prop)) {
+    sigs.prop <- ExposureProportions(mutation.type = mutation.type,
+                                     cancer.type   = cancer.type,
+                                     all.sigs = sigs)
+  }
 
   # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
 
