@@ -36,6 +36,7 @@ Suggests:
     devtools,
     dplyr,
     htmlwidgets,
+    ICAMS.shiny,
     knitr,
     PCAWG7,
     philentropy,

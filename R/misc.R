@@ -1,3 +1,6 @@
+# Needed to silence devtools::check warnings about gobal variable used in dplyr
+utils::globalVariables(c(".data"))
+
 
 List2TibbleRow <- function(a.list) {
 

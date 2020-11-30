@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @return A numerical vector of the proportion of tumors of type \code{cancer.type} with each signature
-#'   for those signatures observed in \code{cancer.types}.The names are the signature ids.
+#'   for those signatures observed in \code{cancer.type}.The names are the signature ids.
 #'
 ExposureProportions <- function(mutation.type, cancer.type, all.sigs = NULL, drop.sigs.no.info = TRUE) {
 

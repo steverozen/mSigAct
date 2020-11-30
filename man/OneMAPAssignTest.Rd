@@ -19,7 +19,8 @@ OneMAPAssignTest(
   out.dir = NULL,
   p.thresh,
   max.presence.proportion,
-  sigs.prop = NULL
+  sigs.prop = NULL,
+  sigs = NULL
 )
 }
 \arguments{
@@ -68,6 +69,8 @@ to allow a small chance that SBS5 is not present.}
 signature. A numerical vector (values between 0 and 1), with names
 being signature identifiers. Can be the
 return value from \code{\link{ExposureProportions}}.}
+
+\item{sigs}{Matrix of signatures.}
 }
 \description{
 Run one test of \code{\link{MAPAssignActivity1}}.

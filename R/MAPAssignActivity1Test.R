@@ -102,7 +102,6 @@ PCAWGMAPTest <- function(cancer.type,
 }
 
 
-utils::globalVariables(c(".data"))
 #' Run one test of \code{\link{MAPAssignActivity1}}.
 #'
 #' @param spect A single spectrum.
@@ -152,6 +151,8 @@ utils::globalVariables(c(".data"))
 #'    being signature identifiers. Can be the
 #'    return value from \code{\link{ExposureProportions}}.
 #'
+#' @param sigs Matrix of signatures.
+#'
 #' @export
 #'
 
@@ -169,7 +170,8 @@ OneMAPAssignTest <- function(spect,
                              out.dir      = NULL,
                              p.thresh,
                              max.presence.proportion,
-                             sigs.prop    = NULL) {
+                             sigs.prop    = NULL,
+                             sigs         = NULL) {
   if (!is.null(out.dir)) {
     if (!dir.exists(out.dir)) {
       created <- dir.create(out.dir, recursive = TRUE)
@@ -187,15 +189,15 @@ OneMAPAssignTest <- function(spect,
     }
   }
 
-  sigs <- PCAWG7::signature$genome[[mutation.type]]
+  if (is.null(sigs)) {
+    sigs <- PCAWG7::signature$genome[[mutation.type]]
+  }
 
   if (is.null(sigs.prop)) {
     sigs.prop <- ExposureProportions(mutation.type = mutation.type,
                                      cancer.type   = cancer.type,
                                      all.sigs = sigs)
   }
-
-  # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
 
   mapout.time <- system.time(
     MAPout <-
@@ -338,6 +340,8 @@ OneMAPAssignTest <- function(spect,
 
   print(MAPout$MAP.distances)
   print(MAPout$sparse.MAP.distances)
+
+  return(MAPout)
 
 }
 

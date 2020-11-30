@@ -68,13 +68,19 @@ MAPAssignActivity1 <- function(spect,
 
   if (is.null(MAPout)) {
     return(
-      list(MAP             = NULL,
-           MAP.row         = NULL,
-           best.sparse     = NULL,
-           best.sparse.row = NULL,
-           all.tested      = NULL,
-           messages        = "max.subsets exceeded",
-           success         = FALSE))
+      list(MAP                  = NULL,
+           MAP.row              = NULL,
+           best.sparse          = NULL,
+           best.sparse.row      = NULL,
+           all.tested           = NULL,
+           messages             = "max.subsets exceeded",
+           success              = FALSE,
+           time.for.MAP.assign  = time.for.MAP.assign,
+           MAP.recon            = NULL,
+           sparse.MAP.recon     = NULL,
+           MAP.distances        = NULL,
+           sparse.MAP.distances = NULL
+           ))
   }
 
   xx <- ListOfList2Tibble(MAPout)
@@ -391,4 +397,13 @@ DistanceMeasures <- function(spect, recon, nbinom.size) {
               nbinom.size = nbinom.size),
           vv)
   return(tibble::tibble(method = names(vv), value = vv))
+}
+
+#' Return the list of possible SBS96 artifacts
+#'
+PossibleArtifacts <- function() {
+  return(c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47",
+           "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
+           "SBS53", "SBS54", "SBS55", "SBS56",
+           "SBS57", "SBS58", "SBS59", "SBS60"))
 }
