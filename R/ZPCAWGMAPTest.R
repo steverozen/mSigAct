@@ -1,4 +1,4 @@
-#' Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with global opts maxeval 10000 and 1000 and compare the results
+#' Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with and with pre-filtering by bootstrapped quadratic programming.
 #'
 #' @param cancer.type A cancer type from the PCAWG exposures matrix.
 #'
@@ -41,7 +41,7 @@
 #' @export
 #'
 
-YPCAWGMAPTest <- function(cancer.type,
+ZPCAWGMAPTest <- function(cancer.type,
                          sample.index,
                          mutation.type,
                          max.level = 5,
@@ -96,11 +96,19 @@ YPCAWGMAPTest <- function(cancer.type,
                                      all.sigs = sigs)
   }
 
-  one.assign <- function(my.sigs.prop, gme) {
-    my.m.opts <- m.opts
-    my.m.opts$global.opts$maxeval <- gme
-    message("my.m.opts$global.opts$maxeval = ", gme)
-    my.out.dir <- file.path(out.dir, paste0("d", gme))
+  if (FALSE) {
+    # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
+    qp.assign <-
+      ICAMS.shiny::GetExposureWithConfidence(
+        catalog = one.spect,
+        sig.universe = sigs[ , names(sigs.prop), drop = FALSE],
+        conf.int = 0.75)
+    some.sigs.prop <- sigs.prop[rownames(qp.assign)]
+  } else {
+    some.sigs.prop <- sigs.prop[setdiff(names(sigs.prop), PossibleArtifacts())]
+  }
+
+  one.assign <- function(my.sigs.prop, subdir) {
     rr <-
       OneMAPAssignTest(spect                   = one.spect,
                        reference.exp           = one.ex,
@@ -109,34 +117,44 @@ YPCAWGMAPTest <- function(cancer.type,
                        exposure.mutation.type  = exposure.mutation.type,
                        max.mc.cores            = max.mc.cores,
                        max.level               = max.level,
-                       out.dir                 = my.out.dir,
+                       out.dir                 = file.path(out.dir, subdir),
                        p.thresh                = p.thresh,
-                       m.opts                  = my.m.opts,
+                       m.opts                  = m.opts,
                        eval_f                  = eval_f,
                        eval_g_ineq             = eval_g_ineq,
                        max.presence.proportion = max.presence.proportion,
                        sigs.prop               = my.sigs.prop)
-    message("END my.m.opts$global.opts$maxeval = ", gme)
-    print(rr$time.for.MAP.assign)
-    if (!is.null(out.dir)) {
-      cat(rr$time.for.MAP.assign, "\n", file = file.path(my.out.dir, "timing.txt"))
-    }
     return(rr)
   }
 
-  rr1 <- one.assign(sigs.prop, 10000)
+  message("Testing all sigs ", paste(names(sigs.prop), collapse = ", "))
+  rr1 <- one.assign(sigs.prop, "all.sigs")
 
-  rr2 <- one.assign(sigs.prop, 1000)
+  if (length(some.sigs.prop) == length(sigs.prop)) {
+    message("No signatures removed")
+    rr2 <- NULL
+  } else {
+    message("Testing ", paste(names(some.sigs.prop), collapse = ", "))
+    rr2 <- one.assign(some.sigs.prop, "some.sigs")
+    if (!isTRUE(all.equal(rr1$MAP, rr2$MAP)) && FALSE) {
+       for (sig.name in setdiff(names(sigs.prop), names(some.sigs.prop))) {
+            # Later try to salvage by a forward search?
+
+       }
+
+    }
+
+  }
 
   if (!is.null(out.dir) && !is.null(rr2)) {
-    if (!isTRUE(all.equal(rr1$MAP, rr2$MAP, tol = 3))) {
+    if (!isTRUE(all.equal(rr1$MAP, rr2$MAP))) {
       cat("DIFFERNCE.MAP\n",
           file = file.path(out.dir, "DIFFERENCE.MAP"))
     } else {
       cat("OK.MAP\n",
           file = file.path(out.dir, "OK.MAP"))
     }
-    if (!isTRUE(all.equal(rr1$best.sparse, rr2$best.sparse, tol = 3))) {
+    if (!isTRUE(all.equal(rr1$best.sparse, rr2$best.sparse))) {
       cat("DIFFERNCE.best.sparse\n",
           file = file.path(out.dir, "DIFFERENCE.best.sparse"))
     } else {

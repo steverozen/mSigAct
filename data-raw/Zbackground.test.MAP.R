@@ -5,9 +5,6 @@ mutation.type <- "SBS96"
 # mutation.type <- "SBS192"
 # mutation.type <- "DBS78"
 
-#  ls */*/no.results.txt
-#
-# ls */DIFF* | wc
 # devtools::load_all(".")
 
 p7 <- PCAWG7::SplitPCAWGMatrixByTumorType(
@@ -29,13 +26,13 @@ mm$global.opts$maxeval <- 10000
 # debug(MAPAssignActivity1)
 
 total.time <- system.time(
-  for (tt in cancer.types[1]) {
-    # for (ii in 1:min(ncol(p7[[tt]]),5)) {
-    for (ii in 2) {
+  for (tt in cancer.types) {
+    for (ii in 1:min(ncol(p7[[tt]]),5)) {
+    # for (ii in 2) {
       message("sample index = ", ii)
       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
       message("cancer type = ", tt)
-      xx <- mSigAct::YPCAWGMAPTest(
+      xx <- mSigAct::ZPCAWGMAPTest(
         cancer.type             = tt,
         sample.index            = ii,
         mutation.type           = mutation.type,
@@ -49,9 +46,8 @@ total.time <- system.time(
 
 )
 
-message("TOTAL TIME")
 print(total.time)
 
 # cd tests.id.gobal.eval.1000     # <--------
-# nice R --vanilla < ~/mSigAct/data-raw/Ybackground.test.MAP.R &> log.txt &
+# nice R --vanilla < ~/mSigAct/data-raw/Zbackground.test.MAP.R &> log.txt &
 
