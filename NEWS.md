@@ -1,3 +1,7 @@
+# 2.0.6.9003
+
+* More performance tests
+
 # 2.0.6.9002
 
 * Added callback fn to MAPAssignActivity1

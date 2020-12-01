@@ -72,6 +72,11 @@ XPCAWGMAPTest <- function(cancer.type,
   my.ex <- ex[[cancer.type]]
   stopifnot(ncol(my.ex) > 0)
 
+  if (sample.index > ncol(my.ex)) {
+    message("Sample index (", sample.index, ") > ncol(my.ex) (", ncol(my.ex), ")")
+    message("Returning NULL")
+    return(NULL)
+  }
   one.ex <- my.ex[ , sample.index, drop = FALSE]
   sample.id <- colnames(one.ex)
   one.spect <- my.p7[ , sample.id, drop = FALSE]
@@ -141,7 +146,7 @@ XPCAWGMAPTest <- function(cancer.type,
 
   }
 
-  if (!is.null(out.dir)) {
+  if (!is.null(out.dir) && !is.null(rr2)) {
     if (!isTRUE(all.equal(rr1$MAP, rr2$MAP))) {
       cat("DIFFERNCE.MAP\n",
           file = file.path(out.dir, "DIFFERENCE.MAP"))

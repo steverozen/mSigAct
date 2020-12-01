@@ -27,12 +27,12 @@ mm$global.opts$maxeval <- 10000
 
 total.time <- system.time(
   for (tt in cancer.types[2]) {
-    # for (ii in 1:min(ncol(p7[[tt]]),5)) {
-    for (ii in 2) {
+    for (ii in 1:min(ncol(p7[[tt]]),5)) {
+    # for (ii in 2) {
       message("sample index = ", ii)
       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
       message("cancer type = ", tt)
-      xx <- mSigAct::XPCAWGMAPTest(
+      xx <- mSigAct::YPCAWGMAPTest(
         cancer.type             = tt,
         sample.index            = ii,
         mutation.type           = mutation.type,
@@ -46,8 +46,9 @@ total.time <- system.time(
 
 )
 
+message("TOTAL TIME")
 print(total.time)
 
 # cd tests.id.gobal.eval.1000     # <--------
-# nice R --vanilla < ~/mSigAct/data-raw/background.test.MAP.R &> log.txt &
+# nice R --vanilla < ~/mSigAct/data-raw/Ybackground.test.MAP.R &> log.txt &
 
