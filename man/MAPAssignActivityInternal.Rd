@@ -15,7 +15,8 @@ MAPAssignActivityInternal(
   m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
   max.subsets = 1000,
-  max.presence.proportion = 0.99
+  max.presence.proportion = 0.99,
+  each.level.callback.fn = NULL
 )
 }
 \arguments{
@@ -47,6 +48,12 @@ tested for removal from the set of signatures.}
 
 \item{max.presence.proportion}{The maximum value of the proportion
 of tumors that must have a given signature.}
+
+\item{each.level.callback.fn}{Function called the start of each
+new level (number of signatures to try excluding). Must
+take named arguments \code{value} and \code{detail}, and
+no others. Designed for a \code{\link[ipc]{AsyncProgress}}
+progress bar function.}
 }
 \description{
 Find a Maximum A Posteriori assignment of signature exposures for one spectrum.

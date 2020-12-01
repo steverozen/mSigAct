@@ -1,3 +1,7 @@
+# 2.0.6.9002
+
+* Added callback fn to MAPAssignActivity1
+
 # 2.0.6.9001
 
 * Added additional elements to return list from MAPAssignActivity1

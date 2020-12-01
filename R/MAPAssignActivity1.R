@@ -50,7 +50,8 @@ MAPAssignActivity1 <- function(spect,
                                m.opts,
                                max.mc.cores = min(20, 2^max.level),
                                max.subsets = 1000,
-                               max.presence.proportion = 0.99) {
+                               max.presence.proportion = 0.99,
+                               each.level.callback.fn  = NULL) {
 
   time.for.MAP.assign <- system.time(
     MAPout <- MAPAssignActivityInternal(
@@ -64,7 +65,8 @@ MAPAssignActivity1 <- function(spect,
       m.opts                  = m.opts,
       max.mc.cores            = max.mc.cores,
       max.subsets             = max.subsets,
-      max.presence.proportion = max.presence.proportion))
+      max.presence.proportion = max.presence.proportion,
+      each.level.callback.fn  = each.level.callback.fn))
 
   if (is.null(MAPout)) {
     return(
@@ -166,6 +168,12 @@ MAPAssignActivity1 <- function(spect,
 #'
 #' @param max.presence.proportion The maximum value of the proportion
 #'   of tumors that must have a given signature.
+#'
+#' @param each.level.callback.fn Function called the start of each
+#'   new level (number of signatures to try excluding). Must
+#'   take named arguments \code{value} and \code{detail}, and
+#'   no others. Designed for a \code{\link[ipc]{AsyncProgress}}
+#'   progress bar function.
 
 MAPAssignActivityInternal <- function(spect,
                                       sigs,
@@ -177,7 +185,8 @@ MAPAssignActivityInternal <- function(spect,
                                       m.opts       = DefaultManyOpts(),
                                       max.mc.cores = min(20, 2^max.level),
                                       max.subsets  = 1000,
-                                      max.presence.proportion = 0.99) {
+                                      max.presence.proportion = 0.99,
+                                      each.level.callback.fn  = NULL) {
 
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
@@ -319,6 +328,14 @@ MAPAssignActivityInternal <- function(spect,
       my.msg(-1, "Returning NULL")
       return(NULL)
     }
+
+    if (!is.null(each.level.callback.fn)) {
+      each.level.callback.fn(
+        value = 1/max.level - 0.01,
+        detail = paste0("Testing removal of subsets of ", df, " signatures (",
+                        length(subsets2), " subsets)"))
+    }
+
     time.used <- system.time(
       check.to.remove <-
         parallel::mclapply(X = subsets2,
