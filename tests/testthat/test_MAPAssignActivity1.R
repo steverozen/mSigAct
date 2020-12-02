@@ -58,7 +58,8 @@ test_that("MAPAssignActivity SBS192", {
   testthat::expect_equal(
     retval$MAP$count,
     c(SBS1 = 509.712341010996, SBS2 = 871.375080961353, SBS5 = 3187.80110383402,
-      SBS13 = 1521.46804094734, SBS40 = 1107.64343324629))
+      SBS13 = 1521.46804094734, SBS40 = 1107.64343324629),
+    tolerance = 1e-5)
 })
 
 test_that("MAPAssignActivity ID", {
@@ -67,8 +68,9 @@ test_that("MAPAssignActivity ID", {
   testthat::expect_equal(
     retval$MAP$count,
     c(ID1 = 76.1872826514142, ID2 = 41.829148548392, ID3 = 137.178076886561,
-      ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,  ID10 = 18.0505660606712)
-    )
+      ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,  
+      ID10 = 18.0505660606712),
+    tolerance = 1e-6)
 })
 
 test_that("MAPAssignActivity DBS78", {

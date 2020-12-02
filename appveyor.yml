@@ -29,8 +29,8 @@ environment:
 # Adapt as necessary starting from here
 
 build_script:
-  - travis-tool.sh bioc_install BSgenome.Hsapiens.1000genomes.hs37d5
   - travis-tool.sh bioc_install GenomeInfoDbData
+  - travis-tool.sh bioc_install BSgenome.Hsapiens.1000genomes.hs37d5
   - travis-tool.sh install_deps
 
 test_script:

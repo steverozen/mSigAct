@@ -5,3 +5,4 @@
 ^README.Rmd$
 ^\.travis\.yml$
 ^mSigAct_.*\.pdf$
+^appveyor\.yml$
