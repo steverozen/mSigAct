@@ -18,6 +18,7 @@ LazyData: true
 Language: en-US
 Remotes: github::steverozen/PCAWG7,
     github::steverozen/ICAMS@master,
+    github::steverozen/ICAMS.shiny@master,
     github::steverozen/mSigBG
 Depends: R (>= 3.5),
 RoxygenNote: 7.1.1
@@ -47,4 +48,3 @@ Suggests:
     testthat (>= 2.1.0),
     usethis
 
-    
