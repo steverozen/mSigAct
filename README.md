@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/56fd8ivqaa2ahy87/branch/master?svg=true)](https://ci.appveyor.com/project/jnh01/msigact/branch/master)
+status](https://ci.appveyor.com/api/projects/status/github/steverozen/mSigAct?branch=master&svg=true)](https://ci.appveyor.com/project/steverozen/mSigAct)
 
 <!-- badges: end -->
 
