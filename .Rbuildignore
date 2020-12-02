@@ -6,3 +6,4 @@
 ^\.travis\.yml$
 ^mSigAct_.*\.pdf$
 ^appveyor\.yml$
+^\.github$
