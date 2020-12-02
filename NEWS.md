@@ -1,7 +1,9 @@
 # 2.0.6.9005
 
 * Changed the name of callback function of MAPAssignActivity1 to `progress.monitor`. Added code to update the progress bar when exiting 
-the for loop.
+the for loop
+
+* Exported function `PossibleArtifacts`
 
 # 2.0.6.9004
 
