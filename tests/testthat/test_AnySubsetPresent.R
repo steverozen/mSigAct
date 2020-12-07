@@ -77,11 +77,11 @@ TestAny1 <- function(extra.sig, eso.index) {
 
 test_that("TestAny1 and TestSignaturePresenceTest on SBS17a in esophageal sample 1", {
   any.retval <- TestAny1("SBS17a", 1)
-  expect_equal(any.retval$all.Ha.info[[1]]$p, 0.09483776)
+  expect_equal(any.retval$all.Ha.info[[1]]$p, 0.0913487716992644)
   spt.retval <- TestSignaturePresenceTestDouble("SBS17a", 1)
-  expect_equal(spt.retval$test1$chisq.p, 0.09483776)
-
+  expect_equal(spt.retval$test1$chisq.p, 0.0913487716992644)
 })
+
 
 test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   any.retval2 <- TestAny1(c("SBS17a", "SBS17b"), 1)
@@ -90,10 +90,10 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   expect_equal(any.retval2$all.Ha.info[[1]]$sigs.added,
                "SBS17a")
   expect_equal(any.retval2$all.Ha.info[[1]]$p,
-               0.09483776)
+               0.0913487716992644)
   expect_equal(any.retval2$all.Ha.info[[2]]$p,
-               0.0009874463)
+               0.000930018426319915)
   expect_equal(any.retval2$all.Ha.info[[3]]$p,
-               0.001309485)
+               0.0014051364416187)
 })
 
