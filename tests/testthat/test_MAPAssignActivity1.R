@@ -33,9 +33,6 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
     sigs.presence.prop      = sig.prop,
     max.level               = 100,
     p.thresh                = 0.01,
-    eval_f                  = ObjFnBinomMaxLHRound,
-    eval_g_ineq             = g_ineq_for_ObjFnBinomMaxLH2,
-    # eval_g_ineq             = NULL,
     m.opts                  = mm,
     max.mc.cores            = 1,
     max.subsets             = 1000,
@@ -68,7 +65,7 @@ test_that("MAPAssignActivity ID", {
   testthat::expect_equal(
     retval$MAP$count,
     c(ID1 = 76.1872826514142, ID2 = 41.829148548392, ID3 = 137.178076886561,
-      ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,  
+      ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,
       ID10 = 18.0505660606712),
     tolerance = 1e-6)
 })

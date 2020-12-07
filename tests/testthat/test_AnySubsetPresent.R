@@ -37,7 +37,6 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
     sigs             = sigs.plus,
     target.sig.index = 1,
     m.opts           = m.opts,
-    eval_f           = ObjFnBinomMaxLHRound,
     mc.cores         = 1)
 
   set.seed(101010, kind = "L'Ecuyer-CMRG")
@@ -45,8 +44,7 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
     spectrum         = eso.spectra,
     sigs             = sigs.plus,
     target.sig.index = 1,
-    m.opts           = m.opts,
-    eval_f           = ObjFnBinomMaxLHRound)
+    m.opts           = m.opts)
 
   stopifnot(all.equal(
     retval1$`Eso-AdenoCA::SP111062`$chisq.p,
@@ -68,7 +66,6 @@ TestAny1 <- function(extra.sig, eso.index) {
   out <- AnySigSubsetPresent(spect           = eso.spectra,
                              all.sigs        = sigs.plus,
                              Ha.sigs.indices = 1:length(extra.sig),
-                             eval_f          = ObjFnBinomMaxLHRound,
                              m.opts          = m.opts,
                              max.mc.cores    = 1) # Travis-CI will not use multiple cores
 
@@ -77,9 +74,10 @@ TestAny1 <- function(extra.sig, eso.index) {
 
 test_that("TestAny1 and TestSignaturePresenceTest on SBS17a in esophageal sample 1", {
   any.retval <- TestAny1("SBS17a", 1)
-  expect_equal(any.retval$all.Ha.info[[1]]$p, 0.0913487716992644)
+  expected <-0.0944294265780503
+  expect_equal(any.retval$all.Ha.info[[1]]$p, expected)
   spt.retval <- TestSignaturePresenceTestDouble("SBS17a", 1)
-  expect_equal(spt.retval$test1$chisq.p, 0.0913487716992644)
+  expect_equal(spt.retval$test1$chisq.p, expected)
 })
 
 
@@ -90,10 +88,10 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   expect_equal(any.retval2$all.Ha.info[[1]]$sigs.added,
                "SBS17a")
   expect_equal(any.retval2$all.Ha.info[[1]]$p,
-               0.0913487716992644)
+               0.0944294265780503)
   expect_equal(any.retval2$all.Ha.info[[2]]$p,
-               0.000930018426319915)
+               0.000910631136606777)
   expect_equal(any.retval2$all.Ha.info[[3]]$p,
-               0.0014051364416187)
+               0.00139051152114872)
 })
 

@@ -28,9 +28,6 @@ PrepOneSynSpectrum <- function(sig.counts,
 
 TestOneLLHetc <- function(sig.counts,
                           input.sigs   = PCAWG7::signature$genome$SBS96,
-                          # eval_f     = ObjFnBinomMaxLHNoRoundOK,
-                          eval_f       = ObjFnBinomMaxLHRound,
-                          eval_g_ineq  = g_ineq_for_ObjFnBinomMaxLH2,
                           trace = 0) {
 
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,
@@ -43,9 +40,7 @@ TestOneLLHetc <- function(sig.counts,
   retval <- OptimizeExposure(
     spect       = test.data$spec,
     sigs        = test.data$sigs,
-    m.opts      = m.opts,
-    eval_f      = eval_f,
-    eval_g_ineq = eval_g_ineq)
+    m.opts      = m.opts)
 
   new.rec <-
     mSigAct:::prop.reconstruct(exp = retval$exposure, sigs = test.data$sigs)

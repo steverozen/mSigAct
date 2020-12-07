@@ -8,7 +8,7 @@
 #'      columns are signatures. Should have column names for
 #'      interpretable results. Cannot be a vector because
 #'      the column names are needed.
-#'      
+#'
 #' @export
 #'
 #' @return A vector of exposures with names being the colnames from
@@ -60,3 +60,7 @@ OptimizeExposureQP <- function(spectrum, signatures) {
   stopifnot(!is.null(names(rr)))
   return(rr)
 }
+
+# To bootstrap do:
+#
+# sample(seq(3), spectrum.as.probs = c(0.5, 0.4, 0.1), total.count = 200)

@@ -10,8 +10,10 @@ mutation.type <- "SBS96"
 p7 <- PCAWG7::SplitPCAWGMatrixByTumorType(
   PCAWG7::spectra$PCAWG[[mutation.type]])
 
-cancer.types <- names(p7)
-# cancer.types <- cancer.types[-(1:7)] # starting where we left off
+cancer.types <- c("Bone-Benign", "CNS-Medullo", "ColoRect-AdenoCA", "Liver-HCC",
+"Lymph-BNHL", "Myeloid-AML", "Myeloid-MPN", "Panc-AdenoCA", "Prost-AdenoCA",
+"Skin-Melanoma", "Stomach-AdenoCA",
+"Thy-AdenoCA")
 
 # Liver-HCC has 24 signatures, index 20
 # Stomach-AdenoCA has 20 signatures, index 35
@@ -39,8 +41,6 @@ total.time <- system.time(
         max.mc.cores            = 50,
         out.dir                 = paste(tt, mutation.type, ii, sep = "-"),
         m.opts                  = mm,
-        eval_f                  = ObjFnBinomMaxLHRound,
-        eval_g_ineq             = g_ineq_for_ObjFnBinomMaxLH2,
         max.level               = 100,
         max.presence.proportion = 0.99) }}
 

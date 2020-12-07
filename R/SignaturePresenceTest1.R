@@ -9,25 +9,21 @@
 #' @param target.sig.index The index of the signature the presence
 #' of which we want to test.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #'
 #' @keywords internal
 
 SignaturePresenceTest1 <- function(
-  spectrum, sigs, target.sig.index, m.opts, eval_f) {
+  spectrum, sigs, target.sig.index, m.opts) {
 
   ret.with <- OptimizeExposure(spectrum  = spectrum,
                                sigs   = sigs,
-                               m.opts = m.opts,
-                               eval_f = eval_f)
+                               m.opts = m.opts)
   loglh.with <- ret.with$loglh
 
   ret.without <- OptimizeExposure(spectrum = spectrum,
                                   sigs   = sigs[ ,-target.sig.index],
-                                  eval_f = eval_f,
                                   m.opts = m.opts)
   loglh.without <- ret.without$loglh
 
@@ -54,7 +50,6 @@ TestSignaturePresenceTest1 <-
   function(sig.counts,
            input.sigs = PCAWG7::signature$genome$SBS96,
            trace      = 0,
-           eval_f     = ObjFnBinomMaxLHRound,
            m.opts     = NULL) {
 
     if (!requireNamespace("BSgenome.Hsapiens.1000genomes.hs37d5",
@@ -95,7 +90,6 @@ TestSignaturePresenceTest1 <-
     spectrum         = spectrum,
     sigs             = some.sigs,
     target.sig.index = 1,
-    eval_f           = eval_f,
     m.opts           = m.opts)
 
   return(retval)

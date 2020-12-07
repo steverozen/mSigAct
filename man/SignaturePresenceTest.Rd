@@ -9,7 +9,6 @@ SignaturePresenceTest(
   sigs,
   target.sig.index,
   m.opts = NULL,
-  eval_f,
   mc.cores = 10
 )
 }
@@ -27,8 +26,6 @@ of which we want to test.}
 \item{m.opts}{If \code{NULL} use the return from
 calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{mc.cores}{Number of cores to use. Always silently
 changed to 1 on Microsoft Windows.}

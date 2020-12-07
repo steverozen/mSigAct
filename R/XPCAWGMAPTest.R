@@ -10,10 +10,6 @@
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
-#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param out.dir If non-NULL create this directory if necessary and put
 #'   results there.
 #'
@@ -49,8 +45,6 @@ XPCAWGMAPTest <- function(cancer.type,
                          out.dir = NULL,
                          p.thresh = 0.01,
                          m.opts = DefaultManyOpts(),
-                         eval_f = ObjFnBinomMaxLHRound,
-                         eval_g_ineq = NULL,
                          max.presence.proportion = 0.99,
                          sigs.prop               = NULL) {
 
@@ -120,8 +114,6 @@ XPCAWGMAPTest <- function(cancer.type,
                        out.dir                 = file.path(out.dir, subdir),
                        p.thresh                = p.thresh,
                        m.opts                  = m.opts,
-                       eval_f                  = eval_f,
-                       eval_g_ineq             = eval_g_ineq,
                        max.presence.proportion = max.presence.proportion,
                        sigs.prop               = my.sigs.prop)
     return(rr)

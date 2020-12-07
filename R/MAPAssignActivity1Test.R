@@ -10,10 +10,6 @@
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
-#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param out.dir If non-NULL create this directory if necessary and put
 #'   results there.
 #'
@@ -46,11 +42,9 @@ PCAWGMAPTest <- function(cancer.type,
                          mutation.type,
                          max.level = 5,
                          max.mc.cores,
+                         m.opts = DefaultManyOpts(),
                          out.dir = NULL,
                          p.thresh = 0.01,
-                         m.opts = DefaultManyOpts(),
-                         eval_f = ObjFnBinomMaxLHRound,
-                         eval_g_ineq = NULL,
                          max.presence.proportion = 0.99,
                          sigs.prop               = NULL) {
 
@@ -94,8 +88,6 @@ PCAWGMAPTest <- function(cancer.type,
                      out.dir                 = out.dir,
                      p.thresh                = p.thresh,
                      m.opts                  = m.opts,
-                     eval_f                  = eval_f,
-                     eval_g_ineq             = eval_g_ineq,
                      max.presence.proportion = max.presence.proportion,
                      sigs.prop               = sigs.prop)
   return(rr)
@@ -129,10 +121,6 @@ PCAWGMAPTest <- function(cancer.type,
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
-#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.
@@ -164,8 +152,6 @@ OneMAPAssignTest <- function(spect,
                              max.subsets  = 1000,
                              max.level    = 5,
                              max.mc.cores = 100,
-                             eval_f       = ObjFnBinomMaxLHRound,
-                             eval_g_ineq  = NULL,
                              m.opts       = DefaultManyOpts(),
                              out.dir      = NULL,
                              p.thresh,
@@ -207,8 +193,6 @@ OneMAPAssignTest <- function(spect,
         sigs.presence.prop      = sigs.prop,
         max.level               = max.level, # length(sigs.prop) - 1,
         p.thresh                = p.thresh,
-        eval_f                  = eval_f,
-        eval_g_ineq             = eval_g_ineq,
         m.opts                  = m.opts,
         max.mc.cores            = max.mc.cores, # mc.cores.per.sample = 100)
         max.subsets             = max.subsets,

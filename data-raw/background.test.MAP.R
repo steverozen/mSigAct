@@ -1,8 +1,8 @@
 
 library(mSigAct)
-mutation.type <- "SBS96"
+# mutation.type <- "SBS96"
 # mutation.type <- "ID"
-# mutation.type <- "SBS192"
+mutation.type <- "SBS192"
 # mutation.type <- "DBS78"
 
 # devtools::load_all(".")
@@ -25,10 +25,12 @@ mm$global.opts$maxeval <- 10000
 # debug(OneMAPAssignTest)
 # debug(MAPAssignActivity1)
 
+cancer.types <- "Liver-HCC"
+
 total.time <- system.time(
-  for (tt in cancer.types[2]) {
+  for (tt in cancer.types) {
     # for (ii in 1:min(ncol(p7[[tt]]),5)) {
-    for (ii in 2) {
+    for (ii in 1) {
       message("sample index = ", ii)
       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
       message("cancer type = ", tt)
@@ -39,8 +41,6 @@ total.time <- system.time(
         max.mc.cores            = 50,
         out.dir                 = paste(tt, mutation.type, ii, sep = "-"),
         m.opts                  = mm,
-        eval_f                  = ObjFnBinomMaxLHRound,
-        eval_g_ineq             = g_ineq_for_ObjFnBinomMaxLH2,
         max.level               = 100,
         max.presence.proportion = 0.99) }}
 

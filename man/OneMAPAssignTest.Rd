@@ -13,8 +13,6 @@ OneMAPAssignTest(
   max.subsets = 1000,
   max.level = 5,
   max.mc.cores = 100,
-  eval_f = ObjFnBinomMaxLHRound,
-  eval_g_ineq = NULL,
   m.opts = DefaultManyOpts(),
   out.dir = NULL,
   p.thresh,
@@ -45,10 +43,6 @@ tested for removal from the set of signatures.}
 
 \item{max.mc.cores}{The maximum number of cores to use.
 On Microsoft Windows machines it is silently changed to 1.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
-
-\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 

@@ -42,8 +42,6 @@ total.time <- system.time(
         max.mc.cores            = 50,
         out.dir                 = paste(tt, mutation.type, ii, sep = "-"),
         m.opts                  = mm,
-        eval_f                  = ObjFnBinomMaxLHRound,
-        eval_g_ineq             = g_ineq_for_ObjFnBinomMaxLH2,
         max.level               = 100,
         max.presence.proportion = 0.99) }}
 

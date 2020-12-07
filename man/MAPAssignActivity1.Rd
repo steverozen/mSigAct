@@ -10,9 +10,7 @@ MAPAssignActivity1(
   sigs.presence.prop,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f,
-  eval_g_ineq = NULL,
-  m.opts,
+  m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
   max.subsets = 1000,
   max.presence.proportion = 0.99,
@@ -33,10 +31,6 @@ being a subset of \code{colnames(sigs)}.}
 \item{p.thresh}{If
 the p value for a better reconstruction with than without a set of signatures
 is > than \code{p.thresh}, then we can use exposures without this set.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
-
-\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 

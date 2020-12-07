@@ -9,7 +9,6 @@ SparseAssignActivity1(
   sigs,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f,
   m.opts,
   max.mc.cores = min(20, 2^max.level)
 )
@@ -22,8 +21,6 @@ SparseAssignActivity1(
 \item{max.level}{The maximum number of signatures to try removing.}
 
 \item{p.thresh}{The p value threshold for deciding if a set of signatures is necessary.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 

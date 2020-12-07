@@ -1,3 +1,8 @@
+# 2.0.7.9001
+
+* Removed the eval_f and eval_g_ineq arguments everywhere; they are now
+  in the options list.
+
 # 2.0.6.9006
 
 * Updated the test for AnySigSubsetPresent and added notes on number of sigs in each tumor type

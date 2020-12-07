@@ -4,7 +4,7 @@
 \alias{SignaturePresenceTest1}
 \title{Test whether a given signature is plausibly present in a spectrum.}
 \usage{
-SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts, eval_f)
+SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts)
 }
 \arguments{
 \item{spectrum}{The spectrum to analyze}
@@ -16,8 +16,6 @@ of which we want to test.}
 
 \item{m.opts}{For documentation
 see \code{\link{DefaultManyOpts}}.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
 }
 \description{
 Use \code{\link{AnySigSubsetPresent}}instead.

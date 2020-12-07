@@ -14,7 +14,6 @@ test_that("SignaturePresence1 SBS192 2", {
   retval <- TestSignaturePresenceTest1(
     sig.counts = input,
     input.sigs = PCAWG7::signature$genome$SBS192,
-    eval_f     = ObjFnBinomMaxLHMustRound,
     m.opts     = m.opts)
   testthat::expect_equal(retval$chisq.p, 0.7404775, tolerance = 1e-5)
 })

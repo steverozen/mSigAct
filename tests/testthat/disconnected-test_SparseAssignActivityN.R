@@ -38,7 +38,6 @@ SparseAssignTest <- function(sig.counts, trace = 0,
   SA.out <-
     SparseAssignActivity(spectra              = spect,
                          sigs                 = some.sigs,
-                         eval_f               = ObjFnBinomMaxLHMustRound,
                          m.opts               = m.opts,
                          mc.cores.per.sample  = mc.cores.per.sample,
                          num.parallel.samples = num.parallel.samples,

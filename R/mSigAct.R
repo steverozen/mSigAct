@@ -1,47 +1,3 @@
-DefaultGlobalOpts <- function() {
-  return(
-    list(algorithm    = "NLOPT_GN_DIRECT",
-         xtol_rel      = 1e-9,
-         # print_level = print_level,
-         print_level   = 0,
-         maxeval       = 10000))
-}
-
-DefaultLocalOpts <- function() {
-  return(list(algorithm   = "NLOPT_LN_COBYLA",
-              xtol_rel    = 1e-15,
-              print_level = 0,
-              maxeval     = 10000))
-}
-
-#' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.
-#'
-#' @export
-#'
-#' @return A list with the following elements
-#' \describe{
-#'   \item{global.opts}{Options for \code{\link[nloptr]{nloptr}},
-#'   q.v., for the global optimization phase.}
-#'
-#'   \item{local.opts}{Options for \code{\link[nloptr]{nloptr}},
-#'   q.v., for the local optimization phase.}
-#'
-#'   \item{nbinom.size}{The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.}
-#'
-#'   \item{trace}{If > 0 print progress messages.}
-#' }
-DefaultManyOpts <- function() {
-  return(list(
-    global.opts = DefaultGlobalOpts(),
-    local.opts  = DefaultLocalOpts(),
-    nbinom.size = 5,
-    trace       = 0
-  ))
-}
-
-
 #' Euclidean reconstruction error.
 #'
 #' @keywords internal
@@ -71,34 +27,6 @@ EDist2Spect <- function(exp, sig.names, spect) {
 }
 
 
-#' "Polish" a solution by minimizing Euclidean distance to the input spectrum.
-#'
-#' This is experimental for testing.
-#'
-#' @keywords internal
-Polish <- function(exp, sig.names, spect) {
-  class(spect) <- "matrix" # Otherwise cbind will use the ICAMS catalog
-                           # method, which may complain that the reconstructed
-                           # output is not a catalog.
-
-  retval <- nloptr::nloptr(x0 = exp,
-                            eval_f = EDist2Spect,
-                            lb = rep(0, length(exp)),
-                            ub = rep(sum(exp), length(exp)),
-                            opts = list(algorithm   = "NLOPT_LN_COBYLA",
-                                        maxeval     = 1000,
-                                        print_level = 0,
-                                        xtol_rel    = 0.001,
-                                        xtol_abs    = 0.0001),
-                            sig.names = sig.names,
-                            spect     = spect)
-
-  names(retval$solution) <- names(exp)
-  return(retval$solution)
-
-}
-
-
 Adj.mc.cores <- function(mc.cores) {
   if (Sys.info()["sysname"] == "Windows" && mc.cores > 1) {
     message("On Windows, changing mc.cores from ", mc.cores, " to 1")
@@ -119,8 +47,6 @@ Adj.mc.cores <- function(mc.cores) {
 #' @param target.sig.index The index of the signature the presence
 #' of which we want to test.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param m.opts If \code{NULL} use the return from
 #'    calling \code{\link{DefaultManyOpts}}. For documentation
 #'    see \code{\link{DefaultManyOpts}}.
@@ -131,7 +57,7 @@ Adj.mc.cores <- function(mc.cores) {
 #' @export
 
 SignaturePresenceTest <- function(
-  spectra, sigs, target.sig.index, m.opts = NULL, eval_f, mc.cores = 10) {
+  spectra, sigs, target.sig.index, m.opts = NULL, mc.cores = 10) {
 
   # check if signatures sum to 1
   all.col.sums <- colSums(sigs)
@@ -163,8 +89,7 @@ SignaturePresenceTest <- function(
       mc.cores         = mc.cores,
       sigs             = sigs,
       target.sig.index = target.sig.index,
-      m.opts           = m.opts,
-      eval_f           = eval_f)
+      m.opts           = m.opts)
 
   return(out.res)
 }

@@ -13,8 +13,6 @@ ZPCAWGMAPTest(
   out.dir = NULL,
   p.thresh = 0.01,
   m.opts = DefaultManyOpts(),
-  eval_f = ObjFnBinomMaxLHRound,
-  eval_g_ineq = NULL,
   max.presence.proportion = 0.99,
   sigs.prop = NULL
 )
@@ -39,10 +37,6 @@ the p value for a better reconstruction with than without a set of signatures
 is > than \code{p.thresh}, then we can use exposures without this set.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
-
-\item{eval_f}{See \code{\link[nloptr]{nloptr}}.}
-
-\item{eval_g_ineq}{See \code{\link[nloptr]{nloptr}}.}
 
 \item{max.presence.proportion}{The maximum value of the proportion
 of tumors that must have a given signature. Used so that it is

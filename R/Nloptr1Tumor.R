@@ -6,8 +6,6 @@
 Nloptr1Tumor <- function(spectrum,
                          sigs,
                          m.opts = NULL,
-                         eval_f,
-                         eval_g_ineq,
                          ... ) {
   if (!"matrix" %in% class(sigs)) {
     if (!"numeric" %in% class(sigs)) {
@@ -49,8 +47,7 @@ Nloptr1Tumor <- function(spectrum,
 
     global.res <- nloptr::nloptr(
       x0          = x0,
-      eval_f      = eval_f,
-      # eval_g_ineq = eval_g_ineq,
+      eval_f      = m.opts[["global_eval_f"]],
       lb          = rep(0, ncol(sigs)),
       ub          = rep(sum(spectrum), ncol(sigs)),
       opts        = m.opts$global.opts,
@@ -71,15 +68,14 @@ Nloptr1Tumor <- function(spectrum,
     my.x0 <- x0
   }
   local.res <- nloptr::nloptr(
-    x0=my.x0,
-    # x0       = global.res$solution,
-    eval_f   = eval_f,
-    eval_g_ineq = eval_g_ineq,
-    lb       = rep(0, ncol(sigs)),
-    ub       = rep(sum(spectrum) + 1e-2, ncol(sigs)),
-    opts     = m.opts$local.opts,
-    spectrum = spectrum,
-    sigs     = sigs,
+    x0          = my.x0,
+    eval_f      = m.opts[["local_eval_f"]],
+    eval_g_ineq = m.opts[["local_eval_g_ineq"]],
+    lb          = rep(0, ncol(sigs)),
+    ub          = rep(sum(spectrum) + 1e-2, ncol(sigs)),
+    opts        = m.opts$local.opts,
+    spectrum    = spectrum,
+    sigs        = sigs,
     ...)
   if (m.opts$trace > 0)
     message("local.res$objective = ", local.res$objective)

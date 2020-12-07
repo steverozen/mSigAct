@@ -7,11 +7,6 @@
 #' @param m.opts Options that govern the numerical optimization.
 #'    For documentation see \code{\link{DefaultManyOpts}}.
 #'
-#' @param eval_f The objective function for
-#'  \code{\link[nloptr]{nloptr}}.
-#'
-#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param ... Additional arguments for \code{eval_f}.
 #'
 #' Returns a list with elements \describe{
@@ -29,8 +24,6 @@
 OptimizeExposure <- function(spectrum,
                              sigs,
                              m.opts,
-                             eval_f,
-                             eval_g_ineq = NULL,
                              ...) {
 
   stopifnot(mode(spectrum) == "numeric")
@@ -38,8 +31,6 @@ OptimizeExposure <- function(spectrum,
   r <- Nloptr1Tumor(spectrum    = spectrum,
                     sigs        = sigs,
                     m.opts      = m.opts,
-                    eval_f      = eval_f,
-                    eval_g_ineq = eval_g_ineq,
                     nbinom.size = m.opts$nbinom.size,
                     ...)
   loglh <- r$objective

@@ -40,18 +40,17 @@
 #'
 #' These elements will be \code{NULL} if \code{max.subsets} is exceeded.
 
-MAPAssignActivity1 <- function(spect,
-                               sigs,
-                               sigs.presence.prop,
-                               max.level    = 5,
-                               p.thresh     = 0.05,
-                               eval_f,
-                               eval_g_ineq  = NULL,
-                               m.opts,
-                               max.mc.cores = min(20, 2^max.level),
-                               max.subsets = 1000,
-                               max.presence.proportion = 0.99,
-                               progress.monitor  = NULL) {
+MAPAssignActivity1 <-
+  function(spect,
+           sigs,
+           sigs.presence.prop,
+           max.level               = 5,
+           p.thresh                = 0.05,
+           m.opts                  = DefaultManyOpts(),
+           max.mc.cores            = min(20, 2^max.level),
+           max.subsets             = 1000,
+           max.presence.proportion = 0.99,
+           progress.monitor        = NULL) {
 
   time.for.MAP.assign <- system.time(
     MAPout <- MAPAssignActivityInternal(
@@ -60,8 +59,6 @@ MAPAssignActivity1 <- function(spect,
       sigs.presence.prop      = sigs.presence.prop,
       max.level               = max.level,
       p.thresh                = p.thresh,
-      eval_f                  = eval_f,
-      eval_g_ineq             = eval_g_ineq,
       m.opts                  = m.opts,
       max.mc.cores            = max.mc.cores,
       max.subsets             = max.subsets,
@@ -149,10 +146,6 @@ MAPAssignActivity1 <- function(spect,
 #'
 #' @param max.level The maximum number of signatures to try removing.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
-#' @param eval_g_ineq See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param p.thresh If
 #'  the p value for a better reconstruction with than without a set of signatures
 #'  is > than \code{p.thresh}, then we can use exposures without this set.
@@ -180,8 +173,6 @@ MAPAssignActivityInternal <- function(spect,
                                       sigs.presence.prop,
                                       max.level    = 5,
                                       p.thresh     = 0.05,
-                                      eval_f       = ObjFnBinomMaxLHRound,
-                                      eval_g_ineq  = g_ineq_for_ObjFnBinomMaxLH2,
                                       m.opts       = DefaultManyOpts(),
                                       max.mc.cores = min(20, 2^max.level),
                                       max.subsets  = 1000,
@@ -202,8 +193,6 @@ MAPAssignActivityInternal <- function(spect,
   stopifnot(isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop))))
   start <- OptimizeExposure(spect,
                             sigs,
-                            eval_f  = eval_f,
-                            eval_g_ineq = eval_g_ineq,
                             m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
   if (lh.w.all == -Inf) {
@@ -280,8 +269,6 @@ MAPAssignActivityInternal <- function(spect,
     # Get the maximum likelihood exposure for try.sigs
     try.exp <- OptimizeExposure(spect,
                                 try.sigs,
-                                eval_f = eval_f,
-                                eval_g_ineq = eval_g_ineq,
                                 m.opts = m.opts)
 
     if (is.infinite(try.exp$loglh)) {
@@ -323,7 +310,7 @@ MAPAssignActivityInternal <- function(spect,
           detail = "Finished testing removal of subsets of signatures")
       }
     )
-    
+
     my.msg(0, "\ndf = ", df)
     subsets <- as.list(sets::set_combn(non.0.exp.index, df))
     discard <- lapply(subsets, is.superset.of.any, background = c.r.s)
@@ -343,7 +330,7 @@ MAPAssignActivityInternal <- function(spect,
         detail = paste0("Testing removal of subsets of ", df, " signatures (",
                         length(subsets2), " subsets)"))
     }
-    
+
     time.used <- system.time(
       check.to.remove <-
         parallel::mclapply(X = subsets2,
@@ -425,7 +412,7 @@ DistanceMeasures <- function(spect, recon, nbinom.size) {
 }
 
 #' Return the list of possible SBS96 artifacts
-#' 
+#'
 #' @export
 PossibleArtifacts <- function() {
   return(c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47",

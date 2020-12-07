@@ -7,8 +7,6 @@
 #'
 #' @param max.level The maximum number of signatures to try removing.
 #'
-#' @param eval_f See \code{\link[nloptr]{nloptr}}.
-#'
 #' @param p.thresh The p value threshold for deciding if a set of signatures is necessary.
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
@@ -22,7 +20,6 @@ SparseAssignActivity1 <- function(spect,
                                   sigs,
                                   max.level    = 5,
                                   p.thresh     = 0.05,
-                                  eval_f,
                                   m.opts,
                                   max.mc.cores = min(20, 2^max.level)) {
 
@@ -34,7 +31,6 @@ SparseAssignActivity1 <- function(spect,
   mode(spect) <-  'numeric'
   start <- OptimizeExposure(spect,
                             sigs,
-                            eval_f  = eval_f,
                             m.opts  = m.opts)
   lh.w.all <- start$loglh  # The likelihood with all signatures
   if (lh.w.all == -Inf) {
@@ -86,7 +82,6 @@ SparseAssignActivity1 <- function(spect,
     # Get the maximum likelihood exposure for try.sigs
     try.exp <- OptimizeExposure(spect,
                                 try.sigs,
-                                eval_f = eval_f,
                                 m.opts = m.opts)
 
     # TODO -- deal with case when try$loglh is Inf

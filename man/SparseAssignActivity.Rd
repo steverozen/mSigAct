@@ -9,7 +9,6 @@ SparseAssignActivity(
   sigs,
   max.level = 5,
   p.thresh = 0.05,
-  eval_f = ObjFnBinomMaxLHRound,
   m.opts = NULL,
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level)
@@ -25,9 +24,6 @@ in the reconstruction.}
 
 \item{p.thresh}{The maximum p value based on which it is decided
 to retain a signature in a reconstruction.}
-
-\item{eval_f}{The objective function for
-\code{\link[nloptr]{nloptr}}.}
 
 \item{m.opts}{For documentation
 see \code{\link{DefaultManyOpts}}.}
