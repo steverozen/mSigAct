@@ -36,3 +36,10 @@ SoftTissue-Liposarc 7
 Stomach-AdenoCA 20
 Thy-AdenoCA 6
 Uterus-AdenoCA 14
+
+
+foo <- lapply(cancer.types, function(tt) {
+ aa <- intersect(PossibleArtifacts(), names(ExposureProportions("SBS96", tt)))
+ if (length(aa) > 0) cat(tt, aa, "\n")
+ }
+
