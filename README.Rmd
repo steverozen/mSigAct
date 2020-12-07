@@ -15,6 +15,13 @@ knitr::opts_chunk$set(
 
 # mSigAct
 
+<!-- badges: start -->
+
+[![R build status](https://github.com/steverozen/mSigAct/workflows/R-CMD-check/badge.svg)](https://github.com/steverozen/mSigAct/actions)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/steverozen/mSigAct?branch=master&svg=true)](https://ci.appveyor.com/project/steverozen/mSigAct)
+
+<!-- badges: end -->
+
 Analyze the the "activities" of mutational signatures in one or
 more mutational spectra.
 'mSigAct' stands for **m**tational **Sig**nature
