@@ -93,9 +93,9 @@ XPCAWGMAPTest <- function(cancer.type,
   if (TRUE) {
     # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
     qp.assign <-
-      ICAMS.shiny::GetExposureWithConfidence(
-        catalog = one.spect,
-        sig.universe = sigs[ , names(sigs.prop), drop = FALSE],
+      OptimizeExposureQPBootstrap(
+        spectrum = one.spect,
+        signatures = sigs[ , names(sigs.prop), drop = FALSE],
         conf.int = 0.75)
     some.sigs.prop <- sigs.prop[rownames(qp.assign)]
   } else {

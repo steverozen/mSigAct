@@ -9,7 +9,7 @@ AnySigSubsetPresent(
   all.sigs,
   Ha.sigs.indices,
   m.opts = DefaultManyOpts(),
-  max.mc.cores = NULL
+  max.mc.cores = 10
 )
 }
 \arguments{
@@ -32,6 +32,49 @@ If \code{NULL} defaults to \eqn{2^{n_a} - 1},
  where \eqn{n_a} is the length of \code{Ha.sigs.indices} -- except on
  MS Windows machines, where it defaults to 1.}
 }
+\value{
+A list with two elements: \describe{
+
+\item{\code{H0.info}}{contains a 1-row \code{\link[tibble]{tibble}}
+   with the columns \describe{
+
+      \item{\code{loglh}}{The log likelihood associated with \eqn{H_0}.}
+
+      \item{\code{exposure}}{A named numeric vector
+        with the signature attributions (exposures) corresponding
+        to the \eqn{H_0} log likelihood.}
+      \item{\code{warnings}}{A character vector of warnings.}
+      \item{\code{global.search.diagnostics}}{Information on
+          the numerical optimization that provided \code{loglh}.}
+      \item{\code{local.search.diagnostics}}{Information on
+          the numerical optimization that provided \code{loglh}.}
+}
+
+}
+
+\item{\code{all.Ha.info}}{A \code{\link[tibble]{tibble}}
+   with one Row for each non-empty subset of \code{Ha.sigs.indices}.
+   The columns are \describe{
+  \item{\code{sigs.added}}{The identifiers of the (additional) signatures
+       tested.}
+
+  \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test. This
+  this \eqn{p} value can be \code{NaN} when the likelihoods of (\eqn{H_0} and \eqn{H_a})
+  are both \code{-Inf}. This can occur if there are are mutation classes in the spectra
+  that are > 0 but that have 0 probability in all the available input signatures.
+  This is unlikely to occur, since most spectra have non-0 (albeit very small)
+  probabilities for most mutation classes.}
+
+  \item{\code{df}}{The degrees of freedom of the likelihood-ratio test
+     (equal to the number of signatures in \code{sigs.added}).}
+
+     }
+
+The remaining columns are as in \code{H0.info}.
+
+}
+}
+}
 \description{
 Please see \strong{Details}.
 }
@@ -45,7 +88,5 @@ be the likelihood that all the signatures in \eqn{H_0}
 plus the signatures specified by \eqn{S} generated \code{spect}.
 Return a list with the results of likelihood ratio tests of
 all \eqn{H_a}'s against \eqn{H_0}.
-
-#' WARNING: tests all non-empty subsets of \code{Ha.sigs.indices},
-so will get very slow for large values of \code{Ha.sigs.indices}.
 }
+\keyword{internal}

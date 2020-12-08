@@ -61,6 +61,60 @@ OptimizeExposureQP <- function(spectrum, signatures) {
   return(rr)
 }
 
-# To bootstrap do:
-#
-# sample(seq(3), spectrum.as.probs = c(0.5, 0.4, 0.1), total.count = 200)
+#' Bootstrap \code{\link{OptimizeExposureQP}} and filter exposures by confidence intervals
+#'
+#' @export
+#'
+#' @inheritParams OptimizeExposureQP
+#'
+#' @param num.replicates Number of bootstrap replicates.
+#'
+#' @param conf.interval Discard signatures with \code{conf.int} that overlaps 0.
+#'
+#' @param mc.cores The maximum number of cores to use.
+#'   On MS Windows machines it defaults to 1.
+
+OptimizeExposureQPBootstrap <- function(spectrum,
+                                        signatures,
+                                        num.replicates = 10000,
+                                        conf.int       = 0.95,
+                                        mc.cores       = 10) {
+
+  mc.cores <- Adj.mc.cores(mc.cores) # Set to 1 if OS is MS Windows
+  ss <- sum(spectrum)
+  spectrum.as.probs <- spectrum/ss
+
+  s2 <- stats::rmultinom(
+    n = num.replicates, size = ss, prob = spectrum.as.probs)
+
+  my.fn <- function(ii) {
+    ex <- OptimizeExposureQP(spectrum = s2[ , ii], signatures)
+    return(ex)
+  }
+
+  rr <- parallel::mclapply(
+    X = 1:num.replicates, FUN = my.fn, mc.cores = mc.cores)
+  rr2 <- do.call(cbind, rr)
+  ex.lower.ci <- apply(rr2, MARGIN = 1, FUN = stats::quantile, probs =  conf.int / 2)
+
+  while (any(ex.lower.ci == 0)) {
+    signatures <- signatures[ , which(ex.lower.ci > 0), drop = FALSE]
+    rr <- parallel::mclapply(
+      X = 1:num.replicates, FUN = my.fn, mc.cores = mc.cores)
+    rr2 <- do.call(cbind, rr)
+    ex.lower.ci <- apply(rr2, MARGIN = 1, FUN = stats::quantile, probs =  conf.int / 2)
+  }
+
+  exp <- OptimizeExposureQP(spectrum, signatures)
+  return(exp)
+}
+
+if (FALSE) {
+  foo <- OptimizeExposureQPBootstrap(spectrum = PCAWG7::spectra$PCAWG$SBS96[ , 1],
+                              signatures = PCAWG7::signature$genome$SBS96,
+                              mc.cores = 50,
+                              num.replicates = 10000)
+
+}
+
+

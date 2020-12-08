@@ -1,10 +1,10 @@
 #' Test whether a given signature is plausibly present in a spectrum.
 #'
-#' Use \code{\link{AnySigSubsetPresent}}instead.
+#' For backward compatibility. See also \code{\link{AnySigSubsetPresent}}.
 #'
-#' @param spectrum The spectrum to analyze
+#' @param spectrum The spectrum to analyze.
 #'
-#' @param sigs A catalog of signatures from which to choose
+#' @param sigs A catalog of signatures from which to choose.
 #'
 #' @param target.sig.index The index of the signature the presence
 #' of which we want to test.
@@ -12,7 +12,7 @@
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #'
-#' @keywords internal
+#' @export
 
 SignaturePresenceTest1 <- function(
   spectrum, sigs, target.sig.index, m.opts) {

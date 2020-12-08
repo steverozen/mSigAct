@@ -7,9 +7,9 @@
 SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts)
 }
 \arguments{
-\item{spectrum}{The spectrum to analyze}
+\item{spectrum}{The spectrum to analyze.}
 
-\item{sigs}{A catalog of signatures from which to choose}
+\item{sigs}{A catalog of signatures from which to choose.}
 
 \item{target.sig.index}{The index of the signature the presence
 of which we want to test.}
@@ -18,6 +18,5 @@ of which we want to test.}
 see \code{\link{DefaultManyOpts}}.}
 }
 \description{
-Use \code{\link{AnySigSubsetPresent}}instead.
+For backward compatibility. See also \code{\link{AnySigSubsetPresent}}.
 }
-\keyword{internal}

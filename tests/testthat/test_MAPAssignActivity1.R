@@ -46,7 +46,8 @@ test_that("MAPAssignActivity SBS96", {
     retval$MAP$count,
     c(SBS1 = 635.255985834199, SBS2 = 1939.32173112431,
       SBS5 = 8705.08084819072,  SBS8 = 1455.34198826826,
-      SBS13 = 2618.99944658252))
+      SBS13 = 2618.99944658252),
+    tolerance = 1e-3)
 })
 
 test_that("MAPAssignActivity SBS192", {
@@ -75,7 +76,11 @@ test_that("MAPAssignActivity DBS78", {
                     sig.mutation.type = "DBS78")
   testthat::expect_equal(
     retval$MAP$count,
-    c(DBS2 = 28.2327526583232, DBS4 = 9.69903696258126, DBS6 = 12.4508152488636,  DBS11 = 22.617395130232)
+    c(DBS2 = 28.2327526583232,
+      DBS4 = 9.69903696258126,
+      DBS6 = 12.4508152488636,
+      DBS11 = 22.617395130232),
+    tolerance = 1e-5
     )
 })
 

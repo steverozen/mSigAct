@@ -411,12 +411,3 @@ DistanceMeasures <- function(spect, recon, nbinom.size) {
   return(tibble::tibble(method = names(vv), value = vv))
 }
 
-#' Return the list of possible SBS96 artifacts
-#'
-#' @export
-PossibleArtifacts <- function() {
-  return(c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47",
-           "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
-           "SBS53", "SBS54", "SBS55", "SBS56",
-           "SBS57", "SBS58", "SBS59", "SBS60"))
-}

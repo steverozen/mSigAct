@@ -35,40 +35,62 @@
 #'
 #' @return A list with two elements: \describe{
 #'
-#' \item{\code{H0.info}}{contains the sub-elements \describe{
-#'    \item{\code{loglh}}{The log likelihood associated with \eqn{H_0}.}
-#'    \item{\code{exposure}}{The signature attributions (exposures) corresponding
+#' \item{\code{H0.info}}{contains a 1-row \code{\link[tibble]{tibble}}
+#'    with the columns \describe{
+#'
+#'       \item{\code{loglh}}{The log likelihood associated with \eqn{H_0}.}
+#'
+#'       \item{\code{exposure}}{A named numeric vector
+#'         with the signature attributions (exposures) corresponding
 #'         to the \eqn{H_0} log likelihood.}
-#'    \item{\code{everything.else}}{A sub-list with information on the output
-#'         of the numerical optimization that provided \code{loglh}.}
-#' }}
+#'       \item{\code{warnings}}{A character vector of warnings.}
+#        \item{\code{maxeval.warnings}}{Deprecated; debugging information.}
+#'       \item{\code{global.search.diagnostics}}{Information on
+#'           the numerical optimization that provided \code{loglh}.}
+#'       \item{\code{local.search.diagnostics}}{Information on
+#'           the numerical optimization that provided \code{loglh}.}
+
+#  End inner \describe
+#' }
 #'
-#' \item{\code{all.Ha.info}}{A list with one sub-element for each non-empty subset of
-#'   \code{Ha.sigs.indices}. Each sub-element is a list with elements that include \describe{
+#  End outer \item
+#' }
 #'
+#' \item{\code{all.Ha.info}}{A \code{\link[tibble]{tibble}}
+#'    with one Row for each non-empty subset of \code{Ha.sigs.indices}.
+#'    The columns are \describe{
+#
 #'   \item{\code{sigs.added}}{The identifiers of the (additional) signatures
 #'        tested.}
 #'
-#'   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test.} This
+#'   \item{\code{p}}{The \eqn{p} value for the likelihood-ratio test. This
 #'   this \eqn{p} value can be \code{NaN} when the likelihoods of (\eqn{H_0} and \eqn{H_a})
 #'   are both \code{-Inf}. This can occur if there are are mutation classes in the spectra
 #'   that are > 0 but that have 0 probability in all the available input signatures.
 #'   This is unlikely to occur, since most spectra have non-0 (albeit very small)
-#'   probabilities for most mutation classes.
+#'   probabilities for most mutation classes.}
 #'
 #'   \item{\code{df}}{The degrees of freedom of the likelihood-ratio test
 #'      (equal to the number of signatures in \code{sigs.added}).}
+#'
+#      End inner \describe
 #'      }
-#' }}
+#'
+#' The remaining columns are as in \code{H0.info}.
+#'
+#  End top level \item
+#' }
+#  End top level \describe
+#' }
 #'
 #'
 #' @keywords internal
 
-AnySigSubsetPresentInternal <- function(spect,
-                                        all.sigs,
-                                        Ha.sigs.indices,
-                                        m.opts,
-                                        max.mc.cores) {
+AnySigSubsetPresent <- function(spect,
+                                all.sigs,
+                                Ha.sigs.indices,
+                                m.opts = DefaultManyOpts(),
+                                max.mc.cores = 10) {
 
     H0.sigs <- all.sigs[ , -Ha.sigs.indices, drop = FALSE]  # H0.sigs a matrix of sigs
 
@@ -80,15 +102,19 @@ AnySigSubsetPresentInternal <- function(spect,
     start.exp <- start$exposure
     zero.exposures <- which(start.exp < 0.5)
     if (length(zero.exposures) > 0) {
-      message("There were some signatures with no expsoures in H0\n")
+      zero.exposure.msg <-
+        paste("There were some signatures with no expsoures in H0:",
+              paste(names(start.exp)[zero.exposures], collapse = ", "))
+      if (m.opts$trace > 0) message(zero.exposure.msg)
+      start$warnings <- c(start$warnings, zero.exposure.msg)
     }
 
     # For information, in case some signatures are useless
     non.0.exp <- names(start.exp)[which(start.exp > 0.5)]
 
-    if (m.opts$trace > 0) {
-      message('H0 sigs are', paste(colnames(H0.sigs), collapse = ','),'\n')
-    }
+    # if (m.opts$trace > 0) {
+    #  message('H0 sigs are', paste(colnames(H0.sigs), collapse = ','),'\n')
+    # }
 
     # new.subsets contains all non-empty subsets of more.sigs (2^as.set(c()))
     # is the powerset of the empty set, i.e. {{}}).
@@ -103,12 +129,19 @@ AnySigSubsetPresentInternal <- function(spect,
 
       statistic <- 2 * (Ha.info$loglh - H0.lh)
       p <- stats::pchisq(statistic, df, lower.tail = FALSE)
-      return(list(sigs.added = paste(colnames(all.sigs)[unlist(sigs.to.add)], collapse = ","),
-                  statistic  = statistic,
-                  df         = df,
-                  p          = p,
-                  base.sigs  = paste(non.0.exp, collapse = ","),
-                  Ha.info    = Ha.info))
+      return(c(list(p          = p,
+                    sigs.added = paste(colnames(all.sigs)[unlist(sigs.to.add)],
+                                       collapse = ","),
+                    statistic  = statistic,
+                    df        = df),
+               Ha.info))
+
+      # loglh                     = Ha.info$loglh,
+      # exposure                  = Ha.info$exposure,
+      # warnings                  = Ha.info$warnings,
+      # maxeval.warning           = Ha.info$maxeval.warning,
+      # global.search.diagnostics = Ha.info$global.search.diagnostics,
+      # local.search.diagnostics  = Ha.info$local.search.diagnostics))
     }
 
     if (is.null(max.mc.cores)) {
@@ -119,43 +152,14 @@ AnySigSubsetPresentInternal <- function(spect,
 
     out <- parallel::mclapply(new.subsets, inner.fn, mc.cores = mc.cores)
 
-    return(list(H0.info = start, all.Ha.info = out))
+    # H0.info <- start
+    # The remainder is temporary until these are removed from OptimizeExposure
+    # H0.info$objective    <- NULL
+    # H0.info$obj.fn.value <- NULL
+    # H0.info$global.res <- NULL
+    # H0.info$local.res  <- NULL
+    # H0.info$solution   <- NULL
+
+    return(list(H0.info     = List2TibbleRow(start),
+                all.Ha.info = ListOfList2Tibble(out)))
   }
-
-
-#' For each combination of several signatures, determine if the combination is plausibly needed to reconstruct a spectrum.
-#'
-#' @description Please see \strong{Details}.
-#'
-#' @details
-#' Let \eqn{H_0} be the likelihood that
-#' the signatures specified by \code{all.sigs[, -Ha.sigs.indicies, drop = FALSE]}
-#' generated the observed spectrum, \code{spect}.
-#' For each non-empty subset, \eqn{S},
-#' of \code{Ha.sigs.indices} let \eqn{H_a}
-#' be the likelihood that all the signatures in \eqn{H_0}
-#' plus the signatures specified by \eqn{S} generated \code{spect}.
-#' Return a list with the results of likelihood ratio tests of
-#' all \eqn{H_a}'s against \eqn{H_0}.
-#'
-#' #' WARNING: tests all non-empty subsets of \code{Ha.sigs.indices},
-#' so will get very slow for large values of \code{Ha.sigs.indices}.
-#'
-#' @inheritParams AnySigSubsetPresentInternal
-#'
-#' @export
-
-AnySigSubsetPresent <- function(spect,
-                                all.sigs,
-                                Ha.sigs.indices,
-                                m.opts = DefaultManyOpts(),
-                                max.mc.cores = NULL) {
-
-  rr1 <- AnySigSubsetPresentInternal(spect = spect,
-                                     all.sigs = all.sigs,
-                                     Ha.sigs.indices = Ha.sigs.indices,
-                                     m.opts = m.opts,
-                                     max.mc.cores = max.mc.cores)
-
-  return(rr1)
-}

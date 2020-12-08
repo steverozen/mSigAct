@@ -41,3 +41,19 @@ ExposureProportions <- function(mutation.type, cancer.type, all.sigs = NULL, dro
   return(sigs.prop)
 }
 
+#' Return a character vector of the IDs of possible SBS96 signature artifacts.
+#'
+#' @export
+PossibleArtifacts <- function() {
+  return(c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47",
+           "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
+           "SBS53", "SBS54", "SBS55", "SBS56",
+           "SBS57", "SBS58", "SBS59", "SBS60"))
+}
+
+#' Return a character vector of the IDs of rare SBS96 signatures.
+#'
+#' @export
+RareSignatures <- function() {
+  return(paste0("SBS", 84:90))
+}

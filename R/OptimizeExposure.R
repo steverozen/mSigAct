@@ -11,13 +11,16 @@
 #'
 #' Returns a list with elements \describe{
 #' \item{\code{loglh}}{The log likelihood of the best
-#'       solution (set of exposures) found.
-#'       For a more general objective function this might be \code{NULL}.}
-#' \item{\code{exposure}}{The vector of exposures that generate \code{loglh}, i.e.
+#'       solution (set of exposures) found.}
+#' \item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
 #'    the number of mutations ascribed to each signature.}
-#' \item{\code{obj.fn.value}}{The objective function value associated with \code{exposure}.}
-#' \item{\code{everything.else}}{Everything returned by the function \code{\link{Nloptr1Tumor}.} }
+#' \item{\code{objective}}{The final value of the objective function.}
+#' \item{\code{solution}}{The optimum exposures.}
+#' \item{\code{warnings}}{A character vector of warnings.}
+#' \item{\code{global.search.diagnostics}}{Diagnostics from \code{\link[nloptr]{nloptr}}.}
+#' \item{\code{local.search.diagnostics}}{Diagnostics from \code{\link[nloptr]{nloptr}}.}
 #' }
+#'
 #'
 #' @export
 #'
@@ -34,7 +37,7 @@ OptimizeExposure <- function(spectrum,
                     nbinom.size = m.opts$nbinom.size,
                     ...)
   loglh <- r$objective
-  if (m.opts$trace > 10) message("loglh from Nlopter1Tumor = ", loglh)
+  if (m.opts$trace > 10) message("Negative loglh from Nlopter1Tumor = ", loglh)
 
   if (loglh == Inf && m.opts$trace > 0)
     message("Got -Inf in OptimizeExposure")
@@ -46,6 +49,10 @@ OptimizeExposure <- function(spectrum,
 
   message("TEST TEST sum(spectrum) = ", sum(spectrum), "; sum(r$solution) = ", sum(r$solution))
 
-  # TODO, there is redundant info in everything.else
-  return(list(loglh = -loglh, exposure = exp, obj.fn.value = r$objective, everything.else = r))
+  r$solution <- NULL
+  r$objective <- NULL
+
+  return(c(list(loglh = -loglh,
+              exposure = exp),
+              r))
 }

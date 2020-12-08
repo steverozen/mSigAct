@@ -1,41 +1,4 @@
-#' Euclidean reconstruction error.
-#'
-#' @keywords internal
-EDist2SpectRounded <- function(exp, sig.names, spect) {
-  reconstruction <-
-    prop.reconstruct(
-      sigs = PCAWG7::signature$genome$SBS96[ , sig.names],
-      exp = round(exp))
-  reconstruction <- round(reconstruction)
-  class(spect) <- "matrix"
-  err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
-  return(err)
-}
-
-
-#' Euclidean reconstruction error.
-#'
-#' @keywords internal
-EDist2Spect <- function(exp, sig.names, spect) {
-  reconstruction <-
-    prop.reconstruct(
-      sigs =
-        PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
-  class(spect) <- "matrix"
-  err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
-  return(err)
-}
-
-
-Adj.mc.cores <- function(mc.cores) {
-  if (Sys.info()["sysname"] == "Windows" && mc.cores > 1) {
-    message("On Windows, changing mc.cores from ", mc.cores, " to 1")
-    return(1)
-  }
-  return(mc.cores)
-}
-
-#' Test whether a given signature is plausibly present in a catalog
+#' Test whether a given signature is plausibly present in a catalog.
 #'
 #' @param spectra The catalog (matrix) to analyze. This could be
 #'   an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.

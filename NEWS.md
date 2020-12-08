@@ -1,3 +1,9 @@
+# 2.0.8
+
+* Cleaned up output of AnySIgSubsetPresent
+* Added RareSignatures
+* Added OptimizeExposureQPBootstrap
+
 # 2.0.7.9001
 
 * Removed the eval_f and eval_g_ineq arguments everywhere; they are now

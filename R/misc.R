@@ -7,11 +7,13 @@ List2TibbleRow <- function(a.list) {
   list2 <- lapply(a.list, function(x) {
     if (length(x) > 1) {
       return(list(x))
+    } else if (length(x) == 0) {
+      return(NA)
     } else {
       return(x)
     }})
 
-  rr <- do.call(tibble::tibble_row, list2)
+  rr <- do.call(tibble::tibble, list2)
   return(rr)
 }
 
@@ -23,8 +25,6 @@ ListOfList2Tibble <- function(list.of.lists) {
 
 if (FALSE) {
   testin <- list(list(a = 1, b = 2), list(a = 3, b = 33))
-
-
 }
 
 #' Given signatures (sigs) and exposures (exp), return a spectrum or spectra
@@ -176,4 +176,43 @@ check.mclapply.result <- function(ss, where, names = NULL) {
   }
   stopifnot(ok)
 }
+
+
+#' Euclidean reconstruction error.
+#'
+#' @keywords internal
+EDist2SpectRounded <- function(exp, sig.names, spect) {
+  reconstruction <-
+    prop.reconstruct(
+      sigs = PCAWG7::signature$genome$SBS96[ , sig.names],
+      exp = round(exp))
+  reconstruction <- round(reconstruction)
+  class(spect) <- "matrix"
+  err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
+  return(err)
+}
+
+
+#' Euclidean reconstruction error.
+#'
+#' @keywords internal
+EDist2Spect <- function(exp, sig.names, spect) {
+  reconstruction <-
+    prop.reconstruct(
+      sigs =
+        PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
+  class(spect) <- "matrix"
+  err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
+  return(err)
+}
+
+
+Adj.mc.cores <- function(mc.cores) {
+  if (Sys.info()["sysname"] == "Windows" && mc.cores > 1) {
+    message("On Windows, changing mc.cores from ", mc.cores, " to 1")
+    return(1)
+  }
+  return(mc.cores)
+}
+
 
