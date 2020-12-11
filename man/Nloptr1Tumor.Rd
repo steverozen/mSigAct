@@ -14,19 +14,7 @@ Nloptr1Tumor(spectrum, sigs, m.opts = NULL, ...)
 \item{m.opts}{Options that govern the numerical optimization.
 For documentation see \code{\link{DefaultManyOpts}}.}
 
-\item{...}{Additional arguments for \code{eval_f}.
-
-Returns a list with elements \describe{
-\item{\code{loglh}}{The log likelihood of the best
-      solution (set of exposures) found.}
-\item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
-   the number of mutations ascribed to each signature.}
-\item{\code{objective}}{The final value of the objective function.}
-\item{\code{solution}}{The optimum exposures.}
-\item{\code{warnings}}{A character vector of warnings.}
-\item{\code{global.search.diagnostics}}{Diagnostics from \code{\link[nloptr]{nloptr}}.}
-\item{\code{local.search.diagnostics}}{Diagnostics from \code{\link[nloptr]{nloptr}}.}
-}}
+\item{...}{Additional arguments for \code{eval_f}.}
 }
 \description{
 Optimize assignment of a fixed set of signature activities for a \strong{single} tumor.

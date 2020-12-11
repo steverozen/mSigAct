@@ -24,10 +24,20 @@ the column names are needed.}
 
 \item{num.replicates}{Number of bootstrap replicates.}
 
-\item{mc.cores}{The maximum number of cores to use.
-On MS Windows machines it defaults to 1.}
+\item{conf.int}{Discard signatures with \code{conf.int} that overlaps 0.}
 
-\item{conf.interval}{Discard signatures with \code{conf.int} that overlaps 0.}
+\item{mc.cores}{The maximum number of cores to use.
+  On MS Windows machines it defaults to 1.
+
+  #' @return
+A list with elements \describe{
+\item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
+   the number of mutations ascribed to each signature. The names of
+   \code{exposure} are a subset of the \code{colnames(signatures)}.}
+\item{\code{euclidean.dist}}{The final value of the objective function.}
+\item{\code{cosine.sim}}{The cosine similarity between \code{spectrum} and
+             the reconstruction based on \code{signatures}.}
+}}
 }
 \description{
 Bootstrap \code{\link{OptimizeExposureQP}} and filter exposures by confidence intervals

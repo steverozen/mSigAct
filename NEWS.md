@@ -1,3 +1,7 @@
+# 2.0.8.9001
+
+* Changed return value from OptimizeExposureQPBootstrap (not backward compatible)
+
 # 2.0.8
 
 * Cleaned up output of AnySIgSubsetPresent

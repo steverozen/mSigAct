@@ -69,10 +69,21 @@ OptimizeExposureQP <- function(spectrum, signatures) {
 #'
 #' @param num.replicates Number of bootstrap replicates.
 #'
-#' @param conf.interval Discard signatures with \code{conf.int} that overlaps 0.
+#' @param conf.int Discard signatures with \code{conf.int} that overlaps 0.
 #'
 #' @param mc.cores The maximum number of cores to use.
 #'   On MS Windows machines it defaults to 1.
+#'
+#'   #' @return
+#' A list with elements \describe{
+#' \item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
+#'    the number of mutations ascribed to each signature. The names of
+#'    \code{exposure} are a subset of the \code{colnames(signatures)}.}
+#' \item{\code{euclidean.dist}}{The final value of the objective function.}
+#' \item{\code{cosine.sim}}{The cosine similarity between \code{spectrum} and
+#'              the reconstruction based on \code{signatures}.}
+#' }
+#'
 
 OptimizeExposureQPBootstrap <- function(spectrum,
                                         signatures,
@@ -106,15 +117,11 @@ OptimizeExposureQPBootstrap <- function(spectrum,
   }
 
   exp <- OptimizeExposureQP(spectrum, signatures)
-  return(exp)
+  rb <- rbind(spectrum,
+              as.vector(ReconstructSpectrum(sigs = signatures, exp = exp)))
+
+  edist <- philentropy::distance(rb, method = "euclidean", test.na = FALSE)
+  csim  <- philentropy::distance(rb, method = "cosine", test.na = FALSE)
+
+  return(list(exposure = exp, euclidean.dist = edist, cosine.sim = csim))
 }
-
-if (FALSE) {
-  foo <- OptimizeExposureQPBootstrap(spectrum = PCAWG7::spectra$PCAWG$SBS96[ , 1],
-                              signatures = PCAWG7::signature$genome$SBS96,
-                              mc.cores = 50,
-                              num.replicates = 10000)
-
-}
-
-
