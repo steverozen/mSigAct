@@ -214,7 +214,7 @@ OneMAPAssignTest <- function(spect,
   }
 
   ref.nonzero <-reference.exp[reference.exp > 0, , drop = FALSE]
-  tmp.names <- names(ref.nonzero)
+  tmp.names <- rownames(ref.nonzero)
   stopifnot(!is.null(tmp.names))
   ref.exp <- tibble::tibble(sig.id = tmp.names, ref.nonzero)
   rm(tmp.names)
