@@ -273,6 +273,7 @@ OneMAPAssignTest <- function(spect,
     r.qp.sparse <-
       ReconstructSpectrum(sigs, exp = qp.sparse, use.sig.names = TRUE)
 
+  class(spect) <- "matrix"
   sol.matrix <- cbind(spect, r.p, r.b, r.qp, r.sparse.best, r.qp.sparse)
 
   colnames(sol.matrix) <-
