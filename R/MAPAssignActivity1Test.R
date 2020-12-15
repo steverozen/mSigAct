@@ -213,8 +213,11 @@ OneMAPAssignTest <- function(spect,
     return(NULL)
   }
 
-  ref.nonzero <-reference.exp[reference.exp > 0]
-  ref.exp <- tibble::tibble(sig.id = names(ref.nonzero), ref.nonzero)
+  ref.nonzero <-reference.exp[reference.exp > 0, , drop = FALSE]
+  tmp.names <- names(ref.nonzero)
+  stopifnot(!is.null(tmp.names))
+  ref.exp <- tibble::tibble(sig.id = tmp.names, ref.nonzero)
+  rm(tmp.names)
 
   QP.exp <- OptimizeExposureQP(spect,
                                sigs[ , MAPout$MAP$sig.id,
