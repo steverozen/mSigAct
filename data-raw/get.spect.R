@@ -1,0 +1,19 @@
+#!Rscript
+args <- commandArgs(trailingOnly = TRUE)
+
+mutation.type <- args[1]
+id <- args[2]
+message(mutation.type)
+message(id)
+
+# "Bladder-TCC::SP1003"
+
+
+cc <- PCAWG7::spectra$PCAWG[[mutation.type]][ , id, drop = FALSE]
+
+id <- gsub("::", "_", id)
+ff <- paste0(mutation.type, "_", id, ".csv")
+
+cc <- ICAMS::as.catalog(cc)
+
+ICAMS::WriteCatalog(cc, file = ff)
