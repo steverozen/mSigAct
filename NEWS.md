@@ -1,10 +1,15 @@
+# 2.0.8.9002
+
+* Can now specify proportions of additional signatures (signatures
+  not previously observed in a given cancer type) to ExposureProportions.
+
 # 2.0.8.9001
 
 * Changed return value from OptimizeExposureQPBootstrap (not backward compatible)
 
 # 2.0.8
 
-* Cleaned up output of AnySIgSubsetPresent
+* Cleaned up output of AnySigSubsetPresent
 * Added RareSignatures
 * Added OptimizeExposureQPBootstrap
 

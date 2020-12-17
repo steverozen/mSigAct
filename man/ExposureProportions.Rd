@@ -8,7 +8,9 @@ ExposureProportions(
   mutation.type,
   cancer.type,
   all.sigs = NULL,
-  drop.sigs.no.info = TRUE
+  drop.sigs.no.info = TRUE,
+  must.include = character(),
+  must.include.prop = 0.1
 )
 }
 \arguments{
@@ -16,14 +18,28 @@ ExposureProportions(
 
 \item{cancer.type}{A character string.}
 
-\item{all.sigs}{An optional matrix of known signatures, with column names being signatures ids.}
+\item{all.sigs}{An optional matrix of known signatures, 
+with column names being signatures ids. Only used to drop 
+signatures not present in \code{all.sigs}.}
 
-\item{drop.sigs.no.info}{If TRUE, drop any not present in the column names of \code{all.sigs}.
+\item{drop.sigs.no.info}{If TRUE, drop signatures any not present in 
+the column names of \code{all.sigs}.
 There are some signatures that do not have SBS192 versions, including SBS29.}
+
+\item{must.include}{A character vector of signature IDs that
+must be included, even if they have not previously been
+observed in that cancer type. The associated proportion is
+specified by \code{new.sig.prop}.}
+
+\item{must.include.prop}{The value used for the expected proportion of
+signatures in \code{must.include} but not previously observed
+in the given \code{cancer.type}.}
 }
 \value{
-A numerical vector of the proportion of tumors of type \code{cancer.type} with each signature
-  for those signatures observed in \code{cancer.type}.The names are the signature ids.
+A numerical vector of the proportion of 
+  tumors of type \code{cancer.type} with each signature
+  for those signatures observed in \code{cancer.type}. 
+  The names are the signature ids.
 }
 \description{
 Return the proportions of tumors of a given cancer type that have a particular signature
