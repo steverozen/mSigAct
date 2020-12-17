@@ -1,4 +1,4 @@
-#' Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with and with pre-filtering by bootstrapped quadratic programming.
+#' Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with artifact signatures removed.
 #'
 #' @param cancer.type A cancer type from the PCAWG exposures matrix.
 #'

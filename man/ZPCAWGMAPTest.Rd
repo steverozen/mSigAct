@@ -2,7 +2,7 @@
 % Please edit documentation in R/ZPCAWGMAPTest.R
 \name{ZPCAWGMAPTest}
 \alias{ZPCAWGMAPTest}
-\title{Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with and with pre-filtering by bootstrapped quadratic programming.}
+\title{Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with artifact signatures removed.}
 \usage{
 ZPCAWGMAPTest(
   cancer.type,
@@ -53,5 +53,5 @@ return value from \code{\link{ExposureProportions}}.}
 A list with two elements, each the result for one call to \code{\link{OneMAPAssignTest}}.
 }
 \description{
-Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with and with pre-filtering by bootstrapped quadratic programming.
+Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with artifact signatures removed.
 }

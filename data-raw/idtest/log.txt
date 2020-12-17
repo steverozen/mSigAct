@@ -1,0 +1,117 @@
+
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> library(mSigAct)
+> # mutation.type <- "SBS96"
+> mutation.type <- "ID"
+> # mutation.type <- "SBS192"
+> # mutation.type <- "DBS78"
+> 
+> #  ls */*/no.results.txt
+> #
+> # ls */DIFF* | wc
+> # devtools::load_all(".")
+> 
+> p7 <- PCAWG7::SplitPCAWGMatrixByTumorType(
++   PCAWG7::spectra$PCAWG[[mutation.type]])
+> 
+> cancer.types <- names(p7)
+> # cancer.types <- cancer.types[-(1:7)] # starting where we left off
+> 
+> # Liver-HCC has 24 signatures, index 20
+> # Stomach-AdenoCA has 20 signatures, index 35
+> # Biliary-AdenoCA has 17
+> 
+> 
+> mm <- mSigAct::DefaultManyOpts()
+> # mm$trace <- 100
+> mm$global.opts$maxeval <- 10000
+> 
+> # debug(OneMAPAssignTest)
+> # debug(MAPAssignActivity1)
+> 
+> total.time <- system.time(
++   for (tt in cancer.types[1]) {
++     for (ii in 1:min(ncol(p7[[tt]]),5)) {
++     # for (ii in 2) {
++       message("sample index = ", ii)
++       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
++       message("cancer type = ", tt)
++       xx <- mSigAct::ZPCAWGMAPTest(
++         cancer.type             = tt,
++         sample.index            = ii,
++         mutation.type           = mutation.type,
++         max.mc.cores            = 1, # 50,
++         out.dir                 = paste(tt, mutation.type, ii, sep = "-"),
++         m.opts                  = mm,
++         max.level               = 100,
++         max.presence.proportion = 0.99) }}
++ 
++ )
+sample index = 1
+cancer type = Biliary-AdenoCA
+Testing all sigs ID1, ID2, ID3, ID5, ID6, ID8, ID11
+XX sum(spectrum) = 1499; sum(my.x0) = 2161.33821063597
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 4460
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+MAPAssignActivity1: 1 signatures removed at beginning
+MAPAssignActivity1: removed: ID11
+MAPAssignActivity1: Starting with ID1,ID2,ID3,ID5,ID6,ID8
+max.level = 100
+log likelihood using all signatures = -243.657047408141
+MAPAssignActivity1: 
+df = 1
+MAPAssignActivity1: Number of subsets to remove = 6
+XX sum(spectrum) = 1499; sum(my.x0) = 2838.24781112984
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 9284
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+XX sum(spectrum) = 1499; sum(my.x0) = 1958.12377650089
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 1512
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+XX sum(spectrum) = 1499; sum(my.x0) = 2531.33473901935
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 366
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+XX sum(spectrum) = 1499; sum(my.x0) = 2555.97765659126
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 365
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+XX sum(spectrum) = 1499; sum(my.x0) = 2268.41507891659
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 377
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+XX sum(spectrum) = 1499; sum(my.x0) = 2102.32586850176
+YY sum(spectrum) = 1499; sum(my.x0) = 1499
+local.res$iterations = 579
+TEST TEST sum(spectrum) = 1499; sum(r$solution) = 1499
+MAPAssignActivity1: 
+df = 2
+Metric: 'euclidean'; comparing: 2 vectors.
+Metric: 'cosine'; comparing: 2 vectors.
+Metric: 'euclidean'; comparing: 2 vectors.
+Metric: 'cosine'; comparing: 2 vectors.
+Error in reference.exp[reference.exp > 0, , drop = FALSE] : 
+  incorrect number of dimensions
+Calls: system.time -> <Anonymous> -> one.assign -> OneMAPAssignTest
+Timing stopped at: 4.78 0.13 4.92
+Execution halted
