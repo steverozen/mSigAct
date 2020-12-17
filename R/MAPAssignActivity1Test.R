@@ -213,8 +213,14 @@ OneMAPAssignTest <- function(spect,
     return(NULL)
   }
 
-  ref.nonzero <-reference.exp[reference.exp > 0, , drop = FALSE]
-  tmp.names <- rownames(ref.nonzero)
+  if (is.matrix(reference.exp)) {
+    if (ncol(reference.exp != 1)) {
+      stop("Need 1-column matrix or vector for reference.exp")
+    }
+    reference.exp <- reference.exp[ , 1, drop = TRUE] # Make it a vector
+  }
+  ref.nonzero <-reference.exp[reference.exp > 0]
+  tmp.names <- names(ref.nonzero)
   stopifnot(!is.null(tmp.names))
   ref.exp <- tibble::tibble(sig.id = tmp.names, ref.nonzero)
   rm(tmp.names)
