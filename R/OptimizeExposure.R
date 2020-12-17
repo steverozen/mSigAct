@@ -48,7 +48,7 @@ OptimizeExposure <- function(spectrum,
   # number of mutations in the spectrum
   exp <- r$solution * (sum(spectrum) / sum(r$solution)) # sum(recon))
 
-  message("TEST TEST sum(spectrum) = ", sum(spectrum), "; sum(r$solution) = ", sum(r$solution))
+  # message("TEST TEST sum(spectrum) = ", sum(spectrum), "; sum(r$solution) = ", sum(r$solution))
 
   r$solution <- NULL
   r$objective <- NULL

@@ -29,7 +29,7 @@ mm$global.opts$maxeval <- 10000
 # debug(MAPAssignActivity1)
 
 total.time <- system.time(
-  for (tt in cancer.types[1]) {
+  for (tt in cancer.types) {
     for (ii in 1:min(ncol(p7[[tt]]),5)) {
     # for (ii in 2) {
       message("sample index = ", ii)

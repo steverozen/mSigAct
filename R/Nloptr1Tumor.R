@@ -61,10 +61,10 @@ Nloptr1Tumor <- function(spectrum,
   if (use.old) {
     my.x0 <- global.res$solution
 
-    message("XX sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
+    # message("XX sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
     # EXPERIMENTAL
     my.x0 <- my.x0 * (sum(spectrum) / sum(global.res$solution))
-    message("YY sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
+    # message("YY sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
 
 
   } else {
@@ -89,7 +89,6 @@ Nloptr1Tumor <- function(spectrum,
   if (local.res$iterations == m.opts$local.opts[["maxeval"]]) {
     msg <- paste("reached maxeval on local optimization: ", local.res$iterations)
     if (m.opts$trace > 0) message(msg)
-    # maxeval.warning <- list(spectrum = spectrum, sigs = sigs)
     warnings <- msg
   }
 
@@ -97,9 +96,6 @@ Nloptr1Tumor <- function(spectrum,
   return(list(objective      =  local.res$objective,
               solution       = local.res$solution,
               warnings        = warnings,
-              # maxeval.warning = maxeval.warning,
-              # global.res     = global.res,
-              # local.res      = local.res,
               global.search.diagnostics = global.res,
               local.search.diagnostics = local.res))
 }
