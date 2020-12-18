@@ -117,8 +117,16 @@ OptimizeExposureQPBootstrap <- function(spectrum,
   }
 
   exp <- OptimizeExposureQP(spectrum, signatures)
-  rb <- rbind(spectrum,
-              as.vector(ReconstructSpectrum(sigs = signatures, exp = exp)))
+  
+  recon.spect <- as.vector(ReconstructSpectrum(sigs = signatures, exp = exp))
+  if (length(recon.spect) != length(spectrum)) {
+    msg <- paste("OptimizeExposureQPBootstrap:\n",
+                 "length(recon.spect) =", length(recon.spect),
+                 "length(spectrum) =", length(spectrum))
+    stop(msg)
+    
+  }
+  rb <- rbind(spectrum, recon.spect)
 
   edist <- philentropy::distance(rb, method = "euclidean", test.na = FALSE)
   csim  <- philentropy::distance(rb, method = "cosine", test.na = FALSE)
