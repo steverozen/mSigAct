@@ -126,21 +126,8 @@ OptimizeExposureQPBootstrap <- function(spectrum,
     stop(msg)
     
   }
+  if (is.matrix(spectrum)) spectrum <- spectrum[, 1]
   rb <- rbind(spectrum, recon.spect)
-  if (ncol(rb) != length(recon.spect)) {
-    msg <- paste("OptimizeExposureQPBootstrap:\n",
-                 "length(recon.spect) =", length(recon.spect),
-                 "length(rb) =", length(rb))
-    stop(msg)
-  }
-  if (ncol(rb) != length(spectrum)) {
-    msg <- paste("OptimizeExposureQPBootstrap:\n",
-                 "length(spectrum) =", length(spectrum),
-                 "length(rb) =", length(rb))
-    stop(msg)
-  }
-  
-
   edist <- philentropy::distance(rb, method = "euclidean", test.na = FALSE)
   csim  <- philentropy::distance(rb, method = "cosine", test.na = FALSE)
 
