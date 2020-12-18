@@ -51,6 +51,11 @@ MAPAssignActivity1 <-
            max.subsets             = 1000,
            max.presence.proportion = 0.99,
            progress.monitor        = NULL) {
+    
+    if (sum(spect) < 1) {
+      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum", 
+                                             time.for.MAP.assign))
+    }
 
   time.for.MAP.assign <- system.time(
     MAPout <- MAPAssignActivityInternal(
@@ -67,21 +72,10 @@ MAPAssignActivity1 <-
 
   if (is.null(MAPout)) {
     return(
-      list(MAP                  = NULL,
-           MAP.row              = NULL,
-           best.sparse          = NULL,
-           best.sparse.row      = NULL,
-           all.tested           = NULL,
-           messages             = "max.subsets exceeded",
-           success              = FALSE,
-           time.for.MAP.assign  = time.for.MAP.assign,
-           MAP.recon            = NULL,
-           sparse.MAP.recon     = NULL,
-           MAP.distances        = NULL,
-           sparse.MAP.distances = NULL
-           ))
+      NullReturnForMAPAssignActivity1("max.subsets exceeded", 
+                                      time.for.MAP.assign))
   }
-
+  
   xx <- ListOfList2Tibble(MAPout)
 
   best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
@@ -130,6 +124,22 @@ MAPAssignActivity1 <-
               sparse.MAP.recon     = sparse.MAP.recon,
               MAP.distances        = MAP.distances,
               sparse.MAP.distances = sparse.MAP.distances))
+  }
+
+NullReturnForMAPAssignActivity1(msg, time.for.MAP.assign) {
+  return(
+    list(MAP                  = NULL,
+         MAP.row              = NULL,
+         best.sparse          = NULL,
+         best.sparse.row      = NULL,
+         all.tested           = NULL,
+         messages             = msg,
+         success              = FALSE,
+         time.for.MAP.assign  = time.for.MAP.assign,
+         MAP.recon            = NULL,
+         sparse.MAP.recon     = NULL,
+         MAP.distances        = NULL,
+         sparse.MAP.distances = NULL))
 }
 
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
