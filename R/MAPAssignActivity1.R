@@ -178,7 +178,12 @@ MAPAssignActivityInternal <- function(spect,
                                       max.subsets  = 1000,
                                       max.presence.proportion = 0.99,
                                       progress.monitor  = NULL) {
-
+  
+  # Type checking
+  if (is.null(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
+  if (is.null(sigs.presence.prop)) 
+    stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
+  
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
 
