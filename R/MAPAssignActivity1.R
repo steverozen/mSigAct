@@ -190,7 +190,18 @@ MAPAssignActivityInternal <- function(spect,
   max.sig.index <- ncol(sigs)
   my.msg(10, "number of signatures = ", max.sig.index)
   mode(spect) <-  'numeric'
-  stopifnot(isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop))))
+  if (!isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop)))) {
+    msg <- paste("class sigs =", 
+    class(sigs), 
+    "\nclass sigs.presence.prop =",
+    class(sigs.presence.prop),
+    "colnames(sigs) =",
+    colnames(sigs),
+    "names(sigs.presence.prop) =",
+    names(sigs.presence.prop),
+    "!isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop)))")
+    
+  }
   start <- OptimizeExposure(spect,
                             sigs,
                             m.opts  = m.opts)
