@@ -126,7 +126,7 @@ MAPAssignActivity1 <-
               sparse.MAP.distances = sparse.MAP.distances))
   }
 
-NullReturnForMAPAssignActivity1(msg, time.for.MAP.assign) {
+NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign) {
   return(
     list(MAP                  = NULL,
          MAP.row              = NULL,
