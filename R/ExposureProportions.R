@@ -53,6 +53,9 @@ ExposureProportions <- function(
     rm(mtype)
     sig.names <- rownames(sigs.prop)
     sigs.prop <- unlist(sigs.prop[ , 2])
+    if (mutation.type == "SBS192") {
+      sig.names <- AddMinusEFor192(sig.names)
+    }
     names(sigs.prop) <- sig.names
   }
   
@@ -81,6 +84,22 @@ ExposureProportions <- function(
   }
   
   return(sigs.prop)
+}
+
+#' Translate SBS96 signature IDs to SBS192 signature IDs.
+#'
+#' @param sig.ids Character vector of SBS96 signature IDs.
+#' 
+#' @keywords internal
+#' @return Character vector of corresponding SBS192 signature IDs; some
+#'   have "-E" (for exmome) post-pended.
+AddMinusEFor192 <- function(sig.ids) {
+  need.minus.E <- 
+    c("SBS23", "SBS25", "SBS27", "SBS29",
+      "SBS42", "SBS45", "SBS46", "SBS59")
+  rr <- lapply(sig.ids, 
+               function(x) ifelse(x %in% need.minus.E, paste0(x, "-E"), x))
+  return(unlist(rr))
 }
 
 #' Return a character vector of the IDs of possible SBS96 signature artifacts.
