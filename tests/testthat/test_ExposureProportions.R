@@ -96,4 +96,27 @@ test_that("ExposureProportions 5", {
   
 })
 
+test_that("ExposureProportions 6", {
+  rr <- ExposureProportions(mutation.type = "SBS192", 
+                            cancer.type   = "Unknown",
+                            all.sigs      = PCAWG7::signature$genome$SBS192)
+  expect_equal(rr, numeric(0))
+})
+
+test_that("ExposureProportions 7", {
+    rr <- ExposureProportions(mutation.type = "SBS192", 
+                              cancer.type   = "Unknown",
+                              all.sigs      = PCAWG7::signature$genome$SBS192,
+                              must.include  = "FOO")
+  expect_equal(rr, numeric(0), check.attributes = FALSE)
+})
+
+test_that("ExposureProportions 8", {
+  rr <- ExposureProportions(mutation.type = "SBS192", 
+                            cancer.type   = "Unknown",
+                            all.sigs      = PCAWG7::signature$genome$SBS192,
+                            must.include  = "SBS9")
+  expect_equal(rr, c(SBS9 = 0.1))
+})
+
 

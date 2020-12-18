@@ -37,17 +37,25 @@ ExposureProportions <- function(
   must.include.prop  = 0.1
   ) {
 
-  mtype <- ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
-
-  sigs.prop <- PCAWG7::exposure.stats$PCAWG[[mtype]][[cancer.type]]
-  if (is.null(sigs.prop)) {
-    stop("Cannot find exposure information for ",
-         mtype, " for ", cancer.type)
+  if (cancer.type %in% c("Unknown", "None")) {
+    sigs.prop <- numeric()
+    sig.names <- character()
+  } else {
+    # We don't have exposure information for SBS192 signatures,
+    # so we use the exposure information for the SBS96 signatures
+    # with the same names.
+    mtype <- ifelse(mutation.type == "SBS192", "SBS96", mutation.type)
+    sigs.prop <- PCAWG7::exposure.stats$PCAWG[[mtype]][[cancer.type]]
+    if (is.null(sigs.prop)) {
+      stop("Cannot find exposure information for ",
+           mtype, " for ", cancer.type)
+    }
+    rm(mtype)
+    sig.names <- rownames(sigs.prop)
+    sigs.prop <- unlist(sigs.prop[ , 2])
+    names(sigs.prop) <- sig.names
   }
-  sig.names <- rownames(sigs.prop)
-  sigs.prop <- unlist(sigs.prop[ , 2])
-  names(sigs.prop) <- sig.names
-
+  
   other.prop.sig.names <- setdiff(must.include, sig.names)
   sig.names <- c(sig.names, other.prop.sig.names)
   other.props <-

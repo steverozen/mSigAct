@@ -3,6 +3,8 @@
 * Can now specify proportions of additional signatures (signatures
   not previously observed in a given cancer type) to ExposureProportions.
 
+* ExposureProportions can no accept cancer.type = "Unknown" or "None"
+
 # 2.0.8.9001
 
 * Changed return value from OptimizeExposureQPBootstrap (not backward compatible)
