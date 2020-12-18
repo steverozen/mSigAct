@@ -43,7 +43,7 @@ test_that("ExposureProportions 3", {
   
 })
 
-test_that("ExposureProportions 3", {
+test_that("ExposureProportions 4", {
   rr <- ExposureProportions(
     mutation.type = "SBS192", 
     "Lung-AdenoCA",
@@ -60,7 +60,7 @@ test_that("ExposureProportions 3", {
   
 })
 
-test_that("ExposureProportions 4", {
+test_that("ExposureProportions 5", {
   rr <- ExposureProportions(
     mutation.type = "SBS192", 
     "Lung-AdenoCA",
@@ -76,7 +76,7 @@ test_that("ExposureProportions 4", {
                  SBS6  = 0.3, SBS29 = 0.3))
 })
 
-test_that("ExposureProportions 5", {
+test_that("ExposureProportions 6", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Liver-HCC",
                             all.sigs      = PCAWG7::signature$genome$SBS192)
@@ -96,14 +96,14 @@ test_that("ExposureProportions 5", {
   
 })
 
-test_that("ExposureProportions 6", {
+test_that("ExposureProportions 7", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Unknown",
                             all.sigs      = PCAWG7::signature$genome$SBS192)
   expect_equal(rr, numeric(0))
 })
 
-test_that("ExposureProportions 7", {
+test_that("ExposureProportions 8", {
     rr <- ExposureProportions(mutation.type = "SBS192", 
                               cancer.type   = "Unknown",
                               all.sigs      = PCAWG7::signature$genome$SBS192,
@@ -111,7 +111,7 @@ test_that("ExposureProportions 7", {
   expect_equal(rr, numeric(0), check.attributes = FALSE)
 })
 
-test_that("ExposureProportions 8", {
+test_that("ExposureProportions 9", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Unknown",
                             all.sigs      = PCAWG7::signature$genome$SBS192,
@@ -119,4 +119,11 @@ test_that("ExposureProportions 8", {
   expect_equal(rr, c(SBS9 = 0.1))
 })
 
+test_that("ExposureProportions 10", {
+  rr <- ExposureProportions(mutation.type = "SBS192", 
+                            cancer.type   = "Lung-SCC",
+                            all.sigs      = PCAWG7::signature$genome$SBS192[, 2:40])
+  expect_equal(rr, c(SBS2 = 0.833333333333333, SBS4 = 0.916666666666667, SBS5 = 1, 
+                     SBS8 = 0.0416666666666667, SBS13 = 0.833333333333333))
+})
 

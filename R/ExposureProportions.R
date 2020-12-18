@@ -67,8 +67,12 @@ ExposureProportions <- function(
     sigs.no.info <- setdiff(sig.names, colnames(all.sigs))
 
     for (zz in sigs.no.info) {
-      message("No signature ", zz, " for ", mutation.type)
-      message("Dropping from signature universe")
+      message("ExposureProportions:")
+      message("No signature ", zz, " for ", mutation.type, 
+              " in all.sigs\n(",
+              paste(colnames(all.sigs), collapse = ", "),
+              ")")
+      message("Dropping from sigs.prop")
       sigs.prop <- sigs.prop[-(which(names(sigs.prop) == zz))]
     }
 
