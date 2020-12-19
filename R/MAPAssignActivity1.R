@@ -53,8 +53,7 @@ MAPAssignActivity1 <-
            progress.monitor        = NULL) {
     
     if (sum(spect) < 1) {
-      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum", 
-                                             time.for.MAP.assign))
+      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum"))
     }
 
   time.for.MAP.assign <- system.time(
@@ -126,7 +125,7 @@ MAPAssignActivity1 <-
               sparse.MAP.distances = sparse.MAP.distances))
   }
 
-NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign) {
+NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
   return(
     list(MAP                  = NULL,
          MAP.row              = NULL,
