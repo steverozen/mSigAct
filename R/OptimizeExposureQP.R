@@ -22,16 +22,16 @@ OptimizeExposureQP <- function(spectrum, signatures) {
     stop("Got spectrum = NULL")
   }
   
-  if (sum(spectrum) == 0 ) {
-    rr <- rep(0, ncol(signatures))
-    names(rr) <- colnames(signaures)
-    return(rr)
-  }
-  
   if (is.data.frame(signatures)) {
     signatures <- as.matrix(signatures)
   }
   stopifnot(is.matrix(signatures))
+  
+  if (sum(spectrum) == 0 ) {
+    rr <- rep(0, ncol(signatures))
+    names(rr) <- colnames(signatures)
+    return(rr)
+  }
 
   M <- spectrum / sum(spectrum)
 
