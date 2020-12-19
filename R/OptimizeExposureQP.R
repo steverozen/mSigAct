@@ -17,13 +17,25 @@
 #' Code adapted from \code{SignatureEstimation::decomposeQP}.
 
 OptimizeExposureQP <- function(spectrum, signatures) {
+  if (is.null(spectrum)) {
+    traceback()
+    stop("Got spectrum = NULL")
+  }
+  
+  if (sum(spectrum) == 0 ) {
+    rr <- rep(0, ncol(signatures))
+    names(rr) <- colnames(signaures)
+    return(rr)
+  }
+  
+  if (is.data.frame(signatures)) {
+    signatures <- as.matrix(signatures)
+  }
+  stopifnot(is.matrix(signatures))
 
   M <- spectrum / sum(spectrum)
 
-  if (is.data.frame(signatures)) {
-    P <- as.matrix(signatures)
-  }
-  stopifnot(is.matrix(signatures))
+
   P <- signatures
 
   # N: how many signatures should be considered
