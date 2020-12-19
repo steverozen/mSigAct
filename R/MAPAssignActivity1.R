@@ -71,8 +71,10 @@ MAPAssignActivity1 <-
 
   if (is.null(MAPout)) {
     return(
-      NullReturnForMAPAssignActivity1("max.subsets exceeded", 
-                                      time.for.MAP.assign))
+      NullReturnForMAPAssignActivity1(
+        paste("There were too many ways to reconstruct the spectrum; ",
+              "please try removing some of the less likely signatures"), 
+        time.for.MAP.assign))
   }
   
   xx <- ListOfList2Tibble(MAPout)
