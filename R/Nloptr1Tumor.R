@@ -27,48 +27,39 @@ Nloptr1Tumor <- function(spectrum,
   foo <- spectrum
   storage.mode(spectrum) <- "double"
   stopifnot(foo == spectrum)
-
+  
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
-
-  use.old <- TRUE
-  if (ncol(sigs) == 1 || use.old) {
-    # x0 is uniform distribution of mutations across signatures
-    # (Each signature gets the same number of mutations)
-    x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
-  } else {
-    stop("This branch does not work")
+  
+  # x0 is uniform distribution of mutations across signatures
+  # (Each signature gets the same number of mutations)
+  x0 <- rep(sum(spectrum) / ncol(sigs), ncol(sigs))
+  
+  if (any(is.na(x0))) {
+    traceback()
+    stop("Programming error, got an NA in x0 (global nloptr)")
   }
-
-  if (!is.null(m.opts$global.opts)) { # WARNING, ADDITIONAL CODE WOULD NEED TO BE CHANGED TO DISABLE THIS BRANCH
-
-    global.res <- nloptr::nloptr(
-      x0          = x0,
-      eval_f      = m.opts[["global_eval_f"]],
-      lb          = rep(0, ncol(sigs)),
-      ub          = rep(sum(spectrum), ncol(sigs)),
-      opts        = m.opts$global.opts,
-      spectrum    = spectrum,
-      sigs        = sigs,
-      ...)
-    if (m.opts$trace > 0) {
-      message("global.res$objective = ", global.res$objective)
-    }
-    if (global.res$iterations == m.opts$global.opts[["maxeval"]]) {
-      # warning("reached maxeval on global optimization: ", global.res$iterations)
-    }
+  global.res <- nloptr::nloptr(
+    x0          = x0,
+    eval_f      = m.opts[["global_eval_f"]],
+    lb          = rep(0, ncol(sigs)),
+    ub          = rep(sum(spectrum), ncol(sigs)),
+    opts        = m.opts$global.opts,
+    spectrum    = spectrum,
+    sigs        = sigs,
+    ...)
+  if (m.opts$trace > 0) {
+    message("global.res$objective = ", global.res$objective)
   }
-
-  if (use.old) {
-    my.x0 <- global.res$solution
-
-    # message("XX sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
-    # EXPERIMENTAL
-    my.x0 <- my.x0 * (sum(spectrum) / sum(global.res$solution))
-    # message("YY sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
-
-
-  } else {
-    my.x0 <- x0
+  
+  my.x0 <- global.res$solution
+  
+  # message("XX sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
+  my.x0 <- my.x0 * (sum(spectrum) / sum(global.res$solution))
+  # message("YY sum(spectrum) = ", sum(spectrum), "; sum(my.x0) = ", sum(my.x0))
+  
+  if (any(is.na(x0))) {
+    traceback()
+    stop("Programming error, got an NA in x0 (local nloptr)")
   }
   local.res <- nloptr::nloptr(
     x0          = my.x0,

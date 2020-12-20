@@ -54,8 +54,7 @@ MAPAssignActivity1 <-
            seed                    = NULL) {
     
     if (sum(spect) < 1) {
-      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum", 
-                                             time.for.MAP.assign))
+      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum"))
     }
 
   time.for.MAP.assign <- system.time(
@@ -74,8 +73,10 @@ MAPAssignActivity1 <-
 
   if (is.null(MAPout)) {
     return(
-      NullReturnForMAPAssignActivity1("max.subsets exceeded", 
-                                      time.for.MAP.assign))
+      NullReturnForMAPAssignActivity1(
+        paste("There were too many ways to reconstruct the spectrum; ",
+              "please try removing some of the less likely signatures"), 
+        time.for.MAP.assign))
   }
   
   xx <- ListOfList2Tibble(MAPout)
@@ -128,7 +129,7 @@ MAPAssignActivity1 <-
               sparse.MAP.distances = sparse.MAP.distances))
   }
 
-NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign) {
+NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
   return(
     list(MAP                  = NULL,
          MAP.row              = NULL,
