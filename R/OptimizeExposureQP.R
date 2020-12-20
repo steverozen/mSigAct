@@ -115,7 +115,7 @@ OptimizeExposureQPBootstrap <- function(spectrum,
   if (ss == 0) {
     return(list(exposure = rep(0, ncol(signatures)), 
                 euclidean.dist = 0, 
-                cosine.sim = Nan))
+                cosine.sim = NaN))
   }
   if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
   mc.cores <- Adj.mc.cores(mc.cores) # Set to 1 if OS is MS Windows

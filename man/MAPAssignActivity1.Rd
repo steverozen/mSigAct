@@ -30,8 +30,9 @@ being a subset of \code{colnames(sigs)}.}
 \item{max.level}{The maximum number of signatures to try removing.}
 
 \item{p.thresh}{If
-the p value for a better reconstruction with than without a set of signatures
-is > than \code{p.thresh}, then we can use exposures without this set.}
+the p value for a better reconstruction with as opposed to
+without a set of signatures
+is > than this argument, then we can use exposures without this set.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 

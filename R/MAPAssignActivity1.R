@@ -187,16 +187,18 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
 #'   might rarely find different optima depending on the random
 #'   seed.)
 
-MAPAssignActivityInternal <- function(spect,
-                                      sigs,
-                                      sigs.presence.prop,
-                                      max.level    = 5,
-                                      p.thresh     = 0.05,
-                                      m.opts       = DefaultManyOpts(),
-                                      max.mc.cores = min(20, 2^max.level),
-                                      max.subsets  = 1000,
-                                      max.presence.proportion = 0.99,
-                                      progress.monitor  = NULL) {
+MAPAssignActivityInternal <-
+  function(spect,
+           sigs,
+           sigs.presence.prop,
+           max.level               = 5,
+           p.thresh                = 0.05,
+           m.opts                  = DefaultManyOpts(),
+           max.mc.cores            = min(20, 2^max.level),
+           max.subsets             = 1000,
+           max.presence.proportion = 0.99,
+           progress.monitor        = NULL,
+           seed                    = NULL) {
   
   # Type checking
   if (is.null(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
