@@ -160,8 +160,9 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
 #' @param max.level The maximum number of signatures to try removing.
 #'
 #' @param p.thresh If
-#'  the p value for a better reconstruction with than without a set of signatures
-#'  is > than \code{p.thresh}, then we can use exposures without this set.
+#'  the p value for a better reconstruction with as opposed to
+#'  without a set of signatures
+#'  is > than this argument, then we can use exposures without this set.
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'
@@ -201,6 +202,7 @@ MAPAssignActivityInternal <- function(spect,
   if (is.null(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
   if (is.null(sigs.presence.prop)) 
     stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
+  
   if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
   
   my.msg <- function(trace.level, ...)
