@@ -9,7 +9,8 @@ OptimizeExposureQPBootstrap(
   signatures,
   num.replicates = 10000,
   conf.int = 0.95,
-  mc.cores = 10
+  mc.cores = 10,
+  seed = NULL
 )
 }
 \arguments{
@@ -27,17 +28,24 @@ the column names are needed.}
 \item{conf.int}{Discard signatures with \code{conf.int} that overlaps 0.}
 
 \item{mc.cores}{The maximum number of cores to use.
-  On MS Windows machines it defaults to 1.
+On MS Windows machines it defaults to 1.}
+
+\item{seed}{Random seed; set this to get reproducible results.
 
   #' @return
 A list with elements \describe{
-\item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
-   the number of mutations ascribed to each signature. The names of
+\item{\code{exposure}}{The vector of exposures that generated \code{loglh},
+   i.e. the number of mutations ascribed to each signature. The names of
    \code{exposure} are a subset of the \code{colnames(signatures)}.}
 \item{\code{euclidean.dist}}{The final value of the objective function.}
 \item{\code{cosine.sim}}{The cosine similarity between \code{spectrum} and
              the reconstruction based on \code{signatures}.}
-}}
+}
+
+If the spectrum has 0 mutations, no bootstrapping is done, and in the
+return value
+all \code{signaures} have 0 exposures, \code{euclidian.dist} is 0,
+and \code{cosine.sim} is \code{NaN}.}
 }
 \description{
 Bootstrap \code{\link{OptimizeExposureQP}} and filter exposures by confidence intervals

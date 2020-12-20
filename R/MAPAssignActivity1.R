@@ -50,7 +50,8 @@ MAPAssignActivity1 <-
            max.mc.cores            = min(20, 2^max.level),
            max.subsets             = 1000,
            max.presence.proportion = 0.99,
-           progress.monitor        = NULL) {
+           progress.monitor        = NULL,
+           seed                    = NULL) {
     
     if (sum(spect) < 1) {
       return(NullReturnForMAPAssignActivity1("0 mutations in spectrum", 
@@ -68,7 +69,8 @@ MAPAssignActivity1 <-
       max.mc.cores            = max.mc.cores,
       max.subsets             = max.subsets,
       max.presence.proportion = max.presence.proportion,
-      progress.monitor        = progress.monitor))
+      progress.monitor        = progress.monitor,
+      seed                    = seed))
 
   if (is.null(MAPout)) {
     return(
@@ -177,6 +179,11 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign) {
 #'   take named arguments \code{value} and \code{detail}, and
 #'   no others. Designed for a \code{\link[ipc]{AsyncProgress}}
 #'   progress bar function.
+#'   
+#' @param seed Random seed; set this to get reproducible results. (The
+#'   numerical optimization is in two phases; the first, global phase
+#'   might rarely find different optima depending on the random
+#'   seed.)
 
 MAPAssignActivityInternal <- function(spect,
                                       sigs,
@@ -193,6 +200,7 @@ MAPAssignActivityInternal <- function(spect,
   if (is.null(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
   if (is.null(sigs.presence.prop)) 
     stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
+  if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
   
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)

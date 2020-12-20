@@ -73,26 +73,41 @@ OptimizeExposureQP <- function(spectrum, signatures) {
 #'
 #' @param mc.cores The maximum number of cores to use.
 #'   On MS Windows machines it defaults to 1.
+#'   
+#' @param seed Random seed; set this to get reproducible results.
 #'
 #'   #' @return
 #' A list with elements \describe{
-#' \item{\code{exposure}}{The vector of exposures that generated \code{loglh}, i.e.
-#'    the number of mutations ascribed to each signature. The names of
+#' \item{\code{exposure}}{The vector of exposures that generated \code{loglh},
+#'    i.e. the number of mutations ascribed to each signature. The names of
 #'    \code{exposure} are a subset of the \code{colnames(signatures)}.}
 #' \item{\code{euclidean.dist}}{The final value of the objective function.}
 #' \item{\code{cosine.sim}}{The cosine similarity between \code{spectrum} and
 #'              the reconstruction based on \code{signatures}.}
 #' }
+#' 
+#' If the spectrum has 0 mutations, no bootstrapping is done, and in the
+#' return value
+#' all \code{signaures} have 0 exposures, \code{euclidian.dist} is 0,
+#' and \code{cosine.sim} is \code{NaN}.
 #'
 
 OptimizeExposureQPBootstrap <- function(spectrum,
                                         signatures,
                                         num.replicates = 10000,
                                         conf.int       = 0.95,
-                                        mc.cores       = 10) {
+                                        mc.cores       = 10,
+                                        seed           = NULL) {
 
-  mc.cores <- Adj.mc.cores(mc.cores) # Set to 1 if OS is MS Windows
   ss <- sum(spectrum)
+  if (ss == 0) {
+    return(list(exposure = rep(0, ncol(signatures)), 
+                euclidean.dist = 0, 
+                cosine.sim = Nan))
+  }
+  if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
+  mc.cores <- Adj.mc.cores(mc.cores) # Set to 1 if OS is MS Windows
+  
   spectrum.as.probs <- spectrum/ss
 
   s2 <- stats::rmultinom(

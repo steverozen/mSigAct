@@ -48,6 +48,11 @@ new level (number of signatures to try excluding). Must
 take named arguments \code{value} and \code{detail}, and
 no others. Designed for a \code{\link[ipc]{AsyncProgress}}
 progress bar function.}
+
+\item{seed}{Random seed; set this to get reproducible results. (The
+numerical optimization is in two phases; the first, global phase
+might rarely find different optima depending on the random
+seed.)}
 }
 \description{
 Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
