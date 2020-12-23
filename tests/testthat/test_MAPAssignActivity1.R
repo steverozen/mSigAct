@@ -11,7 +11,8 @@ sbs192 <-
 dbs78 <-
   c(ACCA = 0L, ACCG = 0L, ACCT = 0L, ACGA = 0L, ACGG = 0L, ACGT = 0L,  ACTA = 1L, ACTG = 0L, ACTT = 1L, ATCA = 0L, ATCC = 0L, ATCG = 0L,  ATGA = 0L, ATGC = 0L, ATTA = 1L, CCAA = 18L, CCAG = 2L, CCAT = 6L,  CCGA = 1L, CCGG = 0L, CCGT = 2L, CCTA = 1L, CCTG = 0L, CCTT = 4L,  CGAT = 0L, CGGC = 0L, CGGT = 0L, CGTA = 0L, CGTC = 0L, CGTT = 1L,  CTAA = 2L, CTAC = 0L, CTAG = 3L, CTGA = 0L, CTGC = 0L, CTGG = 0L,  CTTA = 1L, CTTC = 0L, CTTG = 1L, GCAA = 3L, GCAG = 0L, GCAT = 0L,  GCCA = 0L, GCCG = 0L, GCTA = 0L, TAAT = 1L, TACG = 0L, TACT = 0L,  TAGC = 0L, TAGG = 0L, TAGT = 0L, TCAA = 6L, TCAG = 1L, TCAT = 7L,  TCCA = 1L, TCCG = 0L, TCCT = 0L, TCGA = 0L, TCGG = 0L, TCGT = 1L,  TGAA = 0L, TGAC = 0L, TGAT = 2L, TGCA = 1L, TGCC = 0L, TGCT = 1L,  TGGA = 1L, TGGC = 0L, TGGT = 1L, TTAA = 0L, TTAC = 0L, TTAG = 0L,  TTCA = 0L, TTCC = 1L, TTCG = 0L, TTGA = 0L, TTGC = 0L, TTGG = 1L )
 
-test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
+test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
+                    sig.ids.to.use = NULL) {
 
   mm <- mSigAct::DefaultManyOpts()
   mm$trace <- 0
@@ -21,12 +22,14 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
   mm$local.opts$tol_constraints_ineq <- 10
 
   sigs <-PCAWG7::signature$genome[[sig.mutation.type]]
+  if (!is.null(sig.ids.to.use)) {
+    sigs <- sigs[ , sig.ids.to.use, drop = FALSE]
+  }
 
   sig.prop <- ExposureProportions(mutation.type = sig.mutation.type,
                                   cancer.type = cancer.type,
                                   all.sigs = sigs)
 
-  set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval <- MAPAssignActivity1(
     spect                   = spect,
     sigs                    = sigs,
@@ -36,7 +39,8 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC") {
     m.opts                  = mm,
     max.mc.cores            = 1,
     max.subsets             = 1000,
-    max.presence.proportion = 0.99)
+    max.presence.proportion = 0.99,
+    seed                    = 101010)
   return(retval)
 }
 
@@ -84,5 +88,11 @@ test_that("MAPAssignActivity DBS78", {
       DBS11 = 22.617395130232),
     tolerance = 1e-5
     )
+})
+
+test_that("MAPAssignActivity error1", {
+  retval <- test.fn(spect = sbs192, "SBS192",
+                    sig.ids.to.use = c("SBS1", "SBS2"))
+  testthat::expect_false(retval$success)
 })
 

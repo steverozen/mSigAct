@@ -53,80 +53,79 @@ MAPAssignActivity1 <-
            progress.monitor        = NULL,
            seed                    = NULL) {
     
-    if (sum(spect) < 1) {
-      return(NullReturnForMAPAssignActivity1("0 mutations in spectrum"))
-    }
+    time.for.MAP.assign <- system.time(3)
+    
+    tryCatch({
+      
+      if (sum(spect) < 1) stop("0 mutations in spectrum")
 
-  time.for.MAP.assign <- system.time(
-    MAPout <- MAPAssignActivityInternal(
-      spect                   = spect,
-      sigs                    = sigs,
-      sigs.presence.prop      = sigs.presence.prop,
-      max.level               = max.level,
-      p.thresh                = p.thresh,
-      m.opts                  = m.opts,
-      max.mc.cores            = max.mc.cores,
-      max.subsets             = max.subsets,
-      max.presence.proportion = max.presence.proportion,
-      progress.monitor        = progress.monitor,
-      seed                    = seed))
+      time.for.MAP.assign <- system.time(
+        MAPout <- MAPAssignActivityInternal(
+          spect                   = spect,
+          sigs                    = sigs,
+          sigs.presence.prop      = sigs.presence.prop,
+          max.level               = max.level,
+          p.thresh                = p.thresh,
+          m.opts                  = m.opts,
+          max.mc.cores            = max.mc.cores,
+          max.subsets             = max.subsets,
+          max.presence.proportion = max.presence.proportion,
+          progress.monitor        = progress.monitor,
+          seed                    = seed))
+      
+      xx <- ListOfList2Tibble(MAPout)
+      
+      best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
+      names.best <- names(best[["exp"]])
+      best.exp <- best[["exp"]][[1]]
+      if (is.null(names(best.exp))) {
+        names(best.exp) <- names.best
+      }
+      MAP <- tibble::tibble(sig.id = names(best.exp), count = best.exp)
+      
+      sparse.best <-
+        dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
+      names.sparse.best <- names(sparse.best[["exp"]])
+      most.sparse.exp <- sparse.best[["exp"]][[1]]
+      if (is.null(names(most.sparse.exp))) {
+        names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
+      }
+      
+      most.sparse <-
+        tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
+      
+      # Best MAP
+      MAP.recon <-
+        ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
+      
+      # MAP most sparse
+      sparse.MAP.recon <-
+        ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
+      
+      MAP.distances <-
+        DistanceMeasures(spect, MAP.recon, m.opts$nbinom.size)
+      
+      sparse.MAP.distances <-
+        DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
 
-  if (is.null(MAPout)) {
-    return(
-      NullReturnForMAPAssignActivity1(
-        paste("There were too many ways to reconstruct the spectrum; ",
-              "please try removing some of the less likely signatures"), 
-        time.for.MAP.assign))
-  }
-  
-  xx <- ListOfList2Tibble(MAPout)
-
-  best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
-  names.best <- names(best[["exp"]])
-  best.exp <- best[["exp"]][[1]]
-  if (is.null(names(best.exp))) {
-    names(best.exp) <- names.best
-  }
-  MAP <- tibble::tibble(sig.id = names(best.exp), count = best.exp)
-
-  sparse.best <-
-    dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
-  names.sparse.best <- names(sparse.best[["exp"]])
-  most.sparse.exp <- sparse.best[["exp"]][[1]]
-  if (is.null(names(most.sparse.exp))) {
-    names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
-  }
-
-  most.sparse <-
-    tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
-
-  # Best MAP
-  MAP.recon <-
-    ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
-
-  # MAP most sparse
-  sparse.MAP.recon <-
-    ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
-
-  MAP.distances <-
-    DistanceMeasures(spect, MAP.recon, m.opts$nbinom.size)
-
-  sparse.MAP.distances <-
-    DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
-
-
-  return(list(MAP                  = MAP,
-              MAP.row              = best,
-              best.sparse          = most.sparse,
-              best.sparse.row      = sparse.best,
-              all.tested           = xx,
-              messages             = c(),
-              success              = TRUE,
-              time.for.MAP.assign  = time.for.MAP.assign,
-              MAP.recon            = MAP.recon,
-              sparse.MAP.recon     = sparse.MAP.recon,
-              MAP.distances        = MAP.distances,
-              sparse.MAP.distances = sparse.MAP.distances))
+    return(list(MAP                  = MAP,
+                MAP.row              = best,
+                best.sparse          = most.sparse,
+                best.sparse.row      = sparse.best,
+                all.tested           = xx,
+                messages             = c(),
+                success              = TRUE,
+                time.for.MAP.assign  = time.for.MAP.assign,
+                MAP.recon            = MAP.recon,
+                sparse.MAP.recon     = sparse.MAP.recon,
+                MAP.distances        = MAP.distances,
+                sparse.MAP.distances = sparse.MAP.distances))
+    },
+    error = function(err.info) {
+      if (!is.null(err.info$message)) err.info <- err.info$message
+      message(err.info)
+      return(NullReturnForMAPAssignActivity1(err.info, time.for.MAP.assign))
+    })
   }
 
 NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
@@ -228,20 +227,18 @@ MAPAssignActivityInternal <-
     "names(sigs.presence.prop) =",
     names(sigs.presence.prop),
     "!isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop)))")
-    
   }
-  start <- OptimizeExposure(spect,
-                            sigs,
-                            m.opts  = m.opts)
+ 
+  cannot.generate <- setdiff(which(rowSums(sigs) == 0), which(as.vector(spect) == 0))
+  if (length(cannot.generate) > 0)
+    stop("Cannot generate spectrum from the specified signatures;\n",
+         "No signatures has > 0 proportion for ",
+         paste(rownames(sigs)[cannot.generate], collapse = ", ")) 
+  start <- OptimizeExposure(spect, sigs, m.opts  = m.opts)
+
   lh.w.all <- start$loglh  # The likelihood with all signatures
-  if (lh.w.all == -Inf) {
-    problem <- "Cannot generate spect from sigs"
-    message(problem)
-    rr <- rep(NaN, ncol(sigs))
-    attr(rr, "log.likelihood") <- lh.w.all
-    attr(rr, "problem") <- problem
-    return(rr)
-  }
+  if (lh.w.all == -Inf) stop("Cannot generate spectrum from the specified signatures")
+
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp >= 0.5) # indices of signatures with non-zero
                                              # exposures
@@ -318,7 +315,7 @@ MAPAssignActivityInternal <-
        if (try.exp$loglh < 0) {
           chisq.p <- 0
        } else {
-         stop("How did we here?")
+         stop("Probable coding error")
        }
     } else {
       statistic <- 2 * (lh.w.all - try.exp$loglh)
@@ -360,7 +357,8 @@ MAPAssignActivityInternal <-
     if (length(subsets2) > max.subsets) {
       my.msg(-1, "Number of subsets (", length(subsets2), ") > max.subsets (", max.subsets, ")")
       my.msg(-1, "Returning NULL")
-      return(NULL)
+      stop("There were too many ways to reconstruct the spectrum; ",
+          "please try removing some of the less likely signatures")
     }
 
     if (!is.null(progress.monitor)) {
