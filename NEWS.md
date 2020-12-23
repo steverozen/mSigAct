@@ -1,3 +1,7 @@
+# 2.0.8.9003
+
+* Wrapped MAPAssignActivity1 in a tryCatch and improved some error messages
+
 # 2.0.8.9002
 
 * Can now specify proportions of additional signatures (signatures
