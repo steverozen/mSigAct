@@ -1,3 +1,7 @@
+# 2.0.8.9004
+
+* Fixed typo in documentation for argument `must.include` in function `ExposureProportions`
+
 # 2.0.8.9003
 
 * Wrapped MAPAssignActivity1 in a tryCatch and improved some error messages

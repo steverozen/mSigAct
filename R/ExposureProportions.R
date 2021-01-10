@@ -15,7 +15,7 @@
 #' @param must.include A character vector of signature IDs that
 #'    must be included, even if they have not previously been
 #'    observed in that cancer type. The associated proportion is
-#'    specified by \code{new.sig.prop}.
+#'    specified by \code{must.include.prop}.
 #'    
 #' @param must.include.prop The value used for the expected proportion of
 #'    signatures in \code{must.include} but not previously observed
@@ -92,7 +92,7 @@ ExposureProportions <- function(
 #' 
 #' @keywords internal
 #' @return Character vector of corresponding SBS192 signature IDs; some
-#'   have "-E" (for exmome) post-pended.
+#'   have "-E" (for exome) post-pended.
 AddMinusEFor192 <- function(sig.ids) {
   need.minus.E <- 
     c("SBS23", "SBS25", "SBS27", "SBS29",

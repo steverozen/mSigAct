@@ -11,7 +11,7 @@ AddMinusEFor192(sig.ids)
 }
 \value{
 Character vector of corresponding SBS192 signature IDs; some
-  have "-E" (for exmome) post-pended.
+  have "-E" (for exome) post-pended.
 }
 \description{
 Translate SBS96 signature IDs to SBS192 signature IDs.

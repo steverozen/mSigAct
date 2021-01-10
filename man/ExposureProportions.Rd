@@ -29,7 +29,7 @@ There are some signatures that do not have SBS192 versions, including SBS29.}
 \item{must.include}{A character vector of signature IDs that
 must be included, even if they have not previously been
 observed in that cancer type. The associated proportion is
-specified by \code{new.sig.prop}.}
+specified by \code{must.include.prop}.}
 
 \item{must.include.prop}{The value used for the expected proportion of
 signatures in \code{must.include} but not previously observed
