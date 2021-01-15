@@ -1,3 +1,8 @@
+# 2.0.8.9005
+
+* Round the non integers in spectrum to integers and give a warning when calling
+`MAPAssignActivity1`
+
 # 2.0.8.9004
 
 * Fixed typo in documentation for argument `must.include` in function `ExposureProportions`

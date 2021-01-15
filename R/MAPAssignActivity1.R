@@ -58,6 +58,14 @@ MAPAssignActivity1 <-
     tryCatch({
       
       if (sum(spect) < 1) stop("0 mutations in spectrum")
+      
+      # If there are non integers in spect, round it first. Otherwise, there
+      # will be a lot of warnings later calculating likelihood using
+      # stats::dnbinom() and this will cause the program run very slowly
+      if (any(spect != round(spect))) {
+        warning("Round non integers in spectrum to integers")
+        spect <- round(spect)
+      }
 
       time.for.MAP.assign <- system.time(
         MAPout <- MAPAssignActivityInternal(
