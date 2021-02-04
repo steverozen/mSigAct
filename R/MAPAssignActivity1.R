@@ -57,7 +57,7 @@ MAPAssignActivity1 <-
     
     tryCatch({
       
-      if (sum(spect) < 1) stop("0 mutations in spectrum")
+      if (sum(spect) < 1) stop("< 1 mutation in spectrum")
       
       # If there are non integers in spect, round it first. Otherwise, there
       # will be a lot of warnings later calculating likelihood using
@@ -286,8 +286,6 @@ MAPAssignActivityInternal <-
 
   max.level <- min(max.level, length(non.0.exp.index) - 1)
 
-  mc.cores <- Adj.mc.cores(max.mc.cores) # Set to 1 if OS is MS Windows
-
   # c.r.s is "cannot remove subsets", i.e. subset of the signature indices that
   # cannot be removed
   c.r.s <- sets::set()
@@ -380,7 +378,9 @@ MAPAssignActivityInternal <-
       check.to.remove <-
         parallel::mclapply(X = subsets2,
                            FUN = info.of.removed.subset,
-                           mc.cores = max.mc.cores)
+                           # Set to mc.cores 1 if OS is MS Windows
+                           mc.cores = Adj.mc.cores(max.mc.cores)
+        )
     )
     if (m.opts$trace > 3) {
       message("Time used to compute p values for df ", df, ":")
