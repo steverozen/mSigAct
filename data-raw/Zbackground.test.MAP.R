@@ -34,7 +34,7 @@ total.time <- system.time(
       message("sample index = ", ii)
       set.seed(101010+1, kind = "L'Ecuyer-CMRG")
       message("cancer type = ", tt)
-      xx <- mSigAct::ZPCAWGMAPTest(
+      xx <- mSigAct::PCAWGMAPTest(
         cancer.type             = tt,
         sample.index            = ii,
         mutation.type           = mutation.type,

@@ -37,7 +37,7 @@
 #' @export
 #'
 
-ZPCAWGMAPTest <- function(cancer.type,
+PCAWGMAPTest <- function(cancer.type,
                          sample.index,
                          mutation.type,
                          max.level = 5,
