@@ -64,31 +64,82 @@ PlotMAPResultToPdf <- function(spect, sigs, MAP.out, file) {
   PlotListOfCatalogsToPdf(list.of.catalogs, file = file)
 }
 
-DebugIDAttribution <- function() {
+DebugIDAttribution <- function(num.fake = 0) {
   file.ID <- "data-raw/errors/ID.attribution.error/data/catID.counts.csv"
   catID <- ICAMS::ReadCatalog(file = file.ID, ref.genome = "hg19", region = "genome")
   
   ID.expo.prop <- mSigAct::ExposureProportions(mutation.type = "ID", 
                                                cancer.type = "Lung-AdenoCA")
-  ID.sig.universe <- PCAWG7::signature$genome$ID[, names(ID.expo.prop), drop = FALSE]
+
+  su <- 
+    PCAWG7::signature$genome$ID[, names(ID.expo.prop), drop = FALSE]
   
-  if (.Platform$OS.type == "windows") {
-    num.of.cores <- 1
-  } else {
-    num.of.cores <- 50
+  if (num.fake > 0) {
+    fake.sig <- matrix(rep(0, nrow(su)), ncol = 1)
+    rownames(fake.sig) <- rownames(su)
+    colnames(fake.sig) <- "fake.ins.t.1.0"
+    fake.sig["INS:T:1:0", ] <- 1
+    ID.expo.prop <- c(ID.expo.prop, fake.ins.t.1.0 = 0.5)
+    su <- cbind(su, 
+                ICAMS::as.catalog(fake.sig, 
+                                  catalog.type =
+                                    attr(su, "catalog.type")))
+    if (num.fake > 1) {
+      fake.sig <- matrix(rep(0, nrow(su)), ncol = 1)
+      rownames(fake.sig) <- rownames(su)
+      colnames(fake.sig) <- "fake.ins.rep.2.0"
+      fake.sig["INS:repeats:2:0", ] <- 1
+      ID.expo.prop <- c(ID.expo.prop, fake.ins.rep.2.0 = 0.5)
+      su <- cbind(su, 
+                  ICAMS::as.catalog(fake.sig, 
+                                    catalog.type =
+                                      attr(su, "catalog.type")))
+      
+    }
   }
   
   ID.MAP.out <- mSigAct::MAPAssignActivity1(spect = catID,
-                                            sigs = ID.sig.universe, 
+                                            sigs = su, 
                                             sigs.presence.prop = ID.expo.prop, 
                                             max.level = length(ID.expo.prop) - 1,
                                             p.thresh = 0.01,
-                                            m.opts = mSigAct::DefaultManyOpts(),
-                                            max.mc.cores = num.of.cores)
+                                            m.opts = mSigAct::DefaultManyOpts()
+  )
+  px <- "data-raw/errors/ID.attribution.error/output/"
+  
+  inferred.exp.max.lh <- ID.MAP.out$MAP$count
+  names(inferred.exp.max.lh) <- ID.MAP.out$MAP$sig.id
+  rr <- ReconstructSpectrum(
+    su[ , ID.MAP.out$MAP$sig.id, drop = FALSE], 
+    inferred.exp.max.lh)
+  ICAMS::PlotCatalogToPdf(round(rr), paste0(px, num.fake, file = "lh.recon.pdf"))
+  trr.fake <- tibble::tibble(rownames(catID), 
+                             rr, 
+                             catID[ , 1, drop = T], 
+                             rr  -  catID[ , 1, drop = T])
+  data.table::fwrite(trr.fake, file = paste0(px, num.fake, "comp.table.lh.csv"))
+  message("Max lh cosine = ", 
+          philentropy::distance(
+            rbind(catID[ , 1, drop = TRUE], rr[ , 1, drop = TRUE]), "cosine"))
+  negll <- LLHSpectrumNegBinom(catID[ , 1, drop = TRUE], expected.counts = rr[, 1, drop = TRUE],
+                               nbinom.size = DefaultManyOpts()$nbinom.size)
+  message("max LL log likelihood = ", negll)
+  
+  x2 <- OptimizeExposureQP(spectrum = catID, signatures = su)
+  ss <- ReconstructSpectrum(su, x2)
+  ICAMS::PlotCatalogToPdf(round(ss), paste0(px, num.fake, file = "qp.recon.pdf"))
+  tss.fake <- tibble::tibble(rownames(catID), ss, catID[ , 1, drop = T], ss  -  catID[ , 1, drop = T])
+  data.table::fwrite(tss.fake, file = paste0(px, num.fake, "comp.table.qp.csv"))
+  message("QP cossim = ", 
+          philentropy::distance(rbind(catID[ , 1, drop = TRUE], ss[ , 1, drop = TRUE]), "cosine"))
+  
+  negll <- LLHSpectrumNegBinom(catID[ , 1, drop = TRUE], expected.counts = ss[, 1, drop = TRUE],
+                                nbinom.size = DefaultManyOpts()$nbinom.size)
+  message("QP log likelihood = ", negll)
   
   save(ID.MAP.out, file = "data-raw/errors/ID.attribution.error/output/ID.MAP.out.Rdata")
-  PlotMAPResultToPdf(spect = catID, sigs = ID.sig.universe, MAP.out = ID.MAP.out,
-                     file = "data-raw/errors/ID.attribution.error/output/catID.pdf")
+  PlotMAPResultToPdf(spect = catID, sigs = su, MAP.out = ID.MAP.out,
+                     file = paste0(px, num.fake, "catID.pdf"))
   
   return(ID.MAP.out)
 }
