@@ -14,7 +14,8 @@ ExposureProportions(
 )
 }
 \arguments{
-\item{mutation.type}{A character string, one of "SBS96", "SBS192", "ID", "DBS78".}
+\item{mutation.type}{A character string, one of "SBS96", "SBS192", "ID", 
+"DBS78".}
 
 \item{cancer.type}{A character string.}
 
@@ -22,9 +23,8 @@ ExposureProportions(
 with column names being signatures ids. Only used to drop 
 signatures not present in \code{all.sigs}.}
 
-\item{drop.sigs.no.info}{If TRUE, drop signatures any not present in 
-the column names of \code{all.sigs}.
-There are some signatures that do not have SBS192 versions, including SBS29.}
+\item{drop.sigs.no.info}{If TRUE, drop signatures not present in 
+the column names of \code{all.sigs}.}
 
 \item{must.include}{A character vector of signature IDs that
 must be included, even if they have not previously been

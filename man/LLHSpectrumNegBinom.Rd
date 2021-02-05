@@ -28,7 +28,7 @@ See \code{\link[stats]{NegBinomial}}.}
 \code{log(likelihood(spectrum | expected.counts))}, or,
 in more detail,
 the sum of the negative binomial likelihoods
-that each each element of the
+that each element of the
 spectrum (i.e., the count for each mutation type e.g. ACT > AAT)
 was generated from the expected count for that mutation type.
 }

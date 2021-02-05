@@ -1,6 +1,7 @@
 #' Return the proportions of tumors of a given cancer type that have a particular signature
 #'
-#' @param mutation.type A character string, one of "SBS96", "SBS192", "ID", "DBS78".
+#' @param mutation.type A character string, one of "SBS96", "SBS192", "ID", 
+#'    "DBS78".
 #'
 #' @param cancer.type A character string.
 #'
@@ -8,9 +9,8 @@
 #'    with column names being signatures ids. Only used to drop 
 #'    signatures not present in \code{all.sigs}.
 #'
-#' @param drop.sigs.no.info If TRUE, drop signatures any not present in 
+#' @param drop.sigs.no.info If TRUE, drop signatures not present in 
 #'    the column names of \code{all.sigs}.
-#'    There are some signatures that do not have SBS192 versions, including SBS29.
 #'    
 #' @param must.include A character vector of signature IDs that
 #'    must be included, even if they have not previously been
