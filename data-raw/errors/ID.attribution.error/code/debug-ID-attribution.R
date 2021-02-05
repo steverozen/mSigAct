@@ -85,10 +85,10 @@ DebugIDAttribution <- function(num.fake = 0) {
                                   catalog.type =
                                     attr(su, "catalog.type")))
     if (num.fake > 1) {
-      fake.sig <- matrix(rep(0, nrow(su)), ncol = 1)
+      fake.sig <- matrix(rep(1/nrow(su), nrow(su)), ncol = 1)
       rownames(fake.sig) <- rownames(su)
       colnames(fake.sig) <- "fake.ins.rep.2.0"
-      fake.sig["INS:repeats:2:0", ] <- 1
+      # fake.sig["INS:repeats:2:0", ] <- 1
       ID.expo.prop <- c(ID.expo.prop, fake.ins.rep.2.0 = 0.5)
       su <- cbind(su, 
                   ICAMS::as.catalog(fake.sig, 
@@ -105,41 +105,55 @@ DebugIDAttribution <- function(num.fake = 0) {
                                             p.thresh = 0.01,
                                             m.opts = mSigAct::DefaultManyOpts()
   )
-  px <- "data-raw/errors/ID.attribution.error/output/"
+  px <- "data-raw/errors/ID.attribution.error/"
   
   inferred.exp.max.lh <- ID.MAP.out$MAP$count
   names(inferred.exp.max.lh) <- ID.MAP.out$MAP$sig.id
+  cat("Max LH exposures:")
+  print(round(inferred.exp.max.lh))
   rr <- ReconstructSpectrum(
     su[ , ID.MAP.out$MAP$sig.id, drop = FALSE], 
     inferred.exp.max.lh)
   ICAMS::PlotCatalogToPdf(round(rr), paste0(px, num.fake, file = "lh.recon.pdf"))
+  
+  spect.v <- catID[ , 1, drop = T] # spectrum as a vector
   trr.fake <- tibble::tibble(rownames(catID), 
                              rr, 
-                             catID[ , 1, drop = T], 
-                             rr  -  catID[ , 1, drop = T])
+                             spect.v, 
+                             rr  -  spect.v)
   data.table::fwrite(trr.fake, file = paste0(px, num.fake, "comp.table.lh.csv"))
   message("Max lh cosine = ", 
           philentropy::distance(
-            rbind(catID[ , 1, drop = TRUE], rr[ , 1, drop = TRUE]), "cosine"))
-  negll <- LLHSpectrumNegBinom(catID[ , 1, drop = TRUE], expected.counts = rr[, 1, drop = TRUE],
+            rbind(spect.v, rr[ , 1, drop = TRUE]), "cosine"))
+  negll <- LLHSpectrumNegBinom(spect.v, expected.counts = rr[, 1, drop = TRUE],
                                nbinom.size = DefaultManyOpts()$nbinom.size)
   message("max LL log likelihood = ", negll)
+  max.LH.lh.debug <- LLHSpectrumNegBinomDebug(spect.v, expected.counts = rr[, 1, drop = TRUE],
+                                      nbinom.size = DefaultManyOpts()$nbinom.size)
+  View(max.LH.lh.debug)
+  
   
   x2 <- OptimizeExposureQP(spectrum = catID, signatures = su)
+  cat("QP exposures:\n")
+  print(round(x2))
   ss <- ReconstructSpectrum(su, x2)
   ICAMS::PlotCatalogToPdf(round(ss), paste0(px, num.fake, file = "qp.recon.pdf"))
-  tss.fake <- tibble::tibble(rownames(catID), ss, catID[ , 1, drop = T], ss  -  catID[ , 1, drop = T])
+  tss.fake <- tibble::tibble(rownames(catID), ss, spect.v, ss  -  spect.v)
   data.table::fwrite(tss.fake, file = paste0(px, num.fake, "comp.table.qp.csv"))
   message("QP cossim = ", 
-          philentropy::distance(rbind(catID[ , 1, drop = TRUE], ss[ , 1, drop = TRUE]), "cosine"))
+          philentropy::distance(rbind(spect.v, ss[ , 1, drop = TRUE]), "cosine"))
   
-  negll <- LLHSpectrumNegBinom(catID[ , 1, drop = TRUE], expected.counts = ss[, 1, drop = TRUE],
+  negll <- LLHSpectrumNegBinom(spect.v, expected.counts = ss[, 1, drop = TRUE],
                                 nbinom.size = DefaultManyOpts()$nbinom.size)
   message("QP log likelihood = ", negll)
+  QP.lh.debug <- LLHSpectrumNegBinomDebug(spect.v, expected.counts = ss[, 1, drop = TRUE],
+                                              nbinom.size = DefaultManyOpts()$nbinom.size)
+  View(QP.lh.debug)
   
-  save(ID.MAP.out, file = "data-raw/errors/ID.attribution.error/output/ID.MAP.out.Rdata")
+  
+  save(ID.MAP.out, file = paste0(px, "ID.MAP.out.Rdata"))
   PlotMAPResultToPdf(spect = catID, sigs = su, MAP.out = ID.MAP.out,
                      file = paste0(px, num.fake, "catID.pdf"))
   
-  return(ID.MAP.out)
+  return(list(max.LH.lh.debug, QP.lh.debug))
 }
