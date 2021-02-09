@@ -52,6 +52,7 @@ MAPAssignActivity1 <-
            max.presence.proportion = 0.99,
            progress.monitor        = NULL,
            seed                    = NULL) {
+    message("Analyzing sample ", colnames(spect))
     
     time.for.MAP.assign <- system.time(3)
     

@@ -1,3 +1,7 @@
+# 2.0.9.9000
+
+* Added sample information to show to the user when calling `MAPAssignActivity1`
+
 # 2.0.8.9005
 
 * Round the non integers in spectrum to integers and give a warning when calling
