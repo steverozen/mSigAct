@@ -52,8 +52,6 @@ MAPAssignActivity1 <-
            max.presence.proportion = 0.99,
            progress.monitor        = NULL,
            seed                    = NULL) {
-    message("Analyzing sample ", colnames(spect))
-    
     time.for.MAP.assign <- system.time(3)
     
     tryCatch({
@@ -243,6 +241,8 @@ MAPAssignActivityInternal <-
     stop("Cannot generate spectrum from the specified signatures;\n",
          "No signatures has > 0 proportion for ",
          paste(rownames(sigs)[cannot.generate], collapse = ", ")) 
+  
+  message("Analyzing sample ", colnames(spect))
   start <- OptimizeExposure(spect, sigs, m.opts  = m.opts)
 
   lh.w.all <- start$loglh  # The likelihood with all signatures
