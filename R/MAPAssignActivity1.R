@@ -58,7 +58,7 @@ MAPAssignActivity1 <-
     
     tryCatch({
       
-      if (sum(spect) < 1) stop("< 1 mutation in spectrum")
+      if (sum(spect) < 1) stop("< 1 mutation in spectrum ", colnames(spect))
       
       # If there are non integers in spect, round it first. Otherwise, there
       # will be a lot of warnings later calculating likelihood using
