@@ -47,7 +47,7 @@ throughout Asia”, Science Translational Medicine 2017
 
 ### Get the development version
 
-To use new features in the development version, you can install ICAMS
+To use new features in the development version, you can install mSigAct
 from the master branch on [GitHub](https://github.com/), which may not
 be stable:
 
