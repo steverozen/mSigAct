@@ -15,7 +15,7 @@ v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/li
 <!-- badges: end -->
 
 Analyze the the “activities” of mutational signatures in one or more
-mutational spectra. ‘mSigAct’ stands for **m**tational **Sig**nature
+mutational spectra. ‘mSigAct’ stands for **m**utational **Sig**nature
 **Act**ivity. mSigAct can estimate (conservatively) whether there is
 evidence that a particular mutational signature is present in a spectrum
 and can determine a minimal subset of signatures needed to plausibly
@@ -24,9 +24,9 @@ reconstruct an observed spectrum.
 ## Purpose
 
 The concepts behind the code are described in Ng et al., 2017,
-“Aristolochic acids and their derivatives are widely implicated in
-liver cancers in Taiwan and throughout Asia”, Science Translational
-Medicine 2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
+“Aristolochic acids and their derivatives are widely implicated in liver
+cancers in Taiwan and throughout Asia”, Science Translational Medicine
+2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
 
 ## Installation
 
