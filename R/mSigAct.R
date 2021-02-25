@@ -123,11 +123,11 @@ Nloptr1Tumor <- function(spectrum,
 
 #' Optimize the reconstruction of a spectrum from a set of signatures.
 #'
-#' @param spectrum The spectrum to be reconsructed.
+#' @param spectrum The spectrum to be reconstructed.
 #'
 #' @param sigs The available signatures.
 #'
-#' @param m.opts Options that govern the numerical optimizaiton.
+#' @param m.opts Options that govern the numerical optimization.
 #'    For documentation see \code{\link{DefaultManyOpts}}.
 #'
 #' @param eval_f The objective function for
