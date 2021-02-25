@@ -91,7 +91,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 2", {
 
 test_that("SparseAssignActivity1 (one spectrum) Test 3", {
 
-  # RESULTS NOT UPDATED
+  # RESULTS UPDATED
 
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   retval <- SparseAssignTest1(
@@ -100,16 +100,16 @@ test_that("SparseAssignActivity1 (one spectrum) Test 3", {
     trace = 0)
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 299.2562,
-                           SBS5  = 300.8982,
-                           SBS4  = 300.0772,
-                           SBS29 = 299.2562,
-                           SBS24 = 299.2562,
-                           SBS8  = 299.2562),
+                         c(SBS3  = 341.2224,
+                           SBS5  = 279.0896,
+                           SBS4  = 0,
+                           SBS29 = 417.9223,
+                           SBS24 = 350.3011,
+                           SBS8  = 409.4643),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         2.845529,
+                         29.03664,
                          tolerance = 1e-2)
 
 })
@@ -117,7 +117,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 3", {
 
 test_that("SparseAssignActivity1 (one spectrum) Test 4", {
 
-  # RESULTS NOT UPDATED
+  # RESULTS UPDATED
 
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   retval <- SparseAssignTest1(
@@ -126,15 +126,15 @@ test_that("SparseAssignActivity1 (one spectrum) Test 4", {
     trace = 0)
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 99.83333,
-                           SBS5  = 99.83333,
-                           SBS4  = 99.83333,
-                           SBS29 = 99.83333,
-                           SBS24 = 99.83333,
-                           SBS8  = 99.83333),
+                         c(SBS3  = 0,
+                           SBS5  = 163.8994,
+                           SBS4  = 163.5813,
+                           SBS29 = 0,
+                           SBS24 = 153.1080,
+                           SBS8  = 118.4111),
                          tolerance = 1e-2)
 
-  testthat::expect_equal(as.numeric(retval$edist1), 2.921398,
+  testthat::expect_equal(as.numeric(retval$edist1), 9.671682,
                          tolerance = 1e-2)
 
 })
@@ -142,7 +142,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 4", {
 
 test_that("SparseAssignActivity1 (one spectrum) Test 5", {
 
-  # RESULTS NOT UPDATED
+  # RESULTS UPDATED
 
   testthat::skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   retval <- SparseAssignTest1(
@@ -151,14 +151,14 @@ test_that("SparseAssignActivity1 (one spectrum) Test 5", {
 
   testthat::expect_equal(retval$soln1,
                          c(SBS3  = 0,
-                           SBS5  = 63.96367,
+                           SBS5  = 56.6356,
                            SBS4  = 0,
-                           SBS29 = 73.43977,
+                           SBS29 = 70.1188,
                            SBS24 = 0,
-                           SBS8  = 39.59656),
+                           SBS8  = 50.2455),
                          tolerance = 1e-2)
 
-  testthat::expect_equal(as.numeric(retval$edist1), 5.956736,
+  testthat::expect_equal(as.numeric(retval$edist1), 5.67639,
                          tolerance = 1e-2)
 
 })
