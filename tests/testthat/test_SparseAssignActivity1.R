@@ -160,5 +160,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 5", {
 
   testthat::expect_equal(as.numeric(retval$edist1), 5.67639,
                          tolerance = 1e-2)
+  
+  unlink("Rplots.pdf")
 
 })
