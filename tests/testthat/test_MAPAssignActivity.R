@@ -1,14 +1,12 @@
 context("MAPAssignActivity")
 
 test_that("MAPAssignActivity for ID Catalog", {
-  skip_if_not("PCAWG7" %in% rownames(installed.packages()))
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
-  p7.ID <- PCAWG7::SplitPCAWGMatrixByTumorType(PCAWG7::spectra$PCAWG$ID)
-  
+  catalog <- ICAMS::ReadCatalog(file = "testdata/PCAWG7-Prost-AdenoCA-ten-samples.csv")
   sample.index <- 1:2
-  catID <- p7.ID$`Prost-AdenoCA`[, sample.index, drop = FALSE]
-  ID.sigs <- PCAWG7::signature$genome$ID
+  catID <- catalog[, sample.index, drop = FALSE]
+  ID.sigs <- ICAMS::ReadCatalog(file = "testdata/COSMIC-v3-genome-ID-sigs.csv")
   mutation.type <- "ID"
   cancer.type <- "Prost-AdenoCA"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,

@@ -34,7 +34,7 @@ Imports:
     tibble,
     utils
 Remotes: github::steverozen/ICAMS@master,
-    github::steverozen/ICAMSxtra@master,
+    github::steverozen/ICAMSxtra@master
 Suggests: 
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
