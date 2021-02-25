@@ -1,3 +1,7 @@
+# 2.0.10
+
+* Added `MAPAssignActivity` and tests.
+
 # 2.0.9.9000
 
 * Added sample information to show to the user when calling `MAPAssignActivity1`
