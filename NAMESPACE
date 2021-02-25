@@ -2,6 +2,7 @@
 
 export(DefaultManyOpts)
 export(ExposureProportions)
+export(LLHSpectrumMAP)
 export(LLHSpectrumNegBinom)
 export(MAPAssignActivity)
 export(MAPAssignActivity1)

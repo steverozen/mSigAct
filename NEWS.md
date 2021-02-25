@@ -1,6 +1,10 @@
+# 2.0.10.9001
+
+* Added `LLHSpectrumMAP` and tests
+
 # 2.0.10
 
-* Added `MAPAssignActivity` and tests.
+* Added `MAPAssignActivity` and tests
 
 # 2.0.9.9000
 
