@@ -447,7 +447,7 @@ DistanceMeasures <- function(spect, recon, nbinom.size) {
     return(philentropy::distance(x = df, method = method, test.na = FALSE))
   }
 
-  vv <- unlist(lapply(c("euclidean", "cosine"), my.fn))
+  vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn))
   vv <- c(neg.log.likelihood =
             LLHSpectrumNegBinom(
               as.vector(spect),
