@@ -1,3 +1,8 @@
+# 2.0.10.9003
+
+* Added two internal functions `GetDistanceInfo` and `GetExposureInfo` to
+retrieve information from output returned by `MAPAssignActivity`
+
 # 2.0.10.9002
 
 * Added signature etiologies information to the reconstructed spectrum plot when calling `MAPAssignActivity`
