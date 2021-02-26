@@ -1,10 +1,13 @@
 AAT
+ACA
+AGA
 AnySigSubsetPresent
 AppVeyor
 Aristolochic
 CCT
 DBS
 ExposureProportions
+IndelCatalog
 MAPAssignActivity
 Ng
 ObjFnBinomMaxLH
@@ -19,6 +22,7 @@ RareSignatures
 SBS
 Sig
 SparseAssignActivity
+TCT
 TT
 Translational
 aan
@@ -38,6 +42,8 @@ mSigAct’
 scitranslmed
 sigs
 steverozen
-tational
+trinucleotide
 tryCatch
 unrounded
+untranscribed
+utational

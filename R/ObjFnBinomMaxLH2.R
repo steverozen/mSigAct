@@ -46,7 +46,7 @@ ObjFnBinomMaxLH2 <-
   ## catch errors with NA in the input or in reconstruction.
   if (any(is.na(reconstruction))) {
     save(reconstruction, spectrum, sigs, exp, nbinom.size,
-         file = "reconstruction.error.R")
+         file = "construction.error.Rdata")
   }
   stopifnot(!any(is.na(reconstruction)))
 

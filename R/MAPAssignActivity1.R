@@ -52,12 +52,11 @@ MAPAssignActivity1 <-
            max.presence.proportion = 0.99,
            progress.monitor        = NULL,
            seed                    = NULL) {
-    
     time.for.MAP.assign <- system.time(3)
     
     tryCatch({
       
-      if (sum(spect) < 1) stop("< 1 mutation in spectrum")
+      if (sum(spect) < 1) stop("< 1 mutation in spectrum ", colnames(spect))
       
       # If there are non integers in spect, round it first. Otherwise, there
       # will be a lot of warnings later calculating likelihood using
@@ -242,6 +241,8 @@ MAPAssignActivityInternal <-
     stop("Cannot generate spectrum from the specified signatures;\n",
          "No signatures has > 0 proportion for ",
          paste(rownames(sigs)[cannot.generate], collapse = ", ")) 
+  
+  message("Analyzing sample ", colnames(spect))
   start <- OptimizeExposure(spect, sigs, m.opts  = m.opts)
 
   lh.w.all <- start$loglh  # The likelihood with all signatures
@@ -446,7 +447,7 @@ DistanceMeasures <- function(spect, recon, nbinom.size) {
     return(philentropy::distance(x = df, method = method, test.na = FALSE))
   }
 
-  vv <- unlist(lapply(c("euclidean", "cosine"), my.fn))
+  vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn))
   vv <- c(neg.log.likelihood =
             LLHSpectrumNegBinom(
               as.vector(spect),
