@@ -105,8 +105,6 @@ MAPAssignActivity <-
 #' 
 #' @importFrom utils write.csv
 #' 
-#' @import ICMAS 
-#' 
 #' @keywords internal
 RunMAPOnOneSample <- 
   function(spect,
@@ -144,19 +142,25 @@ RunMAPOnOneSample <-
       return(retval)
     }
     
+    # Get the mutation type of the spectrum
+    mut.type <- GetMutationType(spect)
+    
     output.path <- file.path(output.dir, spect.name)
     dir.create(path = output.path, showWarnings = FALSE)
-    save(retval, file = file.path(output.path, paste0(spect.name, ".MAP.Rdata")))
+    save(retval, file = file.path(output.path, 
+                                  paste0(spect.name, ".", mut.type, ".MAP.Rdata")))
     
     distance.info <- retval$MAP.distances
     
     write.csv(distance.info, 
-              file = file.path(output.path, paste0(spect.name, ".distances.csv")), 
+              file = file.path(output.path, 
+                               paste0(spect.name, ".", mut.type, ".distances.csv")), 
               row.names = TRUE)
     
     ICAMS::WriteCatalog(catalog = ICAMS::as.catalog(spect), 
                         file = file.path(output.path, 
-                                         paste0(spect.name , ".catalog.csv")))
+                                         paste0(spect.name, ".", mut.type, 
+                                                ".catalog.csv")))
     
     tmp <- dplyr::arrange(retval$MAP, dplyr::desc(.data$count))
     sig.names <- tmp$sig.id
@@ -166,17 +170,19 @@ RunMAPOnOneSample <-
     
     ICAMSxtra::WriteExposure(exposure = inferred.exposure, 
                              file = file.path(output.path, 
-                                              paste0(spect.name , ".inferred.exposure.csv")))
+                                              paste0(spect.name, ".", mut.type, 
+                                                     ".inferred.exposure.csv")))
     ICAMSxtra::PlotExposureToPdf(inferred.exposure, 
                                  file = file.path(output.path, 
-                                                  paste0(spect.name , ".inferred.exposure.pdf")))
+                                                  paste0(spect.name , ".", mut.type, 
+                                                         ".inferred.exposure.pdf")))
     
     sigs.names <- rownames(inferred.exposure)
     sigs1 <- sigs[, sigs.names, drop = FALSE]
     
-    sig.type <- GetSigType(sigs)
-    if (!is.null(sig.type)) {
-      etiologies <- sigs.etiologies[[sig.type]]
+    
+    if (!is.null(mut.type)) {
+      etiologies <- sigs.etiologies[[mut.type]]
       colnames(sigs1) <- 
         paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
                ", contribution = ", 
@@ -197,7 +203,7 @@ RunMAPOnOneSample <-
     list.of.catalogs <- list(spect, reconstructed.spectrum, sigs1)
     PlotListOfCatalogsToPdf(list.of.catalogs,
                             file = file.path(output.path, 
-                                             paste0(spect.name , 
+                                             paste0(spect.name, ".", mut.type, 
                                                     ".reconstructed.spectrum.pdf")))
     return(retval)
   }
@@ -210,14 +216,14 @@ SortSigId <- function(sig.id) {
 }
 
 #' @keywords internal
-GetSigType <- function(sigs) {
-  if (nrow(sigs) == 96) {
+GetMutationType <- function(spect) {
+  if (nrow(spect) == 96) {
     return("SBS96")
-  } else if (nrow(sigs) == 192) {
+  } else if (nrow(spect) == 192) {
     return("SBS192")
-  } else if (nrow(sigs) == 78) {
+  } else if (nrow(spect) == 78) {
     return("DBS78")
-  } else if (nrow(sigs) == 83) {
+  } else if (nrow(spect) == 83) {
     return("ID")
   } else {
     return(NULL)
@@ -276,8 +282,6 @@ GetExposureInfo <- function(list.of.MAP.out) {
 #'
 #' @inheritParams ICAMS::PlotCatalogToPdf
 #' 
-#' @importFrom  ICAMS PlotCatalog
-#'
 #' @keywords internal
 PlotListOfCatalogsToPdf <- function(list.of.catalogs, 
                                     file, 
