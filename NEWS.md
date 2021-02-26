@@ -1,3 +1,7 @@
+# 2.0.10.9002
+
+* Added signature etiologies information to the reconstructed spectrum plot when calling `MAPAssignActivity`
+
 # 2.0.10.9001
 
 * Added `LLHSpectrumMAP` and tests

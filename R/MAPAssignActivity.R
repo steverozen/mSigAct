@@ -171,10 +171,21 @@ RunMAPOnOneSample <-
     
     sigs.names <- rownames(inferred.exposure)
     sigs1 <- sigs[, sigs.names, drop = FALSE]
-    colnames(sigs1) <- 
-      paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
-             ", contribution = ", 
-             round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ")")
+    
+    sig.type <- GetSigType(sigs)
+    if (!is.null(sig.type)) {
+      etiologies <- sigs.etiologies[[sig.type]]
+      colnames(sigs1) <- 
+        paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
+               ", contribution = ", 
+               round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ")",
+               etiologies[colnames(sigs1), ])
+    } else {
+      colnames(sigs1) <- 
+        paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
+               ", contribution = ", 
+               round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ")")
+    }
     
     reconstructed.spectrum <- round(retval$MAP.recon)
     colnames(reconstructed.spectrum) <- 
@@ -194,6 +205,21 @@ SortSigId <- function(sig.id) {
   num <- ICAMSxtra::NumFromId(sig.id)
   sig.id2 <- sig.id[order(num)]
   return(sig.id2)
+}
+
+#' @keywords internal
+GetSigType <- function(sigs) {
+  if (nrow(sigs) == 96) {
+    return("SBS96")
+  } else if (nrow(sigs) == 192) {
+    return("SBS192")
+  } else if (nrow(sigs) == 78) {
+    return("DBS78")
+  } else if (nrow(sigs) == 83) {
+    return("ID")
+  } else {
+    return(NULL)
+  }
 }
 
 #' Plot List of catalogs to Pdf
