@@ -192,7 +192,7 @@ RunMAPOnOneSample <-
     reconstructed.spectrum <- round(retval$MAP.recon)
     colnames(reconstructed.spectrum) <- 
       paste0("reconstructed (count = ", round(colSums(reconstructed.spectrum)),
-             ", cosine similarity = ", round(distance.info$value[3], 5), ")")
+             ", cosine similarity = ", round(distance.info$value["cosine"], 5), ")")
     colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
     list.of.catalogs <- list(spect, reconstructed.spectrum, sigs1)
     PlotListOfCatalogsToPdf(list.of.catalogs,
