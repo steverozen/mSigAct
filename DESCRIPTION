@@ -26,6 +26,7 @@ Imports:
     ICAMSxtra,
     lsa,
     nloptr,
+    PCAWG7,
     philentropy,
     quadprog,
     rlang,
@@ -34,13 +35,13 @@ Imports:
     tibble,
     utils
 Remotes: github::steverozen/ICAMS@master,
-    github::steverozen/ICAMSxtra@master
+    github::steverozen/ICAMSxtra@master,
+    github::steverozen/PCAWG7@master
 Suggests: 
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
     htmlwidgets,
     knitr,
-    PCAWG7,
     profvis,
     rmarkdown,
     testthat (>= 2.1.0),
