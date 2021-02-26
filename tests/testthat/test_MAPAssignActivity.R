@@ -6,7 +6,8 @@ test_that("MAPAssignActivity for ID Catalog", {
   catalog <- ICAMS::ReadCatalog(file = "testdata/PCAWG7-Prost-AdenoCA-ten-samples.csv")
   sample.index <- 1:2
   catID <- catalog[, sample.index, drop = FALSE]
-  ID.sigs <- ICAMS::ReadCatalog(file = "testdata/COSMIC-v3-genome-ID-sigs.csv")
+  ID.sigs <- ICAMS::ReadCatalog(file = "testdata/COSMIC-v3-genome-ID-sigs.csv",
+                                catalog.type = "counts.signature")
   mutation.type <- "ID"
   cancer.type <- "Prost-AdenoCA"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,

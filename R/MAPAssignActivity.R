@@ -105,6 +105,8 @@ MAPAssignActivity <-
 #' 
 #' @importFrom utils write.csv
 #' 
+#' @import ICMAS 
+#' 
 #' @keywords internal
 RunMAPOnOneSample <- 
   function(spect,
@@ -178,7 +180,7 @@ RunMAPOnOneSample <-
       colnames(sigs1) <- 
         paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
                ", contribution = ", 
-               round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ")",
+               round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ") ",
                etiologies[colnames(sigs1), ])
     } else {
       colnames(sigs1) <- 
@@ -227,6 +229,8 @@ GetSigType <- function(sigs) {
 #' @param list.of.catalogs List of catalogs in \code{\link{ICAMS}} format.
 #'
 #' @inheritParams ICAMS::PlotCatalogToPdf
+#' 
+#' @importFrom  ICAMS PlotCatalog
 #'
 #' @keywords internal
 PlotListOfCatalogsToPdf <- function(list.of.catalogs, 
