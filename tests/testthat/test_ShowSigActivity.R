@@ -115,4 +115,5 @@ test_that("ShowSigActivity for multiple ID catalog", {
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
+  unlink("Rplots.pdf")
 })

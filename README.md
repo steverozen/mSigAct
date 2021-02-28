@@ -24,9 +24,9 @@ reconstruct an observed spectrum.
 ## Purpose
 
 The concepts behind the code are described in Ng et al., 2017,
-“Aristolochic acids and their derivatives are widely implicated in liver
-cancers in Taiwan and throughout Asia”, Science Translational Medicine
-2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
+“Aristolochic acids and their derivatives are widely implicated in
+liver cancers in Taiwan and throughout Asia”, Science Translational
+Medicine 2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
 
 ## Installation
 
@@ -60,4 +60,4 @@ remotes::install_github(repo = "steverozen/mSigAct", ref = "master")
 
 ## Reference manual
 
-<https://github.com/steverozen/mSigAct/blob/master/data-raw/mSigAct_2.0.10.9001.pdf>
+<https://github.com/steverozen/mSigAct/blob/master/data-raw/mSigAct_2.1.0.9000.pdf>
