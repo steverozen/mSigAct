@@ -297,7 +297,6 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
   graphics::par(tck = old.par.tck.value)
   
   num.of.catalogs <- length(list.of.catalogs)
-  catalog.type <- attr(list.of.catalogs[[1]], "catalog.type")
   if (nrow(list.of.catalogs[[1]]) == 96) {
     opar <- graphics::par(mfrow = c(8, 1), mar = c(4, 5.5, 2, 1), oma = c(1, 1, 2, 1))
   } else if (nrow(list.of.catalogs[[1]]) == 192) {

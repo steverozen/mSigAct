@@ -1,6 +1,6 @@
 Package: mSigAct
 Title: mutational Signature Activity analysis ('mSigAct')
-Version: 2.0.10.9003
+Version: 2.1.0.9000
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description: Analyze the "activities" of mutational signatures in one or more mutational spectra.
@@ -26,7 +26,7 @@ Imports:
     ICAMSxtra,
     lsa,
     nloptr,
-    PCAWG7,
+    PCAWG7 (>= 0.0.3.9006),
     philentropy,
     quadprog,
     rlang,
