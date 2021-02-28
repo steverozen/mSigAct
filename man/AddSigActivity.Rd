@@ -37,7 +37,7 @@ spectrum. The column names of each contributing signature has mutation
 counts attributed to this signature, its contribution proportion and proposed
 etiology(if the etiology is unknown, then will be blank.)
 \item \code{distances}: Various distances and similarities between the original
-spectrum and \code{\code{reconstructed.spect}}.
+spectrum and \code{reconstructed.spect}.
 }
 }
 \description{

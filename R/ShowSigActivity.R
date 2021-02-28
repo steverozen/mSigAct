@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-#' spect <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
+#' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
 #' retval <- AddSigActivity(spectra, exposure, sigs)
@@ -159,7 +159,7 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
         
         for (j in 1:num.of.samples) {
           cat <- catalog[, j, drop = FALSE]
-          ICAMS::PlotCatalog(cat, plot.SBS12 = plot.SBS12, ... = ...)
+          ICAMS::PlotCatalog(cat, ... = ...)
         }
       }
       
@@ -168,7 +168,7 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
       if (num.of.plot.on.last.page != 0) {
         num.of.empty.plots <- 8 - num.of.plot.on.last.page
         for (i in 1:num.of.empty.plots) {
-          plot.new()
+          graphics::plot.new()
         }
       }
     }

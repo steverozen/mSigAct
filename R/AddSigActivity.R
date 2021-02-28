@@ -31,8 +31,8 @@
 #' counts attributed to this signature, its contribution proportion and proposed
 #' etiology(if the etiology is unknown, then will be blank.)
 #' 
-#' * \code{distances}: Various distances and similarities between \code{spect} 
-#' and \code{\code{reconstructed.spect}}.
+#' * \code{distances}: Various distances and similarities between the original
+#' spectrum and \code{reconstructed.spect}.
 #' 
 #' @section Remark: The column names of \code{spect} should be the same as the
 #'   column name of \code{exposure}.
@@ -140,7 +140,7 @@ AddSigActivity1 <- function(spect, exposure, sigs, nbinom.size = 5) {
 #' etiology(if the etiology is unknown, then will be blank.)
 #' 
 #' * \code{distances}: Various distances and similarities between the original
-#' spectrum and \code{\code{reconstructed.spect}}.
+#' spectrum and \code{reconstructed.spect}.
 #' 
 #' @section Remark: The column names of \code{spectra} should be the same as the
 #'   column name of \code{exposure}.
