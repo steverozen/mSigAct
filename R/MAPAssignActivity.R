@@ -145,6 +145,9 @@ RunMAPOnOneSample <-
     # Get the mutation type of the spectrum
     mut.type <- GetMutationType(spect)
     
+    # We cannot use "::" in the file path on Windows, so replace :: with .
+    spect.name <- gsub(pattern = "::", replacement = ".", spect.name)
+    
     output.path <- file.path(output.dir, spect.name)
     dir.create(path = output.path, showWarnings = FALSE)
     save(retval, file = file.path(output.path, 

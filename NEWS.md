@@ -1,3 +1,7 @@
+# 2.1.0.9002
+* Fixed a bug in internal function `RunMAPOnOneSample` to replace `::` to `.` in the file 
+path (otherwise error will occur on Windows OS)
+
 # 2.1.0.9001
 * Fixed a bug in internal function `PlotSigActivityToPdf` to replace `::` to `.` in the file 
 path otherwise `grDevices::pdf` will throw an error
