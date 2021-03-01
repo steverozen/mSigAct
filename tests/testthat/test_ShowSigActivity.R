@@ -16,6 +16,7 @@ test_that("ShowSigActivity for only one SBS96 catalog", {
                   output.dir = output.dirs[2],
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
+  
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
 })
 

@@ -1,3 +1,7 @@
+# 2.1.0.9001
+* Fixed a bug in internal function `PlotSigActivityToPdf` to replace `::` to `.` in the file 
+path otherwise `grDevices::pdf` will throw an error
+
 # 2.1.0.9000
 * Created new exported function `AddSigActivity` to add contributing signature
 activity information for multiple spectra

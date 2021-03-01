@@ -188,9 +188,12 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
     invisible(list(plot.success = TRUE))
   } else {
     for (sample in names(list.of.sig.activity)) {
+      
+      # We cannot use "::" in the file path, otherwise grDevices::pdf will throw an error
+      spect.name <- gsub(pattern = "::", replacement = ".", sample)
       output.file <- 
         file.path(output.dir, paste0(mutation.type, ".", 
-                                     sample, ".sig.activity.pdf"))
+                                     spect.name, ".sig.activity.pdf"))
       PlotListOfCatalogsToPdf(list.of.catalogs = list.of.sig.activity[[sample]],
                               file = output.file, ... = ...)
     }
