@@ -278,6 +278,9 @@ GetExposureInfo <- function(list.of.MAP.out, type.of.exposure = "MAP") {
   colnames(retval1) <- names(list.of.MAP.out)[index.of.non.null]
   
   retval2 <- retval1[SortSigId(rownames(retval1)), ]
+  
+  # Change NA to 0
+  retval2[is.na(retval2)] <- 0
   return(retval2)
 }
 
