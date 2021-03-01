@@ -7,6 +7,7 @@
 PlotSigActivityToPdf(
   list.of.sig.activity,
   output.dir,
+  mutation.type,
   plot.all.samples.in.one.pdf = TRUE,
   ...
 )
@@ -18,6 +19,8 @@ information for multiple spectra. See the return value of
 
 \item{output.dir}{The directory to save the results. Create
 this directory if it does not exist.}
+
+\item{mutation.type}{The mutation type of the mutational spectrum.}
 
 \item{plot.all.samples.in.one.pdf}{Whether to plot all the signature activity information
 within one PDF. Default is TRUE. If FALSE, then plot one PDF for each sample.}

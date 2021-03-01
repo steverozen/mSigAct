@@ -7,6 +7,7 @@
 ShowExposure(
   list.of.sig.activity,
   output.dir,
+  mutation.type,
   plot.exposure.proportion = FALSE
 )
 }
@@ -17,6 +18,8 @@ information for multiple spectra. See the return value of
 
 \item{output.dir}{The directory to save the results. Create
 this directory if it does not exist.}
+
+\item{mutation.type}{The mutation type of the mutational spectrum.}
 
 \item{plot.exposure.proportion}{Whether to plot exposure proportions rather
 than counts.}
