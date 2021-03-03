@@ -1,6 +1,22 @@
+# 2.1.0.9005
+* Added examples to exported function
+`MAPAssignActivity1 `, `MAPAssignActivity` and `ExposureProportions`
+
+* Added new exporeted function `CancerTypes`
+
+* Added new exported 
+# 2.1.0.9004
+* Decreased the number of returned elements from exported functions
+`MAPAssignActivity1 ` and `MAPAssignActivity` and renamed them to make them more
+informative
+
+# 2.1.0.9003
+* Removed parameter `max.subsets` from exported functions
+`MAPAssignActivity1 ` and `MAPAssignActivity`
+
 # 2.1.0.9002
-* Removed parameter `max.presence.proportion` from exported function
-`MAPAssignActivity1 ` and `MAPAssignActivity`.
+* Removed parameter `max.presence.proportion` from exported functions
+`MAPAssignActivity1 ` and `MAPAssignActivity`
 
 # 2.1.0.9001
 * Fixed a bug in internal function `PlotSigActivityToPdf` to replace `::` to `.` in the file 

@@ -15,45 +15,45 @@
 #' @param mc.cores.per.sample The maximum number of cores to use for each
 #'   sample. On Microsoft Windows machines it is silently changed to 1.
 #'
-#' @return A list of lists containing output for each sample in \code{spectra}. 
-#' Each sublist has the following elements \describe{
+#' @return A list with the elements:
 #'
-#' \item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
-#'    Column 1 contains signature ids; column 2 contains the associated counts. }
+#' * \code{proposed.assignment}: Proposed signature assignment for \code{spectra}
+#' with the highest MAP found.
+#'    
+#' * \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra} based on \code{MAP}.
+#' 
+#' * \code{reconstruction.distances}: Various distances and similarities
+#' between \code{spectra} and \code{proposed.reconstruction}.
+#' 
+#' * \code{error.messages}: Only appearing if there are errors running
+#' \code{MAPAssignActivity}.
 #'
-#' \item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
-#'
-#' \item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
-#'      the highest MAP, in the same format as element \code{MAP}.}
-#'
-#' \item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
-#'    most-sparse exposure with the best MAP.}}
-#'
-#' \item{all.tested}{A \code{tibble} of all the search results.}
-#'
-#' \item{messages}{Possibly empty character vector with messages.}
-#'
-#' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
-#'
-#' \item{time.for.MAP.assign}{Value from \code{system.time} for
-#'  \code{\link{MAPAssignActivityInternal}}}.
-#'
-#' \item{MAP.recon}{Reconstruction based on \code{MAP}}.
-#'
-#' \item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
-#'
-#' \item{MAP.distances}{Various distances and similarities
-#' between \code{spect} and \code{MAP.recon}}.
-#'
-#' \item{sparse.MAP.distances}{Various distances and similarities
-#' between \code{spect} and \code{sparse.MAP.recon}}.
-#'
-#' }
-#'
+#' * \code{results.details}: Detailed results for each sample in \code{spectra}.
+#' 
 #' These elements will be \code{NULL} if the algorithm could not find the
-#' optimal reconstruction.
-#'
+#' optimal reconstruction or there are errors coming out.
+#' 
+#' @md
+#' 
 #' @export
+#' 
+#' @examples 
+#' \dontrun{
+#' # This is a long running example unless multiple CPU cores are available
+#' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+#' spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+#' sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+#'                                  cancer.type = "Lung-AdenoCA")
+#' MAP.out <- MAPAssignActivity(spectra = spectra, 
+#'                              sigs = sigs, 
+#'                              sigs.presence.prop = sigs.prop, 
+#'                              output.dir = file.path(tempdir(), "Lung-AdenoCA"),
+#'                              max.level = length(sigs.prop) - 1,
+#'                              p.thresh = 0.05 / ncol(spectra),
+#'                              num.parallel.samples = 2,
+#'                              mc.cores.per.sample = 10)
+#'}
 MAPAssignActivity <-
   function(spectra,
            sigs,
@@ -64,7 +64,6 @@ MAPAssignActivity <-
            m.opts                  = DefaultManyOpts(),
            num.parallel.samples    = 5,
            mc.cores.per.sample     = min(20, 2^max.level),
-           max.subsets             = 1000,
            progress.monitor        = NULL,
            seed                    = NULL) {
     f1 <- function(i) {
@@ -77,7 +76,6 @@ MAPAssignActivity <-
         p.thresh                = p.thresh,
         m.opts                  = m.opts,
         max.mc.cores            = mc.cores.per.sample,
-        max.subsets             = max.subsets,
         progress.monitor        = progress.monitor,
         seed                    = seed)
       
@@ -92,9 +90,107 @@ MAPAssignActivity <-
     names(retval) <- colnames(spectra)
     check.mclapply.result(
       retval, "MAPAssignActivity", colnames(spectra))
-    return(retval)
+    
+    proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval)
+    # Replace NA to 0 in proposed.assignment
+    proposed.assignment[is.na(proposed.assignment)] <- 0
+    
+    proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval)
+    # Add attributes to proposed.reconstruction to be same as spectra
+    proposed.reconstruction <- ICAMS::as.catalog(proposed.reconstruction)
+    attr(proposed.reconstruction, "ref.genome") <- attr(spectra, "ref.genome")
+    attr(proposed.reconstruction, "region") <- attr(spectra, "region")
+    attr(proposed.reconstruction, "abundance") <- attr(spectra, "abundance")
+    
+    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval)
+    error.messages <- lapply(retval, FUN = function(x) {
+      return(x$error.messages)
+    })
+    # Remove NULL elements from error.messages
+    error.messages <- Filter(Negate(is.null), error.messages)
+    
+    if (length(error.messages) == 0) {
+      return(list(proposed.assignment          = proposed.assignment,
+                  proposed.reconstruction      = proposed.reconstruction,
+                  reconstruction.distances     = reconstruction.distances,
+                  results.details              = retval))
+    } else {
+      return(list(proposed.assignment          = proposed.assignment,
+                  proposed.reconstruction      = proposed.reconstruction,
+                  reconstruction.distances     = reconstruction.distances,
+                  error.messages               = error.messages,
+                  results.details              = retval))
+    }
   }
 
+#' Retrieve exposure information from the output generated by running
+#' \code{MAPAssignActivity1} on multiple samples
+#' 
+#' @keywords internal
+GetExposureInfo <- function(list.of.MAP.out) {
+  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
+    if (is.null(x$error.messages)) {
+      exposures <- x$proposed.assignment
+      count <- matrix(exposures$count, ncol = nrow(exposures))
+      colnames(count) <- exposures$sig.id
+      return(as.data.frame(count))
+    } else {
+      return(NULL)
+    }
+  })
+  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
+  tmp1 <- tmp[index.of.non.null]
+  retval <- do.call(dplyr::bind_rows, tmp1)
+  retval1 <- t(retval)
+  colnames(retval1) <- names(list.of.MAP.out)[index.of.non.null]
+  
+  retval2 <- retval1[SortSigId(rownames(retval1)), ]
+  return(retval2)
+}
+
+#' Retrieve reconstruction information from the output generated by running
+#' \code{MAPAssignActivity1} on multiple samples
+#' 
+#' @keywords internal
+GetReconstructionInfo <- function(list.of.MAP.out) {
+  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
+    if (is.null(x$error.messages)) {
+      reconstruction <- x$proposed.reconstruction
+      return(reconstruction)
+    } else {
+      return(NULL)
+    }
+  })
+  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
+  tmp1 <- tmp[index.of.non.null]
+  retval <- do.call(cbind, tmp1)
+  colnames(retval) <- names(list.of.MAP.out)[index.of.non.null]
+  
+  return(retval)
+}
+
+#' Retrieve distance information from the output generated by running
+#' \code{MAPAssignActivity1} on multiple samples
+#' 
+#' @keywords internal
+GetDistanceInfo <- function(list.of.MAP.out) {
+  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
+    if (is.null(x$error.messages)) {
+      distances <- x$reconstruction.distances
+      values <- matrix(distances$value, ncol = nrow(distances))
+      colnames(values) <- distances$method
+      return(as.data.frame(values))
+    } else {
+      return(NULL)
+    }
+  })
+  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
+  
+  tmp1 <- tmp[index.of.non.null]
+  retval <- do.call(dplyr::bind_rows, tmp1)
+  rownames(retval) <- names(list.of.MAP.out)[index.of.non.null]
+  return(retval)
+}
 
 #' Run \code{MAPAssignActivity1} on one sample and save and plot the results
 #' 
@@ -114,7 +210,6 @@ RunMAPOnOneSample <-
            p.thresh                = 0.05,
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
-           max.subsets             = 1000,
            progress.monitor        = NULL,
            seed                    = NULL) {
     
@@ -131,23 +226,25 @@ RunMAPOnOneSample <-
       p.thresh                = p.thresh,
       m.opts                  = m.opts,
       max.mc.cores            = max.mc.cores,
-      max.subsets             = max.subsets,
       progress.monitor        = progress.monitor,
       seed                    = seed)
     
-    if (!isTRUE(retval$success)) {
+    if (!is.null(retval$error.messages)) {
       return(retval)
     }
     
     # Get the mutation type of the spectrum
     mut.type <- GetMutationType(spect)
     
+    # We cannot use "::" in the file path, otherwise error will occur on Windows
+    spect.name <- gsub(pattern = "::", replacement = ".", spect.name)
+    
     output.path <- file.path(output.dir, spect.name)
     dir.create(path = output.path, showWarnings = FALSE)
     save(retval, file = file.path(output.path, 
                                   paste0(spect.name, ".", mut.type, ".MAP.Rdata")))
     
-    distance.info <- retval$MAP.distances
+    distance.info <- retval$reconstruction.distances
     
     write.csv(distance.info, 
               file = file.path(output.path, 
@@ -159,7 +256,7 @@ RunMAPOnOneSample <-
                                          paste0(spect.name, ".", mut.type, 
                                                 ".catalog.csv")))
     
-    tmp <- dplyr::arrange(retval$MAP, dplyr::desc(.data$count))
+    tmp <- dplyr::arrange(retval$proposed.assignment, dplyr::desc(.data$count))
     sig.names <- tmp$sig.id
     inferred.exposure <- matrix(tmp$count)
     rownames(inferred.exposure) <- sig.names
@@ -192,7 +289,7 @@ RunMAPOnOneSample <-
                round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ")")
     }
     
-    reconstructed.spectrum <- round(retval$MAP.recon)
+    reconstructed.spectrum <- retval$proposed.reconstruction
     colnames(reconstructed.spectrum) <- 
       paste0("Reconstructed spectrum (count = ", round(colSums(reconstructed.spectrum)),
              ", cosine similarity = ", round(distance.info$value["cosine"], 5), ")")
@@ -201,7 +298,7 @@ RunMAPOnOneSample <-
     PlotListOfCatalogsToPdf(list.of.catalogs,
                             file = file.path(output.path, 
                                              paste0(spect.name, ".", mut.type, 
-                                                    ".reconstructed.spectrum.pdf")))
+                                                    ".proposed.reconstruction.pdf")))
     return(retval)
   }
 
@@ -225,52 +322,6 @@ GetMutationType <- function(spect) {
   } else {
     return(NULL)
   }
-}
-
-#' Retrieve distance information from the output generated by \code{MAPAssignActivity}
-#' 
-#' @keywords internal
-GetDistanceInfo <- function(list.of.MAP.out) {
-  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
-    if (isTRUE(x$success)) {
-      distances <- x$MAP.distances
-      values <- matrix(distances$value, ncol = nrow(distances))
-      colnames(values) <- distances$method
-      return(as.data.frame(values))
-    } else {
-      return(NULL)
-    }
-  })
-  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
-  
-  tmp1 <- tmp[index.of.non.null]
-  retval <- do.call(dplyr::bind_rows, tmp1)
-  rownames(retval) <- names(list.of.MAP.out)[index.of.non.null]
-  return(retval)
-}
-
-#' Retrieve exposure information from the output generated by \code{MAPAssignActivity}
-#' 
-#' @keywords internal
-GetExposureInfo <- function(list.of.MAP.out) {
-  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
-    if (isTRUE(x$success)) {
-    exposures <- x$MAP
-    count <- matrix(exposures$count, ncol = nrow(exposures))
-    colnames(count) <- exposures$sig.id
-    return(as.data.frame(count))
-    } else {
-      return(NULL)
-    }
-  })
-  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
-  tmp1 <- tmp[index.of.non.null]
-  retval <- do.call(dplyr::bind_rows, tmp1)
-  retval1 <- t(retval)
-  colnames(retval1) <- names(list.of.MAP.out)[index.of.non.null]
-  
-  retval2 <- retval1[SortSigId(rownames(retval1)), ]
-  return(retval2)
 }
 
 #' Plot List of catalogs to Pdf

@@ -6,7 +6,10 @@ test_that("ShowSigActivity for only one SBS96 catalog", {
   index <- grep(spect.name, x = colnames(PCAWG7::exposure$PCAWG$SBS96))
   exposure <- PCAWG7::exposure$PCAWG$SBS96[, index, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 1)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
@@ -27,7 +30,10 @@ test_that("ShowSigActivity for multiple SBS96 catalog", {
     sapply(spect.name, FUN = grep, x = colnames(PCAWG7::exposure$PCAWG$SBS96))
   exposure <- PCAWG7::exposure$PCAWG$SBS96[, indices, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 2)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
@@ -46,7 +52,10 @@ test_that("ShowSigActivity for only one DBS78 catalog", {
   index <- grep(spect.name, x = colnames(PCAWG7::exposure$PCAWG$DBS78))
   exposure <- PCAWG7::exposure$PCAWG$DBS78[, index, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$DBS78
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "DBS78", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 1)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
@@ -66,7 +75,10 @@ test_that("ShowSigActivity for multiple DBS78 catalog", {
     sapply(spect.name, FUN = grep, x = colnames(PCAWG7::exposure$PCAWG$DBS78))
   exposure <- PCAWG7::exposure$PCAWG$DBS78[, indices, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$DBS78
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "DBS78", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 2)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
@@ -85,7 +97,10 @@ test_that("ShowSigActivity for only one ID catalog", {
   index <- grep(spect.name, x = colnames(PCAWG7::exposure$PCAWG$ID))
   exposure <- PCAWG7::exposure$PCAWG$ID[, index, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$ID
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "ID", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 1)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
@@ -105,7 +120,10 @@ test_that("ShowSigActivity for multiple ID catalog", {
     sapply(spect.name, FUN = grep, x = colnames(PCAWG7::exposure$PCAWG$ID))
   exposure <- PCAWG7::exposure$PCAWG$ID[, indices, drop = FALSE]
   sigs <- PCAWG7::COSMIC.v3.1$signature$genome$ID
-  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs)
+  sigs.prop <- ExposureProportions(mutation.type = "ID", 
+                                   cancer.type = "Biliary-AdenoCA")
+  retval <- AddSigActivity(spect = spect, exposure = exposure, sigs = sigs,
+                           sigs.presence.prop = sigs.prop)
   expect_equal(length(retval), 2)
   
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))

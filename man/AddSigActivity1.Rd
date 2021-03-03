@@ -4,7 +4,7 @@
 \alias{AddSigActivity1}
 \title{Add contributing signature activity information for one sample}
 \usage{
-AddSigActivity1(spect, exposure, sigs, nbinom.size = 5)
+AddSigActivity1(spect, exposure, sigs, sigs.presence.prop, nbinom.size = 5)
 }
 \arguments{
 \item{spect}{A single spectrum.}
@@ -16,6 +16,11 @@ signature names and column names are taken as the sample IDs.}
 \item{sigs}{The signatures with which we are trying to reconstruct \code{spect}.
 A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog. The column
 names of \code{sigs} should be a superset of row names of \code{exposure}.}
+
+\item{sigs.presence.prop}{The proportions of samples that contain each
+signature. A numerical vector (values between 0 and 1), with names
+being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+for more details.}
 
 \item{nbinom.size}{The dispersion parameter for the negative binomial
 distribution; smaller is more dispersed. See

@@ -13,7 +13,6 @@ RunMAPOnOneSample(
   p.thresh = 0.05,
   m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
-  max.subsets = 1000,
   progress.monitor = NULL,
   seed = NULL
 )
@@ -25,7 +24,8 @@ RunMAPOnOneSample(
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
-being a subset of \code{colnames(sigs)}.}
+being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+for more details.}
 
 \item{output.dir}{Directory path to save the output file.}
 
@@ -40,9 +40,6 @@ is > than this argument, then we can use exposures without this set.}
 
 \item{max.mc.cores}{The maximum number of cores to use.
 On Microsoft Windows machines it is silently changed to 1.}
-
-\item{max.subsets}{The maximum number of subsets that can be
-tested for removal from the set of signatures.}
 
 \item{progress.monitor}{Function called at the start of each
 new level (number of signatures to try excluding). Must

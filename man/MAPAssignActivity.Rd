@@ -15,7 +15,6 @@ MAPAssignActivity(
   m.opts = DefaultManyOpts(),
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level),
-  max.subsets = 1000,
   progress.monitor = NULL,
   seed = NULL
 )
@@ -27,7 +26,8 @@ MAPAssignActivity(
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
-being a subset of \code{colnames(sigs)}.}
+being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+for more details.}
 
 \item{output.dir}{Directory path to save the output file.}
 
@@ -48,9 +48,6 @@ sample in turn can require multiple cores, as governed by
 \item{mc.cores.per.sample}{The maximum number of cores to use for each
 sample. On Microsoft Windows machines it is silently changed to 1.}
 
-\item{max.subsets}{The maximum number of subsets that can be
-tested for removal from the set of signatures.}
-
 \item{progress.monitor}{Function called at the start of each
 new level (number of signatures to try excluding). Must
 take named arguments \code{value} and \code{detail}, and
@@ -63,44 +60,40 @@ might rarely find different optima depending on the random
 seed.)}
 }
 \value{
-A list of lists containing output for each sample in \code{spectra}. 
-Each sublist has the following elements \describe{
-
-\item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
-   Column 1 contains signature ids; column 2 contains the associated counts. }
-
-\item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
-
-\item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
-     the highest MAP, in the same format as element \code{MAP}.}
-
-\item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
-   most-sparse exposure with the best MAP.}}
-
-\item{all.tested}{A \code{tibble} of all the search results.}
-
-\item{messages}{Possibly empty character vector with messages.}
-
-\item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
-
-\item{time.for.MAP.assign}{Value from \code{system.time} for
- \code{\link{MAPAssignActivityInternal}}}.
-
-\item{MAP.recon}{Reconstruction based on \code{MAP}}.
-
-\item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
-
-\item{MAP.distances}{Various distances and similarities
-between \code{spect} and \code{MAP.recon}}.
-
-\item{sparse.MAP.distances}{Various distances and similarities
-between \code{spect} and \code{sparse.MAP.recon}}.
-
+A list with the elements:
+\itemize{
+\item \code{proposed.assignment}: Proposed signature assignment for \code{spectra}
+with the highest MAP found.
+\item \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra} based on \code{MAP}.
+\item \code{reconstruction.distances}: Various distances and similarities
+between \code{spectra} and \code{proposed.reconstruction}.
+\item \code{error.messages}: Only appearing if there are errors running
+\code{MAPAssignActivity}.
+\item \code{results.details}: Detailed results for each sample in \code{spectra}.
 }
 
-These elements will be \code{NULL} if \code{max.subsets} is exceeded.
+These elements will be \code{NULL} if the algorithm could not find the
+optimal reconstruction or there are errors coming out.
 }
 \description{
 Find Maximum A Posteriori (MAP) assignment of signature exposures that
 explain multiple spectra
+}
+\examples{
+\dontrun{
+# This is a long running example unless multiple CPU cores are available
+indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
+sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+                                 cancer.type = "Lung-AdenoCA")
+MAP.out <- MAPAssignActivity(spectra = spectra, 
+                             sigs = sigs, 
+                             sigs.presence.prop = sigs.prop, 
+                             output.dir = file.path(tempdir(), "Lung-AdenoCA"),
+                             max.level = length(sigs.prop) - 1,
+                             p.thresh = 0.05 / ncol(spectra),
+                             num.parallel.samples = 2,
+                             mc.cores.per.sample = 10)
+}
 }

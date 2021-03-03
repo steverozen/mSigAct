@@ -13,6 +13,11 @@
 #' A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog. The column
 #' names of \code{sigs} should be a superset of row names of \code{exposure}.
 #' 
+#' @param sigs.presence.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+#'    for more details.
+#' 
 #' @param nbinom.size The dispersion parameter for the negative binomial
 #'   distribution; smaller is more dispersed. See
 #'   \code{\link[stats]{NegBinomial}}.
@@ -40,7 +45,8 @@
 #' @md
 #' 
 #' @keywords internal
-AddSigActivity1 <- function(spect, exposure, sigs, nbinom.size = 5) {
+AddSigActivity1 <- function(spect, exposure, sigs, 
+                            sigs.presence.prop, nbinom.size = 5) {
   if (ncol(spect) != ncol(exposure)) {
     stop("The number of samples in spectrum is not equal to the number of ",
          "samples in exposure")
@@ -89,7 +95,8 @@ AddSigActivity1 <- function(spect, exposure, sigs, nbinom.size = 5) {
   
   recon.spect <- ReconstructSpectrum(sigs = sigs1, exp = exposure)
   distances <-
-    DistanceMeasures(spect = spect, recon = recon.spect, nbinom.size = nbinom.size)
+    DistanceMeasures(spect = spect, recon = recon.spect, nbinom.size = nbinom.size,
+                     model = sigs.names, sigs.presence.prop = sigs.presence.prop)
   reconstructed.spectrum <- round(recon.spect)
   
   colnames(reconstructed.spectrum) <- 
@@ -118,6 +125,11 @@ AddSigActivity1 <- function(spect, exposure, sigs, nbinom.size = 5) {
 #' @param sigs The signatures with which we are trying to reconstruct \code{spectra}.
 #' A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog. The column
 #' names of \code{sigs} should be a superset of row names of \code{exposure}.
+#' 
+#' @param sigs.presence.prop The proportions of samples that contain each
+#'    signature. A numerical vector (values between 0 and 1), with names
+#'    being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+#'    for more details.
 #' 
 #' @param nbinom.size The dispersion parameter for the negative binomial
 #'   distribution; smaller is more dispersed. See
@@ -153,8 +165,11 @@ AddSigActivity1 <- function(spect, exposure, sigs, nbinom.size = 5) {
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
-#' retval <- AddSigActivity(spectra, exposure, sigs)
-AddSigActivity <- function(spectra, exposure, sigs, nbinom.size = 5) {
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+#'                                  cancer.type = "Biliary-AdenoCA")
+#' retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
+AddSigActivity <- 
+  function(spectra, exposure, sigs, sigs.presence.prop, nbinom.size = 5) {
   if (ncol(spectra) != ncol(exposure)) {
     stop("The number of samples in spectrum is not equal to the number of ",
          "samples in exposure")
@@ -169,7 +184,9 @@ AddSigActivity <- function(spectra, exposure, sigs, nbinom.size = 5) {
   ret <- lapply(1:ncol(spectra), FUN = function(x) {
     spect <- spectra[, x, drop = FALSE]
     expo <- exposure[, x, drop = FALSE]
-    out <- AddSigActivity1(spect = spect, exposure = expo, sigs = sigs)
+    out <- AddSigActivity1(spect = spect, exposure = expo, sigs = sigs,
+                           sigs.presence.prop = sigs.presence.prop,
+                           nbinom.size = nbinom.size)
   })
   
   names(ret) <- colnames(spectra)

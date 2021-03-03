@@ -4,7 +4,7 @@
 \alias{AddSigActivity}
 \title{Add contributing signature activity information for multiple spectra}
 \usage{
-AddSigActivity(spectra, exposure, sigs, nbinom.size = 5)
+AddSigActivity(spectra, exposure, sigs, sigs.presence.prop, nbinom.size = 5)
 }
 \arguments{
 \item{spectra}{The spectra (multiple spectra) to be reconstructed.}
@@ -16,6 +16,11 @@ signature names and column names are taken as the sample IDs.}
 \item{sigs}{The signatures with which we are trying to reconstruct \code{spectra}.
 A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog. The column
 names of \code{sigs} should be a superset of row names of \code{exposure}.}
+
+\item{sigs.presence.prop}{The proportions of samples that contain each
+signature. A numerical vector (values between 0 and 1), with names
+being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+for more details.}
 
 \item{nbinom.size}{The dispersion parameter for the negative binomial
 distribution; smaller is more dispersed. See
@@ -56,5 +61,7 @@ column name of \code{exposure}.
 spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
 sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
-retval <- AddSigActivity(spectra, exposure, sigs)
+sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+                                 cancer.type = "Biliary-AdenoCA")
+retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
 }

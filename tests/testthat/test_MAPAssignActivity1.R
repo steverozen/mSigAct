@@ -38,7 +38,7 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
     p.thresh                = 0.01,
     m.opts                  = mm,
     max.mc.cores            = 1,
-    max.subsets             = 1000,
+    #max.subsets             = 1000,
     #max.presence.proportion = 0.99,
     seed                    = 101010)
   return(retval)
@@ -47,7 +47,7 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
 test_that("MAPAssignActivity SBS96", {
   retval <- test.fn(spect = sbs96, "SBS96")
   testthat::expect_equal(
-    retval$MAP$count,
+    retval$proposed.assignment$count,
     c(SBS1 = 635.255985834199, SBS2 = 1939.32173112431,
       SBS5 = 8705.08084819072,  SBS8 = 1455.34198826826,
       SBS13 = 2618.99944658252),
@@ -58,7 +58,7 @@ test_that("MAPAssignActivity SBS192", {
   retval <- test.fn(spect = sbs192,
                     sig.mutation.type = "SBS192")
   testthat::expect_equal(
-    retval$MAP$count,
+    retval$proposed.assignment$count,
     c(c(SBS1 = 478.18065976026, SBS2 = 916.298807534028, 
         SBS5 = 3196.85695834661, 
         SBS13 = 1584.7899704744, "SBS29-E" = 315.212489821203,
@@ -70,7 +70,7 @@ test_that("MAPAssignActivity ID", {
   retval <- test.fn(spect = id,
                     sig.mutation.type = "ID")
   testthat::expect_equal(
-    retval$MAP$count,
+    retval$proposed.assignment$count,
     c(ID1 = 76.1872826514142, ID2 = 41.829148548392, ID3 = 137.178076886561,
       ID4 = 23.8033223583356, ID5 = 91.5921757511388, ID8 = 71.3594277434867,
       ID10 = 18.0505660606712),
@@ -81,7 +81,7 @@ test_that("MAPAssignActivity DBS78", {
   retval <- test.fn(spect = dbs78,
                     sig.mutation.type = "DBS78")
   testthat::expect_equal(
-    retval$MAP$count,
+    retval$proposed.assignment$count,
     c(DBS2 = 28.2327526583232,
       DBS4 = 9.69903696258126,
       DBS6 = 12.4508152488636,
@@ -93,6 +93,6 @@ test_that("MAPAssignActivity DBS78", {
 test_that("MAPAssignActivity error1", {
   retval <- test.fn(spect = sbs192, "SBS192",
                     sig.ids.to.use = c("SBS1", "SBS2"))
-  testthat::expect_false(retval$success)
+  testthat::expect_null(retval$proposed.assignment)
 })
 

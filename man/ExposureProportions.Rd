@@ -17,7 +17,8 @@ ExposureProportions(
 \item{mutation.type}{A character string, one of "SBS96", "SBS192", "ID", 
 "DBS78".}
 
-\item{cancer.type}{A character string.}
+\item{cancer.type}{A character string. For some common cancer types, see
+\code{\link{CancerTypes}} for more details.}
 
 \item{all.sigs}{An optional matrix of known signatures, 
 with column names being signatures ids. Only used to drop 
@@ -43,4 +44,8 @@ A numerical vector of the proportion of
 }
 \description{
 Return the proportions of tumors of a given cancer type that have a particular signature
+}
+\examples{
+sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+                                 cancer.type = "Lung-AdenoCA")
 }

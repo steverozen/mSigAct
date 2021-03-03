@@ -4,7 +4,7 @@
 \alias{DistanceMeasures}
 \title{Calculate several distance measures between a spectrum and its reconstruction}
 \usage{
-DistanceMeasures(spect, recon, nbinom.size)
+DistanceMeasures(spect, recon, nbinom.size, model, sigs.presence.prop)
 }
 \description{
 Calculate several distance measures between a spectrum and its reconstruction

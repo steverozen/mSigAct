@@ -4,43 +4,42 @@
 #'
 #' @inheritParams MAPAssignActivityInternal
 #'
-#' @return A list with the elements \describe{
+#' @return A list with the elements:
 #'
-#' \item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
-#'    Column 1 contains signature ids; column 2 contains the associated counts. }
+#' * \code{proposed.assignment}: A 2-column \code{tibble} with the attributions with the highest MAP found.
+#'    Column 1 contains signature ids; column 2 contains the associated counts. 
+#'    
+#' * \code{proposed.reconstruction} :Reconstruction based on \code{MAP}.
+#' 
+#' * \code{reconstruction.distances}: Various distances and similarities
+#' between \code{spect} and \code{proposed.reconstruction}.
 #'
-#' \item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
+#' * \code{all.tested}: A \code{tibble} of all the search results.
+#' 
+#' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
+#'  \code{MAPAssignActivity1}.
 #'
-#' \item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
-#'      the highest MAP, in the same format as element \code{MAP}.}
-#'
-#' \item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
-#'    most-sparse exposure with the best MAP.}}
-#'
-#' \item{all.tested}{A \code{tibble} of all the search results.}
-#'
-#' \item{messages}{Possibly empty character vector with messages.}
-#'
-#' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
-#'
-#' \item{time.for.MAP.assign}{Value from \code{system.time} for
-#'  \code{\link{MAPAssignActivityInternal}}}.
-#'
-#' \item{MAP.recon}{Reconstruction based on \code{MAP}}.
-#'
-#' \item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
-#'
-#' \item{MAP.distances}{Various distances and similarities
-#' between \code{spect} and \code{MAP.recon}}.
-#'
-#' \item{sparse.MAP.distances}{Various distances and similarities
-#' between \code{spect} and \code{sparse.MAP.recon}}.
-#'
-#' }
+#' * \code{error.messages}: Only appearing if there are errors running
+#' \code{MAPAssignActivity1}.
 #'
 #' These elements will be \code{NULL} if the algorithm could not find the
-#' optimal reconstruction.
-
+#' optimal reconstruction or there are errors coming out.
+#' 
+#' @md
+#' 
+#' @examples 
+#' \dontrun{
+#' # This is a long running example unless multiple CPU cores are available
+#' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+#' spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
+#' sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+#'                                  cancer.type = "Lung-AdenoCA")
+#' MAP.out <- MAPAssignActivity1(spect = spect, 
+#'                               sigs = sigs, 
+#'                               sigs.presence.prop = sigs.prop, 
+#'                               max.level = length(sigs.prop) - 1)
+#' }                               
 MAPAssignActivity1 <-
   function(spect,
            sigs,
@@ -49,7 +48,6 @@ MAPAssignActivity1 <-
            p.thresh                = 0.05,
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
-           max.subsets             = 1000,
            progress.monitor        = NULL,
            seed                    = NULL) {
     time.for.MAP.assign <- system.time(3)
@@ -75,7 +73,7 @@ MAPAssignActivity1 <-
           p.thresh                = p.thresh,
           m.opts                  = m.opts,
           max.mc.cores            = max.mc.cores,
-          max.subsets             = max.subsets,
+          max.subsets             = 1000,
           max.presence.proportion = 0.99,
           progress.monitor        = progress.monitor,
           seed                    = seed))
@@ -90,43 +88,56 @@ MAPAssignActivity1 <-
       }
       MAP <- tibble::tibble(sig.id = names(best.exp), count = best.exp)
       
-      sparse.best <-
-        dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
-      names.sparse.best <- names(sparse.best[["exp"]])
-      most.sparse.exp <- sparse.best[["exp"]][[1]]
-      if (is.null(names(most.sparse.exp))) {
-        names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
+      if (FALSE) {
+        sparse.best <-
+          dplyr::arrange(xx, .data$df, .data$MAP)[nrow(xx), ]
+        names.sparse.best <- names(sparse.best[["exp"]])
+        most.sparse.exp <- sparse.best[["exp"]][[1]]
+        if (is.null(names(most.sparse.exp))) {
+          names(most.sparse.exp) <- names.sparse.best # Necessary if only 1 signature
+        }
+        
+        most.sparse <-
+          tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
       }
-      
-      most.sparse <-
-        tibble::tibble(sig.id = names(most.sparse.exp), count = most.sparse.exp)
       
       # Best MAP
       MAP.recon <-
         ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
       
-      # MAP most sparse
-      sparse.MAP.recon <-
-        ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
-      
+      # Internally set max.presence.proportion to be 0.99 in case there will be -Inf
+      # for MAP distances
+      max.presence.proportion <- 0.99
+      sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <- 
+        max.presence.proportion
       MAP.distances <-
-        DistanceMeasures(spect, MAP.recon, m.opts$nbinom.size)
+        DistanceMeasures(spect = spect, recon = MAP.recon, 
+                         nbinom.size = m.opts$nbinom.size,
+                         model = names(best.exp),
+                         sigs.presence.prop = sigs.presence.prop)
       
-      sparse.MAP.distances <-
-        DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
-
-    return(list(MAP                  = MAP,
-                MAP.row              = best,
-                best.sparse          = most.sparse,
-                best.sparse.row      = sparse.best,
-                all.tested           = xx,
-                messages             = c(),
-                success              = TRUE,
-                time.for.MAP.assign  = time.for.MAP.assign,
-                MAP.recon            = MAP.recon,
-                sparse.MAP.recon     = sparse.MAP.recon,
-                MAP.distances        = MAP.distances,
-                sparse.MAP.distances = sparse.MAP.distances))
+      if (FALSE) {
+        # MAP most sparse
+        sparse.MAP.recon <-
+          ReconstructSpectrum(sigs, exp = most.sparse.exp, use.sig.names = TRUE)
+        
+        sparse.MAP.distances <-
+          DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
+      }
+      
+    return(list(proposed.assignment          = MAP,
+                proposed.reconstruction      = MAP.recon,
+                reconstruction.distances     = MAP.distances,
+                all.tested                   = xx,
+                time.for.MAP.assign          = time.for.MAP.assign
+                #MAP.row                     = best,
+                #best.sparse                 = most.sparse,
+                #best.sparse.row             = sparse.best,
+                #error.messages              = c(),
+                #success                     = TRUE,
+                #sparse.MAP.recon            = sparse.MAP.recon,
+                #sparse.MAP.distances        = sparse.MAP.distances
+                ))
     },
     error = function(err.info) {
       if (!is.null(err.info$message)) err.info <- err.info$message
@@ -137,18 +148,19 @@ MAPAssignActivity1 <-
 
 NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
   return(
-    list(MAP                  = NULL,
-         MAP.row              = NULL,
-         best.sparse          = NULL,
-         best.sparse.row      = NULL,
-         all.tested           = NULL,
-         messages             = msg,
-         success              = FALSE,
-         time.for.MAP.assign  = time.for.MAP.assign,
-         MAP.recon            = NULL,
-         sparse.MAP.recon     = NULL,
-         MAP.distances        = NULL,
-         sparse.MAP.distances = NULL))
+    list(proposed.assignment           = NULL,
+         proposed.reconstruction       = NULL,
+         reconstruction.distances      = NULL,
+         all.tested                    = NULL,
+         time.for.MAP.assign           = time.for.MAP.assign,
+         error.messages                = msg
+         #success                      = FALSE,
+         #MAP.row                      = NULL,
+         #best.sparse                  = NULL,
+         #best.sparse.row              = NULL,
+         #sparse.MAP.recon             = NULL,
+         #sparse.MAP.distances         = NULL
+         ))
 }
 
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
@@ -161,7 +173,8 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
 #'
 #' @param sigs.presence.prop The proportions of samples that contain each
 #'    signature. A numerical vector (values between 0 and 1), with names
-#'    being a subset of \code{colnames(sigs)}.
+#'    being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+#'    for more details.
 #'
 #' @param max.level The maximum number of signatures to try removing.
 #'
@@ -440,20 +453,57 @@ P.of.M <- function(model, sigs.presence.prop) {
 #'
 #' @keywords internal
 
-DistanceMeasures <- function(spect, recon, nbinom.size) {
-  my.fn <- function(method) {
-    df <- rbind(as.vector(spect),
-                as.vector(recon))
-    return(philentropy::distance(x = df, method = method, test.na = FALSE))
+DistanceMeasures <- 
+  function(spect, recon, nbinom.size, model, sigs.presence.prop) {
+    my.fn <- function(method) {
+      df <- rbind(as.vector(spect),
+                  as.vector(recon))
+      return(philentropy::distance(x = df, method = method, test.na = FALSE))
+    }
+    
+    vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn))
+    vv <- c(neg.log.likelihood =
+              LLHSpectrumNegBinom(
+                as.vector(spect),
+                as.vector(recon),
+                nbinom.size = nbinom.size),
+            MAP = 
+              LLHSpectrumMAP(spectrum = spect, expected.counts = recon,
+                             nbinom.size = nbinom.size, model = model,
+                             sigs.presence.prop = sigs.presence.prop),
+            vv)
+    return(tibble::tibble(method = names(vv), value = vv))
   }
 
-  vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn))
-  vv <- c(neg.log.likelihood =
-            LLHSpectrumNegBinom(
-              as.vector(spect),
-              as.vector(recon),
-              nbinom.size = nbinom.size),
-          vv)
-  return(tibble::tibble(method = names(vv), value = vv))
-}
+#' @return A list with the elements \describe{
+#'
+#' \item{MAP}{A 2-column \code{tibble} with the attributions with the highest MAP found.
+#'    Column 1 contains signature ids; column 2 contains the associated counts. }
+#'
+#' \item{MAP.row}{A 1-row \code{tibble} with various information on the selected exposure.}
+#'
+#' \item{best.sparse}{A 2-column \code{tibble} with the most-sparse attributions with
+#'      the highest MAP, in the same format as element \code{MAP}.}
+#'
+#' \item{best.sparse.row}{{A 1-row \code{tibble} with various information on the
+#'    most-sparse exposure with the best MAP.}}
+#'
+#' \item{all.tested}{A \code{tibble} of all the search results.}
+#'
+#' \item{messages}{Possibly empty character vector with messages.}
+#'
+#' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
+#'
+#' \item{time.for.MAP.assign}{Value from \code{system.time} for
+#'  \code{\link{MAPAssignActivityInternal}}}.
+#'
+#' \item{MAP.recon}{Reconstruction based on \code{MAP}}.
+#'
+#' \item{sparse.MAP.recon}{Reconstruction based on \code{best.sparse}}.
+#'
+#' \item{MAP.distances}{Various distances and similarities
+#' between \code{spect} and \code{MAP.recon}}.
+#'
+#' \item{sparse.MAP.distances}{Various distances and similarities
+#' between \code{spect} and \code{sparse.MAP.recon}}.
 

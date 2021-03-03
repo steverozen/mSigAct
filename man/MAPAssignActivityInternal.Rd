@@ -25,7 +25,8 @@ MAPAssignActivityInternal(
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
-being a subset of \code{colnames(sigs)}.}
+being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
+for more details.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
 

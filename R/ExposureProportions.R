@@ -3,7 +3,8 @@
 #' @param mutation.type A character string, one of "SBS96", "SBS192", "ID", 
 #'    "DBS78".
 #'
-#' @param cancer.type A character string.
+#' @param cancer.type A character string. For some common cancer types, see
+#'   \code{\link{CancerTypes}} for more details.
 #'
 #' @param all.sigs An optional matrix of known signatures, 
 #'    with column names being signatures ids. Only used to drop 
@@ -27,7 +28,10 @@
 #'   tumors of type \code{cancer.type} with each signature
 #'   for those signatures observed in \code{cancer.type}. 
 #'   The names are the signature ids.
-#'
+#'   
+#' @examples 
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+#'                                  cancer.type = "Lung-AdenoCA")
 ExposureProportions <- function(
   mutation.type, 
   cancer.type, 
@@ -117,4 +121,19 @@ PossibleArtifacts <- function() {
 #' @export
 RareSignatures <- function() {
   return(paste0("SBS", 84:90))
+}
+
+#' Return a character vector of some common cancer types
+#'
+#' @export
+CancerTypes <- function() {
+  return(c("Biliary-AdenoCA", "Bladder-TCC", "Bone-Benign", "Bone-Epith",  
+           "Bone-Osteosarc", "Breast-AdenoCA", "Breast-DCIS", "Breast-LobularCA",  
+           "Cervix-AdenoCA", "Cervix-SCC", "CNS-GBM", "CNS-Medullo", "CNS-Oligo",  
+           "CNS-PiloAstro", "ColoRect-AdenoCA", "Eso-AdenoCA", "Head-SCC",  
+           "Kidney-ChRCC", "Kidney-RCC", "Liver-HCC", "Lung-AdenoCA", "Lung-SCC",  
+           "Lymph-BNHL", "Lymph-CLL", "Myeloid-AML", "Myeloid-MDS", "Myeloid-MPN",  
+           "Ovary-AdenoCA", "Panc-AdenoCA", "Panc-Endocrine", "Prost-AdenoCA",  
+           "Skin-Melanoma", "SoftTissue-Leiomyo", "SoftTissue-Liposarc",  
+           "Stomach-AdenoCA", "Thy-AdenoCA", "Uterus-AdenoCA"))
 }
