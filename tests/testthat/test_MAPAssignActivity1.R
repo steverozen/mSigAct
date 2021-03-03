@@ -39,7 +39,7 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
     m.opts                  = mm,
     max.mc.cores            = 1,
     max.subsets             = 1000,
-    max.presence.proportion = 0.99,
+    #max.presence.proportion = 0.99,
     seed                    = 101010)
   return(retval)
 }

@@ -1,3 +1,7 @@
+# 2.1.0.9002
+* Removed parameter `max.presence.proportion` from exported function
+`MAPAssignActivity1 ` and `MAPAssignActivity`.
+
 # 2.1.0.9001
 * Fixed a bug in internal function `PlotSigActivityToPdf` to replace `::` to `.` in the file 
 path otherwise `grDevices::pdf` will throw an error

@@ -38,7 +38,8 @@
 #'
 #' }
 #'
-#' These elements will be \code{NULL} if \code{max.subsets} is exceeded.
+#' These elements will be \code{NULL} if the algorithm could not find the
+#' optimal reconstruction.
 
 MAPAssignActivity1 <-
   function(spect,
@@ -49,7 +50,6 @@ MAPAssignActivity1 <-
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
            max.subsets             = 1000,
-           max.presence.proportion = 0.99,
            progress.monitor        = NULL,
            seed                    = NULL) {
     time.for.MAP.assign <- system.time(3)
@@ -76,7 +76,7 @@ MAPAssignActivity1 <-
           m.opts                  = m.opts,
           max.mc.cores            = max.mc.cores,
           max.subsets             = max.subsets,
-          max.presence.proportion = max.presence.proportion,
+          max.presence.proportion = 0.99,
           progress.monitor        = progress.monitor,
           seed                    = seed))
       

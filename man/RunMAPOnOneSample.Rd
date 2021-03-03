@@ -14,7 +14,6 @@ RunMAPOnOneSample(
   m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
   max.subsets = 1000,
-  max.presence.proportion = 0.99,
   progress.monitor = NULL,
   seed = NULL
 )
@@ -44,9 +43,6 @@ On Microsoft Windows machines it is silently changed to 1.}
 
 \item{max.subsets}{The maximum number of subsets that can be
 tested for removal from the set of signatures.}
-
-\item{max.presence.proportion}{The maximum value of the proportion
-of tumors that must have a given signature.}
 
 \item{progress.monitor}{Function called at the start of each
 new level (number of signatures to try excluding). Must
