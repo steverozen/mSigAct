@@ -52,8 +52,8 @@ seed.)}
 \value{
 A list with the elements:
 \itemize{
-\item \code{proposed.assignment}: A 2-column \code{tibble} with the attributions with the highest MAP found.
-Column 1 contains signature ids; column 2 contains the associated counts.
+\item \code{proposed.assignment}: Proposed signature assignment for \code{spect}
+with the highest MAP found.
 \item \code{proposed.reconstruction} :Reconstruction based on \code{MAP}.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spect} and \code{proposed.reconstruction}.

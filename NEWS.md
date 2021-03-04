@@ -1,8 +1,14 @@
+# 2.1.0.9006
+* Round the `proposed.assignment` and `proposed.reconstruction` from output running
+`MAPAssignActivity1 `, `MAPAssignActivity`.
+
+* Added new internal function `AddAttributes`
+
 # 2.1.0.9005
 * Added examples to exported function
 `MAPAssignActivity1 `, `MAPAssignActivity` and `ExposureProportions`
 
-* Added new exporeted function `CancerTypes`
+* Added new exported function `CancerTypes`
 
 * Added new exported 
 # 2.1.0.9004

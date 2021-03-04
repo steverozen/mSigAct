@@ -6,8 +6,8 @@
 #'
 #' @return A list with the elements:
 #'
-#' * \code{proposed.assignment}: A 2-column \code{tibble} with the attributions with the highest MAP found.
-#'    Column 1 contains signature ids; column 2 contains the associated counts. 
+#' * \code{proposed.assignment}: Proposed signature assignment for \code{spect}
+#' with the highest MAP found.
 #'    
 #' * \code{proposed.reconstruction} :Reconstruction based on \code{MAP}.
 #' 
@@ -116,6 +116,17 @@ MAPAssignActivity1 <-
                          model = names(best.exp),
                          sigs.presence.prop = sigs.presence.prop)
       
+      # Round the exposure and reconstruction
+      exposure <- matrix(round(MAP$count), nrow = nrow(MAP))
+      rownames(exposure) <- MAP$sig.id
+      colnames(exposure) <- colnames(spect)
+      
+      MAP.recon <- round(MAP.recon)
+      colnames(MAP.recon) <- colnames(spect)
+      
+      # Add attributes to MAP.recon to be same as spect
+      MAP.recon <- AddAttributes(MAP.recon, spect)
+      
       if (FALSE) {
         # MAP most sparse
         sparse.MAP.recon <-
@@ -125,7 +136,7 @@ MAPAssignActivity1 <-
           DistanceMeasures(spect, sparse.MAP.recon, m.opts$nbinom.size)
       }
       
-    return(list(proposed.assignment          = MAP,
+    return(list(proposed.assignment          = exposure,
                 proposed.reconstruction      = MAP.recon,
                 reconstruction.distances     = MAP.distances,
                 all.tested                   = xx,
