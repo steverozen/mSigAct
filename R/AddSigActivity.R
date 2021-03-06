@@ -34,7 +34,7 @@
 #' * \code{contributing.sigs}: The contributing signatures to the original
 #' \code{spect}. The column names of each contributing signature has mutation
 #' counts attributed to this signature, its contribution proportion and proposed
-#' etiology(if the etiology is unknown, then will be blank.)
+#' etiology. (If the etiology is unknown, then will be blank.)
 #' 
 #' * \code{distances}: Various distances and similarities between the original
 #' spectrum and \code{reconstructed.spect}.
