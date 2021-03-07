@@ -23,7 +23,7 @@ biocViews:
 Imports:
     dplyr,
     ICAMS (>= 2.3.5.9002),
-    ICAMSxtra (>= 0.0.4.9000),
+    ICAMSxtra (>= 0.0.3.9999),
     lsa,
     nloptr,
     PCAWG7 (>= 0.0.3.9006),

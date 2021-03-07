@@ -60,7 +60,7 @@ column name of \code{exposure}.
 \examples{
 spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
-sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
+sigs <- PCAWG7::signature$genome$SBS96
 sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                  cancer.type = "Biliary-AdenoCA")
 retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)

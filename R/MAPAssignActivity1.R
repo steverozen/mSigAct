@@ -32,7 +32,7 @@
 #' # This is a long running example unless multiple CPU cores are available
 #' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 #' spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-#' sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
+#' sigs <- PCAWG7::signature$genome$SBS96
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
 #'                                  cancer.type = "Lung-AdenoCA")
 #' MAP.out <- MAPAssignActivity1(spect = spect, 
