@@ -1,3 +1,8 @@
+# 2.1.0.9007
+
+* Adapted to the new version of PCAWG7
+* Added dependency on ICAMSxtra version
+
 # 2.1.0.9006
 * Round the `proposed.assignment` and `proposed.reconstruction` from output running
 `MAPAssignActivity1 `, `MAPAssignActivity`.

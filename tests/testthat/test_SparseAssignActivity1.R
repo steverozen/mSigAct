@@ -9,7 +9,7 @@ SparseAssignTest1 <- function(sig.counts,
   sig.names <- names(sig.counts)
 
   some.sigs  <-
-    PCAWG7::signature$genome$SBS96[ , sig.names, drop = FALSE]
+    PCAWG7::COSMIC.v3.0$signature$genome$SBS96[ , sig.names, drop = FALSE]
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
@@ -160,7 +160,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 5", {
 
   testthat::expect_equal(as.numeric(retval$edist1), 5.67639,
                          tolerance = 1e-2)
-  
+
   unlink("Rplots.pdf")
 
 })

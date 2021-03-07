@@ -1,6 +1,7 @@
 TestEsoSpectra <- function(indices = NULL) {
-  eso.index <- grep("Eso", colnames(PCAWG7::PCAWG.WGS.SBS.96), fixed = TRUE)
-  spectra <- PCAWG7::PCAWG.WGS.SBS.96[ , eso.index, drop = FALSE]
+  ss <- PCAWG7::spectra$PCAWG$SBS96
+  eso.index <- grep("Eso", colnames(ss), fixed = TRUE)
+  spectra <- ss[ , eso.index, drop = FALSE]
   if (!is.null(indices)) {
     spectra <- spectra[ , indices, drop = FALSE]
   }
@@ -20,7 +21,7 @@ TestEsoSigs <- function(extra.sigs = NULL) {
   if (!is.null(extra.sigs)) {
     sigs <- c(extra.sigs, sigs)
   }
-  return(PCAWG7::signature$genome$SBS96[ , sigs])
+  return(PCAWG7::COSMIC.v3.0$signature$genome$SBS96[ , sigs])
 }
 
 TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {

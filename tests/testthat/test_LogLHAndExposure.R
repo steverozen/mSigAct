@@ -1,5 +1,7 @@
 PrepOneSynSpectrum <- function(sig.counts,
-                               input.sigs = PCAWG7::signature$genome$SBS96) {
+                               # input.sigs = PCAWG7::signature$genome$SBS96
+                               input.sigs = PCAWG7::COSMIC.v3.0$signature$genome$SBS96
+                               ) {
 
   sig.names <- names(sig.counts)
 
@@ -27,7 +29,8 @@ PrepOneSynSpectrum <- function(sig.counts,
 }
 
 TestOneLLHetc <- function(sig.counts,
-                          input.sigs   = PCAWG7::signature$genome$SBS96,
+                          # input.sigs   = PCAWG7::signature$genome$SBS96,
+                          input.sigs = PCAWG7::COSMIC.v3.0$signature$genome$SBS96,
                           trace = 0) {
 
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,

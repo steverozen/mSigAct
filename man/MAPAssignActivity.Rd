@@ -85,11 +85,11 @@ explain multiple spectra
 indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
 sigs <- PCAWG7::COSMIC.v3.1$signature$genome$SBS96
-sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
+sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                  cancer.type = "Lung-AdenoCA")
-MAP.out <- MAPAssignActivity(spectra = spectra, 
-                             sigs = sigs, 
-                             sigs.presence.prop = sigs.prop, 
+MAP.out <- MAPAssignActivity(spectra = spectra,
+                             sigs = sigs,
+                             sigs.presence.prop = sigs.prop,
                              output.dir = file.path(tempdir(), "Lung-AdenoCA"),
                              max.level = length(sigs.prop) - 1,
                              p.thresh = 0.05 / ncol(spectra),
