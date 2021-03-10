@@ -84,7 +84,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 2", {
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         5.54163918029701,
+                         5.452318,
                          tolerance = 1e-2)
 })
 

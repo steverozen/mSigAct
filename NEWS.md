@@ -1,3 +1,7 @@
+# 2.1.0.9008
+
+* Updated long running tests by setting `Sys.setenv("MSIGACT_TEST_LENGTH" = "long")`
+
 # 2.1.0.9007
 
 * Adapted to the new version of PCAWG7
