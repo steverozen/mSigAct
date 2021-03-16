@@ -1,3 +1,9 @@
+# 2.1.0.9009
+
+* Updated function `MAPAssignActivity1` to exclude signatures in the
+`proposed.assignment` if the mutations get assigned to the signatures is zero
+after rounding.
+
 # 2.1.0.9008
 
 * Updated long running tests by setting `Sys.setenv("MSIGACT_TEST_LENGTH" = "long")`
