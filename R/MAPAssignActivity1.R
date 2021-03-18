@@ -19,7 +19,7 @@
 #' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
 #'  \code{MAPAssignActivity1}.
 #'
-#' * \code{error.messages}: Only appearing if there are errors running
+#' * \code{error.messages}: Only present if there were errors.
 #' \code{MAPAssignActivity1}.
 #'
 #' These elements will be \code{NULL} if the algorithm could not find the
@@ -49,7 +49,8 @@ MAPAssignActivity1 <-
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
            progress.monitor        = NULL,
-           seed                    = NULL) {
+           seed                    = NULL,
+           max.subsets             = 1000) {
     time.for.MAP.assign <- system.time(3)
     
     tryCatch({
@@ -73,7 +74,7 @@ MAPAssignActivity1 <-
           p.thresh                = p.thresh,
           m.opts                  = m.opts,
           max.mc.cores            = max.mc.cores,
-          max.subsets             = 1000,
+          max.subsets             = max.subsets,
           max.presence.proportion = 0.99,
           progress.monitor        = progress.monitor,
           seed                    = seed))
@@ -190,8 +191,9 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
 #' @param max.level The maximum number of signatures to try removing.
 #'
 #' @param p.thresh If
-#'  the p value for a better reconstruction with as opposed to
-#'  without a set of signatures
+#'  the p value for a better reconstruction with a
+#'  set of signatures (as opposed to
+#'  without that set of signatures)
 #'  is > than this argument, then we can use exposures without this set.
 #'
 #' @param m.opts See \code{\link{DefaultManyOpts}}.
@@ -200,8 +202,18 @@ NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.
 #'
-#' @param max.subsets The maximum number of subsets that can be
-#'   tested for removal from the set of signatures.
+#' @param max.subsets This argument provides a way to 
+#'   heuristically limit the
+#'   amount of time spent by this function. Larger values of this
+#'   argument will tend to allow longer running times.
+#'   The algorithm
+#'   successively tries to remove all subsets of 1 signature, 2
+#'   signatures, 3 signatures, etc., down to \code{max.level}.
+#'   (Not every subset is tested at each level; if a subset was
+#'   already found to be necessary the algorithm does not test
+#'   supersets of that subset.) If at any level the algorithm
+#'   needs to test more than \code{max.subsets} this function will
+#'   not proceed.
 #'
 #' @param max.presence.proportion The maximum value of the proportion
 #'   of tumors that must have a given signature.
