@@ -122,6 +122,11 @@ MAPAssignActivity1 <-
       rownames(exposure) <- MAP$sig.id
       colnames(exposure) <- colnames(spect)
       
+      # If there are signatures get assigned zero mutation counts after rounding,
+      # remove these signatures from the exposure matrix
+      non.zero.indices <- rowSums(exposure) > 0
+      exposure <- exposure[non.zero.indices, , drop = FALSE]
+      
       MAP.recon <- round(MAP.recon)
       colnames(MAP.recon) <- colnames(spect)
       
