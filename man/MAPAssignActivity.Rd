@@ -34,8 +34,9 @@ for more details.}
 \item{max.level}{The maximum number of signatures to try removing.}
 
 \item{p.thresh}{If
-the p value for a better reconstruction with as opposed to
-without a set of signatures
+the p value for a better reconstruction with a
+set of signatures (as opposed to
+without that set of signatures)
 is > than this argument, then we can use exposures without this set.}
 
 \item{m.opts}{See \code{\link{DefaultManyOpts}}.}
