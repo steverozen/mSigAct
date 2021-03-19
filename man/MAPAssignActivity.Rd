@@ -16,7 +16,8 @@ MAPAssignActivity(
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level),
   progress.monitor = NULL,
-  seed = NULL
+  seed = NULL,
+  max.subsets = 1000
 )
 }
 \arguments{
@@ -59,6 +60,19 @@ progress bar function.}
 numerical optimization is in two phases; the first, global phase
 might rarely find different optima depending on the random
 seed.)}
+
+\item{max.subsets}{This argument provides a way to 
+heuristically limit the
+amount of time spent by this function. Larger values of this
+argument will tend to allow longer running times.
+The algorithm
+successively tries to remove all subsets of 1 signature, 2
+signatures, 3 signatures, etc., down to \code{max.level}.
+(Not every subset is tested at each level; if a subset was
+already found to be necessary the algorithm does not test
+supersets of that subset.) If at any level the algorithm
+needs to test more than \code{max.subsets} this function will
+not proceed.}
 }
 \value{
 A list with the elements:
@@ -82,7 +96,7 @@ explain multiple spectra
 }
 \examples{
 \dontrun{
-# This is a long running example unless multiple CPU cores are available
+# This is a long running example unless parallel computing is supported on your machine
 indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
 sigs <- PCAWG7::signature$genome$SBS96

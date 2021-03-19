@@ -64,8 +64,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          options(pkgType = "binary")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_github(repo = "steverozen/ICAMS", ref = "master")
+          remotes::install_github(repo = "steverozen/ICAMSxtra", ref = "master")
           remotes::install_github(repo = "steverozen/PCAWG7", ref = "master")
         shell: Rscript {0}
 

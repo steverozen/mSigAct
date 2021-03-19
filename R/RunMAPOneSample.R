@@ -17,7 +17,8 @@ RunMAPOnOneSample <-
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
            progress.monitor        = NULL,
-           seed                    = NULL) {
+           seed                    = NULL,
+           max.subsets             = 1000) {
     
     if (!dir.exists(output.dir)) {
       dir.create(output.dir)
@@ -33,7 +34,8 @@ RunMAPOnOneSample <-
       m.opts                  = m.opts,
       max.mc.cores            = max.mc.cores,
       progress.monitor        = progress.monitor,
-      seed                    = seed)
+      seed                    = seed,
+      max.subsets             = max.subsets)
     
     if (!is.null(retval$error.messages)) {
       return(retval)

@@ -1,3 +1,7 @@
+# 2.1.1
+
+* Added back argument `max.subsets` in function `MAPAssignActivity1` and `MAPAssignActivity`.
+
 # 2.1.0.9009
 
 * Updated function `MAPAssignActivity1` to exclude signatures in the

@@ -31,15 +31,15 @@ program internally. Only implemented for SBS96Catalog, SBS192Catalog and
 DBS144Catalog.}
 
 \item{grid}{A logical value indicating whether to draw grid lines. Only
-implemented for SBS96Catalog.}
+implemented for SBS96Catalog, DBS78Catalog, IndelCatalog.}
 
 \item{upper}{A logical value indicating whether to draw horizontal lines and
 the names of major mutation class on top of graph. Only implemented for
-SBS96Catalog.}
+SBS96Catalog, DBS78Catalog, IndelCatalog.}
 
 \item{xlabels}{A logical value indicating whether to draw x axis labels. Only
-implemented for \code{SBS96Catalog}. If \code{FALSE} then plot x axis tick marks;
-set \code{par(tck = 0)} to suppress.}
+implemented for SBS96Catalog, DBS78Catalog, IndelCatalog. If \code{FALSE} then plot x
+axis tick marks for SBS96Catalog; set \code{par(tck = 0)} to suppress.}
 
 \item{ylim}{Has the usual meaning. Only implemented for SBS96Catalog and
 IndelCatalog.}

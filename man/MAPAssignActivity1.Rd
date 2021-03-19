@@ -75,7 +75,7 @@ between \code{spect} and \code{proposed.reconstruction}.
 \item \code{all.tested}: A \code{tibble} of all the search results.
 \item \code{time.for.MAP.assign}: Value from \code{system.time} for running
 \code{MAPAssignActivity1}.
-\item \code{error.messages}: Only present if there were errors.
+\item \code{error.messages}: Only present if there were errors running
 \code{MAPAssignActivity1}.
 }
 
@@ -87,7 +87,7 @@ Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain
 }
 \examples{
 \dontrun{
-# This is a long running example unless multiple CPU cores are available
+# This is a long running example unless parallel computing is supported on your machine
 indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
 sigs <- PCAWG7::signature$genome$SBS96

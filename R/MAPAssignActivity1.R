@@ -19,7 +19,7 @@
 #' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
 #'  \code{MAPAssignActivity1}.
 #'
-#' * \code{error.messages}: Only present if there were errors.
+#' * \code{error.messages}: Only present if there were errors running
 #' \code{MAPAssignActivity1}.
 #'
 #' These elements will be \code{NULL} if the algorithm could not find the
@@ -29,7 +29,7 @@
 #' 
 #' @examples 
 #' \dontrun{
-#' # This is a long running example unless multiple CPU cores are available
+#' # This is a long running example unless parallel computing is supported on your machine
 #' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 #' spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
 #' sigs <- PCAWG7::signature$genome$SBS96

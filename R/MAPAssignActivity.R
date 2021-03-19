@@ -39,7 +39,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' # This is a long running example unless multiple CPU cores are available
+#' # This is a long running example unless parallel computing is supported on your machine
 #' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
 #' sigs <- PCAWG7::signature$genome$SBS96
@@ -65,7 +65,8 @@ MAPAssignActivity <-
            num.parallel.samples    = 5,
            mc.cores.per.sample     = min(20, 2^max.level),
            progress.monitor        = NULL,
-           seed                    = NULL) {
+           seed                    = NULL,
+           max.subsets             = 1000) {
     f1 <- function(i) {
       retval1 <- RunMAPOnOneSample(
         spect                   = spectra[ , i, drop = FALSE],
@@ -77,7 +78,8 @@ MAPAssignActivity <-
         m.opts                  = m.opts,
         max.mc.cores            = mc.cores.per.sample,
         progress.monitor        = progress.monitor,
-        seed                    = seed)
+        seed                    = seed,
+        max.subsets             = max.subsets)
 
       return(retval1)
     }
