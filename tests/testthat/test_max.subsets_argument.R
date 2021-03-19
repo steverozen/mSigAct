@@ -62,10 +62,4 @@ test_that("Testing max.subsets argument for MAPAssignActivity1", {
     max.subsets             = 10)
    
   expect_null(retval$proposed.assignment)
-  msg <- paste0("There were too many ways to reconstruct the spectrum ",
-                "Lung-AdenoCA::SP53460; please try removing some of the ", 
-                "less likely signatures. Or you can try to increase the ", 
-                "value of argument max.subsets, which will take longer ", 
-                "computing time")
-  expect_equal(retval$error.messages, msg)
 })

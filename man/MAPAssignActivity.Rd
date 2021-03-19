@@ -87,8 +87,10 @@ between \code{spectra} and \code{proposed.reconstruction}.
 \item \code{results.details}: Detailed results for each sample in \code{spectra}.
 }
 
-These elements will be \code{NULL} if the algorithm could not find the
-optimal reconstruction or there are errors coming out for \strong{all} samples.
+The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+\code{reconstruction.distances} will be \code{NULL} if the algorithm could
+not find the optimal reconstruction or there are errors coming out for
+\strong{all} samples.
 }
 \description{
 Find Maximum A Posteriori (MAP) assignment of signature exposures that

@@ -79,8 +79,10 @@ between \code{spect} and \code{proposed.reconstruction}.
 \code{MAPAssignActivity1}.
 }
 
-These elements will be \code{NULL} if the algorithm could not find the
-optimal reconstruction or there are errors coming out.
+The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+\code{reconstruction.distances}, \code{all.tested},
+\code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+find the optimal reconstruction or there are errors coming out.
 }
 \description{
 Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.
