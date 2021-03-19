@@ -42,6 +42,7 @@ jobs:
       - name: Query dependencies
         run: |
           install.packages('remotes')
+          install.packages("BiocManager")
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
@@ -64,9 +65,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          options(pkgType = "binary")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          BiocManager::install("GenomeInfoDbData", pkgType = "binary")
+          install.packages("RCurl", pkgType = "binary")
           remotes::install_github(repo = "steverozen/ICAMS", ref = "master")
           remotes::install_github(repo = "steverozen/ICAMSxtra", ref = "master")
           remotes::install_github(repo = "steverozen/PCAWG7", ref = "master")

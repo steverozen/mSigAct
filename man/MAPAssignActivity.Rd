@@ -88,7 +88,7 @@ between \code{spectra} and \code{proposed.reconstruction}.
 }
 
 These elements will be \code{NULL} if the algorithm could not find the
-optimal reconstruction or there are errors coming out.
+optimal reconstruction or there are errors coming out for \strong{all} samples.
 }
 \description{
 Find Maximum A Posteriori (MAP) assignment of signature exposures that

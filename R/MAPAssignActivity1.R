@@ -22,8 +22,10 @@
 #' * \code{error.messages}: Only present if there were errors running
 #' \code{MAPAssignActivity1}.
 #'
-#' These elements will be \code{NULL} if the algorithm could not find the
-#' optimal reconstruction or there are errors coming out.
+#' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+#' \code{reconstruction.distances}, \code{all.tested},
+#' \code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+#' find the optimal reconstruction or there are errors coming out.
 #' 
 #' @md
 #' 
@@ -163,7 +165,8 @@ MAPAssignActivity1 <-
     })
   }
 
-NullReturnForMAPAssignActivity1 <- function(msg, time.for.MAP.assign = NULL) {
+NullReturnForMAPAssignActivity1 <- function(msg, all.tested, 
+                                            time.for.MAP.assign = NULL) {
   return(
     list(proposed.assignment           = NULL,
          proposed.reconstruction       = NULL,
@@ -405,8 +408,11 @@ MAPAssignActivityInternal <-
     if (length(subsets2) > max.subsets) {
       my.msg(-1, "Number of subsets (", length(subsets2), ") > max.subsets (", max.subsets, ")")
       my.msg(-1, "Returning NULL")
-      stop("There were too many ways to reconstruct the spectrum; ",
-          "please try removing some of the less likely signatures")
+      stop("There were too many ways to reconstruct the spectrum ", 
+           colnames(spect),
+          "; please try removing some of the less likely signatures. ",
+          "Or you can try to increase the value of argument max.subsets, ",
+          "which will take longer computing time")
     }
 
     if (!is.null(progress.monitor)) {

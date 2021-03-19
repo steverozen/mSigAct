@@ -30,9 +30,11 @@
 #'
 #' * \code{results.details}: Detailed results for each sample in \code{spectra}.
 #'
-#' These elements will be \code{NULL} if the algorithm could not find the
-#' optimal reconstruction or there are errors coming out.
-#'
+#' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+#' \code{reconstruction.distances} will be \code{NULL} if the algorithm could
+#' not find the optimal reconstruction or there are errors coming out for
+#' \strong{all} samples.
+#' 
 #' @md
 #'
 #' @export
@@ -89,24 +91,40 @@ MAPAssignActivity <-
     retval <- parallel::mclapply(1:ncol(spectra),
                                  f1,
                                  mc.cores = num.parallel.samples)
+    
     names(retval) <- colnames(spectra)
-    check.mclapply.result(
-      retval, "MAPAssignActivity", colnames(spectra))
-
-    proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval)
-    # Replace NA to 0 in proposed.assignment
-    proposed.assignment[is.na(proposed.assignment)] <- 0
-
-    proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval)
-    # Add attributes to proposed.reconstruction to be same as spectra
-    proposed.reconstruction <- AddAttributes(proposed.reconstruction, spectra)
-
-    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval)
+    
     error.messages <- lapply(retval, FUN = function(x) {
       return(x$error.messages)
     })
     # Remove NULL elements from error.messages
     error.messages <- Filter(Negate(is.null), error.messages)
+    
+    # Check for samples which have NULL return for proposed.assignment
+    null.assignment <- sapply(retval, FUN = function(x) {
+      return(is.null(x$proposed.assignment))
+    })
+    retval.non.null <- retval[!null.assignment]
+    
+    if (length(retval.non.null) == 0) {
+      # The case when all samples have NULL assignment
+      return(list(proposed.assignment          = NULL,
+                  proposed.reconstruction      = NULL,
+                  reconstruction.distances     = NULL,
+                  error.messages               = error.messages,
+                  results.details              = retval))
+    }
+    
+    proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval.non.null)
+    # Replace NA to 0 in proposed.assignment
+    proposed.assignment[is.na(proposed.assignment)] <- 0
+    
+    proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval.non.null)
+    # Add attributes to proposed.reconstruction to be same as spectra
+    proposed.reconstruction <- AddAttributes(proposed.reconstruction, spectra)
+
+    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null)
+
 
     if (length(error.messages) == 0) {
       return(list(proposed.assignment          = proposed.assignment,
@@ -114,12 +132,13 @@ MAPAssignActivity <-
                   reconstruction.distances     = reconstruction.distances,
                   results.details              = retval))
     } else {
+      # The case when part of samples have NULL assignment
       return(list(proposed.assignment          = proposed.assignment,
                   proposed.reconstruction      = proposed.reconstruction,
                   reconstruction.distances     = reconstruction.distances,
                   error.messages               = error.messages,
                   results.details              = retval))
-    }
+    } 
   }
 
 #' Add attributes to proposed.reconstruction to be same as spectra
@@ -154,7 +173,7 @@ GetExposureInfo <- function(list.of.MAP.out) {
   retval1 <- t(retval)
   colnames(retval1) <- names(list.of.MAP.out)[index.of.non.null]
 
-  retval2 <- retval1[SortSigId(rownames(retval1)), ]
+  retval2 <- retval1[SortSigId(rownames(retval1)), , drop = FALSE]
   return(retval2)
 }
 
@@ -173,6 +192,11 @@ GetReconstructionInfo <- function(list.of.MAP.out) {
   })
   index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
   tmp1 <- tmp[index.of.non.null]
+  
+  if (length(tmp1) == 1) {
+    return(tmp1[[1]])
+  }
+  
   retval <- do.call(cbind, tmp1)
   colnames(retval) <- names(list.of.MAP.out)[index.of.non.null]
 
