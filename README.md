@@ -16,14 +16,22 @@ v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/li
 
 Analyze the the “activities” of mutational signatures in one or more
 mutational spectra. ‘mSigAct’ stands for **m**utational **Sig**nature
-**Act**ivity. mSigAct can estimate (conservatively) whether there is
-evidence that a particular mutational signature is present in a spectrum
-and can determine a minimal subset of signatures needed to plausibly
-reconstruct an observed spectrum.
+**Act**ivity. mSigAct uses a maximum likelihood approach to estimate
+(conservatively) whether there is evidence that a particular set of
+mutational signatures is present in a spectrum. It can also determine a
+*minimal* subset of signatures needed to plausibly reconstruct an
+observed spectrum. This sparse assign signatures functionality is
+*deliberately biased* toward using as few signatures as possible. There
+is also functionality to do a maximum a posteriori estimate of signature
+activity, which makes use of information on the proportion of tumors in
+a given type that have a particular signature combined with the
+likelihood that a particular combination of signatures generated an
+observed spectrum.
 
 ## Purpose
 
-The concepts behind the code are described in Ng et al., 2017,
+The concepts behind the signature presence test and the
+sparse-assign-signature functionality are described in Ng et al., 2017,
 “Aristolochic acids and their derivatives are widely implicated in
 liver cancers in Taiwan and throughout Asia”, Science Translational
 Medicine 2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
@@ -36,7 +44,7 @@ Medicine 2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.0.2-branch")
+remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.1.1-branch")
 ```
 
 The alpha version used in Ng et al., 2017, “Aristolochic acids and their
