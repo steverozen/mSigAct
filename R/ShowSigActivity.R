@@ -7,6 +7,9 @@
 #' @param output.dir The directory to save the results. Create
 #'   this directory if it does not exist.
 #'   
+#' @param base.filename Optional. \code{base.filename} will be appended to the start
+#' of the names of files generated inside \code{output.dir}.
+#'   
 #' @param plot.all.samples.in.one.pdf Whether to plot all the signature activity information
 #'   within one PDF. Default is TRUE. If FALSE, then plot one PDF for each sample.
 #' 
@@ -24,9 +27,11 @@
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
 #'                                  cancer.type = "Biliary-AdenoCA")
 #' retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
-#' ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"))
+#' ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"), 
+#'                 base.filename = "Biliary-AdenoCA")
 ShowSigActivity <- function(list.of.sig.activity,
                             output.dir,
+                            base.filename = NULL,
                             plot.all.samples.in.one.pdf = TRUE, 
                             plot.exposure.proportion = FALSE,
                             ...) {
@@ -37,14 +42,19 @@ ShowSigActivity <- function(list.of.sig.activity,
   mut.type <- GetMutationType(list.of.sig.activity[[1]][[1]])
   
   WriteDistances(list.of.sig.activity = list.of.sig.activity, 
-                 output.dir = output.dir, mutation.type = mut.type)
+                 output.dir = output.dir, 
+                 base.filename = base.filename,
+                 mutation.type = mut.type)
   PlotSigActivityToPdf(list.of.sig.activity = list.of.sig.activity, 
                        output.dir = output.dir,
+                       base.filename = base.filename,
                        mutation.type = mut.type,
                        plot.all.samples.in.one.pdf = plot.all.samples.in.one.pdf, 
                        ... = ...)
   ShowExposure(list.of.sig.activity = list.of.sig.activity, 
-               output.dir = output.dir, mutation.type = mut.type,
+               output.dir = output.dir,
+               base.filename = base.filename,
+               mutation.type = mut.type,
                plot.exposure.proportion = plot.exposure.proportion)
   
 }
@@ -56,7 +66,8 @@ ShowSigActivity <- function(list.of.sig.activity,
 #' @param mutation.type The mutation type of the mutational spectrum.
 #' 
 #' @keywords internal
-ShowExposure <- function(list.of.sig.activity, output.dir, mutation.type,
+ShowExposure <- function(list.of.sig.activity, output.dir, base.filename,
+                         mutation.type,
                          plot.exposure.proportion = FALSE) {
   # Retrieve the exposure information
   exposure.info <- lapply(list.of.sig.activity, FUN = function(x) {
@@ -69,12 +80,24 @@ ShowExposure <- function(list.of.sig.activity, output.dir, mutation.type,
   # Remove rows with zero exposure
   exposure <- exposure[rowSums(exposure) > 0, , drop = FALSE]
   
+  if (is.null(base.filename)) {
+    file.name.append <- mutation.type
+  } else {
+    file.name.append <- paste0(base.filename, ".", mutation.type)
+  }
+  
   if (isTRUE(plot.exposure.proportion)) {
-    output.file <- 
-      file.path(output.dir, paste0(mutation.type, ".all.samples.exposure.props.pdf"))
+    if (is.null(base.filename)) {
+      output.file <- 
+        file.path(output.dir, paste0(file.name.append, ".all.samples.exposure.props.pdf"))
+    } else {
+      output.file <- 
+        file.path(output.dir, paste0(file.name.append, ".all.samples.exposure.props.pdf"))
+    }
+    
   } else {
     output.file <- 
-      file.path(output.dir, paste0(mutation.type, ".all.samples.exposure.counts.pdf"))
+      file.path(output.dir, paste0(file.name.append, ".all.samples.exposure.counts.pdf"))
   }
   
   ICAMSxtra::PlotExposureToPdf(exposure = exposure, file = output.file,
@@ -89,7 +112,8 @@ ShowExposure <- function(list.of.sig.activity, output.dir, mutation.type,
 #' @param mutation.type The mutation type of the mutational spectrum.
 #'
 #' @keywords internal
-WriteDistances <- function(list.of.sig.activity, output.dir, mutation.type) {
+WriteDistances <- 
+  function(list.of.sig.activity, output.dir, base.filename, mutation.type) {
   if (!dir.exists(output.dir)) {
     dir.create(output.dir)
   }
@@ -105,8 +129,14 @@ WriteDistances <- function(list.of.sig.activity, output.dir, mutation.type) {
   retval <- do.call(dplyr::bind_rows, distances.info)
   rownames(retval) <- names(list.of.sig.activity)
   
+  if (is.null(base.filename)) {
+    file.name.append <- mutation.type
+  } else {
+    file.name.append <- paste0(base.filename, ".", mutation.type)
+  }
+  
   output.file <- 
-    file.path(output.dir, paste0(mutation.type, ".all.samples.distances.csv"))
+    file.path(output.dir, paste0(file.name.append, ".all.samples.distances.csv"))
   write.csv(retval, file = output.file)
   
 }
@@ -123,6 +153,7 @@ WriteDistances <- function(list.of.sig.activity, output.dir, mutation.type) {
 #' @keywords internal
 PlotSigActivityToPdf <- function(list.of.sig.activity, 
                                  output.dir,
+                                 base.filename,
                                  mutation.type,
                                  plot.all.samples.in.one.pdf = TRUE, 
                                  ...) {
@@ -136,10 +167,16 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
     return(x)
   })
   
+  if (is.null(base.filename)) {
+    file.name.append <- mutation.type
+  } else {
+    file.name.append <- paste0(base.filename, ".", mutation.type)
+  }
+  
   if (plot.all.samples.in.one.pdf) {
     old.par.tck.value <- graphics::par("tck")
     file <- 
-      file.path(output.dir, paste0(mutation.type, ".all.samples.sig.activity.pdf"))
+      file.path(output.dir, paste0(file.name.append, ".all.samples.sig.activity.pdf"))
     
     # Setting the width and length for A4 size plotting
     grDevices::pdf(file, width = 8.2677, height = 11.6929, onefile = TRUE)
@@ -194,7 +231,7 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
       # We cannot use "::" in the file path, otherwise grDevices::pdf will throw an error
       spect.name <- gsub(pattern = "::", replacement = ".", sample)
       output.file <- 
-        file.path(output.dir, paste0(mutation.type, ".", 
+        file.path(output.dir, paste0(file.name.append, ".", 
                                      spect.name, ".sig.activity.pdf"))
       PlotListOfCatalogsToPdf(list.of.catalogs = list.of.sig.activity[[sample]],
                               file = output.file, ... = ...)

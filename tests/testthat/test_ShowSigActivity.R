@@ -14,9 +14,11 @@ test_that("ShowSigActivity for only one SBS96 catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
-                  output.dir = output.dirs[1])
+                  output.dir = output.dirs[1],
+                  base.filename = "Biliary-AdenoCA")
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
 
@@ -38,9 +40,11 @@ test_that("ShowSigActivity for multiple SBS96 catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
-                  output.dir = output.dirs[1])
+                  output.dir = output.dirs[1],
+                  base.filename = "Biliary-AdenoCA")
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
@@ -60,9 +64,11 @@ test_that("ShowSigActivity for only one DBS78 catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
+                  base.filename = "Biliary-AdenoCA",
                   output.dir = output.dirs[1])
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
@@ -83,9 +89,11 @@ test_that("ShowSigActivity for multiple DBS78 catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
-                  output.dir = output.dirs[1])
+                  output.dir = output.dirs[1],
+                  base.filename = "Biliary-AdenoCA")
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
@@ -105,9 +113,11 @@ test_that("ShowSigActivity for only one ID catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
-                  output.dir = output.dirs[1])
+                  output.dir = output.dirs[1],
+                  base.filename = "Biliary-AdenoCA")
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)
@@ -128,9 +138,11 @@ test_that("ShowSigActivity for multiple ID catalog", {
 
   output.dirs <- file.path(tempdir(), paste0("test", 1:2))
   ShowSigActivity(list.of.sig.activity = retval,
-                  output.dir = output.dirs[1])
+                  output.dir = output.dirs[1],
+                  base.filename = "Biliary-AdenoCA")
   ShowSigActivity(list.of.sig.activity = retval,
                   output.dir = output.dirs[2],
+                  base.filename = "Biliary-AdenoCA",
                   plot.all.samples.in.one.pdf = FALSE,
                   plot.exposure.proportion = TRUE)
   sapply(output.dirs, FUN = unlink, recursive = TRUE)

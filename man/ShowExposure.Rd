@@ -7,6 +7,7 @@
 ShowExposure(
   list.of.sig.activity,
   output.dir,
+  base.filename,
   mutation.type,
   plot.exposure.proportion = FALSE
 )
@@ -18,6 +19,9 @@ information for multiple spectra. See the return value of
 
 \item{output.dir}{The directory to save the results. Create
 this directory if it does not exist.}
+
+\item{base.filename}{Optional. \code{base.filename} will be appended to the start
+of the names of files generated inside \code{output.dir}.}
 
 \item{mutation.type}{The mutation type of the mutational spectrum.}
 

@@ -7,6 +7,7 @@
 ShowSigActivity(
   list.of.sig.activity,
   output.dir,
+  base.filename = NULL,
   plot.all.samples.in.one.pdf = TRUE,
   plot.exposure.proportion = FALSE,
   ...
@@ -19,6 +20,9 @@ information for multiple spectra. See the return value of
 
 \item{output.dir}{The directory to save the results. Create
 this directory if it does not exist.}
+
+\item{base.filename}{Optional. \code{base.filename} will be appended to the start
+of the names of files generated inside \code{output.dir}.}
 
 \item{plot.all.samples.in.one.pdf}{Whether to plot all the signature activity information
 within one PDF. Default is TRUE. If FALSE, then plot one PDF for each sample.}
@@ -38,5 +42,6 @@ sigs <- PCAWG7::signature$genome$SBS96
 sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
                                  cancer.type = "Biliary-AdenoCA")
 retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
-ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"))
+ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"), 
+                base.filename = "Biliary-AdenoCA")
 }

@@ -1,12 +1,14 @@
 # 2.1.1
 
-* Added back argument `max.subsets` in function `MAPAssignActivity1` and `MAPAssignActivity`.
+* Added back argument `max.subsets` in function `MAPAssignActivity1` and `MAPAssignActivity`
+
+* Added an additional argument `base.filename` in function `ShowSigActivity`
 
 # 2.1.0.9009
 
 * Updated function `MAPAssignActivity1` to exclude signatures in the
 `proposed.assignment` if the mutations get assigned to the signatures is zero
-after rounding.
+after rounding
 
 # 2.1.0.9008
 
