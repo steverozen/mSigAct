@@ -36,7 +36,7 @@ Medicine 2017 <https://doi.org/10.1126/scitranslmed.aan6446>.
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.0.2-branch")
+remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.1.1-branch")
 ```
 
 The alpha version used in Ng et al., 2017, “Aristolochic acids and their
