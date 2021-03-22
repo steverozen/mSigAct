@@ -38,7 +38,6 @@ signature combined with the likelihood that a particular combination of signatur
 an observed spectrum. 
 
 ## Purpose
-code
 The concepts behind the signature presence test and the sparse-assign-signature
 functionality
 are described in Ng et al., 2017, "Aristolochic acids and their derivatives are widely 
@@ -53,7 +52,7 @@ implicated in liver cancers in Taiwan and throughout Asia", Science Translationa
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.0.2-branch")
+remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.1.1-branch")
 ```
 
 The alpha version used in Ng et al., 2017, "Aristolochic acids and their derivatives are widely 
