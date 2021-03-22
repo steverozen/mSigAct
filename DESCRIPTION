@@ -1,15 +1,18 @@
 Package: mSigAct
 Title: mutational Signature Activity analysis ('mSigAct')
 Version: 2.1.1
-Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot 
+Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot, Nan Hai Jiang 
 Maintainer: Steve Rozen <steverozen@gmail.com>
 Description: Analyze the "activities" of mutational signatures in one or more mutational spectra.
-    'mSigAct' stands for mutational Signature Activity. mSigAct can estimate (conservatively) 
-    whether there is evidence that a particular set of mutational signatures is present in a 
-    spectrum. It can also determine a *minimal* subset of signatures needed to plausibly 
-    reconstruct an observed spectrum. This sparse assign signatures functionality is 
-    *deliberately biased* toward using as few signatures as possible.This package does not 
-    provide all-purpose estimation for signature attribution. 
+    'mSigAct' stands for mutational Signature Activity. mSigAct uses a maximum likelihood approach
+    to estimate (conservatively) whether there is evidence that a particular set of mutational 
+    signatures is present in a spectrum. It can also determine a *minimal* subset of signatures 
+    needed to plausibly reconstruct an observed spectrum. This sparse assign signatures 
+    functionality is *deliberately biased* toward using as few signatures as possible. There is 
+    also functionality to do a maximum a posteriori estimate of signature activity, which makes 
+    use of information on the proportion of tumors in a given type that have a particular 
+    signature combined with the likelihood that a particular combination of signatures generated
+    an observed spectrum. 
 License: GPL-3
 URL: https://github.com/steverozen/mSigAct
 BugReports: https://github.com/steverozen/mSigAct/issues
