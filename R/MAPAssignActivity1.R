@@ -473,7 +473,11 @@ MAPAssignActivityInternal <-
 #' @keywords internal
 #'
 P.of.M <- function(model, sigs.presence.prop) {
-  stopifnot(length(setdiff(model, names(sigs.presence.prop))) == 0)
+  sigs.not.having.prop <- setdiff(model, names(sigs.presence.prop))
+  if (length(sigs.not.having.prop) > 0) {
+    stop("Signatures used in the model but don't have presence proportions: ",
+         paste(sigs.not.having.prop, collapse = " "))
+  }
   present <- sigs.presence.prop[model]
   not.present.names <- setdiff(names(sigs.presence.prop), model)
   not.present <- sigs.presence.prop[not.present.names]

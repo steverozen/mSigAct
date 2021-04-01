@@ -1,3 +1,8 @@
+# 2.1.1.9000
+
+* Updated function `P.of.M` to give more informative error message when there are signatures used in the model but don't have presence
+proportions.
+
 # 2.1.1
 
 * Added back argument `max.subsets` in function `MAPAssignActivity1` and `MAPAssignActivity`
