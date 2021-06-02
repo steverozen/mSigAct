@@ -1,3 +1,8 @@
+# 2.1.1.9001
+
+* Updated function `ShowSigActivity` to create the `output.dir` recursively if it
+does not exist
+
 # 2.1.1.9000
 
 * Updated function `P.of.M` to give more informative error message when there are signatures used in the model but don't have presence

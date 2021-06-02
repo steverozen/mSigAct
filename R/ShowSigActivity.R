@@ -36,7 +36,7 @@ ShowSigActivity <- function(list.of.sig.activity,
                             plot.exposure.proportion = FALSE,
                             ...) {
   if (!dir.exists(output.dir)) {
-    dir.create(output.dir)
+    dir.create(output.dir, recursive = TRUE)
   }
   
   mut.type <- GetMutationType(list.of.sig.activity[[1]][[1]])
