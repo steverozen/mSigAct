@@ -1,0 +1,27 @@
+Call
+AnalyzeAndPlotretval(retval = multi.chains.etc, input.catalog = input.catalog, 
+    out.dir = out.dir, ground.truth.sig = ground.truth.sig, ground.truth.exp = ground.truth.exp, 
+    verbose = verbose, overwrite = overwrite)
+
+Average cosine similarity
+[1] 0.4568689
+
+Average cosine similarity to each ground-truth signature
+NULL
+
+Number of ground-truth signatures
+[1] 72
+
+Number of extracted signatures
+[1] 3
+
+sigAnalysis0$extracted.with.no.best.match
+[1] "hdp.2"           "potential hdp.1"
+
+sigAnalysis0$ground.truth.with.no.best.match
+ [1] "SBS1"   "SBS2"   "SBS3"   "SBS4"   "SBS5"   "SBS6"   "SBS7a"  "SBS7b"  "SBS7c"  "SBS7d"  "SBS8"   "SBS9"  
+[13] "SBS10a" "SBS10b" "SBS11"  "SBS12"  "SBS13"  "SBS14"  "SBS15"  "SBS16"  "SBS17a" "SBS17b" "SBS18"  "SBS19" 
+[25] "SBS20"  "SBS21"  "SBS23"  "SBS24"  "SBS25"  "SBS26"  "SBS27"  "SBS28"  "SBS29"  "SBS30"  "SBS31"  "SBS32" 
+[37] "SBS33"  "SBS34"  "SBS35"  "SBS36"  "SBS37"  "SBS38"  "SBS39"  "SBS40"  "SBS41"  "SBS42"  "SBS43"  "SBS44" 
+[49] "SBS45"  "SBS46"  "SBS47"  "SBS48"  "SBS49"  "SBS50"  "SBS51"  "SBS52"  "SBS53"  "SBS54"  "SBS55"  "SBS56" 
+[61] "SBS57"  "SBS58"  "SBS59"  "SBS60"  "SBS84"  "SBS85"  "SBS86"  "SBS87"  "SBS88"  "SBS89"  "SBS90" 

@@ -33,8 +33,15 @@ LLHSpectrumNegBinom <-
 
     stopifnot(length(spectrum) == length(expected.counts))
 
-    loglh0 <- sum(stats::dnbinom(
-      x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
+    if (Sys.getenv("MULT") == "y") {
+      # message("dmultinom")
+      loglh0 <- stats::dmultinom(x = spectrum,
+                                 prob = expected.counts,
+                                 log = TRUE)
+    } else {
+      loglh0 <- sum(stats::dnbinom(
+        x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
+    }
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")
       loglh0 = -Inf
@@ -52,23 +59,23 @@ LLHSpectrumNegBinom <-
 
 
 #' A verbose version of \code{\link{LLHSpectrumNegBinom}} for testing
-#' 
+#'
 #' We use a separate function so as not to slow down the heavily
 #' used \code{\link{LLHSpectrumNegBinom}} and to provide more
 #' information in the output
-#' 
+#'
 #' @inheritParams LLHSpectrumNegBinom
 #'
 #' @export
-#' 
-#' @return A \code{\link[tibble]{tibble}} with 
+#'
+#' @return A \code{\link[tibble]{tibble}} with
 #'    self-explanatory columns and rows.
 
 LLHSpectrumNegBinomDebug <-
   function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {
-    
+
     stopifnot(length(spectrum) == length(expected.counts))
-    
+
     loglik <- stats::dnbinom(
       x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE)
     rr <- tibble::tibble(mut.type       = names(spectrum),
@@ -77,7 +84,7 @@ LLHSpectrumNegBinomDebug <-
                          expected       = expected.counts,
                          spec.minus.exp = spectrum - expected.counts
     )
-    
+
     return(rr)
   }
 
