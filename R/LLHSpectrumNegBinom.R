@@ -33,7 +33,7 @@ LLHSpectrumNegBinom <-
 
     stopifnot(length(spectrum) == length(expected.counts))
 
-    if (Sys.getenv("MULT") == "y") {
+    if (Sys.getenv("MULT") != "") {
       # message("dmultinom")
       loglh0 <- stats::dmultinom(x = spectrum,
                                  prob = expected.counts,
