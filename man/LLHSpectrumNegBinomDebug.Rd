@@ -30,7 +30,7 @@ See \code{\link[stats]{NegBinomial}}.}
 \item{verbose}{If \code{TRUE} print messages under some circumstances.}
 }
 \value{
-A \code{\link[tibble]{tibble}} with 
+A \code{\link[tibble]{tibble}} with
    self-explanatory columns and rows.
 }
 \description{

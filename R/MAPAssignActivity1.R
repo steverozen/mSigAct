@@ -494,16 +494,30 @@ P.of.M <- function(model, sigs.presence.prop) {
 #' The idea is to provide several measures of how well the 
 #' reconstruction matches the spectrum.
 #' 
-#' @param spect The spectrum we are trying to reconstruct
+#' @param spect The spectrum we are trying to reconstruct.
 #' 
 #' @param recon The unrounded reconstruction.
 #' 
-#' @param nbinom.size The \code{size} ....
+#' @param nbinom.size The dispersion parameter for the negative
+#'        binomial distribution; smaller is more dispersed.
+#'        See \code{\link[stats]{NegBinomial}}.
+#'        
+#' @param model Names of sigs present in a trial exposure. Do not use indices.
+#'
+#' @param sigs.presence.prop The proportions of samples that contain each
+#'   signature. A numerical vector (values between 0 and 1), with names being a
+#'   superset of \code{model}.
+#'   
+#' @param signatures Matrix or data frame of signatures from which
+#'      reconstruct \code{spect}. Rows are mutation types and
+#'      columns are signatures. Should have column names for
+#'      interpretable results. Cannot be a vector because
+#'      the column names are needed.
 #'
 #' @keywords internal
 
 DistanceMeasures <- 
-  function(spect, recon, nbinom.size, model, sigs.presence.prop) {
+  function(spect, recon, nbinom.size, model, sigs.presence.prop, signatures) {
     my.fn <- function(method) {
       df <- rbind(as.vector(spect),
                   as.vector(recon))

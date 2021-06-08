@@ -14,6 +14,6 @@ signature. A numerical vector (values between 0 and 1), with names
 being a superset of \code{model}.}
 }
 \description{
-Calculate \eqn{P(M)} -- the probability of a model of which signatures are present in a sample.
+This is the second factor in the product \eqn{P(M|D) = P(D|M)P(M)}.
 }
 \keyword{internal}

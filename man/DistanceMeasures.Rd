@@ -2,11 +2,27 @@
 % Please edit documentation in R/MAPAssignActivity1.R
 \name{DistanceMeasures}
 \alias{DistanceMeasures}
-\title{Calculate several distance measures between a spectrum and its reconstruction}
+\title{Calculate several distance measures between a spectrum and its reconstruction.}
 \usage{
 DistanceMeasures(spect, recon, nbinom.size, model, sigs.presence.prop)
 }
+\arguments{
+\item{spect}{The spectrum we are trying to reconstruct.}
+
+\item{recon}{The unrounded reconstruction.}
+
+\item{nbinom.size}{The dispersion parameter for the negative
+binomial distribution; smaller is more dispersed.
+See \code{\link[stats]{NegBinomial}}.}
+
+\item{model}{Names of sigs present in a trial exposure. Do not use indices.}
+
+\item{sigs.presence.prop}{The proportions of samples that contain each
+signature. A numerical vector (values between 0 and 1), with names being a
+superset of \code{model}.}
+}
 \description{
-Calculate several distance measures between a spectrum and its reconstruction
+The idea is to provide several measures of how well the 
+reconstruction matches the spectrum.
 }
 \keyword{internal}
