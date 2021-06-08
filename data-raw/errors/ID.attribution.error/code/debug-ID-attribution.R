@@ -50,16 +50,17 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
 
 #' @keywords internal
 PlotMAPResultToPdf <- function(spect, sigs, MAP.out, file) {
-  recon.spect <- round(MAP.out$MAP.recon)
+  recon.spect <- round(MAP.out$proposed.reconstruction)
   cossim <- 
-    round(MAP.out$MAP.distances$value[MAP.out$MAP.distances$method == "cosine"], 5)
+    round(MAP.out$reconstruction.distances$value[MAP.out$reconstruction.distances$method == "cosine"], 5)
   colnames(recon.spect) <- paste0("reconstructed (cosine similarity = ", cossim, ")")
   
-  MAP.exp <- dplyr::arrange(MAP.out$MAP, dplyr::desc(count))
-  selected.sigs.names <- MAP.exp$sig.id
+  MAP.exp <- 
+    MAP.out$proposed.assignment[order(MAP.out$proposed.assignment,  decreasing = TRUE), ]
+  selected.sigs.names <- names(MAP.exp)
   selected.sigs <- sigs[, selected.sigs.names, drop = FALSE]
   colnames(selected.sigs) <- paste0(colnames(selected.sigs), " (exposure = ", 
-                                    round(MAP.exp$count), ")")
+                                    round(MAP.exp), ")")
   list.of.catalogs <- list(spect, recon.spect, selected.sigs)
   PlotListOfCatalogsToPdf(list.of.catalogs, file = file)
 }
@@ -98,22 +99,26 @@ DebugIDAttribution <- function(num.fake = 0) {
     }
   }
   
-  ID.MAP.out <- mSigAct::MAPAssignActivity1(spect = catID,
+  px <- "data-raw/errors/ID.attribution.error.mult/"
+  ID.MAP.out <- mSigAct::MAPAssignActivity(spect = catID,
                                             sigs = su, 
                                             sigs.presence.prop = ID.expo.prop, 
                                             max.level = length(ID.expo.prop) - 1,
                                             p.thresh = 0.01,
-                                            m.opts = mSigAct::DefaultManyOpts()
+                                            m.opts = mSigAct::DefaultManyOpts(),
+                                            output.dir =   px
   )
-  px <- "data-raw/errors/ID.attribution.error/"
-  
-  inferred.exp.max.lh <- ID.MAP.out$MAP$count
-  names(inferred.exp.max.lh) <- ID.MAP.out$MAP$sig.id
+
+  foo <- OptimizeExposureQP(spectrum = catID, signatures = su)
+  foo.recon <- ReconstructSpectrum(sigs = su, exp = foo)
+  ICAMS::PlotCatalogToPdf(foo.recon, file.path(px, "QPrecon.pdf"))
+  cat("foo recon cossim:", cossim(foo.recon, catID))
+    
+  inferred.exp.max.lh <- ID.MAP.out$proposed.assignment
+  # names(inferred.exp.max.lh) <- ID.MAP.out$MAP$sig.id
   cat("Max LH exposures:")
   print(round(inferred.exp.max.lh))
-  rr <- ReconstructSpectrum(
-    su[ , ID.MAP.out$MAP$sig.id, drop = FALSE], 
-    inferred.exp.max.lh)
+  rr <- ID.MAP.out$proposed.reconstruction
   ICAMS::PlotCatalogToPdf(round(rr), paste0(px, num.fake, file = "lh.recon.pdf"))
   
   spect.v <- catID[ , 1, drop = T] # spectrum as a vector
@@ -152,8 +157,8 @@ DebugIDAttribution <- function(num.fake = 0) {
   
   
   save(ID.MAP.out, file = paste0(px, "ID.MAP.out.Rdata"))
-  PlotMAPResultToPdf(spect = catID, sigs = su, MAP.out = ID.MAP.out,
-                     file = paste0(px, num.fake, "catID.pdf"))
+  # PlotMAPResultToPdf(spect = catID, sigs = su, MAP.out = ID.MAP.out,
+  #                   file = paste0(px, num.fake, "catID.pdf"))
   
-  return(list(max.LH.lh.debug, QP.lh.debug))
+  return(list(ID.MAP.out, max.LH.lh.debug, QP.lh.debug))
 }
