@@ -463,6 +463,8 @@ MAPAssignActivityInternal <-
 }
 
 #' Calculate \eqn{P(M)} -- the probability of a model of which signatures are present in a sample.
+#' 
+#' This is the second factor in the product \eqn{P(M|D) = P(D|M)P(M)}.
 #'
 #' @param model Names of sigs present in a trial exposure. Do not use indices.
 #'
@@ -494,7 +496,9 @@ P.of.M <- function(model, sigs.presence.prop) {
 #' 
 #' @param spect The spectrum we are trying to reconstruct
 #' 
-#' @param recon The unrounded reconstruction
+#' @param recon The unrounded reconstruction.
+#' 
+#' @param nbinom.size The \code{size} ....
 #'
 #' @keywords internal
 
