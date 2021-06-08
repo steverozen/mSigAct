@@ -487,7 +487,14 @@ P.of.M <- function(model, sigs.presence.prop) {
   return(rr)
 }
 
-#' Calculate several distance measures between a spectrum and its reconstruction
+#' Calculate several distance measures between a spectrum and its reconstruction.
+#' 
+#' The idea is to provide several measures of how well the 
+#' reconstruction matches the spectrum.
+#' 
+#' @param spect The spectrum we are trying to reconstruct
+#' 
+#' @param recon The unrounded reconstruction
 #'
 #' @keywords internal
 
