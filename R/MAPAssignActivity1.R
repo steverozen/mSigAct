@@ -117,7 +117,8 @@ MAPAssignActivity1 <-
         DistanceMeasures(spect = spect, recon = MAP.recon, 
                          nbinom.size = m.opts$nbinom.size,
                          model = names(best.exp),
-                         sigs.presence.prop = sigs.presence.prop)
+                         sigs.presence.prop = sigs.presence.prop,
+                         signatures = sigs[, names(best.exp), drop = FALSE])
       
       # Round the exposure and reconstruction
       exposure <- matrix(round(MAP$count), nrow = nrow(MAP))
@@ -508,23 +509,33 @@ P.of.M <- function(model, sigs.presence.prop) {
 #'   signature. A numerical vector (values between 0 and 1), with names being a
 #'   superset of \code{model}.
 #'   
-#' @param signatures Matrix or data frame of signatures from which
-#'      reconstruct \code{spect}. Rows are mutation types and
-#'      columns are signatures. Should have column names for
-#'      interpretable results. Cannot be a vector because
-#'      the column names are needed.
-#'
+#' @param signatures \strong{Only} used to compute distances for quadratic
+#'   programming assignment. Signature as a matrix or data frame, with each row
+#'   one mutation type (g.e. CCT > CAT or CC > TT) and each column a signature.
+#'   It should be the proposed signatures used by Maximum A Posteriori (MAP)
+#'   assignment to reconstruct \code{spect}. It is needed to calculate distances
+#'   of quadratic programming assignment.
+#'   
+#' @return A data frame whose first column indicates the distance method. The
+#'   second column \code{proposed.assignment} shows the values of various
+#'   distances using Maximum A Posteriori (MAP) assignment. 
+#'   
+#'   When \code{signatures} is \strong{not} NULL, there will be a third column
+#'   \code{QP.assignment} shows the values of various distances using quadratic
+#'   programming assignment.
+#'   
 #' @keywords internal
 
 DistanceMeasures <- 
-  function(spect, recon, nbinom.size, model, sigs.presence.prop, signatures) {
-    my.fn <- function(method) {
+  function(spect, recon, nbinom.size, model, sigs.presence.prop, signatures = NULL) {
+    my.fn <- function(method, spect, recon) {
       df <- rbind(as.vector(spect),
                   as.vector(recon))
       return(philentropy::distance(x = df, method = method, test.na = FALSE))
     }
     
-    vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn))
+    vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
+                        spect = spect, recon = recon))
     vv <- c(neg.log.likelihood =
               LLHSpectrumNegBinom(
                 as.vector(spect),
@@ -535,7 +546,30 @@ DistanceMeasures <-
                              nbinom.size = nbinom.size, model = model,
                              sigs.presence.prop = sigs.presence.prop),
             vv)
-    return(tibble::tibble(method = names(vv), value = vv))
+    
+    if (!is.null(signatures)) {
+      # Do signature assignment using QP
+      QP.expo <- OptimizeExposureQP(spectrum = spect, signatures = signatures)
+      QP.expo.non.zero <- QP.expo[QP.expo > 0]
+      QP.recon <- ReconstructSpectrum(sigs = signatures, exp = QP.expo.non.zero)
+      QP.distances <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
+                                    spect = spect, recon = QP.recon))
+      QP.distances <- c(neg.log.likelihood =
+                          LLHSpectrumNegBinom(
+                            as.vector(spect),
+                            as.vector(QP.recon),
+                            nbinom.size = nbinom.size),
+                        MAP = 
+                          LLHSpectrumMAP(spectrum = spect, expected.counts = QP.recon,
+                                         nbinom.size = nbinom.size, model = model,
+                                         sigs.presence.prop = sigs.presence.prop),
+                        QP.distances)
+      
+      return(tibble::tibble(method = names(vv), proposed.assignment = vv,
+                            QP.assignment = QP.distances))
+    } else {
+      return(tibble::tibble(method = names(vv), proposed.assignment = vv))
+    }
   }
 
 #' @return A list with the elements \describe{

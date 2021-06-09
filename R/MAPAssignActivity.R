@@ -208,22 +208,39 @@ GetReconstructionInfo <- function(list.of.MAP.out) {
 #'
 #' @keywords internal
 GetDistanceInfo <- function(list.of.MAP.out) {
-  tmp <- lapply(list.of.MAP.out, FUN = function(x) {
+  MAP.tmp <- lapply(list.of.MAP.out, FUN = function(x) {
     if (is.null(x$error.messages)) {
       distances <- x$reconstruction.distances
-      values <- matrix(distances$value, ncol = nrow(distances))
+      values <- matrix(distances$proposed.assignment, ncol = nrow(distances))
       colnames(values) <- distances$method
       return(as.data.frame(values))
     } else {
       return(NULL)
     }
   })
-  index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
+  MAP.index.of.non.null <- sapply(MAP.tmp, FUN = Negate(is.null))
 
-  tmp1 <- tmp[index.of.non.null]
-  retval <- do.call(dplyr::bind_rows, tmp1)
-  rownames(retval) <- names(list.of.MAP.out)[index.of.non.null]
-  return(retval)
+  MAP.tmp1 <- MAP.tmp[MAP.index.of.non.null]
+  MAP.retval <- do.call(dplyr::bind_rows, MAP.tmp1)
+  rownames(MAP.retval) <- names(list.of.MAP.out)[MAP.index.of.non.null]
+  
+  QP.tmp <- lapply(list.of.MAP.out, FUN = function(x) {
+    if (is.null(x$error.messages)) {
+      distances <- x$reconstruction.distances
+      values <- matrix(distances$QP.assignment, ncol = nrow(distances))
+      colnames(values) <- distances$method
+      return(as.data.frame(values))
+    } else {
+      return(NULL)
+    }
+  })
+  QP.index.of.non.null <- sapply(QP.tmp, FUN = Negate(is.null))
+  
+  QP.tmp1 <- QP.tmp[QP.index.of.non.null]
+  QP.retval <- do.call(dplyr::bind_rows, QP.tmp1)
+  rownames(QP.retval) <- names(list.of.MAP.out)[QP.index.of.non.null]
+  
+  return(list(MAP.distances = MAP.retval, QP.distances = QP.retval))
 }
 
 

@@ -108,7 +108,7 @@ AddSigActivity1 <- function(spect, exposure, sigs,
   colnames(reconstructed.spectrum) <-
     paste0("reconstructed (count = ", round(colSums(reconstructed.spectrum)),
            ", cosine similarity = ",
-           round(distances$value["cosine"], 5), ")")
+           round(distances$proposed.assignment["cosine"], 5), ")")
   colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
   sig.activity <- list(original.spect = spect,
                        reconstructed.spect = reconstructed.spectrum,

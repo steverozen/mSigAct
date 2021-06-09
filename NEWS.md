@@ -1,3 +1,8 @@
+# 2.1.1.9002
+
+* Added new argument `signatures` to internal function `DistanceMeasures` to enable calculating
+distance measures using quadratic programming assignment
+
 # 2.1.1.9001
 
 * Updated function `ShowSigActivity` to create the `output.dir` recursively if it

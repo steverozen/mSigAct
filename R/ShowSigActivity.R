@@ -121,7 +121,7 @@ WriteDistances <-
   # Retrieve the distances information
   distances.info <- lapply(list.of.sig.activity, FUN = function(x) {
     distances <- x$distances
-    values <- matrix(distances$value, ncol = nrow(distances))
+    values <- matrix(distances$proposed.assignment, ncol = nrow(distances))
     colnames(values) <- distances$method
     return(as.data.frame(values))
   })

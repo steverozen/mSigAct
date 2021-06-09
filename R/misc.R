@@ -29,7 +29,7 @@ if (FALSE) {
 
 #' Given signatures (sigs) and exposures (exp), return a spectrum or spectra
 #'
-#' @param sigs Signature as a matrix or or data frame, with each
+#' @param sigs Signature as a matrix or data frame, with each
 #'      row one mutation type (g.e. CCT > CAT or CC > TT) and
 #'      each column a signature.
 #'
