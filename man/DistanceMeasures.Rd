@@ -4,7 +4,14 @@
 \alias{DistanceMeasures}
 \title{Calculate several distance measures between a spectrum and its reconstruction.}
 \usage{
-DistanceMeasures(spect, recon, nbinom.size, model, sigs.presence.prop)
+DistanceMeasures(
+  spect,
+  recon,
+  nbinom.size,
+  model,
+  sigs.presence.prop,
+  signatures = NULL
+)
 }
 \arguments{
 \item{spect}{The spectrum we are trying to reconstruct.}
@@ -20,6 +27,22 @@ See \code{\link[stats]{NegBinomial}}.}
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names being a
 superset of \code{model}.}
+
+\item{signatures}{\strong{Only} used to compute distances for quadratic
+programming assignment. Signature as a matrix or data frame, with each row
+one mutation type (g.e. CCT > CAT or CC > TT) and each column a signature.
+It should be the proposed signatures used by Maximum A Posteriori (MAP)
+assignment to reconstruct \code{spect}. It is needed to calculate distances
+of quadratic programming assignment.}
+}
+\value{
+A data frame whose first column indicates the distance method. The
+  second column \code{proposed.assignment} shows the values of various
+  distances using Maximum A Posteriori (MAP) assignment. 
+  
+  When \code{signatures} is \strong{not} NULL, there will be a third column
+  \code{QP.assignment} shows the values of various distances using quadratic
+  programming assignment.
 }
 \description{
 The idea is to provide several measures of how well the 

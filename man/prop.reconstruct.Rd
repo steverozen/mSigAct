@@ -7,7 +7,7 @@
 prop.reconstruct(sigs, exp)
 }
 \arguments{
-\item{sigs}{Signature as a matrix or or data frame, with each
+\item{sigs}{Signature as a matrix or data frame, with each
 row one mutation type (g.e. CCT > CAT or CC > TT) and
 each column a signature.}
 
