@@ -21,7 +21,7 @@ RunMAPOnOneSample <-
            max.subsets             = 1000) {
     
     if (!dir.exists(output.dir)) {
-      dir.create(output.dir)
+      dir.create(output.dir, recursive = TRUE)
     }
     
     spect.name <- colnames(spect)
