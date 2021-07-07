@@ -1,3 +1,8 @@
+# 2.1.1.9003
+
+* Updated documentation for the return values of `DefaultManyOpts` to include three additional 
+elements `global_eval_f`, `local_eval_f` and `local_eval_g_ineq`
+
 # 2.1.1.9002
 
 * Added new argument `signatures` to internal function `DistanceMeasures` to enable calculating
