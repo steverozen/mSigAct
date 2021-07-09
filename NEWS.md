@@ -3,6 +3,8 @@
 * Added a new argument `likelihood.dist` to function `DefaultManyOpts` for user to
 specify the probability distribution to calculate the likelihood
 
+* Added a new element `likelihood.dist` in the returned value of function `DefaultManyOpts`
+
 # 2.1.1.9003
 
 * Updated documentation for the return values of `DefaultManyOpts` to include three additional 

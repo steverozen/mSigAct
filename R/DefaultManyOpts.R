@@ -42,6 +42,8 @@ DefaultLocalOpts <- function() {
 #'   
 #'   \item{local_eval_g_ineq}{The inequality constraint function for 
 #'   the local optimization phase.}
+#'   
+#'   \item{likelihood.dist}{The probability distribution used to calculate the likelihood.}
 #' }
 
 DefaultManyOpts <- function(likelihood.dist = "multinom") {
@@ -56,7 +58,8 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
       trace             = 0,
       global_eval_f     = ObjFnMultinomMaxLH,
       local_eval_f      = ObjFnMultinomMaxLH,
-      local_eval_g_ineq = g_ineq_for_ObjFnMultinomMaxLH))
+      local_eval_g_ineq = g_ineq_for_ObjFnMultinomMaxLH,
+      likelihood.dist   = likelihood.dist))
   } else if (likelihood.dist == "neg.binom") {
     return(list(
       global.opts       = DefaultGlobalOpts(),
@@ -65,6 +68,7 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
       trace             = 0,
       global_eval_f     = ObjFnBinomMaxLHRound,
       local_eval_f      = ObjFnBinomMaxLHRound,
-      local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2))
+      local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2,
+      likelihood.dist   = likelihood.dist))
   }
 }
