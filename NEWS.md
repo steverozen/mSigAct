@@ -1,3 +1,8 @@
+# 2.1.1.9005
+
+* Changed the default tracing behavior to only show the information of sample
+name, df and number of subsets to remove.
+
 # 2.1.1.9004
 
 * Added a new argument `likelihood.dist` to functions `DefaultManyOpts`,

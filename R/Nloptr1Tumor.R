@@ -71,9 +71,10 @@ Nloptr1Tumor <- function(spectrum,
     spectrum    = spectrum,
     sigs        = sigs,
     ...)
-  if (m.opts$trace > 0)
+  if (m.opts$trace > 0) {
     message("local.res$objective = ", local.res$objective)
-  message("local.res$iterations = ", local.res$iterations)
+    message("local.res$iterations = ", local.res$iterations)
+  }
 
   maxeval.warning <- NULL
   warnings <- NULL

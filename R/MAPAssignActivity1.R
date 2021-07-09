@@ -300,14 +300,14 @@ MAPAssignActivityInternal <-
 
   if (length(non.0.exp.index) < ncol(sigs)) {
     removed.sig.names <- colnames(sigs)[which(start.exp < 0.5)]
-    my.msg(0, ncol(sigs) - length(non.0.exp.index),
+    my.msg(1, ncol(sigs) - length(non.0.exp.index),
            " signatures removed at beginning")
-    my.msg(0, "removed: ",
+    my.msg(1, "removed: ",
            paste(removed.sig.names, collapse = ", "))
   }
 
   df0.sig.names <- colnames(sigs)[non.0.exp.index]
-  my.msg(0, "Starting with ",
+  my.msg(1, "Starting with ",
          paste(df0.sig.names, collapse = ","),
          "\nmax.level = ", max.level,
          "\nlog likelihood using all signatures = ", lh.w.all)
