@@ -3,24 +3,28 @@
 #' 
 #' @param spectrum An observed spectrum (a numeric vector).
 #'
-#' @param expected.counts A vector of (integer) expected mutation counts, one
+#' @param expected.counts A vector of expected mutation counts, one
 #' expected count for each mutation type. We want to know the
 #' likelihood that this model generated the observed
 #' spectrum, assuming each mutational types generates counts according to
-#' a negative binomial distribution with
-#' the given \code{expected.counts} (argument \code{mu}
-#' to \code{\link[stats]{NegBinomial}}) and dispersion parameter
-#' \code{nbinom.size}.
-#'
-#' @param nbinom.size The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.
+#' a probability distribution specified by \code{likelihood.dist} with
+#' the given \code{expected.counts}. See \code{LLHSpectrumMultinom} and \
+#' \code{LLHSpectrumNegBinom} for more details.
+#' 
+#' @param nbinom.size \strong{Only} needed when \code{likelihood.dist =
+#'   "neg.binom"}.The dispersion parameter for the negative binomial
+#'   distribution; smaller is more dispersed. See
+#'   \code{\link[stats]{NegBinomial}}.
 #'        
 #' @param model Names of sigs present in the MAP exposure. Do not use indices.
 #'
 #' @param sigs.presence.prop The proportions of samples that contain each
 #'    signature. A numerical vector (values between 0 and 1), with names
 #'    being a superset of \code{model}.
+#'    
+#' @param likelihood.dist The probability distribution used to calculate the
+#'   likelihood, can be either "multinom" (multinomial distribution) or
+#'   "neg.binom" (negative binomial distribution).
 #'
 #' @param verbose If \code{TRUE} print messages under some circumstances.
 #'
@@ -37,12 +41,18 @@
 #' @export
 LLHSpectrumMAP <-
   function(spectrum, expected.counts, nbinom.size, model, sigs.presence.prop, 
-           verbose = FALSE) {
+           likelihood.dist = "multinom", verbose = FALSE) {
     
-    loglh.of.exp <- LLHSpectrumNegBinom(spectrum = spectrum,
-                                        expected.counts = expected.counts,
-                                        nbinom.size = nbinom.size,
-                                        verbose = verbose)
+    if (likelihood.dist == "multinom") {
+      loglh.of.exp <- LLHSpectrumMultinom(spectrum = spectrum,
+                                          expected.counts = expected.counts,
+                                          verbose = verbose)
+    } else if (likelihood.dist == "neg.binom") {
+      loglh.of.exp <- LLHSpectrumNegBinom(spectrum = spectrum,
+                                          expected.counts = expected.counts,
+                                          nbinom.size = nbinom.size,
+                                          verbose = verbose)
+    }
     
     prob.of.model <- P.of.M(model = model,
                             sigs.presence.prop = sigs.presence.prop)

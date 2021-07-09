@@ -118,6 +118,7 @@ MAPAssignActivity1 <-
                          nbinom.size = m.opts$nbinom.size,
                          model = names(best.exp),
                          sigs.presence.prop = sigs.presence.prop,
+                         likelihood.dist = m.opts$likelihood.dist,
                          signatures = sigs[, names(best.exp), drop = FALSE])
       
       # Round the exposure and reconstruction
@@ -499,15 +500,20 @@ P.of.M <- function(model, sigs.presence.prop) {
 #' 
 #' @param recon The unrounded reconstruction.
 #' 
-#' @param nbinom.size The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.
+#' @param nbinom.size \strong{Only} needed when \code{likelihood.dist =
+#'   "neg.binom"}.The dispersion parameter for the negative binomial
+#'   distribution; smaller is more dispersed. See
+#'   \code{\link[stats]{NegBinomial}}.
 #'        
 #' @param model Names of sigs present in a trial exposure. Do not use indices.
 #'
 #' @param sigs.presence.prop The proportions of samples that contain each
 #'   signature. A numerical vector (values between 0 and 1), with names being a
 #'   superset of \code{model}.
+#'   
+#' @param likelihood.dist The probability distribution used to calculate the
+#'   likelihood, can be either "multinom" (multinomial distribution) or
+#'   "neg.binom" (negative binomial distribution).
 #'   
 #' @param signatures \strong{Only} used to compute distances for quadratic
 #'   programming assignment. Signature as a matrix or data frame, with each row
@@ -527,25 +533,31 @@ P.of.M <- function(model, sigs.presence.prop) {
 #' @keywords internal
 
 DistanceMeasures <- 
-  function(spect, recon, nbinom.size, model, sigs.presence.prop, signatures = NULL) {
+  function(spect, recon, nbinom.size, model, sigs.presence.prop, 
+           likelihood.dist = "multinom", signatures = NULL) {
     my.fn <- function(method, spect, recon) {
       df <- rbind(as.vector(spect),
                   as.vector(recon))
-      return(philentropy::distance(x = df, method = method, test.na = FALSE))
+      return(suppressMessages(philentropy::distance(x = df, 
+                                                    method = method, 
+                                                    test.na = FALSE)))
     }
     
     vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
                         spect = spect, recon = recon))
-    vv <- c(neg.log.likelihood =
-              LLHSpectrumNegBinom(
-                as.vector(spect),
-                as.vector(recon),
-                nbinom.size = nbinom.size),
-            MAP = 
-              LLHSpectrumMAP(spectrum = spect, expected.counts = recon,
-                             nbinom.size = nbinom.size, model = model,
-                             sigs.presence.prop = sigs.presence.prop),
-            vv)
+    if (likelihood.dist == "multinom") {
+      neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(recon))
+    } else if (likelihood.dist == "neg.binom") {
+      neg.log.likelihood <- 
+        LLHSpectrumNegBinom(as.vector(spect), as.vector(recon), nbinom.size = nbinom.size)
+    }
+    
+    MAP <- LLHSpectrumMAP(spectrum = spect, expected.counts = recon,
+                          nbinom.size = nbinom.size, model = model,
+                          likelihood.dist = likelihood.dist,
+                          sigs.presence.prop = sigs.presence.prop)
+    
+    vv <- c(neg.log.likelihood = neg.log.likelihood, MAP = MAP, vv)
     
     if (!is.null(signatures)) {
       # Do signature assignment using QP
@@ -555,16 +567,20 @@ DistanceMeasures <-
                                       use.sig.names = TRUE)
       QP.distances <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
                                     spect = spect, recon = QP.recon))
-      QP.distances <- c(neg.log.likelihood =
-                          LLHSpectrumNegBinom(
-                            as.vector(spect),
-                            as.vector(QP.recon),
-                            nbinom.size = nbinom.size),
-                        MAP = 
-                          LLHSpectrumMAP(spectrum = spect, expected.counts = QP.recon,
-                                         nbinom.size = nbinom.size, model = model,
-                                         sigs.presence.prop = sigs.presence.prop),
-                        QP.distances)
+      
+      if (likelihood.dist == "multinom") {
+        neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(QP.recon))
+      } else if (likelihood.dist == "neg.binom") {
+        neg.log.likelihood <- 
+          LLHSpectrumNegBinom(as.vector(spect), as.vector(QP.recon), nbinom.size = nbinom.size)
+      }
+      
+      MAP <- LLHSpectrumMAP(spectrum = spect, expected.counts = QP.recon,
+                            nbinom.size = nbinom.size, model = model,
+                            likelihood.dist = likelihood.dist,
+                            sigs.presence.prop = sigs.presence.prop)
+      
+      QP.distances <- c(neg.log.likelihood = neg.log.likelihood, MAP = MAP, QP.distances)
       
       return(tibble::tibble(method = names(vv), proposed.assignment = vv,
                             QP.assignment = QP.distances))

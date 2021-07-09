@@ -1,9 +1,11 @@
 # 2.1.1.9004
 
-* Added a new argument `likelihood.dist` to function `DefaultManyOpts` for user to
-specify the probability distribution to calculate the likelihood
+* Added a new argument `likelihood.dist` to functions `DefaultManyOpts`,
+`LLHSpectrumMAP` and `DistanceMeasures` so that user can specify the probability
+distribution to calculate the likelihood
 
-* Added a new element `likelihood.dist` in the returned value of function `DefaultManyOpts`
+* Added a new element `likelihood.dist` in the returned value of function
+`DefaultManyOpts`
 
 # 2.1.1.9003
 
