@@ -31,12 +31,20 @@ OptimizeExposure <- function(spectrum,
                              ...) {
 
   stopifnot(mode(spectrum) == "numeric")
+  
+  if (is.null(m.opts$nbinom.size)) {
+    r <- Nloptr1Tumor(spectrum    = spectrum,
+                      sigs        = sigs,
+                      m.opts      = m.opts,
+                      ...)
+  } else {
+    r <- Nloptr1Tumor(spectrum    = spectrum,
+                      sigs        = sigs,
+                      m.opts      = m.opts,
+                      nbinom.size = m.opts$nbinom.size,
+                      ...)
+  }
 
-  r <- Nloptr1Tumor(spectrum    = spectrum,
-                    sigs        = sigs,
-                    m.opts      = m.opts,
-                    nbinom.size = m.opts$nbinom.size,
-                    ...)
   loglh <- r$objective
   if (m.opts$trace > 10) message("Negative loglh from Nlopter1Tumor = ", loglh)
 

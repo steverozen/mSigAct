@@ -50,19 +50,21 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
   }
   
   if (likelihood.dist == "multinom") {
-    global_eval_f <- ObjFnMultinomMaxLH
-    local_eval_f <- ObjFnMultinomMaxLH
+    return(list(
+      global.opts       = DefaultGlobalOpts(),
+      local.opts        = DefaultLocalOpts(),
+      trace             = 0,
+      global_eval_f     = ObjFnMultinomMaxLH,
+      local_eval_f      = ObjFnMultinomMaxLH,
+      local_eval_g_ineq = g_ineq_for_ObjFnMultinomMaxLH))
   } else if (likelihood.dist == "neg.binom") {
-    global_eval_f <- ObjFnBinomMaxLHRound
-    local_eval_f <- ObjFnBinomMaxLHRound
+    return(list(
+      global.opts       = DefaultGlobalOpts(),
+      local.opts        = DefaultLocalOpts(),
+      nbinom.size       = 5,
+      trace             = 0,
+      global_eval_f     = ObjFnBinomMaxLHRound,
+      local_eval_f      = ObjFnBinomMaxLHRound,
+      local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2))
   }
-  
-  return(list(
-    global.opts       = DefaultGlobalOpts(),
-    local.opts        = DefaultLocalOpts(),
-    nbinom.size       = 5,
-    trace             = 0,
-    global_eval_f     = global_eval_f,
-    local_eval_f      = local_eval_f,
-    local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2))
 }
