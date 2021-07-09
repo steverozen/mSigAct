@@ -562,7 +562,7 @@ DistanceMeasures <-
     if (!is.null(signatures)) {
       # Do signature assignment using QP
       QP.expo <- OptimizeExposureQP(spectrum = spect, signatures = signatures)
-      QP.expo.non.zero <- QP.expo[QP.expo > 0]
+      QP.expo.non.zero <- QP.expo[QP.expo >= 0.5]
       QP.recon <- ReconstructSpectrum(sigs = signatures, exp = QP.expo.non.zero,
                                       use.sig.names = TRUE)
       QP.distances <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,

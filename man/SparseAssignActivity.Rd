@@ -7,17 +7,21 @@
 SparseAssignActivity(
   spectra,
   sigs,
+  output.dir,
   max.level = 5,
   p.thresh = 0.05,
-  m.opts = NULL,
+  m.opts = DefaultManyOpts(),
   num.parallel.samples = 5,
-  mc.cores.per.sample = min(20, 2^max.level)
+  mc.cores.per.sample = min(20, 2^max.level),
+  seed = NULL
 )
 }
 \arguments{
 \item{spectra}{The spectra (multiple spectra) to be reconstructed.}
 
 \item{sigs}{The known signatures to use in reconstruction.}
+
+\item{output.dir}{Directory path to save the output file.}
 
 \item{max.level}{The largest number of signatures to consider discarding
 in the reconstruction.}
@@ -34,10 +38,41 @@ sample in turn can require multiple cores, as governed by
 
 \item{mc.cores.per.sample}{The maximum number of cores to use for each sample.
 On Microsoft Windows machines it is silently changed to 1.}
+
+\item{seed}{Random seed; set this to get reproducible results. (The
+numerical optimization is in two phases; the first, global phase
+might rarely find different optima depending on the random
+seed.)}
 }
 \value{
-A list with the inferred exposure matrix as element \code{exposure}.
+A list with the elements:
+\itemize{
+\item \code{proposed.assignment}: Proposed sparse assignment for \code{spectra}.
+\item \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra}
+based on sparse assignment.
+\item \code{reconstruction.distances}: Various distances and similarities
+between \code{spectra} and \code{proposed.reconstruction}.
+}
 }
 \description{
 Find known signatures that can most sparsely reconstruct each spectrum in a catalog.
+}
+\examples{
+\dontrun{
+# This is a long running example unless parallel computing is supported on your machine
+indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+sigs <- PCAWG7::signature$genome$SBS96
+sigs.prop <- ExposureProportions(mutation.type = "SBS96",
+                                 cancer.type = "Lung-AdenoCA")
+sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
+sparse.out <- SparseAssignActivity(spectra = spectra,
+                                   sigs = sigs.to.use,
+                                   output.dir = file.path(tempdir(), "Lung-AdenoCA"),
+                                   max.level = ncol(sigs.to.use) - 1,
+                                   p.thresh = 0.05 / ncol(spectra),
+                                   num.parallel.samples = 2,
+                                   mc.cores.per.sample = 30,
+                                   seed = 2561)
+}
 }

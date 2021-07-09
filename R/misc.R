@@ -53,7 +53,7 @@ ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
      exp <- as.matrix(exp)
   }
   if (use.sig.names) {
-    sigs <- sigs[ , rownames(exp)]
+    sigs <- sigs[ , rownames(exp), drop = FALSE]
   }
   stopifnot(length(exp) == ncol(sigs))
   return(as.matrix(sigs) %*% as.matrix(exp))
@@ -71,7 +71,7 @@ ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
 #' @keywords internal
 
 prop.reconstruct <- function(sigs, exp) {
-  return(ReconstructSpectrum(sigs, exp, FALSE))
+  return(ReconstructSpectrum(sigs, exp, TRUE))
 }
 
 

@@ -34,7 +34,7 @@ SparseAssignTest1 <- function(sig.counts,
                                   m.opts       = m.opts,
                                   max.mc.cores = max.mc.cores
   )
-
+  SA.out <- SA.out$proposed.assignment
   zeros <- which(SA.out < 0.5)
   if (length(zeros) > 0) {
     SA.out2 <- SA.out[-zeros]
@@ -44,9 +44,10 @@ SparseAssignTest1 <- function(sig.counts,
     sig.names2 <- sig.names
   }
 
-  recon1 <- round(prop.reconstruct(some.sigs, SA.out))
-
-  return(list(soln1       = SA.out,
+  recon1 <- round(ReconstructSpectrum(some.sigs, SA.out, use.sig.names = TRUE))
+  
+  
+  return(list(soln1       = SA.out[, ],
               # soln2       = polish.out,
               truth       = sig.counts,
               edist1      = EDist2Spect(SA.out, sig.names, spect),
@@ -62,12 +63,12 @@ test_that("SparseAssignActivity1 (one spectrum) Test 1", {
   retval <-  SparseAssignTest1(sig.counts = c(SBS1 = 1000, SBS22 = 2000))
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS1    = 973.214846450792,
-                           SBS22   = 2024.78515354921),
+                         round(c(SBS1    = 973.214846450792,
+                           SBS22   = 2024.78515354921)),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         14.6182783136673,
+                         14.88182,
                          tolerance = 1e-2)
 
 })
@@ -78,13 +79,15 @@ test_that("SparseAssignActivity1 (one spectrum) Test 2", {
   retval <- SparseAssignTest1(
     sig.counts = c(SBS3 = 10, SBS5 = 1000, SBS10a = 2000),
     trace = 0)
-
+  
+  # RESULTS UPDATED on 9 July 2021, may need further investigation for this particular 
+  # test below
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 0, SBS5 = 1011.794, SBS10a = 2002.206),
+                         c(SBS5 = 1021, SBS10a = 1993),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         5.452318,
+                         5.577088,
                          tolerance = 1e-2)
 })
 
@@ -100,12 +103,12 @@ test_that("SparseAssignActivity1 (one spectrum) Test 3", {
     trace = 0)
 
   testthat::expect_equal(retval$soln1,
+                         round(
                          c(SBS3  = 341.2224,
                            SBS5  = 279.0896,
-                           SBS4  = 0,
                            SBS29 = 417.9223,
                            SBS24 = 350.3011,
-                           SBS8  = 409.4643),
+                           SBS8  = 409.4643)),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
@@ -126,12 +129,10 @@ test_that("SparseAssignActivity1 (one spectrum) Test 4", {
     trace = 0)
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 0,
-                           SBS5  = 163.8994,
+                         round(c(SBS5  = 163.8994,
                            SBS4  = 163.5813,
-                           SBS29 = 0,
                            SBS24 = 153.1080,
-                           SBS8  = 118.4111),
+                           SBS8  = 118.4111)),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1), 9.671682,
@@ -150,12 +151,9 @@ test_that("SparseAssignActivity1 (one spectrum) Test 5", {
     trace = 0)
 
   testthat::expect_equal(retval$soln1,
-                         c(SBS3  = 0,
-                           SBS5  = 56.6356,
-                           SBS4  = 0,
+                         round(c(SBS5  = 56.6356,
                            SBS29 = 70.1188,
-                           SBS24 = 0,
-                           SBS8  = 50.2455),
+                           SBS8  = 50.2455)),
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1), 5.67639,

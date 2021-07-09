@@ -1,5 +1,8 @@
 # 2.1.1.9005
 
+* Added example, new arguments and return values to function
+`SparseAssignActivity`. See its documentation for more details
+
 * Changed the default tracing behavior to only show the information of sample
 name, df and number of subsets to remove.
 

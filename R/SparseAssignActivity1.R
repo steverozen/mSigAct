@@ -14,8 +14,11 @@
 #' @param max.mc.cores
 #'   The maximum number of cores to use.
 #'   On Microsoft Windows machines it is silently changed to 1.)
-
-
+#'   
+#' @param seed Random seed; set this to get reproducible results. (The
+#'   numerical optimization is in two phases; the first, global phase
+#'   might rarely find different optima depending on the random
+#'   seed.)
 SparseAssignActivity1 <- function(spect,
                                   sigs,
                                   max.level    = 5,
@@ -168,5 +171,117 @@ SparseAssignActivity1 <- function(spect,
     out.exp[unlist(best.sig.indices[[max.df]])] <- unlist(best.exp[[max.df]])
   }
   stopifnot(abs(sum(out.exp) - sum(spect)) < 1)
-  return(out.exp)
+  
+  # Remove signature that have exposure less than 0.5
+  sig.indices.non.zero.exposure <- which(out.exp >= 0.5)
+  exposure <- as.matrix(out.exp[sig.indices.non.zero.exposure])
+  colnames(exposure) <- colnames(spect)
+  
+  # Get the reconstructed spectrum
+  recon <- ReconstructSpectrum(sigs = sigs, exp = exposure, use.sig.names = TRUE)
+  
+  distances <- 
+    DistanceMeasuresSparse(spect = spect, recon = recon, 
+                           nbinom.size = m.opts$nbinom.size,
+                           likelihood.dist = m.opts$likelihood.dist,
+                           signatures = sigs[, rownames(exposure), drop = FALSE])
+  
+  # Round the exposure and reconstruction
+  exposure <- round(exposure)
+  recon <- round(recon)
+  
+  # If there are signatures get assigned zero mutation counts after rounding,
+  # remove these signatures from the exposure matrix
+  non.zero.indices <- rowSums(exposure) > 0
+  exposure <- exposure[non.zero.indices, , drop = FALSE]
+  
+  # Add attributes to recon to be same as spect
+  recon <- AddAttributes(recon, spect)
+  
+  return(list(proposed.assignment          = exposure,
+              proposed.reconstruction      = recon,
+              reconstruction.distances     = distances))
 }
+
+#' Calculate several distance measures between a spectrum and its reconstruction using
+#' sparse assignment
+#' 
+#' The idea is to provide several measures of how well the 
+#' reconstruction matches the spectrum.
+#' 
+#' @param spect The spectrum we are trying to reconstruct.
+#' 
+#' @param recon The unrounded reconstruction.
+#' 
+#' @param nbinom.size \strong{Only} needed when \code{likelihood.dist =
+#'   "neg.binom"}.The dispersion parameter for the negative binomial
+#'   distribution; smaller is more dispersed. See
+#'   \code{\link[stats]{NegBinomial}}.
+#'        
+#' @param likelihood.dist The probability distribution used to calculate the
+#'   likelihood, can be either "multinom" (multinomial distribution) or
+#'   "neg.binom" (negative binomial distribution).
+#'   
+#' @param signatures \strong{Only} used to compute distances for quadratic
+#'   programming assignment. Signature as a matrix or data frame, with each row
+#'   one mutation type (g.e. CCT > CAT or CC > TT) and each column a signature.
+#'   It should be the proposed signatures used by sparse
+#'   assignment to reconstruct \code{spect}. It is needed to calculate distances
+#'   of quadratic programming assignment.
+#'   
+#' @return A data frame whose first column indicates the distance method. The
+#'   second column \code{proposed.assignment} shows the values of various
+#'   distances using sparse assignment. 
+#'   
+#'   When \code{signatures} is \strong{not} NULL, there will be a third column
+#'   \code{QP.assignment} shows the values of various distances using quadratic
+#'   programming assignment.
+#'   
+#' @keywords internal
+
+DistanceMeasuresSparse <- 
+  function(spect, recon, nbinom.size, likelihood.dist = "multinom", signatures = NULL) {
+    my.fn <- function(method, spect, recon) {
+      df <- rbind(as.vector(spect),
+                  as.vector(recon))
+      return(suppressMessages(philentropy::distance(x = df, 
+                                                    method = method, 
+                                                    test.na = FALSE)))
+    }
+    
+    vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
+                        spect = spect, recon = recon))
+    if (likelihood.dist == "multinom") {
+      neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(recon))
+    } else if (likelihood.dist == "neg.binom") {
+      neg.log.likelihood <- 
+        LLHSpectrumNegBinom(as.vector(spect), as.vector(recon), nbinom.size = nbinom.size)
+    }
+    
+    vv <- c(neg.log.likelihood = neg.log.likelihood, vv)
+    
+    if (!is.null(signatures)) {
+      # Do signature assignment using QP
+      QP.expo <- OptimizeExposureQP(spectrum = spect, signatures = signatures)
+      QP.expo.non.zero <- QP.expo[QP.expo >= 0.5]
+      QP.recon <- ReconstructSpectrum(sigs = signatures, exp = QP.expo.non.zero,
+                                      use.sig.names = TRUE)
+      QP.distances <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
+                                    spect = spect, recon = QP.recon))
+      
+      if (likelihood.dist == "multinom") {
+        neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(QP.recon))
+      } else if (likelihood.dist == "neg.binom") {
+        neg.log.likelihood <- 
+          LLHSpectrumNegBinom(as.vector(spect), as.vector(QP.recon), nbinom.size = nbinom.size)
+      }
+      
+      
+      QP.distances <- c(neg.log.likelihood = neg.log.likelihood, QP.distances)
+      
+      return(tibble::tibble(method = names(vv), proposed.assignment = vv,
+                            QP.assignment = QP.distances))
+    } else {
+      return(tibble::tibble(method = names(vv), proposed.assignment = vv))
+    }
+  }
