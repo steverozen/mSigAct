@@ -20,13 +20,18 @@ SparseAssignActivity1 <- function(spect,
                                   sigs,
                                   max.level    = 5,
                                   p.thresh     = 0.05,
-                                  m.opts,
-                                  max.mc.cores = min(20, 2^max.level)) {
-
+                                  m.opts       = DefaultManyOpts(),
+                                  max.mc.cores = min(20, 2^max.level),
+                                  seed         = NULL) {
+  
+  if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
+  
   my.msg <- function(trace.level, ...)
     if (m.opts$trace >= trace.level) message("SparseAssignActivity1: ", ...)
 
   max.sig.index <- ncol(sigs)
+  
+  message("Analyzing sample ", colnames(spect))
   my.msg(10, "SparseAssignActivity1: number of signatures = ", max.sig.index)
   mode(spect) <-  'numeric'
   start <- OptimizeExposure(spect,
@@ -44,7 +49,7 @@ SparseAssignActivity1 <- function(spect,
   start.exp <- start$exposure
   non.0.exp.index <- which(start.exp > 0.5) # indices of signatures with non-zero
                                             # exposures； TODO, possibly remove
-  my.msg(0, "Starting with ",
+  my.msg(1, "Starting with ",
          paste(names(start.exp)[non.0.exp.index], collapse = ","),
          "\nmax.level = ", max.level,
          "\nlog likelihood using all signatures = ", lh.w.all)
