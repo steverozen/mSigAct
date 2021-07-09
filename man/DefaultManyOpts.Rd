@@ -4,7 +4,12 @@
 \alias{DefaultManyOpts}
 \title{Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.}
 \usage{
-DefaultManyOpts()
+DefaultManyOpts(likelihood.dist = "multinom")
+}
+\arguments{
+\item{likelihood.dist}{The probability distribution used to calculate the
+likelihood, can be either "multinom" (multinomial distribution) or
+"neg.binom" (negative binomial distribution).}
 }
 \value{
 A list with the following elements
@@ -18,7 +23,7 @@ A list with the following elements
 
   \item{nbinom.size}{The dispersion parameter for the negative
        binomial distribution; smaller is more dispersed.
-       See \code{\link[stats]{NegBinomial}}.}
+       See \code{\link[stats]{NegBinomial}}.} 
 
   \item{trace}{If > 0 print progress messages.}
   

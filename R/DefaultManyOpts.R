@@ -14,7 +14,11 @@ DefaultLocalOpts <- function() {
 }
 
 #' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.
-#'
+#' 
+#' @param likelihood.dist The probability distribution used to calculate the
+#'   likelihood, can be either "multinom" (multinomial distribution) or
+#'   "neg.binom" (negative binomial distribution).
+#'   
 #' @export
 #'
 #' @return A list with the following elements
@@ -28,7 +32,7 @@ DefaultLocalOpts <- function() {
 #'
 #'   \item{nbinom.size}{The dispersion parameter for the negative
 #'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.}
+#'        See \code{\link[stats]{NegBinomial}}.} 
 #'
 #'   \item{trace}{If > 0 print progress messages.}
 #'   
@@ -40,14 +44,25 @@ DefaultLocalOpts <- function() {
 #'   the local optimization phase.}
 #' }
 
-DefaultManyOpts <- function(distribution = "multinom") {
-  e
+DefaultManyOpts <- function(likelihood.dist = "multinom") {
+  if (!likelihood.dist %in% c("multinom", "neg.binom")) {
+    stop("The value for argument likelihood.dist should be either multinom or neg.binom")
+  }
+  
+  if (likelihood.dist == "multinom") {
+    global_eval_f <- ObjFnMultinomMaxLH
+    local_eval_f <- ObjFnMultinomMaxLH
+  } else if (likelihood.dist == "neg.binom") {
+    global_eval_f <- ObjFnBinomMaxLHRound
+    local_eval_f <- ObjFnBinomMaxLHRound
+  }
+  
   return(list(
     global.opts       = DefaultGlobalOpts(),
     local.opts        = DefaultLocalOpts(),
     nbinom.size       = 5,
     trace             = 0,
-    global_eval_f     = ObjFnBinomMaxLHRound,
-    local_eval_f      = ObjFnBinomMaxLHRound,
+    global_eval_f     = global_eval_f,
+    local_eval_f      = local_eval_f,
     local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2))
 }
