@@ -33,6 +33,8 @@ A list with the following elements
   
   \item{local_eval_g_ineq}{The inequality constraint function for 
   the local optimization phase.}
+  
+  \item{likelihood.dist}{The probability distribution used to calculate the likelihood.}
 }
 }
 \description{

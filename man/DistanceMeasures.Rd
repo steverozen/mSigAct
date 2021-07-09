@@ -10,6 +10,7 @@ DistanceMeasures(
   nbinom.size,
   model,
   sigs.presence.prop,
+  likelihood.dist = "multinom",
   signatures = NULL
 )
 }
@@ -18,15 +19,20 @@ DistanceMeasures(
 
 \item{recon}{The unrounded reconstruction.}
 
-\item{nbinom.size}{The dispersion parameter for the negative
-binomial distribution; smaller is more dispersed.
-See \code{\link[stats]{NegBinomial}}.}
+\item{nbinom.size}{\strong{Only} needed when \code{likelihood.dist =
+"neg.binom"}.The dispersion parameter for the negative binomial
+distribution; smaller is more dispersed. See
+\code{\link[stats]{NegBinomial}}.}
 
 \item{model}{Names of sigs present in a trial exposure. Do not use indices.}
 
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names being a
 superset of \code{model}.}
+
+\item{likelihood.dist}{The probability distribution used to calculate the
+likelihood, can be either "multinom" (multinomial distribution) or
+"neg.binom" (negative binomial distribution).}
 
 \item{signatures}{\strong{Only} used to compute distances for quadratic
 programming assignment. Signature as a matrix or data frame, with each row
