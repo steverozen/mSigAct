@@ -45,6 +45,7 @@ test_that("MAPAssignActivity for ID Catalog", {
                               expected.counts = expected.counts,
                               nbinom.size = 5,
                               model = model,
+                              likelihood.dist = "neg.binom",
                               sigs.presence.prop = sigs.prop)
   expect_equal(loglh.MAP, -124.6515, tolerance = 1e-3)
 })

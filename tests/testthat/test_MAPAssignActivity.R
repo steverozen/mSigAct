@@ -22,6 +22,7 @@ test_that("MAPAssignActivity for ID Catalog", {
     output.dir              = output.dir,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
+    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
     num.parallel.samples    = 2,
     mc.cores.per.sample     = 30,
     seed                    = 8787)

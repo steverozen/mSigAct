@@ -37,7 +37,7 @@ TestOneLLHetc <- function(sig.counts,
                                   input.sigs = input.sigs)
 
 
-  m.opts <- DefaultManyOpts()
+  m.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
   m.opts$trace <- trace
 
   retval <- OptimizeExposure(

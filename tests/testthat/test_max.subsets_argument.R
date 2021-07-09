@@ -18,6 +18,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     output.dir              = output.dir,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
+    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
     num.parallel.samples    = 2,
     mc.cores.per.sample     = 10,
     seed                    = 8787,
@@ -33,6 +34,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     output.dir              = output.dir,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
+    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
     num.parallel.samples    = 2,
     mc.cores.per.sample     = 10,
     seed                    = 8787,
@@ -57,6 +59,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity1", {
     sigs.presence.prop      = sigs.prop,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
+    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
     max.mc.cores            = 10,
     seed                    = 8787,
     max.subsets             = 10)

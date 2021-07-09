@@ -26,7 +26,7 @@ SparseAssignTest1 <- function(sig.counts,
       catalog.type = "counts")
   nbinom.size <- 5
 
-  m.opts <- DefaultManyOpts()
+  m.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
   m.opts$trace <- trace
 
   SA.out <- SparseAssignActivity1(spect       = spect,

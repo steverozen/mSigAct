@@ -29,7 +29,7 @@ TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
   stopifnot(length(eso.indices) == 1)
   eso.spectra <- TestEsoSpectra(eso.indices)
 
-  m.opts <- DefaultManyOpts()
+  m.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
 
   sigs.plus <- TestEsoSigs(extra.sig)
   set.seed(101010, kind = "L'Ecuyer-CMRG")
@@ -58,7 +58,7 @@ TestAny1 <- function(extra.sig, eso.index) {
 
   eso.spectra <- TestEsoSpectra(eso.index)
 
-  m.opts <- DefaultManyOpts()
+  m.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
   m.opts$trace <- 100
 
   sigs.plus <- TestEsoSigs(extra.sig) # The extra signatures are signature names, and will be the first columns of sigs.plus

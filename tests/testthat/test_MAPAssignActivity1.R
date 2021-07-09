@@ -14,7 +14,7 @@ dbs78 <-
 test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
                     sig.ids.to.use = NULL) {
 
-  mm <- mSigAct::DefaultManyOpts()
+  mm <- mSigAct::DefaultManyOpts(likelihood.dist = "neg.binom")
   mm$trace <- 0
   mm$global.opts$maxeval <- 1000 # A small value for testing
   # mm$local.opts$print_options_doc <- TRUE
