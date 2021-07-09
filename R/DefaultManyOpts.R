@@ -40,7 +40,8 @@ DefaultLocalOpts <- function() {
 #'   the local optimization phase.}
 #' }
 
-DefaultManyOpts <- function() {
+DefaultManyOpts <- function(distribution = "multinom") {
+  e
   return(list(
     global.opts       = DefaultGlobalOpts(),
     local.opts        = DefaultLocalOpts(),

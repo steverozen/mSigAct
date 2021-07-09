@@ -1,4 +1,5 @@
-#' Likelihood that 1 observed spectrum was generated from a vector of expected mutation counts.
+#' Likelihood that 1 observed spectrum was generated from a vector of expected
+#' mutation counts using negative binomial distribution
 #'
 #' @param spectrum An observed spectrum (a numeric vector)
 #'
