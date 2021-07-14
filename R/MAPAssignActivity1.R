@@ -546,9 +546,9 @@ DistanceMeasures <-
     vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
                         spect = spect, recon = recon))
     if (likelihood.dist == "multinom") {
-      neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(recon))
+      log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(recon))
     } else if (likelihood.dist == "neg.binom") {
-      neg.log.likelihood <- 
+      log.likelihood <- 
         LLHSpectrumNegBinom(as.vector(spect), as.vector(recon), nbinom.size = nbinom.size)
     }
     
@@ -557,7 +557,7 @@ DistanceMeasures <-
                           likelihood.dist = likelihood.dist,
                           sigs.presence.prop = sigs.presence.prop)
     
-    vv <- c(neg.log.likelihood = neg.log.likelihood, MAP = MAP, vv)
+    vv <- c(log.likelihood = log.likelihood, MAP = MAP, vv)
     
     if (!is.null(signatures)) {
       # Do signature assignment using QP
@@ -569,9 +569,9 @@ DistanceMeasures <-
                                     spect = spect, recon = QP.recon))
       
       if (likelihood.dist == "multinom") {
-        neg.log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(QP.recon))
+        log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(QP.recon))
       } else if (likelihood.dist == "neg.binom") {
-        neg.log.likelihood <- 
+        log.likelihood <- 
           LLHSpectrumNegBinom(as.vector(spect), as.vector(QP.recon), nbinom.size = nbinom.size)
       }
       
@@ -580,7 +580,7 @@ DistanceMeasures <-
                             likelihood.dist = likelihood.dist,
                             sigs.presence.prop = sigs.presence.prop)
       
-      QP.distances <- c(neg.log.likelihood = neg.log.likelihood, MAP = MAP, QP.distances)
+      QP.distances <- c(log.likelihood = log.likelihood, MAP = MAP, QP.distances)
       
       return(tibble::tibble(method = names(vv), proposed.assignment = vv,
                             QP.assignment = QP.distances))

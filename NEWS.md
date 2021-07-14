@@ -1,10 +1,15 @@
+# 2.1.1.9006
+
+* Changed the column name from `neg.log.likelihood` to `log.likelihood` in the
+output of functions `DistanceMeasures` and `DistanceMeasuresSparse`
+
 # 2.1.1.9005
 
 * Added example, new arguments and return values to function
 `SparseAssignActivity`. See its documentation for more details
 
 * Changed the default tracing behavior to only show the information of sample
-name, df and number of subsets to remove.
+name, df and number of subsets to remove
 
 # 2.1.1.9004
 
