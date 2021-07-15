@@ -1,5 +1,7 @@
 #' Find Maximum A Posteriori (MAP) assignment of signature exposures that
 #' explain multiple spectra
+#' 
+#' This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
 #'
 #' @inheritParams MAPAssignActivityInternal
 #'
@@ -18,9 +20,12 @@
 #' @return A list with the elements:
 #'
 #' * \code{proposed.assignment}: Proposed signature assignment for \code{spectra}
-#' with the highest MAP found.
+#' with the highest MAP found. If \code{use.sparse.assign = TRUE}, this will
+#' be the most sparse set of signatures that can plausibly explain \code{spectra}.
 #'
 #' * \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra} based on \code{MAP}.
+#' If \code{use.sparse.assign = TRUE}, this will be the reconstruction based on
+#' sparse assignment.
 #'
 #' * \code{reconstruction.distances}: Various distances and similarities
 #' between \code{spectra} and \code{proposed.reconstruction}.
@@ -68,7 +73,8 @@ MAPAssignActivity <-
            mc.cores.per.sample     = min(20, 2^max.level),
            progress.monitor        = NULL,
            seed                    = NULL,
-           max.subsets             = 1000) {
+           max.subsets             = 1000,
+           use.sparse.assign       = FALSE) {
     f1 <- function(i) {
       retval1 <- RunMAPOnOneSample(
         spect                   = spectra[ , i, drop = FALSE],
@@ -81,7 +87,8 @@ MAPAssignActivity <-
         max.mc.cores            = mc.cores.per.sample,
         progress.monitor        = progress.monitor,
         seed                    = seed,
-        max.subsets             = max.subsets)
+        max.subsets             = max.subsets,
+        use.sparse.assign       = use.sparse.assign)
 
       return(retval1)
     }
@@ -122,9 +129,13 @@ MAPAssignActivity <-
     proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval.non.null)
     # Add attributes to proposed.reconstruction to be same as spectra
     proposed.reconstruction <- AddAttributes(proposed.reconstruction, spectra)
-
-    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null)
-
+    
+    if (use.sparse.assign == FALSE) {
+      reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null)
+    } else if (use.sparse.assign == TRUE) {
+      reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null,
+                                                  sparse.assign = TRUE)
+    }
 
     if (length(error.messages) == 0) {
       return(list(proposed.assignment          = proposed.assignment,

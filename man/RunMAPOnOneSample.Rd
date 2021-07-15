@@ -15,7 +15,8 @@ RunMAPOnOneSample(
   max.mc.cores = min(20, 2^max.level),
   progress.monitor = NULL,
   seed = NULL,
-  max.subsets = 1000
+  max.subsets = 1000,
+  use.sparse.assign = FALSE
 )
 }
 \arguments{
@@ -66,6 +67,10 @@ already found to be necessary the algorithm does not test
 supersets of that subset.) If at any level the algorithm
 needs to test more than \code{max.subsets} this function will
 not proceed.}
+
+\item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
+arguments designed for Maximum A Posteriori assignment such as
+\code{sigs.presence.prop} will be ignored.}
 }
 \description{
 Run \code{MAPAssignActivity1} on one sample and save and plot the results

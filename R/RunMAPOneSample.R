@@ -18,7 +18,8 @@ RunMAPOnOneSample <-
            max.mc.cores            = min(20, 2^max.level),
            progress.monitor        = NULL,
            seed                    = NULL,
-           max.subsets             = 1000) {
+           max.subsets             = 1000,
+           use.sparse.assign       = FALSE) {
     
     if (!dir.exists(output.dir)) {
       dir.create(output.dir, recursive = TRUE)
@@ -35,7 +36,8 @@ RunMAPOnOneSample <-
       max.mc.cores            = max.mc.cores,
       progress.monitor        = progress.monitor,
       seed                    = seed,
-      max.subsets             = max.subsets)
+      max.subsets             = max.subsets,
+      use.sparse.assign       = use.sparse.assign)
     
     if (!is.null(retval$error.messages)) {
       return(retval)
@@ -91,12 +93,6 @@ RunMAPOnOneSample <-
                ", contribution = ",
                round(inferred.exposure[, 1]/sum(inferred.exposure[, 1]), 2), ") ",
                ets)
-      # etiologies <- sigs.etiologies[[mut.type]]
-      # colnames(sigs1) <-
-      #  paste0(colnames(sigs1), " (exposure = ", round(exposure[, 1]),
-      #         ", contribution = ",
-      #         round(exposure[, 1]/sum(exposure[, 1]), 2), ") ",
-      #         etiologies[colnames(sigs1), ])
     } else {
       colnames(sigs1) <-
         paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),

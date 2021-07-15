@@ -1,3 +1,8 @@
+# 2.1.1.9007
+
+* Added a new argument `use.sparse.assign` in functions `MAPAssignActivity`,
+`MAPAssignActivity1` and `MAPAssignActivityInternal`
+
 # 2.1.1.9006
 
 * Changed the column name from `neg.log.likelihood` to `log.likelihood` in the

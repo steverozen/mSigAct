@@ -15,7 +15,8 @@ MAPAssignActivityInternal(
   max.subsets = 1000,
   max.presence.proportion = 0.99,
   progress.monitor = NULL,
-  seed = NULL
+  seed = NULL,
+  use.sparse.assign = FALSE
 )
 }
 \arguments{
@@ -67,8 +68,12 @@ progress bar function.}
 numerical optimization is in two phases; the first, global phase
 might rarely find different optima depending on the random
 seed.)}
+
+\item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
+arguments designed for Maximum A Posteriori assignment such as
+\code{sigs.presence.prop} will be ignored.}
 }
 \description{
-Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
+This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
 }
 \keyword{internal}

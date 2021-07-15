@@ -14,7 +14,8 @@ MAPAssignActivity1(
   max.mc.cores = min(20, 2^max.level),
   progress.monitor = NULL,
   seed = NULL,
-  max.subsets = 1000
+  max.subsets = 1000,
+  use.sparse.assign = FALSE
 )
 }
 \arguments{
@@ -63,13 +64,20 @@ already found to be necessary the algorithm does not test
 supersets of that subset.) If at any level the algorithm
 needs to test more than \code{max.subsets} this function will
 not proceed.}
+
+\item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
+arguments designed for Maximum A Posteriori assignment such as
+\code{sigs.presence.prop} will be ignored.}
 }
 \value{
 A list with the elements:
 \itemize{
 \item \code{proposed.assignment}: Proposed signature assignment for \code{spect}
-with the highest MAP found.
+with the highest MAP found. If \code{use.sparse.assign = TRUE}, this will
+be the most sparse set of signatures that can plausibly explain \code{spect}.
 \item \code{proposed.reconstruction} :Reconstruction based on \code{MAP}.
+If \code{use.sparse.assign = TRUE}, this will be the reconstruction based on
+sparse assignment.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spect} and \code{proposed.reconstruction}.
 \item \code{all.tested}: A \code{tibble} of all the search results.
@@ -85,7 +93,7 @@ The elements \code{proposed.assignment}, \code{proposed.reconstruction},
 find the optimal reconstruction or there are errors coming out.
 }
 \description{
-Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.
+This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
 }
 \examples{
 \dontrun{
