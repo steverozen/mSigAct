@@ -385,32 +385,26 @@ MAPAssignActivityInternal <-
         chisq.p <- stats::pchisq(statistic, df, lower.tail = FALSE)
       }
       
-      if (use.sparse.assign == FALSE) {
+      rr <- list(
+        sig.names            = paste(colnames(sigs)[try.sigs.indices],
+                                     collapse = ","),
+        p.for.removing.sigs  = chisq.p,
+        exp                  = try.exp[["exposure"]],
+        sig.indices          = try.sigs.indices,
+        removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
+                                     collapse = ","),
+        loglh.of.exp         = try.exp[["loglh"]]
+      ) 
+      if (!use.sparse.assign) {
         prob.of.model <- P.of.M(try.sigs.names, sigs.presence.prop)
-        
-        return(list(
-          sig.names            = paste(colnames(sigs)[try.sigs.indices],
-                                       collapse = ","),
-          p.for.removing.sigs  = chisq.p,
-          exp                  = try.exp[["exposure"]],
-          sig.indices          = try.sigs.indices,
-          removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
-                                       collapse = ","),
-          loglh.of.exp         = try.exp[["loglh"]],
-          prob.of.model        = prob.of.model,
-          MAP                  = try.exp[["loglh"]] + prob.of.model,
-          df                   = df))
+        return(
+          c(rr,
+            list(
+              prob.of.model        = prob.of.model,
+              MAP                  = try.exp[["loglh"]] + prob.of.model,
+              df                   = df)))
       } else if (use.sparse.assign == TRUE) {
-        return(list(
-          sig.names            = paste(colnames(sigs)[try.sigs.indices],
-                                       collapse = ","),
-          p.for.removing.sigs  = chisq.p,
-          exp                  = try.exp[["exposure"]],
-          sig.indices          = try.sigs.indices,
-          removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
-                                       collapse = ","),
-          loglh.of.exp         = try.exp[["loglh"]],
-          df                   = df))
+        return(c(rr, list(df = df)))
       }
       
     } # Internal function info.of.removed.subset ===========================
