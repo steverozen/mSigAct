@@ -96,3 +96,32 @@ test_that("MAPAssignActivity error1", {
   testthat::expect_null(retval$proposed.assignment)
 })
 
+test_that("MAPAssignActivity1 for ID Catalog", {
+  skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
+  
+  spectra <- PCAWG7::spectra$PCAWG$SBS96
+  catalog.list <- PCAWG7::SplitPCAWGMatrixByTumorType(spectra)
+  biliary.catalogs <- catalog.list$`Biliary-AdenoCA`
+  
+  sample.index <- 1
+  catalog <- biliary.catalogs[, sample.index, drop = FALSE]
+  SBS.sigs <- PCAWG7::signature$genome$SBS96
+  mutation.type <- "SBS96"
+  cancer.type <- "Biliary-AdenoCA"
+  sigs.prop <- ExposureProportions(mutation.type = mutation.type,
+                                   cancer.type = cancer.type)
+  sigs <- SBS.sigs[, names(sigs.prop), drop = FALSE]
+  my.opts <- DefaultManyOpts()
+  
+  retval1 <- MAPAssignActivity1(
+    spect                   = catalog,
+    sigs                    = sigs,
+    sigs.presence.prop      = sigs.prop,
+    max.level               = ncol(sigs) - 1,
+    p.thresh                = 0.01,
+    m.opts                  = my.opts,
+    max.mc.cores            = 60,
+    seed                    = 2351)
+  
+  expect_equal(nrow(retval1$proposed.assignment), 14)
+})

@@ -20,7 +20,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     p.thresh                = 0.01,
     m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
     num.parallel.samples    = 2,
-    mc.cores.per.sample     = 10,
+    mc.cores.per.sample     = 30,
     seed                    = 8787,
     max.subsets             = 1)
   expect_null(retval$proposed.assignment)

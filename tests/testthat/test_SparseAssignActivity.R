@@ -4,7 +4,7 @@ test_that("SparseAssignActivity for SBS Catalog", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
-  spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+  spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
   sigs <- PCAWG7::signature$genome$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Lung-AdenoCA")
@@ -39,7 +39,7 @@ test_that("SparseAssignActivity for DBS Catalog", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$DBS78))
-  spectra <- PCAWG7::spectra$PCAWG$DBS78[, indices[1:2], drop = FALSE]
+  spectra <- PCAWG7::spectra$PCAWG$DBS78[, indices[1], drop = FALSE]
   sigs <- PCAWG7::signature$genome$DBS78
   sigs.prop <- ExposureProportions(mutation.type = "DBS78",
                                    cancer.type = "Lung-AdenoCA")
@@ -74,7 +74,7 @@ test_that("SparseAssignActivity for ID Catalog", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$ID))
-  spectra <- PCAWG7::spectra$PCAWG$ID[, indices[1:2], drop = FALSE]
+  spectra <- PCAWG7::spectra$PCAWG$ID[, indices[1], drop = FALSE]
   sigs <- PCAWG7::signature$genome$ID
   sigs.prop <- ExposureProportions(mutation.type = "ID",
                                    cancer.type = "Lung-AdenoCA")

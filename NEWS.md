@@ -1,3 +1,15 @@
+# 2.1.1.9008
+* Removed columns `sig.indices` and `removed.sig.names` in the returned all tested table
+from function `MAPAssignActivity` and `MAPAssignActivity1`
+
+* Added new internal functions `GetAllTestedTables` and `GetTimeForMAPAssign`
+
+* Changed element `results.details` to `all.tested.tables` in the returned value of
+function `MAPAssignActivity`
+
+* Added new element `time.for.MAP.assign` in the returned value of
+function `MAPAssignActivity`
+
 # 2.1.1.9007
 
 * Added a new argument `use.sparse.assign` in functions `MAPAssignActivity`,

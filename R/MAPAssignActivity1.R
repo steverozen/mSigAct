@@ -312,26 +312,19 @@ MAPAssignActivityInternal <-
            "\nmax.level = ", max.level,
            "\nlog likelihood using all signatures = ", lh.w.all)
     
+    ss <- list(sig.names            = paste(df0.sig.names, collapse = ","),
+               p.for.sig.subset     = NA,
+               exp                  = start.exp[non.0.exp.index],
+               loglh.of.exp         = lh.w.all)
+    
     if (use.sparse.assign == FALSE) {
       df0.prob.of.model <- P.of.M(df0.sig.names, sigs.presence.prop)
       
-      df0 <- list(sig.names            = paste(df0.sig.names, collapse = ","),
-                  p.for.removing.sigs  = NA,
-                  exp                  = start.exp[non.0.exp.index],
-                  sig.indices          = non.0.exp.index,
-                  removed.sig.names    = "",
-                  loglh.of.exp         = lh.w.all,
-                  prob.of.model        = df0.prob.of.model,
-                  MAP                  = lh.w.all + df0.prob.of.model,
-                  df                   = 0)
+      df0 <- c(ss, list(prob.of.model        = df0.prob.of.model,
+                        MAP                  = lh.w.all + df0.prob.of.model,
+                        df                   = 0))
     } else if (use.sparse.assign == TRUE) {
-      df0 <- list(sig.names            = paste(df0.sig.names, collapse = ","),
-                  p.for.removing.sigs  = NA,
-                  exp                  = start.exp[non.0.exp.index],
-                  sig.indices          = non.0.exp.index,
-                  removed.sig.names    = "",
-                  loglh.of.exp         = lh.w.all,
-                  df                   = 0)
+      df0 <- c(ss, list(df = 0))
     }
     
     out.list <- list(df0)
@@ -388,11 +381,11 @@ MAPAssignActivityInternal <-
       rr <- list(
         sig.names            = paste(colnames(sigs)[try.sigs.indices],
                                      collapse = ","),
-        p.for.removing.sigs  = chisq.p,
+        p.for.sig.subset     = chisq.p,
         exp                  = try.exp[["exposure"]],
-        sig.indices          = try.sigs.indices,
-        removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
-                                     collapse = ","),
+        #sig.indices          = try.sigs.indices,
+        #removed.sig.names    = paste(colnames(sigs)[subset.to.remove.v],
+        #                             collapse = ","),
         loglh.of.exp         = try.exp[["loglh"]]
       ) 
       if (!use.sparse.assign) {
@@ -457,7 +450,7 @@ MAPAssignActivityInternal <-
       
       check.mclapply.result(check.to.remove, "MAPAssignActivityInternal")
       
-      p.to.remove <- unlist(lapply(check.to.remove, `[`, "p.for.removing.sigs"))
+      p.to.remove <- unlist(lapply(check.to.remove, `[`, "p.for.sig.subset"))
       names(p.to.remove) <-
         unlist(lapply(check.to.remove,
                       function(x) paste(x$removed.sig.names, collapse = ",")))
