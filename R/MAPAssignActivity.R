@@ -30,7 +30,7 @@
 #' * \code{reconstruction.distances}: Various distances and similarities
 #' between \code{spectra} and \code{proposed.reconstruction}.
 #' 
-#' * \code{all.tested.tables}: All tested possible ways to reconstruct each
+#' * \code{all.tested}: All tested possible ways to reconstruct each
 #' sample in \code{spectra}.
 #' 
 #' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
@@ -40,7 +40,7 @@
 #' \code{MAPAssignActivity}.
 #'
 #' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
-#' \code{reconstruction.distances}, \code{all.tested.tables},
+#' \code{reconstruction.distances}, \code{all.tested},
 #' \code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
 #' find the optimal reconstruction or there are errors coming out for
 #' \strong{all} samples.
@@ -143,21 +143,21 @@ MAPAssignActivity <-
                                                   sparse.assign = TRUE)
     }
     
-    all.tested.tables <- GetAllTestedTables(list.of.MAP.out = retval.non.null)
+    all.tested <- GetAllTestedTables(list.of.MAP.out = retval.non.null)
     time.for.MAP.assign <- GetTimeForMAPAssign(list.of.MAP.out = retval.non.null)
 
     if (length(error.messages) == 0) {
       return(list(proposed.assignment          = proposed.assignment,
                   proposed.reconstruction      = proposed.reconstruction,
                   reconstruction.distances     = reconstruction.distances,
-                  all.tested.tables            = all.tested.tables,
+                  all.tested                   = all.tested,
                   time.for.MAP.assign          = time.for.MAP.assign))
     } else {
       # The case when part of samples have NULL assignment
       return(list(proposed.assignment          = proposed.assignment,
                   proposed.reconstruction      = proposed.reconstruction,
                   reconstruction.distances     = reconstruction.distances,
-                  all.tested.tables            = all.tested.tables,
+                  all.tested                   = all.tested,
                   time.for.MAP.assign          = time.for.MAP.assign,
                   error.messages               = error.messages))
     } 

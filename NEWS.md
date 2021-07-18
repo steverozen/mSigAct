@@ -4,7 +4,7 @@ from function `MAPAssignActivity` and `MAPAssignActivity1`
 
 * Added new internal functions `GetAllTestedTables` and `GetTimeForMAPAssign`
 
-* Changed element `results.details` to `all.tested.tables` in the returned value of
+* Changed element `results.details` to `all.tested` in the returned value of
 function `MAPAssignActivity`
 
 * Added new element `time.for.MAP.assign` in the returned value of
