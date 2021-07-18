@@ -62,10 +62,10 @@ test_that("Use sparse assignment for MAPAssignActivity", {
   
   spectra <- PCAWG7::spectra$PCAWG$SBS96
   catalog.list <- PCAWG7::SplitPCAWGMatrixByTumorType(spectra)
-  liver.catalogs <- catalog.list$`Biliary-AdenoCA`
+  biliary.catalogs <- catalog.list$`Biliary-AdenoCA`
   
   sample.index <- 1
-  catalog <- liver.catalogs[, sample.index, drop = FALSE]
+  catalog <- biliary.catalogs[, sample.index, drop = FALSE]
   SBS.sigs <- PCAWG7::signature$genome$SBS96
   mutation.type <- "SBS96"
   cancer.type <- "Biliary-AdenoCA"
