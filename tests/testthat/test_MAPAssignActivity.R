@@ -99,7 +99,7 @@ test_that("Use sparse assignment for MAPAssignActivity", {
     mc.cores.per.sample     = 30,
     seed                    = 2351,
     use.sparse.assign       = TRUE)
-  expect_equal(nrow(retval2$proposed.assignment), 13)
+  expect_equal(nrow(retval2$proposed.assignment), 14)
   
   
   retval3 <- SparseAssignActivity(spectra = catalog,
