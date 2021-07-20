@@ -143,10 +143,12 @@ MAPAssignActivity1 <-
       # Add attributes to MAP.recon to be same as spect
       MAP.recon <- AddAttributes(MAP.recon, spect)
       
+      all.tested <- GetAlternativeSolutions(tibble = xx, 
+                                            sparse.assign = use.sparse.assign)
       return(list(proposed.assignment          = exposure,
                   proposed.reconstruction      = MAP.recon,
                   reconstruction.distances     = MAP.distances,
-                  all.tested                   = xx,
+                  all.tested                   = all.tested,
                   time.for.MAP.assign          = time.for.MAP.assign
       ))
       
@@ -599,6 +601,89 @@ DistanceMeasures <-
       return(tibble::tibble(method = names(vv), proposed.assignment = vv))
     }
   }
+
+GetAlternativeSolutions <- function(tibble, sparse.assign = FALSE) {
+  all.tested <- tibble
+  if (sparse.assign) {
+    # Sort the all tested table by df and log likelihood
+    all.tested.sorted <- 
+      dplyr::arrange(all.tested, dplyr::desc(df), dplyr::desc(loglh.of.exp))
+    
+    best.df <- all.tested.sorted$df[1]
+    best.loglh <- all.tested.sorted$loglh.of.exp[1]
+    best.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[1], ","))
+    best.num.of.sigs <- length(best.sig.names)
+    best.AIC <- -2 * best.loglh + 2 * best.num.of.sigs
+    best.set <- sets::as.set(best.sig.names)
+    
+    # Get all the non nested solution indices
+    non.nested.indices0 <- sapply(2:nrow(all.tested.sorted), FUN = function(x) {
+      index <- x
+      try.df <- all.tested.sorted$df[index]
+      try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
+      # If the model has the same df as the best solution, then it is non nested
+      if (try.df == best.df) {
+        return(index)
+      } else {
+        # If the model is not a superset of the best solution, then it is non nested
+        try.set <- sets::as.set(try.sig.names)
+        if (!sets::set_is_proper_subset(x = best.set, y = try.set)) {
+          return(index)
+        }
+      }
+    })
+    non.nested.indices <- unlist(non.nested.indices0)
+    nested.indices <- setdiff(2:nrow(all.tested.sorted), non.nested.indices)
+    
+    # Check whether the non nested models are statistically different from the 
+    # best solution by Akaike weights
+    # https://link.springer.com/content/pdf/10.3758/BF03206482.pdf
+    non.nested.results <- sapply(non.nested.indices, FUN = function(x) {
+      index <- x
+      try.loglh <- all.tested.sorted$loglh.of.exp[index]
+      try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
+      try.num.of.sigs <- length(try.sig.names)
+      try.AIC <- -2 * try.loglh + 2 * try.num.of.sigs
+      AIC.min <- min(best.AIC, try.AIC)
+      
+      # Calculate relative likelihood
+      best.rv.lh <- exp((AIC.min - best.AIC) / 2)
+      try.rv.lh <- exp((AIC.min - try.AIC) / 2)
+      
+      # Calculate Akaike weights
+      best.akaike.weights <- best.rv.lh / sum(best.rv.lh + try.rv.lh)
+      
+      # If the Akaike weights of the best solution is not greater than 0.95, then
+      # it is not significantly favoured over the other solution
+    })
+    
+    # Perform likelihood ratio test for nested models
+    nested.results <- sapply(nested.indices, FUN = function(x) {
+      index <- x
+      try.df <- all.tested.sorted$df[index]
+      try.loglh <- all.tested.sorted$loglh.of.exp[index]
+      
+      LR.statistic <- 2 * (try.loglh - best.loglh)
+      df <- best.df - try.df
+      p.value <- pchisq(q = LR.statistic, df = df, lower.tail = FALSE)
+    })
+    
+    all.tested.sorted$best.akaike.weights <- NA
+    all.tested.sorted$alt.akaike.weights <- NA
+    all.tested.sorted$LR.p.value <- NA
+    
+    df <- as.data.frame(all.tested.sorted)
+    
+    df[non.nested.indices, ]$best.akaike.weights <- non.nested.results
+    df[non.nested.indices, ]$alt.akaike.weights <- 1- non.nested.results
+    df[nested.indices, ]$LR.p.value <- nested.results
+    return(df)
+  } else {
+    return(all.tested)
+  }
+}
+
+
 
 #' @return A list with the elements \describe{
 #'
