@@ -750,7 +750,7 @@ GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1,
   
   retval2 <- do.call("rbind", retval)
   alt.solutions2 <- cbind(alt.solutions1, retval2)
-  return(alt.solutions1)
+  return(alt.solutions2)
 }
 
 #' @return A list with the elements \describe{
