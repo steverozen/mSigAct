@@ -21,6 +21,10 @@
 #'
 #' * \code{all.tested}: A \code{tibble} of all the search results.
 #' 
+#' * \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
+#' that are statistically as good as the \code{proposed.assignment} that can
+#' plausibly reconstruct \code{spect}.
+#' 
 #' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
 #'  \code{MAPAssignActivity1}.
 #'
@@ -143,12 +147,20 @@ MAPAssignActivity1 <-
       # Add attributes to MAP.recon to be same as spect
       MAP.recon <- AddAttributes(MAP.recon, spect)
       
-      all.tested <- GetAlternativeSolutions(tibble = xx, 
-                                            sparse.assign = use.sparse.assign)
+      all.tested <- TestAltSolutions(tibble = xx, 
+                                     sparse.assign = use.sparse.assign)
+      alt.solutions <- GetAltSolutions(tibble = all.tested,
+                                       spectrum = spect,
+                                       sigs = sigs, 
+                                       mc.cores = max.mc.cores,
+                                       sparse.assign = use.sparse.assign,
+                                       wt.thresh = 0.95,
+                                       p.thresh = 0.05)
       return(list(proposed.assignment          = exposure,
                   proposed.reconstruction      = MAP.recon,
                   reconstruction.distances     = MAP.distances,
                   all.tested                   = all.tested,
+                  alt.solutions                = alt.solutions,
                   time.for.MAP.assign          = time.for.MAP.assign
       ))
       
@@ -167,6 +179,7 @@ NullReturnForMAPAssignActivity1 <- function(msg, all.tested,
          proposed.reconstruction       = NULL,
          reconstruction.distances      = NULL,
          all.tested                    = NULL,
+         alt.solutions                 = NULL,
          time.for.MAP.assign           = time.for.MAP.assign,
          error.messages                = msg
          ))
@@ -602,88 +615,143 @@ DistanceMeasures <-
     }
   }
 
-GetAlternativeSolutions <- function(tibble, sparse.assign = FALSE) {
+#' Test to try to find alternative solutions that are statistically as good as
+#' the best solution from \code{MAPAssignActivitiy1}
+#' 
+#' @keywords internal
+TestAltSolutions <- function(tibble, sparse.assign = FALSE) {
   all.tested <- tibble
-  if (sparse.assign) {
-    # Sort the all tested table by df and log likelihood
-    all.tested.sorted <- 
-      dplyr::arrange(all.tested, dplyr::desc(df), dplyr::desc(loglh.of.exp))
-    
-    best.df <- all.tested.sorted$df[1]
-    best.loglh <- all.tested.sorted$loglh.of.exp[1]
-    best.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[1], ","))
-    best.num.of.sigs <- length(best.sig.names)
-    best.AIC <- -2 * best.loglh + 2 * best.num.of.sigs
-    best.set <- sets::as.set(best.sig.names)
-    
-    # Get all the non nested solution indices
-    non.nested.indices0 <- sapply(2:nrow(all.tested.sorted), FUN = function(x) {
-      index <- x
-      try.df <- all.tested.sorted$df[index]
-      try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
-      # If the model has the same df as the best solution, then it is non nested
-      if (try.df == best.df) {
-        return(index)
-      } else {
-        # If the model is not a superset of the best solution, then it is non nested
-        try.set <- sets::as.set(try.sig.names)
-        if (!sets::set_is_proper_subset(x = best.set, y = try.set)) {
-          return(index)
-        }
-      }
-    })
-    non.nested.indices <- unlist(non.nested.indices0)
-    nested.indices <- setdiff(2:nrow(all.tested.sorted), non.nested.indices)
-    
-    # Check whether the non nested models are statistically different from the 
-    # best solution by Akaike weights
-    # https://link.springer.com/content/pdf/10.3758/BF03206482.pdf
-    non.nested.results <- sapply(non.nested.indices, FUN = function(x) {
-      index <- x
-      try.loglh <- all.tested.sorted$loglh.of.exp[index]
-      try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
-      try.num.of.sigs <- length(try.sig.names)
-      try.AIC <- -2 * try.loglh + 2 * try.num.of.sigs
-      AIC.min <- min(best.AIC, try.AIC)
-      
-      # Calculate relative likelihood
-      best.rv.lh <- exp((AIC.min - best.AIC) / 2)
-      try.rv.lh <- exp((AIC.min - try.AIC) / 2)
-      
-      # Calculate Akaike weights
-      best.akaike.weights <- best.rv.lh / sum(best.rv.lh + try.rv.lh)
-      
-      # If the Akaike weights of the best solution is not greater than 0.95, then
-      # it is not significantly favoured over the other solution
-    })
-    
-    # Perform likelihood ratio test for nested models
-    nested.results <- sapply(nested.indices, FUN = function(x) {
-      index <- x
-      try.df <- all.tested.sorted$df[index]
-      try.loglh <- all.tested.sorted$loglh.of.exp[index]
-      
-      LR.statistic <- 2 * (try.loglh - best.loglh)
-      df <- best.df - try.df
-      p.value <- pchisq(q = LR.statistic, df = df, lower.tail = FALSE)
-    })
-    
-    all.tested.sorted$best.akaike.weights <- NA
-    all.tested.sorted$alt.akaike.weights <- NA
-    all.tested.sorted$LR.p.value <- NA
-    
-    df <- as.data.frame(all.tested.sorted)
-    
-    df[non.nested.indices, ]$best.akaike.weights <- non.nested.results
-    df[non.nested.indices, ]$alt.akaike.weights <- 1- non.nested.results
-    df[nested.indices, ]$LR.p.value <- nested.results
-    return(df)
-  } else {
+  
+  if (nrow(all.tested) == 1) {
     return(all.tested)
   }
+  
+  if (sparse.assign) {
+    loglh.col.name <- "loglh.of.exp"
+    all.tested.sorted <- 
+      dplyr::arrange(all.tested, dplyr::desc(df), dplyr::desc(loglh.col.name))
+  } else {
+    loglh.col.name <- "MAP"
+    all.tested.sorted <- 
+      dplyr::arrange(all.tested, dplyr::desc(MAP))
+  }
+  
+  best.df <- all.tested.sorted$df[1]
+  best.loglh <- all.tested.sorted[[loglh.col.name]][1]
+  best.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[1], ","))
+  best.num.of.sigs <- length(best.sig.names)
+  best.AIC <- -2 * best.loglh + 2 * best.num.of.sigs
+  best.set <- sets::as.set(best.sig.names)
+  
+  # Get all the non nested solution indices
+  non.nested.indices0 <- sapply(2:nrow(all.tested.sorted), FUN = function(x) {
+    index <- x
+    try.df <- all.tested.sorted$df[index]
+    try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
+    # If the model has the same df as the best solution, then it is non nested
+    if (try.df == best.df) {
+      return(index)
+    } else {
+      # If the model is not a superset of the best solution, then it is non nested
+      try.set <- sets::as.set(try.sig.names)
+      if (!sets::set_is_proper_subset(x = best.set, y = try.set)) {
+        return(index)
+      }
+    }
+  })
+  non.nested.indices <- unlist(non.nested.indices0)
+  nested.indices <- setdiff(2:nrow(all.tested.sorted), non.nested.indices)
+  
+  # Check whether the non nested models are statistically different from the 
+  # best solution by Akaike weights
+  # https://link.springer.com/content/pdf/10.3758/BF03206482.pdf
+  non.nested.results <- sapply(non.nested.indices, FUN = function(x) {
+    index <- x
+    try.loglh <- all.tested.sorted[[loglh.col.name]][index]
+    try.sig.names <- unlist(strsplit(all.tested.sorted$sig.names[index], ","))
+    try.num.of.sigs <- length(try.sig.names)
+    try.AIC <- -2 * try.loglh + 2 * try.num.of.sigs
+    AIC.min <- min(best.AIC, try.AIC)
+    
+    # Calculate relative likelihood
+    best.rv.lh <- exp((AIC.min - best.AIC) / 2)
+    try.rv.lh <- exp((AIC.min - try.AIC) / 2)
+    
+    # Calculate Akaike weights
+    try.akaike.weights <- try.rv.lh / sum(best.rv.lh + try.rv.lh)
+    
+    # If the Akaike weights of the alternative solution is greater than 0.95, then
+    # it is significantly favored over the best solution
+  })
+  
+  # Perform likelihood ratio test for nested models
+  nested.results <- sapply(nested.indices, FUN = function(x) {
+    index <- x
+    try.df <- all.tested.sorted$df[index]
+    try.loglh <- all.tested.sorted[[loglh.col.name]][index]
+    
+    LR.statistic <- 2 * (try.loglh - best.loglh)
+    df <- best.df - try.df
+    p.value <- stats::pchisq(q = LR.statistic, df = df, lower.tail = FALSE)
+  })
+  
+  all.tested.sorted$akaike.weights <- NA
+  all.tested.sorted$LRT.p.value <- NA
+  
+  df <- as.data.frame(all.tested.sorted)
+  
+  df[non.nested.indices, ]$akaike.weights <- non.nested.results
+  df[nested.indices, ]$LRT.p.value <- nested.results
+  return(df)
 }
 
-
+#' Get alternative solutions that are statistically as good as the best solution
+#' from \code{MAPAssignActivitiy1} 
+#'
+#' @keywords internal
+GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1, 
+                            sparse.assign = FALSE, 
+                            wt.thresh = 0.95, p.thresh = 0.05) {
+  all.tested <- tibble
+  
+  if (nrow(all.tested) == 1) {
+    return(all.tested[0, ])
+  }
+  
+  all.tested.nested.models <- all.tested[!is.na(all.tested$LRT.p.value), ]
+  all.tested.LR.OK <- 
+    all.tested.nested.models[all.tested.nested.models$LRT.p.value < p.thresh, ]
+  
+  all.test.non.nested.models <- all.tested[!is.na(all.tested$akaike.weights), ]
+  all.tested.akaike.weights.OK <-
+    all.test.non.nested.models[all.test.non.nested.models$akaike.weights > wt.thresh, ]
+  
+  alt.solutions <- rbind(all.tested.LR.OK, all.tested.akaike.weights.OK)
+  if (sparse.assign) {
+    alt.solutions1 <- 
+      dplyr::arrange(alt.solutions, dplyr::desc(df), dplyr::desc(loglh.of.exp))
+  } else {
+    alt.solutions1 <- dplyr::arrange(alt.solutions, dplyr::desc(MAP))
+  }
+  
+  if (nrow(alt.solutions1) == 0) {
+    return(alt.solutions1)
+  }
+  
+  retval <- parallel::mclapply(1:nrow(alt.solutions1), FUN = function(x) {
+    index <- x
+    sig.names <- unlist(strsplit(alt.solutions1$sig.names[index], ","))
+    sig.to.use <- sigs[, sig.names, drop = FALSE]
+    QP.retval <- OptimizeExposureQP(spectrum = spectrum, signatures = sig.to.use)
+    reconstuction <- ReconstructSpectrum(sigs = sig.to.use, exp = QP.retval)
+    cosine <- cossim(v1 = spectrum, v2 = reconstuction)
+    return(tibble::tibble(QP.exp = list(QP.retval), QP.cosine = cosine[, 1]))
+  }, mc.cores = Adj.mc.cores(mc.cores))
+  
+  retval2 <- do.call("rbind", retval)
+  alt.solutions2 <- cbind(alt.solutions1, retval2)
+  return(alt.solutions1)
+}
 
 #' @return A list with the elements \describe{
 #'

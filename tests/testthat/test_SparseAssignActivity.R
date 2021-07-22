@@ -98,7 +98,7 @@ test_that("SparseAssignActivity for ID Catalog", {
                                seed = 2561,
                                use.sparse.assign = TRUE)
   expect_equal(sparse.out$reconstruction.distances$sparse.assign.distances$cosine[1],
-               0.9780138, tolerance = 1e-5)
+               0.9826415, tolerance = 1e-2)
   expect_equal(sparse.out$proposed.assignment, MAP.out$proposed.assignment)
   
   unlink(file.path(tempdir(), "Lung-AdenoCA"), recursive = TRUE)

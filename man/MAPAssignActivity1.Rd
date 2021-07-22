@@ -81,6 +81,9 @@ sparse assignment.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spect} and \code{proposed.reconstruction}.
 \item \code{all.tested}: A \code{tibble} of all the search results.
+\item \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
+that are statistically as good as the \code{proposed.assignment} that can
+plausibly reconstruct \code{spect}.
 \item \code{time.for.MAP.assign}: Value from \code{system.time} for running
 \code{MAPAssignActivity1}.
 \item \code{error.messages}: Only present if there were errors running

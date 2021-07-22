@@ -1,5 +1,5 @@
 # Needed to silence devtools::check warnings about gobal variable used in dplyr
-utils::globalVariables(c(".data"))
+utils::globalVariables(c(".data", "df", "loglh.of.exp", "MAP"))
 
 
 List2TibbleRow <- function(a.list) {

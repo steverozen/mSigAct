@@ -29,7 +29,6 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
   sig.prop <- ExposureProportions(mutation.type = sig.mutation.type,
                                   cancer.type = cancer.type,
                                   all.sigs = sigs)
-
   retval <- MAPAssignActivity1(
     spect                   = spect,
     sigs                    = sigs,

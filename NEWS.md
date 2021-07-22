@@ -1,3 +1,7 @@
+# 2.1.1.9009
+* Updated functions `MAPAssignActivity` and `MAPAssignActivity1` to return extra element `alt.solutions` that are statistically as good as the `proposed.assignment` that can
+plausibly reconstruct the spectra
+
 # 2.1.1.9008
 * Removed columns `sig.indices` and `removed.sig.names` in the returned all tested table
 from function `MAPAssignActivity` and `MAPAssignActivity1`

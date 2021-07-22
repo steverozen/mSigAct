@@ -90,14 +90,21 @@ If \code{use.sparse.assign = TRUE}, this will be the reconstruction based on
 sparse assignment.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spectra} and \code{proposed.reconstruction}.
+\item \code{all.tested}: All tested possible ways to reconstruct each
+sample in \code{spectra}.
+\item \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
+that are statistically as good as the \code{proposed.assignment} that can
+plausibly reconstruct \code{spectra}.
+\item \code{time.for.MAP.assign}: Value from \code{system.time} for running
+\code{MAPAssignActivity1} for each sample in \code{spectra}.
 \item \code{error.messages}: Only appearing if there are errors running
 \code{MAPAssignActivity}.
-\item \code{results.details}: Detailed results for each sample in \code{spectra}.
 }
 
 The elements \code{proposed.assignment}, \code{proposed.reconstruction},
-\code{reconstruction.distances} will be \code{NULL} if the algorithm could
-not find the optimal reconstruction or there are errors coming out for
+\code{reconstruction.distances}, \code{all.tested},
+\code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+find the optimal reconstruction or there are errors coming out for
 \strong{all} samples.
 }
 \description{
