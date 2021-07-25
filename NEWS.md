@@ -1,3 +1,7 @@
+# 2.1.1.9010
+* Used Benjamini-Hochberg false discovery rate to adjust p values to determine the `alt.solutions`
+that are statistically as good as the `proposed.assignment` from `MAPAssignActivity` and `MAPAssignActivity1`
+
 # 2.1.1.9009
 * Updated functions `MAPAssignActivity` and `MAPAssignActivity1` to return extra element `alt.solutions` that are statistically as good as the `proposed.assignment` that can
 plausibly reconstruct the spectra

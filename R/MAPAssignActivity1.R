@@ -155,7 +155,7 @@ MAPAssignActivity1 <-
                                        mc.cores = max.mc.cores,
                                        sparse.assign = use.sparse.assign,
                                        wt.thresh = 0.95,
-                                       p.thresh = 0.05)
+                                       q.thresh = 0.05)
       return(list(proposed.assignment          = exposure,
                   proposed.reconstruction      = MAP.recon,
                   reconstruction.distances     = MAP.distances,
@@ -697,11 +697,15 @@ TestAltSolutions <- function(tibble, sparse.assign = FALSE) {
   
   all.tested.sorted$akaike.weights <- NA
   all.tested.sorted$LRT.p.value <- NA
+  all.tested.sorted$LRT.q.value <- NA
   
   df <- as.data.frame(all.tested.sorted)
   
   df[non.nested.indices, ]$akaike.weights <- non.nested.results
   df[nested.indices, ]$LRT.p.value <- nested.results
+  # Adjust p-values for multiple comparisons to Benjamini-Hochberg false discovery rate
+  df[nested.indices, ]$LRT.q.value <- 
+    p.adjust(p = nested.results, method = "BH") 
   return(df)
 }
 
@@ -711,16 +715,16 @@ TestAltSolutions <- function(tibble, sparse.assign = FALSE) {
 #' @keywords internal
 GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1, 
                             sparse.assign = FALSE, 
-                            wt.thresh = 0.95, p.thresh = 0.05) {
+                            wt.thresh = 0.95, q.thresh = 0.05) {
   all.tested <- tibble
   
   if (nrow(all.tested) == 1) {
     return(all.tested[0, ])
   }
   
-  all.tested.nested.models <- all.tested[!is.na(all.tested$LRT.p.value), ]
+  all.tested.nested.models <- all.tested[!is.na(all.tested$LRT.q.value), ]
   all.tested.LR.OK <- 
-    all.tested.nested.models[all.tested.nested.models$LRT.p.value < p.thresh, ]
+    all.tested.nested.models[all.tested.nested.models$LRT.q.value < q.thresh, ]
   
   all.test.non.nested.models <- all.tested[!is.na(all.tested$akaike.weights), ]
   all.tested.akaike.weights.OK <-

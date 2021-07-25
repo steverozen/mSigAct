@@ -12,7 +12,7 @@ GetAltSolutions(
   mc.cores = 1,
   sparse.assign = FALSE,
   wt.thresh = 0.95,
-  p.thresh = 0.05
+  q.thresh = 0.05
 )
 }
 \description{
