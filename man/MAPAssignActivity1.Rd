@@ -15,7 +15,8 @@ MAPAssignActivity1(
   progress.monitor = NULL,
   seed = NULL,
   max.subsets = 1000,
-  use.sparse.assign = FALSE
+  use.sparse.assign = FALSE,
+  drop.low.mut.samples = TRUE
 )
 }
 \arguments{
@@ -68,6 +69,10 @@ not proceed.}
 \item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
 arguments designed for Maximum A Posteriori assignment such as
 \code{sigs.presence.prop} will be ignored.}
+
+\item{drop.low.mut.samples}{Whether to exclude low mutation samples from
+the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+than 100, DBS or ID total mutations less than 25 will be dropped.}
 }
 \value{
 A list with the elements:

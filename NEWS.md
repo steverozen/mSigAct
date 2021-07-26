@@ -1,3 +1,11 @@
+# 2.1.1.9011
+* Added new internal function `DropLowMutationSamples`
+
+* Added new argument `drop.low.mut.samples` for functions `MAPAssignActivity`
+and `MAPAssignActivity1`. Samples with SBS total mutations less than 100, DBS or
+ID total mutations less than 25 will be excluded from the analysis
+
+
 # 2.1.1.9010
 * Used Benjamini-Hochberg false discovery rate to adjust p values to determine the `alt.solutions`
 that are statistically as good as the `proposed.assignment` from `MAPAssignActivity` and `MAPAssignActivity1`

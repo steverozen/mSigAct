@@ -16,6 +16,10 @@
 #'
 #' @param mc.cores.per.sample The maximum number of cores to use for each
 #'   sample. On Microsoft Windows machines it is silently changed to 1.
+#'   
+#' @param drop.low.mut.samples Whether to exclude low mutation samples from
+#' the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+#' than 100, DBS or ID total mutations less than 25 will be dropped.
 #'
 #' @return A list with the elements:
 #'
@@ -83,7 +87,18 @@ MAPAssignActivity <-
            progress.monitor        = NULL,
            seed                    = NULL,
            max.subsets             = 1000,
-           use.sparse.assign       = FALSE) {
+           use.sparse.assign       = FALSE,
+           drop.low.mut.samples    = TRUE) {
+    if (drop.low.mut.samples) {
+      spectra <- DropLowMutationSamples(spectra)
+    } else {
+      spectra <- spectra
+    }
+    
+    if (ncol(spectra) == 0) {
+      return(NullReturnForMAPAssignActivity1(msg = "No sample to analyse"))
+    }
+    
     f1 <- function(i) {
       retval1 <- RunMAPOnOneSample(
         spect                   = spectra[ , i, drop = FALSE],
@@ -124,13 +139,7 @@ MAPAssignActivity <-
     
     if (length(retval.non.null) == 0) {
       # The case when all samples have NULL assignment
-      return(list(proposed.assignment          = NULL,
-                  proposed.reconstruction      = NULL,
-                  reconstruction.distances     = NULL,
-                  all.tested                   = NULL,
-                  alt.solutions                = NULL,
-                  time.for.MAP.assign          = NULL,
-                  error.messages               = error.messages))
+      return(NullReturnForMAPAssignActivity1(msg = error.messages))
     }
     
     proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval.non.null)
@@ -348,6 +357,7 @@ SortSigId <- function(sig.id) {
 
 #' @keywords internal
 GetMutationType <- function(spect) {
+  spect <- as.matrix(spect)
   if (nrow(spect) == 96) {
     return("SBS96")
   } else if (nrow(spect) == 192) {
@@ -358,6 +368,29 @@ GetMutationType <- function(spect) {
     return("ID")
   } else {
     return(NULL)
+  }
+}
+
+#' @keywords internal
+DropLowMutationSamples <- function(spectra) {
+  spectra <- as.matrix(spectra)
+  mut.type <- GetMutationType(spectra)
+  if (mut.type %in% c("SBS96", "SBS192")) {
+    thresh.value <- 100
+  } else if (mut.type %in% c("DBS78", "ID")) {
+    thresh.value <- 25
+  }
+  
+  indices <- which(colSums(spectra) < thresh.value)
+  
+  if (length(indices) == 0) {
+    return(spectra)
+  } else {
+    message("Samples with total mutations less than ", thresh.value,
+            " were excluded in the analysis for ", mut.type, "\n",
+            paste(colnames(spectra)[indices], collapse = " "),
+            "\nSet argument drop.low.mut.samples = FALSE to suppress")
+    return(spectra[, -indices, drop = FALSE])
   }
 }
 

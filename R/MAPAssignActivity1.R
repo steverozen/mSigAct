@@ -1,6 +1,10 @@
 #' Find a Maximum A Posteriori (MAP) assignment of signature exposures that explain one spectrum.
 #' 
 #' This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
+#' 
+#' @param drop.low.mut.samples Whether to exclude low mutation samples from
+#' the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+#' than 100, DBS or ID total mutations less than 25 will be dropped.
 #'
 #' @export
 #'
@@ -62,7 +66,19 @@ MAPAssignActivity1 <-
            progress.monitor        = NULL,
            seed                    = NULL,
            max.subsets             = 1000,
-           use.sparse.assign       = FALSE) {
+           use.sparse.assign       = FALSE,
+           drop.low.mut.samples    = TRUE) {
+    
+    if (drop.low.mut.samples) {
+      spect <- DropLowMutationSamples(spect)
+    } else {
+      spect <- spect
+    }
+    
+    if (ncol(spect) == 0) {
+      return(NullReturnForMAPAssignActivity1(msg = "No sample to analyse"))
+    }
+    
     time.for.MAP.assign <- system.time(3)
     
     tryCatch({
