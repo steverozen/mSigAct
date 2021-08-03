@@ -1,3 +1,7 @@
+# 2.1.1.9012
+* Added new arguments `likelihood.dist` and `use.sparse.assign` in functions `AddSigActivity1` 
+and `AddSigActivity1`.
+
 # 2.1.1.9011
 * Added new internal function `DropLowMutationSamples`
 
