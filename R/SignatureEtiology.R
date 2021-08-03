@@ -10,3 +10,10 @@ POLESigs <- function() {
   DBS <- paste0("DBS", 3)
   return(list(SBS = SBS, DBS = DBS))
 }
+
+UVSigs <- function() {
+  SBS <- paste0("SBS7", letters[1:4])
+  DBS <- "DBS1"
+  ID <- "ID13"
+  return(list(SBS = SBS, DBS = DBS, ID = ID))
+}
