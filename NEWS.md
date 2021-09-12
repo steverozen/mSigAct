@@ -1,3 +1,8 @@
+# 2.1.1.9009
+
+* Fixed a bug in function `AddSigActivity` when some samples in the spectra have
+zero mutations
+
 # 2.1.1.9008
 * Removed columns `sig.indices` and `removed.sig.names` in the returned all tested table
 from function `MAPAssignActivity` and `MAPAssignActivity1`

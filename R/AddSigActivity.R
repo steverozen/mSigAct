@@ -176,25 +176,40 @@ AddSigActivity1 <- function(spect, exposure, sigs,
 #' retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
 AddSigActivity <-
   function(spectra, exposure, sigs, sigs.presence.prop, nbinom.size = 5) {
-  if (ncol(spectra) != ncol(exposure)) {
-    stop("The number of samples in spectrum is not equal to the number of ",
-         "samples in exposure")
+    if (ncol(spectra) != ncol(exposure)) {
+      stop("The number of samples in spectrum is not equal to the number of ",
+           "samples in exposure")
+    }
+    
+    if (!all(colnames(spectra) == colnames(exposure))) {
+      stop("The sample name in spectrum ", paste(colnames(spectra), collapse = " "),
+           " is not the same as the sample name in exposure ",
+           paste(colnames(exposure), collapse = ""))
+    }
+    
+    # Check whether there are some samples which have zero mutations
+    indices <- which(colSums(spectra) == 0)
+    if (length(indices) > 0) {
+      sample.names <- names(indices)
+      spectra <- spectra[, !colnames(spectra) %in% sample.names, drop = FALSE]
+      exposure <- exposure[, !colnames(exposure) %in% sample.names, drop = FALSE]
+      warning("Some samples have zero mutations, dropping: ",
+              paste(sample.names, collapse = ", "))
+    }
+    
+    if (ncol(spectra) == 0) {
+      message("All the samples have zero mutations")
+      return()
+    }
+    
+    ret <- lapply(1:ncol(spectra), FUN = function(x) {
+      spect <- spectra[, x, drop = FALSE]
+      expo <- exposure[, x, drop = FALSE]
+      out <- AddSigActivity1(spect = spect, exposure = expo, sigs = sigs,
+                             sigs.presence.prop = sigs.presence.prop,
+                             nbinom.size = nbinom.size)
+    })
+    
+    names(ret) <- colnames(spectra)
+    return(ret)
   }
-
-  if (!all(colnames(spectra) == colnames(exposure))) {
-    stop("The sample name in spectrum ", paste(colnames(spectra), collapse = " "),
-         " is not the same as the sample name in exposure ",
-         paste(colnames(exposure), collapse = ""))
-  }
-
-  ret <- lapply(1:ncol(spectra), FUN = function(x) {
-    spect <- spectra[, x, drop = FALSE]
-    expo <- exposure[, x, drop = FALSE]
-    out <- AddSigActivity1(spect = spect, exposure = expo, sigs = sigs,
-                           sigs.presence.prop = sigs.presence.prop,
-                           nbinom.size = nbinom.size)
-  })
-
-  names(ret) <- colnames(spectra)
-  return(ret)
-}
