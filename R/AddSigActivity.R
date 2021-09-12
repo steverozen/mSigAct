@@ -189,6 +189,21 @@ AddSigActivity <-
          " is not the same as the sample name in exposure ",
          paste(colnames(exposure), collapse = ""))
   }
+    
+  # Check whether there are some samples which have zero mutations
+  indices <- which(colSums(spectra) == 0)
+  if (length(indices) > 0) {
+    sample.names <- names(indices)
+    spectra <- spectra[, !colnames(spectra) %in% sample.names, drop = FALSE]
+    exposure <- exposure[, !colnames(exposure) %in% sample.names, drop = FALSE]
+    warning("Some samples have zero mutations, dropping: ",
+            paste(sample.names, collapse = ", "))
+  }
+  
+  if (ncol(spectra) == 0) {
+    message("All the samples have zero mutations")
+    return()
+  }
 
   ret <- lapply(1:ncol(spectra), FUN = function(x) {
     spect <- spectra[, x, drop = FALSE]

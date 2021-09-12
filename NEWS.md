@@ -1,3 +1,7 @@
+# 2.1.1.9013
+* Fixed a bug in function `AddSigActivity` when some samples in the spectra have
+zero mutations.
+
 # 2.1.1.9012
 * Added new arguments `likelihood.dist` and `use.sparse.assign` in functions `AddSigActivity1` 
 and `AddSigActivity1`.
