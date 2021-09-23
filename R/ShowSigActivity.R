@@ -170,6 +170,8 @@ PlotSigActivityToPdf <- function(list.of.sig.activity,
   if (is.null(base.filename)) {
     file.name.append <- mutation.type
   } else {
+    # We cannot use "::" in the file path, otherwise grDevices::pdf will throw an error
+    base.filename <- gsub(pattern = "::", replacement = ".", base.filename)
     file.name.append <- paste0(base.filename, ".", mutation.type)
   }
   

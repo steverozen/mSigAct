@@ -4,7 +4,15 @@
 \alias{AddSigActivity1}
 \title{Add contributing signature activity information for one sample}
 \usage{
-AddSigActivity1(spect, exposure, sigs, sigs.presence.prop, nbinom.size = 5)
+AddSigActivity1(
+  spect,
+  exposure,
+  sigs,
+  sigs.presence.prop,
+  nbinom.size = 5,
+  likelihood.dist = "multinom",
+  use.sparse.assign = FALSE
+)
 }
 \arguments{
 \item{spect}{A single spectrum.}
@@ -25,6 +33,14 @@ for more details.}
 \item{nbinom.size}{The dispersion parameter for the negative binomial
 distribution; smaller is more dispersed. See
 \code{\link[stats]{NegBinomial}}.}
+
+\item{likelihood.dist}{The probability distribution used to calculate the
+likelihood, can be either "multinom" (multinomial distribution) or
+"neg.binom" (negative binomial distribution).}
+
+\item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
+arguments designed for Maximum A Posteriori assignment such as
+\code{sigs.presence.prop} will be ignored.}
 }
 \value{
 A list of elements:
@@ -47,8 +63,8 @@ spectrum and \code{reconstructed.spect}.
 Add contributing signature activity information for one sample
 }
 \details{
-This function calls \code{\link{ReconstructSpectrum}} and
-\code{\link{LLHSpectrumNegBinom}}.
+This function calls \code{\link{ReconstructSpectrum}},
+\code{\link{LLHSpectrumNegBinom}} and \code{\link{LLHSpectrumMAP}}.
 }
 \section{Remark}{
  The column names of \code{spect} should be the same as the

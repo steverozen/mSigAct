@@ -1,7 +1,26 @@
-# 2.1.1.9009
-
+# 2.1.1.9013
 * Fixed a bug in function `AddSigActivity` when some samples in the spectra have
-zero mutations
+zero mutations.
+
+# 2.1.1.9012
+* Added new arguments `likelihood.dist` and `use.sparse.assign` in functions `AddSigActivity1` 
+and `AddSigActivity1`.
+
+# 2.1.1.9011
+* Added new internal function `DropLowMutationSamples`
+
+* Added new argument `drop.low.mut.samples` for functions `MAPAssignActivity`
+and `MAPAssignActivity1`. Samples with SBS total mutations less than 100, DBS or
+ID total mutations less than 25 will be excluded from the analysis
+
+
+# 2.1.1.9010
+* Used Benjamini-Hochberg false discovery rate to adjust p values to determine the `alt.solutions`
+that are statistically as good as the `proposed.assignment` from `MAPAssignActivity` and `MAPAssignActivity1`
+
+# 2.1.1.9009
+* Updated functions `MAPAssignActivity` and `MAPAssignActivity1` to return extra element `alt.solutions` that are statistically as good as the `proposed.assignment` that can
+plausibly reconstruct the spectra
 
 # 2.1.1.9008
 * Removed columns `sig.indices` and `removed.sig.names` in the returned all tested table
