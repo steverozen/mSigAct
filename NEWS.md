@@ -1,3 +1,7 @@
+# 2.1.1.9014
+* Changed name of returned element from `time.for.MAP.assign` to
+`time.for.assignment` in function `MAPAssignActivity`
+
 # 2.1.1.9013
 * Fixed a bug in function `AddSigActivity` when some samples in the spectra have
 zero mutations.

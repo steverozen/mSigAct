@@ -41,7 +41,7 @@
 #' that are statistically as good as the \code{proposed.assignment} that can
 #' plausibly reconstruct \code{spectra}.
 #' 
-#' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
+#' * \code{time.for.assignment}: Value from \code{system.time} for running
 #'  \code{MAPAssignActivity1} for each sample in \code{spectra}.
 #' 
 #' * \code{error.messages}: Only appearing if there are errors running
@@ -49,7 +49,7 @@
 #'
 #' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
 #' \code{reconstruction.distances}, \code{all.tested},
-#' \code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+#' \code{time.for.assignment} will be \code{NULL} if the algorithm could not
 #' find the optimal reconstruction or there are errors coming out for
 #' \strong{all} samples.
 #' 
@@ -167,7 +167,7 @@ MAPAssignActivity <-
                   reconstruction.distances     = reconstruction.distances,
                   all.tested                   = all.tested,
                   alt.solutions                = alt.solutions,
-                  time.for.MAP.assign          = time.for.MAP.assign))
+                  time.for.assignment          = time.for.MAP.assign))
     } else {
       # The case when part of samples have NULL assignment
       return(list(proposed.assignment          = proposed.assignment,
@@ -175,7 +175,7 @@ MAPAssignActivity <-
                   reconstruction.distances     = reconstruction.distances,
                   all.tested                   = all.tested,
                   alt.solutions                = alt.solutions,
-                  time.for.MAP.assign          = time.for.MAP.assign,
+                  time.for.assignment          = time.for.MAP.assign,
                   error.messages               = error.messages))
     } 
   }
