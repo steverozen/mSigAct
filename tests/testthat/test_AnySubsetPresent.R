@@ -93,6 +93,6 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   expect_equal(any.retval2$all.Ha.info[[2, "p"]],
                0.000910631136606777, tolerance = 1e-5)
   expect_equal(any.retval2$all.Ha.info[[3, "p"]],
-               0.00139051152114872)
+               0.00139051152114872, tolerance = 1e-5)
 })
 

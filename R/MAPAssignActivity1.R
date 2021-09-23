@@ -721,7 +721,7 @@ TestAltSolutions <- function(tibble, sparse.assign = FALSE) {
   df[nested.indices, ]$LRT.p.value <- nested.results
   # Adjust p-values for multiple comparisons to Benjamini-Hochberg false discovery rate
   df[nested.indices, ]$LRT.q.value <- 
-    p.adjust(p = nested.results, method = "BH") 
+    stats::p.adjust(p = nested.results, method = "BH") 
   return(df)
 }
 
