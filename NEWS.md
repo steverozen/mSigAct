@@ -1,3 +1,7 @@
+# 2.1.1.9015
+* Updated function `SparseAssignActivity` to use `MAPAssignActivity` with 
+argument `use.sparse.assign` set to be TRUE
+
 # 2.1.1.9014
 * Changed name of returned element from `time.for.MAP.assign` to
 `time.for.assignment` in function `MAPAssignActivity`

@@ -1,45 +1,39 @@
 #' Find known signatures that can most sparsely reconstruct each spectrum in a catalog.
 #'
-#' @param spectra The spectra (multiple spectra) to be reconstructed.
-#'
-#' @param sigs The known signatures to use in reconstruction.
-#' 
-#' @param output.dir Directory path to save the output file.
-#'
-#' @param max.level The largest number of signatures to consider discarding
-#' in the reconstruction.
-#'
-#' @param p.thresh The maximum p value based on which it is decided
-#' to retain a signature in a reconstruction.
-#'
-#' @param m.opts For documentation
-#'    see \code{\link{DefaultManyOpts}}.
-#'
-#' @param num.parallel.samples The (maximum) number of samples to run in parallel; each
-#'    sample in turn can require multiple cores, as governed by
-#'    \code{mc.cores.per.sample}.
-#'
-#' @param mc.cores.per.sample
-#'    The maximum number of cores to use for each sample.
-#'    On Microsoft Windows machines it is silently changed to 1.
-#'    
-#' @param seed Random seed; set this to get reproducible results. (The
-#'   numerical optimization is in two phases; the first, global phase
-#'   might rarely find different optima depending on the random
-#'   seed.)
+#' @inheritParams MAPAssignActivity
 #'
 #' @return A list with the elements:
 #'
-#' * \code{proposed.assignment}: Proposed sparse assignment for \code{spectra}.
-#'
-#' * \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra}
-#' based on sparse assignment.
+#' * \code{proposed.assignment}: The most sparse set of signatures that can
+#' plausibly explain \code{spectra}.
+#' 
+#' * \code{proposed.reconstruction}: The reconstruction based on sparse
+#' assignment.
 #'
 #' * \code{reconstruction.distances}: Various distances and similarities
 #' between \code{spectra} and \code{proposed.reconstruction}.
+#' 
+#' * \code{all.tested}: All tested possible ways to reconstruct each
+#' sample in \code{spectra}.
+#' 
+#' * \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
+#' that are statistically as good as the \code{proposed.assignment} that can
+#' plausibly reconstruct \code{spectra}.
+#' 
+#' * \code{time.for.assignment}: Value from \code{system.time} for running
+#'  \code{SparseAssignActivity} for each sample in \code{spectra}.
+#' 
+#' * \code{error.messages}: Only appearing if there are errors running
+#' \code{SparseAssignActivity}.
 #'
+#' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+#' \code{reconstruction.distances}, \code{all.tested},
+#' \code{time.for.assignment} will be \code{NULL} if the algorithm could not
+#' find the optimal reconstruction or there are errors coming out for
+#' \strong{all} samples.
+#' 
 #' @md
-#'
+#' 
 #' @export
 #' 
 #' @examples
@@ -64,81 +58,29 @@ SparseAssignActivity <-
   function(spectra,
            sigs,
            output.dir,
-           max.level            = 5,
-           p.thresh             = 0.05,
-           m.opts               = DefaultManyOpts(),
-           num.parallel.samples = 5,
-           mc.cores.per.sample  = min(20, 2^max.level),
-           seed                 = NULL) {
+           max.level               = 5,
+           p.thresh                = 0.05,
+           m.opts                  = DefaultManyOpts(),
+           num.parallel.samples    = 5,
+           mc.cores.per.sample     = min(20, 2^max.level),
+           progress.monitor        = NULL,
+           seed                    = NULL,
+           max.subsets             = 1000,
+           drop.low.mut.samples    = TRUE) {
     
-    
-    f1 <- function(i) {
-      retval1 <- RunSparseAssignOneSample(
-        spect                   = spectra[ , i, drop = FALSE],
-        sigs                    = sigs,
-        output.dir              = output.dir,
-        max.level               = max.level,
-        p.thresh                = p.thresh,
-        m.opts                  = m.opts,
-        max.mc.cores            = mc.cores.per.sample,
-        seed                    = seed)
-      
-      return(retval1)
-    }
-    
-    num.parallel.samples <- Adj.mc.cores(num.parallel.samples)
-    
-    retval <- parallel::mclapply(1:ncol(spectra),
-                                 f1,
-                                 mc.cores = num.parallel.samples)
-    
-    names(retval) <- colnames(spectra)
-    
-    proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval)
-    # Replace NA to 0 in proposed.assignment
-    proposed.assignment[is.na(proposed.assignment)] <- 0
-    
-    proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval)
-    # Add attributes to proposed.reconstruction to be same as spectra
-    proposed.reconstruction <- AddAttributes(proposed.reconstruction, spectra)
-    
-    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval, 
-                                                sparse.assign = TRUE)
-    
-      return(list(proposed.assignment          = proposed.assignment,
-                  proposed.reconstruction      = proposed.reconstruction,
-                  reconstruction.distances     = reconstruction.distances))
-    
-    if (FALSE) {
-      f1 <- function(i) {
-        retval1 <- SparseAssignActivity1(
-          spect        = spectra[ , i, drop = FALSE],
-          sigs         = sigs,
-          p.thresh     = p.thresh,
-          m.opts       = m.opts,
-          max.level    = max.level,
-          max.mc.cores = mc.cores.per.sample,
-          seed         = seed)
-        
-        return(retval1)
-      }
-      
-      if (is.null(m.opts)) m.opts <- DefaultManyOpts()
-      
-      num.parallel.samples <- Adj.mc.cores(num.parallel.samples)
-      
-      retval <- parallel::mclapply(1:ncol(spectra),
-                                   f1,
-                                   mc.cores = num.parallel.samples)
-      check.mclapply.result(
-        retval, "SparseAssignActivity", colnames(spectra))
-      
-      other.info <- lapply(retval, attributes)
-      retval2 <- matrix(unlist(retval), ncol = length(retval))
-      colnames(retval2) <- colnames(spectra)
-      rownames(retval2) <- colnames(sigs)
-      
-      return(list(exposure = retval2, other.info = other.info))
-    }
-}
+    retval <- MAPAssignActivity(spectra                 = spectra,
+                                sigs                    = sigs,
+                                use.sparse.assign       = TRUE,
+                                output.dir              = output.dir,
+                                max.level               = max.level,
+                                p.thresh                = p.thresh,
+                                m.opts                  = m.opts,
+                                num.parallel.samples    = num.parallel.samples,
+                                mc.cores.per.sample     = mc.cores.per.sample,
+                                progress.monitor        = progress.monitor,
+                                seed                    = seed,
+                                max.subsets             = max.subsets,
+                                drop.low.mut.samples    = drop.low.mut.samples)
+    return(retval)
+  }
 

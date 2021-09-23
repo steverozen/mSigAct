@@ -13,46 +13,90 @@ SparseAssignActivity(
   m.opts = DefaultManyOpts(),
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level),
-  seed = NULL
+  progress.monitor = NULL,
+  seed = NULL,
+  max.subsets = 1000,
+  drop.low.mut.samples = TRUE
 )
 }
 \arguments{
 \item{spectra}{The spectra (multiple spectra) to be reconstructed.}
 
-\item{sigs}{The known signatures to use in reconstruction.}
+\item{sigs}{A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.}
 
 \item{output.dir}{Directory path to save the output file.}
 
-\item{max.level}{The largest number of signatures to consider discarding
-in the reconstruction.}
+\item{max.level}{The maximum number of signatures to try removing.}
 
-\item{p.thresh}{The maximum p value based on which it is decided
-to retain a signature in a reconstruction.}
+\item{p.thresh}{If
+the p value for a better reconstruction with a
+set of signatures (as opposed to
+without that set of signatures)
+is > than this argument, then we can use exposures without this set.}
 
-\item{m.opts}{For documentation
-see \code{\link{DefaultManyOpts}}.}
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
-\item{num.parallel.samples}{The (maximum) number of samples to run in parallel; each
+\item{num.parallel.samples}{The (maximum) number of samples to run in
+parallel. On Microsoft Windows machines it is silently changed to 1. Each
 sample in turn can require multiple cores, as governed by
 \code{mc.cores.per.sample}.}
 
-\item{mc.cores.per.sample}{The maximum number of cores to use for each sample.
-On Microsoft Windows machines it is silently changed to 1.}
+\item{mc.cores.per.sample}{The maximum number of cores to use for each
+sample. On Microsoft Windows machines it is silently changed to 1.}
+
+\item{progress.monitor}{Function called at the start of each
+new level (number of signatures to try excluding). Must
+take named arguments \code{value} and \code{detail}, and
+no others. Designed for a \code{\link[ipc]{AsyncProgress}}
+progress bar function.}
 
 \item{seed}{Random seed; set this to get reproducible results. (The
 numerical optimization is in two phases; the first, global phase
 might rarely find different optima depending on the random
 seed.)}
+
+\item{max.subsets}{This argument provides a way to 
+heuristically limit the
+amount of time spent by this function. Larger values of this
+argument will tend to allow longer running times.
+The algorithm
+successively tries to remove all subsets of 1 signature, 2
+signatures, 3 signatures, etc., down to \code{max.level}.
+(Not every subset is tested at each level; if a subset was
+already found to be necessary the algorithm does not test
+supersets of that subset.) If at any level the algorithm
+needs to test more than \code{max.subsets} this function will
+not proceed.}
+
+\item{drop.low.mut.samples}{Whether to exclude low mutation samples from
+the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+than 100, DBS or ID total mutations less than 25 will be dropped.}
 }
 \value{
 A list with the elements:
 \itemize{
-\item \code{proposed.assignment}: Proposed sparse assignment for \code{spectra}.
-\item \code{proposed.reconstruction}: Proposed reconstruction of \code{spectra}
-based on sparse assignment.
+\item \code{proposed.assignment}: The most sparse set of signatures that can
+plausibly explain \code{spectra}.
+\item \code{proposed.reconstruction}: The reconstruction based on sparse
+assignment.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spectra} and \code{proposed.reconstruction}.
+\item \code{all.tested}: All tested possible ways to reconstruct each
+sample in \code{spectra}.
+\item \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
+that are statistically as good as the \code{proposed.assignment} that can
+plausibly reconstruct \code{spectra}.
+\item \code{time.for.assignment}: Value from \code{system.time} for running
+\code{SparseAssignActivity} for each sample in \code{spectra}.
+\item \code{error.messages}: Only appearing if there are errors running
+\code{SparseAssignActivity}.
 }
+
+The elements \code{proposed.assignment}, \code{proposed.reconstruction},
+\code{reconstruction.distances}, \code{all.tested},
+\code{time.for.assignment} will be \code{NULL} if the algorithm could not
+find the optimal reconstruction or there are errors coming out for
+\strong{all} samples.
 }
 \description{
 Find known signatures that can most sparsely reconstruct each spectrum in a catalog.
