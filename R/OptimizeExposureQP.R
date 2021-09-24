@@ -3,11 +3,10 @@
 #' @param spectrum Mutational signature spectrum
 #'      as a numeric vector or single column data frame or matrix.
 #'
-#' @param signatures Matrix or data frame of signatures from which
-#'      reconstruct \code{spectrum}. Rows are mutation types and
-#'      columns are signatures. Should have column names for
-#'      interpretable results. Cannot be a vector because
-#'      the column names are needed.
+#' @param signatures Matrix or data frame of signatures from which to
+#'   reconstruct \code{spectrum}. Rows are mutation types and columns are
+#'   signatures. Should have column names for interpretable results. Cannot be a
+#'   vector because the column names are needed.
 #'
 #' @export
 #'
