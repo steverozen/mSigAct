@@ -111,6 +111,9 @@ RareSignatures <- function() {
 #' Return a character vector of some common cancer types
 #'
 #' @export
+#' 
+#' @examples 
+#' cancer.types <- CancerTypes()
 CancerTypes <- function() {
   return(c("Biliary-AdenoCA", "Bladder-TCC", "Bone-Benign", "Bone-Epith",  
            "Bone-Osteosarc", "Breast-AdenoCA", "Breast-DCIS", "Breast-LobularCA",  

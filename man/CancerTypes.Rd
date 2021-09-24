@@ -9,3 +9,6 @@ CancerTypes()
 \description{
 Return a character vector of some common cancer types
 }
+\examples{
+cancer.types <- CancerTypes()
+}
