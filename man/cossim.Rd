@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{cossim}
 \alias{cossim}
-\title{Cosine similarity with useful argument types..}
+\title{Cosine similarity with useful argument types}
 \usage{
 cossim(v1, v2)
 }
@@ -13,4 +13,13 @@ cossim(v1, v2)
 }
 \description{
 Calls \code{\link[lsa]{cosine}}.
+}
+\examples{
+spectrum <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]
+SBS96.sigs <- PCAWG7::signature$genome$SBS96
+exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1, drop = FALSE]
+reconstructed.spectrum <- ReconstructSpectrum(sigs = SBS96.sigs,
+                                              exp = exposure,
+                                              use.sig.names = TRUE)
+cosine <- cossim(spectrum, reconstructed.spectrum)
 }

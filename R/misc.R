@@ -55,7 +55,7 @@ ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
   if (use.sig.names) {
     sigs <- sigs[ , rownames(exp), drop = FALSE]
   }
-  stopifnot(length(exp) == ncol(sigs))
+  stopifnot(nrow(exp) == ncol(sigs))
   return(as.matrix(sigs) %*% as.matrix(exp))
 }
 
@@ -86,7 +86,7 @@ is.superset.of.any <- function(probe, background) {
 }
 
 
-#' Cosine similarity with useful argument types..
+#' Cosine similarity with useful argument types
 #'
 #' Calls \code{\link[lsa]{cosine}}.
 #'
@@ -94,7 +94,14 @@ is.superset.of.any <- function(probe, background) {
 #' @param v2 A vector or single-column matrix
 #'
 #' @export
-
+#' @examples 
+#' spectrum <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]
+#' SBS96.sigs <- PCAWG7::signature$genome$SBS96
+#' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1, drop = FALSE]
+#' reconstructed.spectrum <- ReconstructSpectrum(sigs = SBS96.sigs,
+#'                                               exp = exposure,
+#'                                               use.sig.names = TRUE)
+#' cosine <- cossim(spectrum, reconstructed.spectrum)
 cossim <- function(v1, v2) {
   if (!is.null(ncol(v1)))  {
     stopifnot(ncol(v1) == 1)
