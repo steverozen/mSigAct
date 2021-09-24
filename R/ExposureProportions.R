@@ -30,6 +30,8 @@
 #'   The names are the signature ids.
 #'   
 #' @examples 
+#' cancer.types <- CancerTypes()
+#' cancer.types
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
 #'                                  cancer.type = "Lung-AdenoCA")
 ExposureProportions <- function(

@@ -46,6 +46,8 @@ A numerical vector of the proportion of
 Return the proportions of tumors of a given cancer type that have a particular signature
 }
 \examples{
+cancer.types <- CancerTypes()
+cancer.types
 sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
                                  cancer.type = "Lung-AdenoCA")
 }
