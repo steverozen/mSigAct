@@ -2,7 +2,7 @@
 % Please edit documentation in R/DefaultManyOpts.R
 \name{DefaultManyOpts}
 \alias{DefaultManyOpts}
-\title{Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.}
+\title{Set default options for many functions, especially \code{\link[nloptr]{nloptr}}}
 \usage{
 DefaultManyOpts(likelihood.dist = "multinom")
 }
@@ -21,9 +21,9 @@ A list with the following elements
   \item{local.opts}{A sub-list with several options for \code{\link[nloptr]{nloptr}},
   q.v., for the local optimization phase.}
 
-  \item{nbinom.size}{The dispersion parameter for the negative
-       binomial distribution; smaller is more dispersed.
-       See \code{\link[stats]{NegBinomial}}.} 
+  \item{nbinom.size}{Only appearing if \code{likelihood.dist = "neg.binom"}.
+  The dispersion parameter for the negative binomial distribution; smaller is
+  more dispersed. See \code{\link[stats]{NegBinomial}}.}
 
   \item{trace}{If > 0 print progress messages.}
   
@@ -38,5 +38,9 @@ A list with the following elements
 }
 }
 \description{
-Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.
+Set default options for many functions, especially \code{\link[nloptr]{nloptr}}
+}
+\examples{
+my.opts <- DefaultManyOpts()
+my.opts$trace <- 10
 }

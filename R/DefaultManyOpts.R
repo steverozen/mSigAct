@@ -13,7 +13,7 @@ DefaultLocalOpts <- function() {
               maxeval     = 10000))
 }
 
-#' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}.
+#' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}
 #' 
 #' @param likelihood.dist The probability distribution used to calculate the
 #'   likelihood, can be either "multinom" (multinomial distribution) or
@@ -30,9 +30,9 @@ DefaultLocalOpts <- function() {
 #'   \item{local.opts}{A sub-list with several options for \code{\link[nloptr]{nloptr}},
 #'   q.v., for the local optimization phase.}
 #'
-#'   \item{nbinom.size}{The dispersion parameter for the negative
-#'        binomial distribution; smaller is more dispersed.
-#'        See \code{\link[stats]{NegBinomial}}.} 
+#'   \item{nbinom.size}{Only appearing if \code{likelihood.dist = "neg.binom"}.
+#'   The dispersion parameter for the negative binomial distribution; smaller is
+#'   more dispersed. See \code{\link[stats]{NegBinomial}}.}
 #'
 #'   \item{trace}{If > 0 print progress messages.}
 #'   
@@ -45,6 +45,10 @@ DefaultLocalOpts <- function() {
 #'   
 #'   \item{likelihood.dist}{The probability distribution used to calculate the likelihood.}
 #' }
+#' 
+#' @examples 
+#' my.opts <- DefaultManyOpts()
+#' my.opts$trace <- 10
 
 DefaultManyOpts <- function(likelihood.dist = "multinom") {
   if (!likelihood.dist %in% c("multinom", "neg.binom")) {
