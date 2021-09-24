@@ -8,11 +8,14 @@ prop.reconstruct(sigs, exp)
 }
 \arguments{
 \item{sigs}{Signature as a matrix or data frame, with each
-row one mutation type (g.e. CCT > CAT or CC > TT) and
+row one mutation type (e.g. CCT > CAT or CC > TT) and
 each column a signature.}
 
 \item{exp}{The exposures for one or more samples as a matrix or data.frame,
 with each row a signature and each column a sample.}
+}
+\value{
+The matrix product \code{sigs \%*\% exp}.
 }
 \description{
 Use \code{\link{ReconstructSpectrum}} instead.

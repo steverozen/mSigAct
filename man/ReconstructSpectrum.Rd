@@ -8,7 +8,7 @@ ReconstructSpectrum(sigs, exp, use.sig.names = FALSE)
 }
 \arguments{
 \item{sigs}{Signature as a matrix or data frame, with each
-row one mutation type (g.e. CCT > CAT or CC > TT) and
+row one mutation type (e.g. CCT > CAT or CC > TT) and
 each column a signature.}
 
 \item{exp}{The exposures for one or more samples as a matrix or data.frame,
@@ -18,10 +18,21 @@ with each row a signature and each column a sample.}
 a subset of \code{colnames(sigs)}, and use only the columns in \code{sigs}
 that are present in \code{exp}.}
 }
+\value{
+The matrix product \code{sigs \%*\% exp} after some error checking.
+}
 \description{
 Given signatures (sigs) and exposures (exp), return a spectrum or spectra
 }
 \details{
 Does not care or check if \code{colSums(sigs) == 1}.
-  Error checking is minimal since this function is called often.
+Error checking is minimal since this function is called often.
+}
+\examples{
+spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
+SBS96.sigs <- PCAWG7::signature$genome$SBS96
+exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
+reconstructed.spectra <- ReconstructSpectrum(sigs = SBS96.sigs,
+                                             exp = exposure,
+                                             use.sig.names = TRUE)
 }

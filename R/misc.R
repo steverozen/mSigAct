@@ -30,7 +30,7 @@ if (FALSE) {
 #' Given signatures (sigs) and exposures (exp), return a spectrum or spectra
 #'
 #' @param sigs Signature as a matrix or data frame, with each
-#'      row one mutation type (g.e. CCT > CAT or CC > TT) and
+#'      row one mutation type (e.g. CCT > CAT or CC > TT) and
 #'      each column a signature.
 #'
 #' @param exp The exposures for one or more samples as a matrix or data.frame,
@@ -40,13 +40,22 @@ if (FALSE) {
 #'   a subset of \code{colnames(sigs)}, and use only the columns in \code{sigs}
 #'   that are present in \code{exp}.
 #'
-# @return The matrix product \code{sigs %*% exp} after some error checking.
+#' @return The matrix product \code{sigs %*% exp} after some error checking.
 #'
 #' @details Does not care or check if \code{colSums(sigs) == 1}.
 #'   Error checking is minimal since this function is called often.
 #'
 #' @export
-#'
+#' 
+#' @md
+#' 
+#' @examples 
+#' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
+#' SBS96.sigs <- PCAWG7::signature$genome$SBS96
+#' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
+#' reconstructed.spectra <- ReconstructSpectrum(sigs = SBS96.sigs,
+#'                                              exp = exposure,
+#'                                              use.sig.names = TRUE)
 ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
   stopifnot(is.matrix(sigs))
   if (!(is.matrix(exp))) {
@@ -66,8 +75,10 @@ ReconstructSpectrum <- function(sigs, exp, use.sig.names = FALSE) {
 #'
 #' @inheritParams ReconstructSpectrum
 #'
-# @return The matrix product \code{sigs %*% exp}.
-#'
+#' @return The matrix product \code{sigs %*% exp}.
+#' 
+#' @md
+#' 
 #' @keywords internal
 
 prop.reconstruct <- function(sigs, exp) {

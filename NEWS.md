@@ -1,3 +1,7 @@
+# 2.1.1.9016
+* Fixed a bug in function `ReconstructSpectrum` to allow reconstructing multiple
+spectra
+
 # 2.1.1.9015
 * Updated function `SparseAssignActivity` to use `MAPAssignActivity` with 
 argument `use.sparse.assign` set to be TRUE
