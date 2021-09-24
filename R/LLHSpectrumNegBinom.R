@@ -34,15 +34,9 @@ LLHSpectrumNegBinom <-
 
     stopifnot(length(spectrum) == length(expected.counts))
 
-    if (Sys.getenv("MULT") != "") {
-      # message("dmultinom")
-      loglh0 <- stats::dmultinom(x = spectrum,
-                                 prob = expected.counts,
-                                 log = TRUE)
-    } else {
-      loglh0 <- sum(stats::dnbinom(
-        x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
-    }
+    loglh0 <- sum(stats::dnbinom(
+      x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
+    
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")
       loglh0 = -Inf
