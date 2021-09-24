@@ -18,6 +18,20 @@
 #'  changed to 1 on Microsoft Windows.
 #'
 #' @export
+#' 
+#' @examples 
+#' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+#' spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+#' sigs <- PCAWG7::signature$genome$SBS96
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96",
+#'                                  cancer.type = "Lung-AdenoCA")
+#' sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
+#' # Test whether SBS17a is plausibly present in the spectra
+#' sig.index <- which(colnames(sigs.to.use) == "SBS17a")
+#' sig.presence.test.out <- SignaturePresenceTest(spectra = spectra,
+#'                                                sigs = sigs.to.use, 
+#'                                                target.sig.index = sig.index,
+#'                                                mc.cores = 2)
 
 SignaturePresenceTest <- function(
   spectra, sigs, target.sig.index, m.opts = NULL, mc.cores = 10) {
