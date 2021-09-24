@@ -9,3 +9,6 @@ PossibleArtifacts()
 \description{
 Return a character vector of the IDs of possible SBS96 signature artifacts.
 }
+\examples{
+artifact.sigs <- PossibleArtifacts()
+}

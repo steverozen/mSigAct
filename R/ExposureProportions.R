@@ -96,6 +96,9 @@ ExposureProportions <- function(
 #' Return a character vector of the IDs of possible SBS96 signature artifacts.
 #'
 #' @export
+#' 
+#' @examples 
+#' artifact.sigs <- PossibleArtifacts()
 PossibleArtifacts <- function() {
   return(c("SBS27", "SBS43", "SBS45", "SBS46", "SBS47",
            "SBS48", "SBS49", "SBS50", "SBS51", "SBS52",
