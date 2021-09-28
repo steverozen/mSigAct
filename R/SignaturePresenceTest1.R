@@ -7,15 +7,26 @@
 #' @param sigs A catalog of signatures from which to choose.
 #'
 #' @param target.sig.index The index of the signature the presence
-#' of which we want to test.
+#' of which we want to test. It can also be the signature id (e.g. "SBS22").
 #'
-#' @param m.opts For documentation
+#' @param m.opts If \code{NULL} use the return from
+#'    calling \code{\link{DefaultManyOpts}}. For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #'
 #' @keywords internal
 
 SignaturePresenceTest1 <- function(
-  spectrum, sigs, target.sig.index, m.opts) {
+  spectrum, sigs, target.sig.index, m.opts = NULL) {
+  
+  if (!is.numeric(target.sig.index)) {
+    if (!target.sig.index %in% colnames(sigs)) {
+      stop("The signature id specified by target.sig.index ", target.sig.index,
+           " is not found in column names of sigs")
+    }
+    target.sig.index <- which(colnames(sigs) == target.sig.index)
+  }
+  
+  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
 
   ret.with <- OptimizeExposure(spectrum  = spectrum,
                                sigs   = sigs,
