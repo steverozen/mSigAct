@@ -1,3 +1,8 @@
+# 2.1.1.9017
+* Moved several functions `LLHSpectrumNegBinomDebug`, `ObjFnBinomMaxLHMustRound`,
+`ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
+folder.
+
 # 2.1.1.9016
 * Fixed a bug in function `ReconstructSpectrum` to allow reconstructing multiple
 spectra

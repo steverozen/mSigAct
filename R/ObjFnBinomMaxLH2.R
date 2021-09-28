@@ -58,43 +58,6 @@ ObjFnBinomMaxLH2 <-
   return(-loglh)
   }
 
-#' A deprecated negative binomial maximum likelihood objective function.
-#'
-#' Use \code{\link{ObjFnBinomMaxLHRound}} instead.
-#'
-#' This function will lead to errors in some situations
-#' when the rounded reconstructed signature contains 0s for
-#' mutations classes for which the target spectrum is > 0.
-#'
-#' @inheritParams ObjFnBinomMaxLHRound
-#'
-#' @export
-#'
-ObjFnBinomMaxLHMustRound <- function(exp, spectrum, sigs, nbinom.size) {
-  warning("Called ObjFnBinomMaxLHMustRound")
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE, round.ok = TRUE)
-}
-
-
-#' A deprecated negative binomial maximum likelihood objective function.
-#'
-#' Use \code{\link{ObjFnBinomMaxLHRound}} instead.
-#'
-#' This function rounds sometimes, which leads to
-#' minor differences in log likelihoods of reconstructed spectra
-#' (\code{\link{LLHSpectrumNegBinom}})
-#' compared to the value returned by this function.
-#'
-#' @inheritParams ObjFnBinomMaxLHRound
-#'
-#' @export
-#'
-ObjFnBinomMaxLHNoRoundOK <- function(exp, spectrum, sigs, nbinom.size) {
-  warning("Called ObjFnBinomMaxLHNoRoundOK")
-  ObjFnBinomMaxLH2(exp, spectrum, sigs, nbinom.size, no.round.ok = TRUE, round.ok = TRUE)
-}
-
-
 #' The preferred negative binomial maximum likelihood objective function.
 #'
 #' Can be used as the
