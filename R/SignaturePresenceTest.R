@@ -19,6 +19,28 @@
 #'
 #' @export
 #' 
+#' @return A list of test results for each sample in \code{spectra}.
+#' Each sublist contains the following elements:
+#' 
+#' * loglh.with: The maximum log likelihood of the reconstructed spectrum using
+#' all the signatures.
+#'
+#' * loglh.without: The maximum log likelihood of the reconstructed spectrum
+#' without the target signature.
+#'
+#' * statistic: Likelihood ratio test statistic.
+#'
+#' * chisq.p: P-value of the likelihood ratio test. The null hypothesis is we
+#' can plausibly reconstruct the spectrum without the target signature.
+#'
+#' * exp.with: The exposure using all the signatures which generates the maximum
+#' log likelihood \code{loglh.with}.
+#'
+#' * exp.without: The exposure not using the target signature which generates
+#' the maximum log likelihood \code{loglh.without}.
+#' 
+#' @md
+#' 
 #' @examples 
 #' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]

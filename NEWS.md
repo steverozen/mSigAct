@@ -11,6 +11,8 @@ Changed the names of first two returned elements: `with` -> `loglh.with` and
 `without` -> `loglh.without`. Removed two NULL elements `everything.else.with` and 
 `everything.else.without`.
 
+* Added documentation of return value for exported function `SignaturePresenceTest`.
+
 * Moved several functions `LLHSpectrumNegBinomDebug`, `ObjFnBinomMaxLHMustRound`,
 `ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
 folder.

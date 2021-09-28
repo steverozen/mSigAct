@@ -18,7 +18,7 @@ an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
 
 \item{sigs}{A catalog of signatures from which to choose.
 This could be
-  and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
+and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
 
 \item{target.sig.index}{The index of the signature the presence
 of which we want to test.}
@@ -29,6 +29,23 @@ see \code{\link{DefaultManyOpts}}.}
 
 \item{mc.cores}{Number of cores to use. Always silently
 changed to 1 on Microsoft Windows.}
+}
+\value{
+A list of test results for each sample in \code{spectra}.
+Each sublist contains the following elements:
+\itemize{
+\item loglh.with: The maximum log likelihood of the reconstructed spectrum using
+all the signatures.
+\item loglh.without: The maximum log likelihood of the reconstructed spectrum
+without the target signature.
+\item statistic: Likelihood ratio test statistic.
+\item chisq.p: P-value of the likelihood ratio test. The null hypothesis is we
+can plausibly reconstruct the spectrum without the target signature.
+\item exp.with: The exposure using all the signatures which generates the maximum
+log likelihood \code{loglh.with}.
+\item exp.without: The exposure not using the target signature which generates
+the maximum log likelihood \code{loglh.without}.
+}
 }
 \description{
 Test whether a given signature is plausibly present in a catalog.
