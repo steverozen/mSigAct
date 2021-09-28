@@ -45,3 +45,4 @@ retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
 ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"), 
                 base.filename = "Biliary-AdenoCA")
 }
+\keyword{internal}

@@ -81,3 +81,4 @@ sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                  cancer.type = "Biliary-AdenoCA")
 retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
 }
+\keyword{internal}

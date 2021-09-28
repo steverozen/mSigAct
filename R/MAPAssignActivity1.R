@@ -6,7 +6,7 @@
 #' the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
 #' than 100, DBS or ID total mutations less than 25 will be dropped.
 #'
-#' @export
+#' @keywords internal
 #'
 #' @inheritParams MAPAssignActivityInternal
 #'

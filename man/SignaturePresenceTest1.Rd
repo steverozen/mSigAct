@@ -20,3 +20,4 @@ see \code{\link{DefaultManyOpts}}.}
 \description{
 For backward compatibility. See also \code{\link{AnySigSubsetPresent}}.
 }
+\keyword{internal}

@@ -23,3 +23,4 @@ Code adapted from \code{SignatureEstimation::decomposeQP}.
 \description{
 Quadratic programming optimization of signature activities
 }
+\keyword{internal}

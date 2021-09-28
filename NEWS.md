@@ -3,6 +3,12 @@
 `ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
 folder.
 
+* Made several functions `AddSigActivity`, `g_ineq_for_ObjFnBinomMaxLH2`, 
+`g_ineq_for_ObjFnMultinomMaxLH`, `LLHSpectrumMAP`, `LLHSpectrumNegBinom`,
+`MAPAssignActivity1`, `ObjFnBinomMaxLHRound`, `ObjFnMultinomMaxLH`,
+`OneMAPAssignTest `, `OptimizeExposure`, `OptimizeExposureQP`, `PCAWGMAPTest`,
+`ShowSigActivity`, `SignaturePresenceTest1` **internal** functions.
+
 # 2.1.1.9016
 * Fixed a bug in function `ReconstructSpectrum` to allow reconstructing multiple
 spectra

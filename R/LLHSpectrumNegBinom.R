@@ -27,7 +27,7 @@
 #'
 #' @importFrom stats dnbinom
 #'
-#' @export
+#' @keywords internal
 
 LLHSpectrumNegBinom <-
   function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {

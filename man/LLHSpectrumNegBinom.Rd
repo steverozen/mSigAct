@@ -37,3 +37,4 @@ was generated from the expected count for that mutation type.
 Likelihood that 1 observed spectrum was generated from a vector of expected
 mutation counts using negative binomial distribution
 }
+\keyword{internal}

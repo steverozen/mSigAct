@@ -83,7 +83,7 @@ ObjFnBinomMaxLH2 <-
 #'        binomial distribution; smaller is more dispersed.
 #'        See \code{\link[stats]{NegBinomial}}.
 #'
-#' @export
+#' @keywords internal
 #'
 
 ObjFnBinomMaxLHRound <- function(exp, spectrum, sigs, nbinom.size) {

@@ -69,3 +69,4 @@ return value from \code{\link{ExposureProportions}}.}
 \description{
 Run one test of \code{\link{MAPAssignActivity1}}.
 }
+\keyword{internal}

@@ -38,7 +38,7 @@
 #'
 #' @importFrom stats dnbinom
 #'
-#' @export
+#' @keywords internal
 LLHSpectrumMAP <-
   function(spectrum, expected.counts, nbinom.size, model, sigs.presence.prop, 
            likelihood.dist = "multinom", verbose = FALSE) {

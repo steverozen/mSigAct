@@ -12,7 +12,7 @@
 #' @param m.opts For documentation
 #'    see \code{\link{DefaultManyOpts}}.
 #'
-#' @export
+#' @keywords internal
 
 SignaturePresenceTest1 <- function(
   spectrum, sigs, target.sig.index, m.opts) {

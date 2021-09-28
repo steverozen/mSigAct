@@ -117,3 +117,4 @@ MAP.out <- MAPAssignActivity1(spect = spect,
                               max.level = length(sigs.prop) - 1)
 }                               
 }
+\keyword{internal}

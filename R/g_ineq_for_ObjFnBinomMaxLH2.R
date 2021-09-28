@@ -2,7 +2,7 @@
 #'
 #' See \code{\link[nloptr]{nloptr}} to understand how this function is used.
 #'
-#' @export
+#' @keywords internal
 #'
 #' @param exp A numeric vector of exposures.
 #'

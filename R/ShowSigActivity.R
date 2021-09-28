@@ -18,7 +18,7 @@
 #' 
 #' @param ... Other arguments passed to \code{\link[ICAMS]{PlotCatalogToPdf}}.
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]

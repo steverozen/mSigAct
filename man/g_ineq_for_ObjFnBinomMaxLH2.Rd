@@ -20,3 +20,4 @@ the spectrum. (Ignored in this function but used by \code{\link[nloptr]{nloptr}}
 \description{
 See \code{\link[nloptr]{nloptr}} to understand how this function is used.
 }
+\keyword{internal}

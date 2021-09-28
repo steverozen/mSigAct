@@ -20,7 +20,7 @@ Encoding: UTF-8
 LazyData: true
 Language: en-US
 Depends: R (>= 4.0),
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 biocViews:
 Imports:
@@ -49,4 +49,3 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     usethis
-

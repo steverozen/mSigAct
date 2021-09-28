@@ -72,3 +72,4 @@ Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data 
 
 Run \code{\link{MAPAssignActivity1}} on one sample from the PCAWG platinum data set with artifact signatures removed.
 }
+\keyword{internal}

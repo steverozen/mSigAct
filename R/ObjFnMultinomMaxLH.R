@@ -15,7 +15,7 @@
 #' 
 #' @param sigs The matrix of signatures.
 #'
-#' @export
+#' @keywords internal
 #' 
 #' @return
 #'

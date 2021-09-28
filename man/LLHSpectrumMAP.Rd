@@ -56,3 +56,4 @@ likelihood, can be either "multinom" (multinomial distribution) or
 Likelihood that 1 observed spectrum was generated from a vector of expected
 mutation counts using prior information of the signature presence proportions
 }
+\keyword{internal}

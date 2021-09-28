@@ -8,7 +8,7 @@
 #'   signatures. Should have column names for interpretable results. Cannot be a
 #'   vector because the column names are needed.
 #'
-#' @export
+#' @keywords internal
 #'
 #' @return A vector of exposures with names being the colnames from
 #'   \code{signatures}.

@@ -23,7 +23,7 @@
 #' }
 #'
 #'
-#' @export
+#' @keywords internal
 #'
 OptimizeExposure <- function(spectrum,
                              sigs,

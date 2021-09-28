@@ -33,3 +33,4 @@ objective function for \code{\link{MAPAssignActivity}},
 and \code{\link{SignaturePresenceTest1}}.
 (Internally used by by \code{\link[nloptr]{nloptr}}.)
 }
+\keyword{internal}

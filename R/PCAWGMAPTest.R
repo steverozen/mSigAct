@@ -34,7 +34,7 @@
 #'
 #' @return A list with two elements, each the result for one call to \code{\link{OneMAPAssignTest}}.
 #'
-#' @export
+#' @keywords internal
 #'
 
 PCAWGMAPTest <- function(cancer.type,

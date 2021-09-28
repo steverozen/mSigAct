@@ -167,7 +167,7 @@ AddSigActivity1 <- function(spect, exposure, sigs,
 #'
 #' @md
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]

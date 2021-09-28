@@ -141,7 +141,7 @@ PCAWGMAPTest <- function(cancer.type,
 #'
 #' @param sigs Matrix of signatures.
 #'
-#' @export
+#' @keywords internal
 #'
 
 OneMAPAssignTest <- function(spect,
