@@ -32,7 +32,6 @@ Imports:
     PCAWG7 (>= 0.1.0.9003),
     philentropy,
     quadprog,
-    rlang,
     stats,
     sets,
     tibble,

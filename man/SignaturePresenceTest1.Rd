@@ -4,7 +4,7 @@
 \alias{SignaturePresenceTest1}
 \title{Test whether a given signature is plausibly present in a spectrum.}
 \usage{
-SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts)
+SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts = NULL)
 }
 \arguments{
 \item{spectrum}{The spectrum to analyze.}
@@ -12,9 +12,10 @@ SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts)
 \item{sigs}{A catalog of signatures from which to choose.}
 
 \item{target.sig.index}{The index of the signature the presence
-of which we want to test.}
+of which we want to test. It can also be the signature id (e.g. "SBS22").}
 
-\item{m.opts}{For documentation
+\item{m.opts}{If \code{NULL} use the return from
+calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
 }
 \description{
