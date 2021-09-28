@@ -110,7 +110,7 @@ PossibleArtifacts <- function() {
 #'
 #' @export
 RareSignatures <- function() {
-  return(paste0("SBS", 84:90))
+  return(paste0("SBS", c(84:90, 91, 94)))
 }
 
 #' Return a character vector of some common cancer types

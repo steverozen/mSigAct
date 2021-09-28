@@ -1,4 +1,7 @@
 # 2.1.1.9017
+* Updated exported function `RareSignatures` to include SBS91 and SBS94
+as rare signatures.
+
 * Moved several functions `LLHSpectrumNegBinomDebug`, `ObjFnBinomMaxLHMustRound`,
 `ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
 folder.
