@@ -12,7 +12,27 @@
 #' @param m.opts If \code{NULL} use the return from
 #'    calling \code{\link{DefaultManyOpts}}. For documentation
 #'    see \code{\link{DefaultManyOpts}}.
+#' 
+#' @return A list of elements:
+#' * loglh.with: The maximum log likelihood of the reconstructed spectrum using
+#' all the signatures.
 #'
+#' * loglh.without: The maximum log likelihood of the reconstructed spectrum
+#' without the target signature.
+#'
+#' * statistic: Likelihood ratio test statistic.
+#'
+#' * chisq.p: P-value of the likelihood ratio test. The null hypothesis is we
+#' can plausibly reconstruct the spectrum without the target signature.
+#'
+#' * exp.with: The exposure using all the signatures which generates the maximum
+#' log likelihood \code{loglh.with}.
+#'
+#' * exp.without: The exposure not using the target signature which generates
+#' the maximum log likelihood \code{loglh.without}.
+#' 
+#' @md
+#' 
 #' @keywords internal
 
 SignaturePresenceTest1 <- function(
@@ -43,14 +63,14 @@ SignaturePresenceTest1 <- function(
   if (m.opts$trace > 0)
     message("statistic  = ", statistic, "\nchisq p = ", chisq.p)
 
-  list(with                    = loglh.with,
-       without                 = loglh.without,
+  list(loglh.with              = loglh.with,
+       loglh.without           = loglh.without,
        statistic               = statistic,
        chisq.p                 = chisq.p,
-       exp.with                = ret.with$exp,
-       exp.without             = ret.without$exp,
-       everything.else.with    = ret.with$everything.else,
-       everything.else.without = ret.without$everything.else)
+       exp.with                = ret.with$exposure,
+       exp.without             = ret.without$exposure)
+       #everything.else.with    = ret.with$everything.else,
+       #everything.else.without = ret.without$everything.else)
 }
 
 #' Framework for testing \code{\link{SignaturePresenceTest1}}.

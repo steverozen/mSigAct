@@ -6,6 +6,11 @@ from `DefaultManyOpts` by default.
 * Updated exported function `RareSignatures` to include SBS91 and SBS94
 as rare signatures.
 
+* Added documentation of return value for internal function `SignaturePresenceTest1`.
+Changed the names of first two returned elements: `with` -> `loglh.with` and
+`without` -> `loglh.without`. Removed two NULL elements `everything.else.with` and 
+`everything.else.without`.
+
 * Moved several functions `LLHSpectrumNegBinomDebug`, `ObjFnBinomMaxLHMustRound`,
 `ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
 folder.

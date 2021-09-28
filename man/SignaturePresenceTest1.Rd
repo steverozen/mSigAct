@@ -18,6 +18,22 @@ of which we want to test. It can also be the signature id (e.g. "SBS22").}
 calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
 }
+\value{
+A list of elements:
+\itemize{
+\item loglh.with: The maximum log likelihood of the reconstructed spectrum using
+all the signatures.
+\item loglh.without: The maximum log likelihood of the reconstructed spectrum
+without the target signature.
+\item statistic: Likelihood ratio test statistic.
+\item chisq.p: P-value of the likelihood ratio test. The null hypothesis is we
+can plausibly reconstruct the spectrum without the target signature.
+\item exp.with: The exposure using all the signatures which generates the maximum
+log likelihood \code{loglh.with}.
+\item exp.without: The exposure not using the target signature which generates
+the maximum log likelihood \code{loglh.without}.
+}
+}
 \description{
 For backward compatibility. See also \code{\link{AnySigSubsetPresent}}.
 }
