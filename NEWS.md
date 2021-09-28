@@ -16,6 +16,8 @@ folder.
 `OneMAPAssignTest `, `OptimizeExposure`, `OptimizeExposureQP`, `PCAWGMAPTest`,
 `ShowSigActivity`, `SignaturePresenceTest1` **internal** functions.
 
+* Removed `rlang` from Imports field in DESCRIPTION file.
+
 # 2.1.1.9016
 * Fixed a bug in function `ReconstructSpectrum` to allow reconstructing multiple
 spectra
