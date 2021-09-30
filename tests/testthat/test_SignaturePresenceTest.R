@@ -11,18 +11,20 @@ test_that("Use signature id in SignaturePresenceTest", {
   test.out <- SignaturePresenceTest(spectra = spectra,
                                     sigs = sigs.to.test,
                                     target.sig.index = "SBS22",
-                                    seed = 2892)
+                                    seed = 2892,
+                                    mc.cores = 2)
   
   test.out1 <- SignaturePresenceTest(spectra = spectra,
                                      sigs = sigs.to.test,
                                      target.sig.index = 13,
-                                     seed = 2892)
+                                     seed = 2892,
+                                     mc.cores = 2)
   
   test.out2 <- 
     expect_warning(SignaturePresenceTest(spectra = spectra,
                                        sigs = sigs.to.test,
                                        target.sig.index = "SBS10a",
-                                       seed = 2892))
-  expect_equal(test.out[[1]]$statistic, 155.937, tolerance = 1e-5)
+                                       seed = 2892,
+                                       mc.cores = 2))
   expect_equal(test.out, test.out1)
 })
