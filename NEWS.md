@@ -17,11 +17,12 @@ Changed the names of first two returned elements: `with` -> `loglh.with` and
 `ObjFnBinomMaxLHNoRoundOK` and `OptimizeExposureQPBootstrap` to data-raw old.code
 folder.
 
-* Made several functions `AddSigActivity`, `g_ineq_for_ObjFnBinomMaxLH2`, 
+* Made several functions `AddSigActivity`, `g_ineq_for_ObjFnBinomMaxLH2`,
 `g_ineq_for_ObjFnMultinomMaxLH`, `LLHSpectrumMAP`, `LLHSpectrumNegBinom`,
-`MAPAssignActivity1`, `ObjFnBinomMaxLHRound`, `ObjFnMultinomMaxLH`,
-`OneMAPAssignTest `, `OptimizeExposure`, `OptimizeExposureQP`, `PCAWGMAPTest`,
-`ShowSigActivity`, `SignaturePresenceTest1` **internal** functions.
+`MAPAssignActivity1`, `MAPAssignActivity`, `ObjFnBinomMaxLHRound`,
+`ObjFnMultinomMaxLH`, `OneMAPAssignTest `, `OptimizeExposure`,
+`OptimizeExposureQP`, `PCAWGMAPTest`, `ShowSigActivity`,
+`SignaturePresenceTest1` **internal** functions.
 
 * Removed `rlang` from Imports field in DESCRIPTION file.
 

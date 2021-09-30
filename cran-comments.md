@@ -2,6 +2,7 @@
 This is a new submission.
 
 ## Test environments
+* Local Windows 10 install: R 4.1.1
 * Local OS X Big Sur install: R 4.1.1
 * Local CentOS 8: R 4.1.1
 

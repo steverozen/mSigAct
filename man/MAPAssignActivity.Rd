@@ -133,3 +133,4 @@ MAP.out <- MAPAssignActivity(spectra = spectra,
                              mc.cores.per.sample = 10)
 }
 }
+\keyword{internal}
