@@ -21,6 +21,7 @@
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' sigs <- PCAWG7::signature$genome$SBS96
@@ -29,6 +30,7 @@
 #' retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)
 #' ShowSigActivity(retval, output.dir = file.path(tempdir(), "SBS96"), 
 #'                 base.filename = "Biliary-AdenoCA")
+#'}                
 ShowSigActivity <- function(list.of.sig.activity,
                             output.dir,
                             base.filename = NULL,

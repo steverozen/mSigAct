@@ -34,7 +34,7 @@
 #'
 #' @return See \code{\link{OneMAPAssignTest}}.
 #'
-#' @export
+#' @keywords internal
 #'
 
 PCAWGMAPTest <- function(cancer.type,
