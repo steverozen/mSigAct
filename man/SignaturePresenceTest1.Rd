@@ -4,7 +4,13 @@
 \alias{SignaturePresenceTest1}
 \title{Test whether a given signature is plausibly present in a spectrum.}
 \usage{
-SignaturePresenceTest1(spectrum, sigs, target.sig.index, m.opts = NULL)
+SignaturePresenceTest1(
+  spectrum,
+  sigs,
+  target.sig.index,
+  m.opts = NULL,
+  seed = NULL
+)
 }
 \arguments{
 \item{spectrum}{The spectrum to analyze.}
@@ -17,6 +23,11 @@ of which we want to test. It can also be the signature id (e.g. "SBS22").}
 \item{m.opts}{If \code{NULL} use the return from
 calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
+
+\item{seed}{Random seed; set this to get reproducible results. (The
+numerical optimization is in two phases; the first, global phase
+might rarely find different optima depending on the random
+seed.)}
 }
 \value{
 A list of elements:

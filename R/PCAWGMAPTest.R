@@ -21,12 +21,6 @@
 #'  the p value for a better reconstruction with than without a set of signatures
 #'  is > than \code{p.thresh}, then we can use exposures without this set.
 #'
-#' @param max.presence.proportion  The maximum value of the proportion
-#'   of tumors that must have a given signature. Used so that it is
-#'   possible to exclude a signature from a spectrum, e.g.
-#'   perhaps all examples of tumor types have SBS5, but we want
-#'   to allow a small chance that SBS5 is not present.
-#'
 #' @param sigs.prop The proportions of samples that contain each
 #'    signature. A numerical vector (values between 0 and 1), with names
 #'    being signature identifiers. Can be the
@@ -114,7 +108,6 @@ PCAWGMAPTest <- function(cancer.type,
                        out.dir                 = out.dir, # file.path(out.dir, subdir),
                        p.thresh                = p.thresh,
                        m.opts                  = m.opts,
-                       max.presence.proportion = max.presence.proportion,
                        sigs.prop               = my.sigs.prop)
     return(rr)
   }

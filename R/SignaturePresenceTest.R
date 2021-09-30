@@ -13,6 +13,11 @@
 #' @param m.opts If \code{NULL} use the return from
 #'    calling \code{\link{DefaultManyOpts}}. For documentation
 #'    see \code{\link{DefaultManyOpts}}.
+#'    
+#' @param seed Random seed; set this to get reproducible results. (The
+#'   numerical optimization is in two phases; the first, global phase
+#'   might rarely find different optima depending on the random
+#'   seed.)
 #'
 #' @param mc.cores Number of cores to use. Always silently
 #'  changed to 1 on Microsoft Windows.
@@ -53,10 +58,11 @@
 #' sig.presence.test.out <- SignaturePresenceTest(spectra = spectra,
 #'                                                sigs = sigs.to.use, 
 #'                                                target.sig.index = sig.index,
+#'                                                seed = 2581,
 #'                                                mc.cores = 2)
 
 SignaturePresenceTest <- function(
-  spectra, sigs, target.sig.index, m.opts = NULL, mc.cores = 10) {
+  spectra, sigs, target.sig.index, m.opts = NULL, seed = NULL, mc.cores = 10) {
 
   # check if signatures sum to 1
   all.col.sums <- colSums(sigs)
@@ -88,7 +94,8 @@ SignaturePresenceTest <- function(
       mc.cores         = mc.cores,
       sigs             = sigs,
       target.sig.index = target.sig.index,
-      m.opts           = m.opts)
+      m.opts           = m.opts,
+      seed             = seed)
 
   return(out.res)
 }

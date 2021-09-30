@@ -25,6 +25,9 @@ folder.
 
 * Removed `rlang` from Imports field in DESCRIPTION file.
 
+* Removed argument `max.presence.proportion` from internal functions `OneMAPAssignTest`
+and `PCAWGMAPTest`.
+
 # 2.1.1.9016
 * Fixed a bug in function `ReconstructSpectrum` to allow reconstructing multiple
 spectra

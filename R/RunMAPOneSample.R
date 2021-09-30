@@ -26,7 +26,7 @@ RunMAPOnOneSample <-
     }
     
     spect.name <- colnames(spect)
-    retval <- mSigAct::MAPAssignActivity1(
+    retval <- MAPAssignActivity1(
       spect                   = spect,
       sigs                    = sigs,
       sigs.presence.prop      = sigs.presence.prop,

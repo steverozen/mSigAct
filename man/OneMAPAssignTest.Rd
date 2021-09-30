@@ -16,7 +16,6 @@ OneMAPAssignTest(
   m.opts = DefaultManyOpts(),
   out.dir = NULL,
   p.thresh,
-  max.presence.proportion,
   sigs.prop = NULL,
   sigs = NULL
 )
@@ -52,12 +51,6 @@ results there.}
 \item{p.thresh}{If
 the p value for a better reconstruction with than without a set of signatures
 is > than \code{p.thresh}, then we can use exposures without this set.}
-
-\item{max.presence.proportion}{The maximum value of the proportion
-of tumors that must have a given signature. Used so that it is
-possible to exclude a signature from a spectrum, e.g.
-perhaps all examples of tumor types have SBS5, but we want
-to allow a small chance that SBS5 is not present.}
 
 \item{sigs.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names

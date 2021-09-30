@@ -9,6 +9,7 @@ SignaturePresenceTest(
   sigs,
   target.sig.index,
   m.opts = NULL,
+  seed = NULL,
   mc.cores = 10
 )
 }
@@ -26,6 +27,11 @@ of which we want to test.}
 \item{m.opts}{If \code{NULL} use the return from
 calling \code{\link{DefaultManyOpts}}. For documentation
 see \code{\link{DefaultManyOpts}}.}
+
+\item{seed}{Random seed; set this to get reproducible results. (The
+numerical optimization is in two phases; the first, global phase
+might rarely find different optima depending on the random
+seed.)}
 
 \item{mc.cores}{Number of cores to use. Always silently
 changed to 1 on Microsoft Windows.}
@@ -62,5 +68,6 @@ sig.index <- which(colnames(sigs.to.use) == "SBS17a")
 sig.presence.test.out <- SignaturePresenceTest(spectra = spectra,
                                                sigs = sigs.to.use, 
                                                target.sig.index = sig.index,
+                                               seed = 2581,
                                                mc.cores = 2)
 }

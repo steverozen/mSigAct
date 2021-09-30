@@ -128,12 +128,6 @@ PCAWGMAPTest <- function(cancer.type,
 #' @param max.subsets The maximum number of subsets that can be
 #'   tested for removal from the set of signatures.
 #'
-#' @param max.presence.proportion The maximum value of the proportion
-#'   of tumors that must have a given signature. Used so that it is
-#'   possible to exclude a signature from a spectrum, e.g.
-#'   perhaps all examples of tumor types have SBS5, but we want
-#'   to allow a small chance that SBS5 is not present.
-#'
 #' @param sigs.prop The proportions of samples that contain each
 #'    signature. A numerical vector (values between 0 and 1), with names
 #'    being signature identifiers. Can be the
@@ -155,7 +149,6 @@ OneMAPAssignTest <- function(spect,
                              m.opts       = DefaultManyOpts(),
                              out.dir      = NULL,
                              p.thresh,
-                             max.presence.proportion,
                              sigs.prop    = NULL,
                              sigs         = NULL) {
   if (!is.null(out.dir)) {
@@ -187,7 +180,7 @@ OneMAPAssignTest <- function(spect,
 
   mapout.time <- system.time(
     MAPout <-
-      mSigAct::MAPAssignActivity1(
+      MAPAssignActivity1(
         spect                   = spect,
         sigs                    = sigs,
         sigs.presence.prop      = sigs.prop,
@@ -195,8 +188,7 @@ OneMAPAssignTest <- function(spect,
         p.thresh                = p.thresh,
         m.opts                  = m.opts,
         max.mc.cores            = max.mc.cores, # mc.cores.per.sample = 100)
-        max.subsets             = max.subsets,
-        max.presence.proportion = max.presence.proportion)
+        max.subsets             = max.subsets)
   )
   shortlog("Time", mapout.time)
 

@@ -11,16 +11,16 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
   output.dir <- file.path(tempdir(), "ID")
   
   panc.sparse.out <- 
-    mSigAct::MAPAssignActivity(spectra = ID.three.spectra[, 1, drop = FALSE],
-                               sigs = ID.sigs, 
-                               output.dir = output.dir, 
-                               max.level = ncol(ID.sigs) - 1,
-                               p.thresh = 0.05 / ncol(ID.sigs), 
-                               num.parallel.samples = 1, 
-                               mc.cores.per.sample = 50, 
-                               seed = 5196, 
-                               max.subsets = 1e15,
-                               use.sparse.assign = TRUE
+    MAPAssignActivity(spectra = ID.three.spectra[, 1, drop = FALSE],
+                      sigs = ID.sigs, 
+                      output.dir = output.dir, 
+                      max.level = ncol(ID.sigs) - 1,
+                      p.thresh = 0.05 / ncol(ID.sigs), 
+                      num.parallel.samples = 1, 
+                      mc.cores.per.sample = 50, 
+                      seed = 5196, 
+                      max.subsets = 1e15,
+                      use.sparse.assign = TRUE
     )
   
   alt.solutions <- panc.sparse.out$alt.solutions$`Panc-Endocrine::SP102561`

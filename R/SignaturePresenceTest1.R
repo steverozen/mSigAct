@@ -12,6 +12,11 @@
 #' @param m.opts If \code{NULL} use the return from
 #'    calling \code{\link{DefaultManyOpts}}. For documentation
 #'    see \code{\link{DefaultManyOpts}}.
+#'    
+#' @param seed Random seed; set this to get reproducible results. (The
+#'   numerical optimization is in two phases; the first, global phase
+#'   might rarely find different optima depending on the random
+#'   seed.)
 #' 
 #' @return A list of elements:
 #' * loglh.with: The maximum log likelihood of the reconstructed spectrum using
@@ -36,7 +41,7 @@
 #' @keywords internal
 
 SignaturePresenceTest1 <- function(
-  spectrum, sigs, target.sig.index, m.opts = NULL) {
+  spectrum, sigs, target.sig.index, m.opts = NULL, seed = NULL) {
   
   if (!is.numeric(target.sig.index)) {
     if (!target.sig.index %in% colnames(sigs)) {
@@ -45,6 +50,8 @@ SignaturePresenceTest1 <- function(
     }
     target.sig.index <- which(colnames(sigs) == target.sig.index)
   }
+  
+  if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
   
   if (is.null(m.opts)) m.opts <- DefaultManyOpts()
 
