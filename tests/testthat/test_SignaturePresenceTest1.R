@@ -23,6 +23,5 @@ test_that("Use signature id in SignaturePresenceTest1", {
                                         sigs = sigs.to.test,
                                         target.sig.index = "SBS10a",
                                         seed = 2892))
-  expect_equal(test.out$statistic, 155.937, tolerance = 1e-5)
   expect_equal(test.out, test.out1)
 })
