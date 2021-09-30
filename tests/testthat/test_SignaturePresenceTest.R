@@ -21,10 +21,10 @@ test_that("Use signature id in SignaturePresenceTest", {
                                      mc.cores = 2)
   
   test.out2 <- 
-    expect_warning(SignaturePresenceTest(spectra = spectra,
+    expect_error(SignaturePresenceTest(spectra = spectra,
                                        sigs = sigs.to.test,
                                        target.sig.index = "SBS10a",
                                        seed = 2892,
-                                       mc.cores = 2))
+                                       mc.cores = 1))
   expect_equal(test.out, test.out1)
 })
