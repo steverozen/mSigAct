@@ -1,4 +1,4 @@
-# 2.1.1.9017
+# 2.1.2
 * Enabled argument `target.sig.index` to also take the signature id as input in
 function `SignaturePresenceTest1`. Changed argument `m.opts` to use return value
 from `DefaultManyOpts` by default.
