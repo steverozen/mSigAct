@@ -1,5 +1,5 @@
 Package: mSigAct
-Title: mutational Signature Activity analysis ('mSigAct')
+Title: Mutational Signature Activity Analysis ('mSigAct')
 Version: 2.1.2
 Author: Steve Rozen, Alvin Wei Tian Ng, Arnoud Boot, Nanhai Jiang 
 Maintainer: Steve Rozen <steverozen@gmail.com>
