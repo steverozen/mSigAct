@@ -20,7 +20,6 @@ Encoding: UTF-8
 Language: en-US
 Depends: R (>= 4.0),
 RoxygenNote: 7.1.2
-VignetteBuilder: knitr
 biocViews:
 Imports:
     dplyr,
@@ -44,3 +43,6 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     usethis
+Additional_repositories: 
+    https://steverozen.github.io/PCAWG7/,
+    https://steverozen.github.io/ICAMSxtra/
