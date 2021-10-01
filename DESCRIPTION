@@ -24,20 +24,17 @@ VignetteBuilder: knitr
 biocViews:
 Imports:
     dplyr,
-    ICAMS (>= 2.3.5.9002),
-    ICAMSxtra (>= 0.0.3.9999),
+    ICAMS (>= 2.3.6),
+    ICAMSxtra (>= 0.0.4),
     lsa,
     nloptr,
-    PCAWG7 (>= 0.1.0.9003),
+    PCAWG7 (>= 0.1.1),
     philentropy,
     quadprog,
     stats,
     sets,
     tibble,
     utils
-Remotes: github::steverozen/ICAMS@master,
-    github::steverozen/ICAMSxtra@master,
-    github::steverozen/PCAWG7@master
 Suggests: 
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
