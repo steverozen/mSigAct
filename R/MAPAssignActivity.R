@@ -350,7 +350,7 @@ GetTimeForMAPAssign <- function(list.of.MAP.out) {
 
 #' @keywords internal
 SortSigId <- function(sig.id) {
-  num <- ICAMSxtra::NumFromId(sig.id)
+  num <- NumFromId(sig.id)
   sig.id2 <- sig.id[order(num)]
   return(sig.id2)
 }
@@ -441,4 +441,26 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
 
   grDevices::dev.off()
   invisible(list(plot.success = TRUE))
+}
+
+#' Get the numerical parts of identifiers.
+#'
+#' @param s A character vector.
+#'
+#' @return A vector, each element of which is the integer
+#' corresponding to the first string of digits of an element of s.
+#'
+#' @details Not very sophisticated.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' x<- c("SBS22", "SBS2", "SBS7b", "SBS7a")
+#' NumFromId(x)
+#' x[order(NumFromId(x))]
+#'
+NumFromId<- function(s) {
+  return(
+    as.numeric(
+      sub("[^0123456789]*(\\d+).*", "\\1", s, perl = TRUE)))
 }

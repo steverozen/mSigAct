@@ -102,7 +102,7 @@ ShowExposure <- function(list.of.sig.activity, output.dir, base.filename,
       file.path(output.dir, paste0(file.name.append, ".all.samples.exposure.counts.pdf"))
   }
   
-  ICAMSxtra::PlotExposureToPdf(exposure = exposure, file = output.file,
+  PlotExposureToPdf(exposure = exposure, file = output.file,
                                plot.proportion = plot.exposure.proportion)
   
 }

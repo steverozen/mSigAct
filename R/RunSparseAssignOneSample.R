@@ -66,11 +66,11 @@ RunSparseAssignOneSample <-
                         drop = FALSE]
     colnames(inferred.exposure) <- colnames(spect)
     
-    ICAMSxtra::WriteExposure(exposure = inferred.exposure,
+    WriteExposure(exposure = inferred.exposure,
                              file = file.path(output.path,
                                               paste0(spect.name, ".", mut.type,
                                                      ".inferred.exposure.csv")))
-    ICAMSxtra::PlotExposureToPdf(inferred.exposure,
+    PlotExposureToPdf(inferred.exposure,
                                  file = file.path(output.path,
                                                   paste0(spect.name , ".", mut.type,
                                                          ".inferred.exposure.pdf")))
