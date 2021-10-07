@@ -18,8 +18,8 @@ test_that("Read and write exposure", {
 })
 
 test_that("PlotExposureInternal function", {
-  exposure <- ReadExposure("testdata/synthetic.exposure.csv")
-  par(mar = c(3.9, 3.9, 1, 1))
+  exposure <- ReadExposure("testdata/Liver-HCC.exposure.csv")
+  par(mar = c(6.9, 3.9, 1, 1))
   out <-
     PlotExposureInternal(SortExposure(exposure),
                          xlim = c(0, ncol(exposure) * 2.5),
@@ -71,10 +71,10 @@ test_that("PlotExposureInternal function", {
 })
 
 test_that("PlotExposure function", {
-  exposure <- ReadExposure("testdata/synthetic.exposure.csv")
+  exposure <- ReadExposure("testdata/Liver-HCC.exposure.csv")
 
   old.par <-
-    par(mfcol = c(2, 1), mar = c(2, 3.9, 3.9, 2), oma = c(2, 0, 0, 0))
+    par(mfcol = c(2, 1), mar = c(2, 3.9, 3.9, 2), oma = c(4, 0, 0, 0))
   on.exit(par(old.par))
   out <- PlotExposure(exposure = SortExposure(exposure[, 1:43]),
                       main = "test", cex.main = 0.8, cex.legend = 0.3,
@@ -83,8 +83,9 @@ test_that("PlotExposure function", {
 
   # Only plot the first 30 samples
   par(old.par)
-  out1 <- PlotExposure(exposure = SortExposure(exposure[, 1:30]),  # Test a trick edge case
-                       main = "test1", cex.main = 0.8, cex.legend = 0.45)
+  out1 <- PlotExposure(exposure = SortExposure(exposure[, 1:10]),  # Test a trick edge case
+                       main = "test1", cex.main = 0.8, cex.legend = 0.45,
+                       plot.proportion = TRUE)
   expect_equal(out1$plot.success, TRUE)
 
   # Only plot one sample
@@ -133,7 +134,7 @@ test_that("PlotExposure function", {
 })
 
 test_that("PlotExposureToPdf function", {
-  exposure <- ReadExposure("testdata/synthetic.exposure.csv")
+  exposure <- ReadExposure("testdata/Liver-HCC.exposure.csv")
 
   out <- PlotExposureToPdf(exposure, file = file.path(tempdir(), "test.pdf"))
   expect_equal(out$plot.success, TRUE)

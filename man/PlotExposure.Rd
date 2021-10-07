@@ -71,8 +71,11 @@ Plot exposures in multiple plots each with a manageable number of samples
 }
 \examples{
 file <- system.file("extdata",
-                    "synthetic.exposure.csv",
+                    "Liver-HCC.exposure.csv",
                     package = "mSigAct")
 exposure <- ReadExposure(file)
-PlotExposure(exposure[, 1:30])
+old.par <- par(mar = c(8, 5, 1, 1))
+PlotExposure(exposure[, 1:30], main = "Liver-HCC exposure", cex.yaxis = 0.8,
+             plot.proportion = TRUE)
+par(old.par)
 }

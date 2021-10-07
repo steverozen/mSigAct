@@ -92,8 +92,9 @@ Plot exposures in multiple plots each with a manageable number of samples to PDF
 }
 \examples{
 file <- system.file("extdata",
-                    "synthetic.exposure.csv",
+                    "Liver-HCC.exposure.csv",
                     package = "mSigAct")
 exposure <- ReadExposure(file)
-PlotExposureToPdf(exposure, file = file.path(tempdir(), "exposure.pdf"))
+PlotExposureToPdf(exposure, file = file.path(tempdir(), "Liver-HCC.exposure.pdf"), 
+                  cex.yaxis = 0.8, plot.proportion = TRUE)
 }

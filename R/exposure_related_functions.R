@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' file <- system.file("extdata",
-#'                     "synthetic.exposure.csv",
+#'                     "Liver-HCC.exposure.csv",
 #'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 ReadExposure <- function(file, check.names = FALSE) {
@@ -53,10 +53,10 @@ ReadExposure <- function(file, check.names = FALSE) {
 #'
 #' @examples
 #' file <- system.file("extdata",
-#'                     "synthetic.exposure.csv",
+#'                     "Liver-HCC.exposure.csv",
 #'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
-#' WriteExposure(exposure, file = file.path(tempdir(), "synthetic.exposure.csv"))
+#' WriteExposure(exposure, file = file.path(tempdir(), "Liver-HCC.exposure.csv"))
 WriteExposure <- function(exposure, file, row.names = TRUE) {
   old.digits <- getOption("digits")
   options(digits = 22)
@@ -78,7 +78,7 @@ WriteExposure <- function(exposure, file, row.names = TRUE) {
 #'
 #' @examples
 #' file <- system.file("extdata",
-#'                     "synthetic.exposure.csv",
+#'                     "Liver-HCC.exposure.csv",
 #'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 #' exposure.sorted <- SortExposure(exposure)
@@ -289,8 +289,8 @@ PlotExposureInternal <-
     legend(x         = legend.x,
            y         = legend.y,
            legend    = rev(row.names(exposure)),
-           density   = density,
-           angle     = barplot.angle,
+           density   = legend.density,
+           angle     = legend.angle,
            xpd       = NA,
            fill      = legend.col,
            x.intersp = 0.3,
@@ -324,7 +324,7 @@ PlotExposureInternal <-
       }
     }
 
-    invisible(list(plot.success = TRUE, mp.coordinates = mp))
+    invisible(list(plot.success = TRUE, bp.coordinates = mp))
   }
 
 #' Plot exposures in multiple plots each with a manageable number of samples
@@ -348,10 +348,13 @@ PlotExposureInternal <-
 #'
 #' @examples
 #' file <- system.file("extdata",
-#'                     "synthetic.exposure.csv",
+#'                     "Liver-HCC.exposure.csv",
 #'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
-#' PlotExposure(exposure[, 1:30])
+#' old.par <- par(mar = c(8, 5, 1, 1))
+#' PlotExposure(exposure[, 1:30], main = "Liver-HCC exposure", cex.yaxis = 0.8,
+#'              plot.proportion = TRUE)
+#' par(old.par)
 PlotExposure <- function(exposure,
                          samples.per.line   = 30,
                          plot.proportion    = FALSE,
@@ -367,6 +370,7 @@ PlotExposure <- function(exposure,
                          ...
 ) {
   n.sample <- ncol(exposure)
+  exposure <- exposure[rowSums(exposure) > 0, , drop = FALSE]
   num.ranges <- n.sample %/% samples.per.line
   size.of.last.range <- n.sample %% samples.per.line
   
@@ -402,7 +406,7 @@ PlotExposure <- function(exposure,
                                  yaxis.labels      = yaxis.labels,
                                  ...               = ...)
   }
-  invisible(list(plot.success = TRUE, mp.coordinates = list$mp.coordinates))
+  invisible(list(plot.success = TRUE, bp.coordinates = list$bp.coordinates))
 }
 
 #' Plot exposures in multiple plots each with a manageable number of samples to PDF
@@ -441,10 +445,11 @@ PlotExposure <- function(exposure,
 #'
 #' @examples
 #' file <- system.file("extdata",
-#'                     "synthetic.exposure.csv",
+#'                     "Liver-HCC.exposure.csv",
 #'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
-#' PlotExposureToPdf(exposure, file = file.path(tempdir(), "exposure.pdf"))
+#' PlotExposureToPdf(exposure, file = file.path(tempdir(), "Liver-HCC.exposure.pdf"), 
+#'                   cex.yaxis = 0.8, plot.proportion = TRUE)
 PlotExposureToPdf <- function(exposure,
                               file,
                               mfrow             = c(2, 1),
@@ -486,5 +491,5 @@ PlotExposureToPdf <- function(exposure,
                        ...               = ...)
 
   grDevices::dev.off()
-  invisible(list(plot.success = TRUE, mp.coordinates = list$mp.coordinates))
+  invisible(list(plot.success = TRUE, bp.coordinates = list$bp.coordinates))
 }
