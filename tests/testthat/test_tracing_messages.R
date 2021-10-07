@@ -29,7 +29,7 @@ test_that("Test tracing messages for MAPAssignActivity", {
                                m.opts = my.opts,
                                num.parallel.samples = 1,
                                mc.cores.per.sample = 30)
-  
+  expect_equal(nrow(MAP.out$proposed.assignment), 11)
   unlink(file.path(tempdir(), "Liver-HCC.1"), recursive = TRUE)
   unlink(file.path(tempdir(), "Liver-HCC.2"), recursive = TRUE)
 })
@@ -73,6 +73,7 @@ test_that("Test tracing messages for SparseAssignActivity", {
                                       num.parallel.samples = 1,
                                       mc.cores.per.sample = 30)
   
+  expect_equal(nrow(sparse.out3$proposed.assignment), 11)
   unlink(file.path(tempdir(), "test1"), recursive = TRUE)
   unlink(file.path(tempdir(), "test2"), recursive = TRUE)
   unlink(file.path(tempdir(), "test3"), recursive = TRUE)

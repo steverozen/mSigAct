@@ -24,7 +24,7 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
     )
   
   alt.solutions <- panc.sparse.out$alt.solutions$`Panc-Endocrine::SP102561`
-  
+  expect_equal(nrow(alt.solutions), 398)
   # View all the alternative solutions and check the QP cosine
   # View(alt.solutions)
   # hist(alt.solutions$QP.cosine)
