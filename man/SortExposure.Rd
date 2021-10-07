@@ -22,7 +22,7 @@ Sort columns of an exposure matrix from largest to smallest (or vice versa)
 \examples{
 file <- system.file("extdata",
                     "synthetic.exposure.csv",
-                    package = "ICAMSxtra")
+                    package = "mSigAct")
 exposure <- ReadExposure(file)
 exposure.sorted <- SortExposure(exposure)
 }

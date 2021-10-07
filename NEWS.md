@@ -8,6 +8,8 @@
 function `SignaturePresenceTest`. Changed argument `m.opts` to use return value
 from `DefaultManyOpts` by default. Changed the default value for argument `mc.cores` to 2.
 
+* Added extdata folder to be used in running the examples.
+
 # 2.1.2
 * Enabled argument `target.sig.index` to also take the signature id as input in
 function `SignaturePresenceTest1`. Changed argument `m.opts` to use return value

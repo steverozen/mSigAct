@@ -18,7 +18,7 @@
 #' @examples
 #' file <- system.file("extdata",
 #'                     "synthetic.exposure.csv",
-#'                     package = "ICAMSxtra")
+#'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 ReadExposure <- function(file, check.names = FALSE) {
   if (check.names) {
@@ -54,7 +54,7 @@ ReadExposure <- function(file, check.names = FALSE) {
 #' @examples
 #' file <- system.file("extdata",
 #'                     "synthetic.exposure.csv",
-#'                     package = "ICAMSxtra")
+#'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 #' WriteExposure(exposure, file = file.path(tempdir(), "synthetic.exposure.csv"))
 WriteExposure <- function(exposure, file, row.names = TRUE) {
@@ -79,7 +79,7 @@ WriteExposure <- function(exposure, file, row.names = TRUE) {
 #' @examples
 #' file <- system.file("extdata",
 #'                     "synthetic.exposure.csv",
-#'                     package = "ICAMSxtra")
+#'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 #' exposure.sorted <- SortExposure(exposure)
 SortExposure <- function(exposure, decreasing = TRUE) {
@@ -349,7 +349,7 @@ PlotExposureInternal <-
 #' @examples
 #' file <- system.file("extdata",
 #'                     "synthetic.exposure.csv",
-#'                     package = "ICAMSxtra")
+#'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 #' PlotExposure(exposure[, 1:30])
 PlotExposure <- function(exposure,
@@ -442,7 +442,7 @@ PlotExposure <- function(exposure,
 #' @examples
 #' file <- system.file("extdata",
 #'                     "synthetic.exposure.csv",
-#'                     package = "ICAMSxtra")
+#'                     package = "mSigAct")
 #' exposure <- ReadExposure(file)
 #' PlotExposureToPdf(exposure, file = file.path(tempdir(), "exposure.pdf"))
 PlotExposureToPdf <- function(exposure,

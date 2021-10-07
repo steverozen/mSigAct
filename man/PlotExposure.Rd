@@ -72,7 +72,7 @@ Plot exposures in multiple plots each with a manageable number of samples
 \examples{
 file <- system.file("extdata",
                     "synthetic.exposure.csv",
-                    package = "ICAMSxtra")
+                    package = "mSigAct")
 exposure <- ReadExposure(file)
 PlotExposure(exposure[, 1:30])
 }

@@ -25,6 +25,6 @@ Read an exposure matrix from a file
 \examples{
 file <- system.file("extdata",
                     "synthetic.exposure.csv",
-                    package = "ICAMSxtra")
+                    package = "mSigAct")
 exposure <- ReadExposure(file)
 }

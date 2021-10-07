@@ -23,7 +23,7 @@ Write an exposure matrix to a file
 \examples{
 file <- system.file("extdata",
                     "synthetic.exposure.csv",
-                    package = "ICAMSxtra")
+                    package = "mSigAct")
 exposure <- ReadExposure(file)
 WriteExposure(exposure, file = file.path(tempdir(), "synthetic.exposure.csv"))
 }
