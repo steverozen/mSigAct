@@ -1,3 +1,7 @@
+# 2.1.3
+* Added new exported functions `ReadExposure`, `WriteExposure`, `SortExposure`, 
+`PlotExposure`, `PlotExposureToPdf` and necessary tests and test data.
+
 # 2.1.2
 * Enabled argument `target.sig.index` to also take the signature id as input in
 function `SignaturePresenceTest1`. Changed argument `m.opts` to use return value
