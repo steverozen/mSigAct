@@ -10,7 +10,7 @@ from `DefaultManyOpts` by default. Changed the default value for argument `mc.co
 
 * Added `inst/extdata` folder to be used in running the examples.
 
-* Added `ipc` as one of the Suggests package in DESCRIPTION.
+* Added `ipc` as one of the Suggests packages in DESCRIPTION.
 
 # 2.1.2
 * Enabled argument `target.sig.index` to also take the signature id as input in
