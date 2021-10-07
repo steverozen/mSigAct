@@ -8,9 +8,9 @@ SignaturePresenceTest(
   spectra,
   sigs,
   target.sig.index,
-  m.opts = NULL,
+  m.opts = DefaultManyOpts(),
   seed = NULL,
-  mc.cores = 10
+  mc.cores = 2
 )
 }
 \arguments{
@@ -22,11 +22,9 @@ This could be
 and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
 
 \item{target.sig.index}{The index of the signature the presence
-of which we want to test.}
+of which we want to test. It can also be the signature id (e.g. "SBS22").}
 
-\item{m.opts}{If \code{NULL} use the return from
-calling \code{\link{DefaultManyOpts}}. For documentation
-see \code{\link{DefaultManyOpts}}.}
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{seed}{Random seed; set this to get reproducible results. (The
 numerical optimization is in two phases; the first, global phase
@@ -64,10 +62,9 @@ sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                  cancer.type = "Lung-AdenoCA")
 sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
 # Test whether SBS17a is plausibly present in the spectra
-sig.index <- which(colnames(sigs.to.use) == "SBS17a")
 sig.presence.test.out <- SignaturePresenceTest(spectra = spectra,
                                                sigs = sigs.to.use, 
-                                               target.sig.index = sig.index,
+                                               target.sig.index = "SBS17a",
                                                seed = 2581,
                                                mc.cores = 2)
 }

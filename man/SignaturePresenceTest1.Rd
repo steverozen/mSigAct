@@ -8,7 +8,7 @@ SignaturePresenceTest1(
   spectrum,
   sigs,
   target.sig.index,
-  m.opts = NULL,
+  m.opts = DefaultManyOpts(),
   seed = NULL
 )
 }
@@ -20,9 +20,7 @@ SignaturePresenceTest1(
 \item{target.sig.index}{The index of the signature the presence
 of which we want to test. It can also be the signature id (e.g. "SBS22").}
 
-\item{m.opts}{If \code{NULL} use the return from
-calling \code{\link{DefaultManyOpts}}. For documentation
-see \code{\link{DefaultManyOpts}}.}
+\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
 
 \item{seed}{Random seed; set this to get reproducible results. (The
 numerical optimization is in two phases; the first, global phase

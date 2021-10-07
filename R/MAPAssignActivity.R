@@ -455,10 +455,11 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' x<- c("SBS22", "SBS2", "SBS7b", "SBS7a")
 #' NumFromId(x)
 #' x[order(NumFromId(x))]
-#'
+#' }
 NumFromId<- function(s) {
   return(
     as.numeric(

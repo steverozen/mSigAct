@@ -9,9 +9,7 @@
 #' @param target.sig.index The index of the signature the presence
 #' of which we want to test. It can also be the signature id (e.g. "SBS22").
 #'
-#' @param m.opts If \code{NULL} use the return from
-#'    calling \code{\link{DefaultManyOpts}}. For documentation
-#'    see \code{\link{DefaultManyOpts}}.
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'    
 #' @param seed Random seed; set this to get reproducible results. (The
 #'   numerical optimization is in two phases; the first, global phase
@@ -41,7 +39,7 @@
 #' @keywords internal
 
 SignaturePresenceTest1 <- function(
-  spectrum, sigs, target.sig.index, m.opts = NULL, seed = NULL) {
+  spectrum, sigs, target.sig.index, m.opts = DefaultManyOpts(), seed = NULL) {
   
   if (!is.numeric(target.sig.index)) {
     if (!target.sig.index %in% colnames(sigs)) {
@@ -53,8 +51,6 @@ SignaturePresenceTest1 <- function(
   
   if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
   
-  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
-
   ret.with <- OptimizeExposure(spectrum  = spectrum,
                                sigs   = sigs,
                                m.opts = m.opts)

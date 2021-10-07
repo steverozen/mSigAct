@@ -20,9 +20,10 @@ Get the numerical parts of identifiers.
 Not very sophisticated.
 }
 \examples{
+\dontrun{
 x<- c("SBS22", "SBS2", "SBS7b", "SBS7a")
 NumFromId(x)
 x[order(NumFromId(x))]
-
+}
 }
 \keyword{internal}

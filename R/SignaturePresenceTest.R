@@ -8,11 +8,9 @@
 #'   and \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
 #'
 #' @param target.sig.index The index of the signature the presence
-#' of which we want to test.
+#' of which we want to test. It can also be the signature id (e.g. "SBS22").
 #'
-#' @param m.opts If \code{NULL} use the return from
-#'    calling \code{\link{DefaultManyOpts}}. For documentation
-#'    see \code{\link{DefaultManyOpts}}.
+#' @param m.opts See \code{\link{DefaultManyOpts}}.
 #'    
 #' @param seed Random seed; set this to get reproducible results. (The
 #'   numerical optimization is in two phases; the first, global phase
@@ -54,15 +52,14 @@
 #'                                  cancer.type = "Lung-AdenoCA")
 #' sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
 #' # Test whether SBS17a is plausibly present in the spectra
-#' sig.index <- which(colnames(sigs.to.use) == "SBS17a")
 #' sig.presence.test.out <- SignaturePresenceTest(spectra = spectra,
 #'                                                sigs = sigs.to.use, 
-#'                                                target.sig.index = sig.index,
+#'                                                target.sig.index = "SBS17a",
 #'                                                seed = 2581,
 #'                                                mc.cores = 2)
 
 SignaturePresenceTest <- function(
-  spectra, sigs, target.sig.index, m.opts = NULL, seed = NULL, mc.cores = 10) {
+  spectra, sigs, target.sig.index, m.opts = DefaultManyOpts(), seed = NULL, mc.cores = 2) {
 
   # check if signatures sum to 1
   all.col.sums <- colSums(sigs)
@@ -82,8 +79,6 @@ SignaturePresenceTest <- function(
   spectra.as.list <- split(t(spectra), 1:ncol(spectra))
 
   names(spectra.as.list) <- colnames(spectra)
-
-  if (is.null(m.opts)) m.opts <- DefaultManyOpts()
 
   mc.cores <- Adj.mc.cores(mc.cores)
 
