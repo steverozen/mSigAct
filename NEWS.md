@@ -1,3 +1,6 @@
+# 2.1.3.9000
+* Fixed a bug in parsing argument `drop.low.mut.samples` in function `MAPAssignActivity` and `SparseAssignActivity`
+
 # 2.1.3
 * Added new exported functions `ReadExposure`, `WriteExposure`, `SortExposure`, 
 `PlotExposure`, `PlotExposureToPdf` and necessary tests and test data.

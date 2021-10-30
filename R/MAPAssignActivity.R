@@ -112,7 +112,8 @@ MAPAssignActivity <-
         progress.monitor        = progress.monitor,
         seed                    = seed,
         max.subsets             = max.subsets,
-        use.sparse.assign       = use.sparse.assign)
+        use.sparse.assign       = use.sparse.assign,
+        drop.low.mut.samples    = drop.low.mut.samples)
 
       return(retval1)
     }
