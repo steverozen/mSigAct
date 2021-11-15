@@ -91,6 +91,7 @@ AddSigActivity1 <- function(spect, exposure, sigs,
 
   if (!is.null(mut.type)) {
     ets <- PCAWG7::GetEtiology(mut.type, colnames(sigs1))
+
     colnames(sigs1) <-
       paste0(colnames(sigs1), " (exposure = ", round(exposure[, 1]),
              ", contribution = ",
@@ -128,6 +129,24 @@ AddSigActivity1 <- function(spect, exposure, sigs,
                        contributing.sigs = sigs1,
                        distances = distances)
   return(sig.activity)
+}
+
+RemoveZeroMutationSample <- function(spectra, exposure) {
+  for (to.check in c("spectra", "exposure")) {
+    if (to.check == "spectra") {
+      indices <- which(colSums(spectra) == 0)
+    } else {
+      indices <- which(colSums(exposure) == 0)
+    }
+    if (length(indices) > 0) {
+      sample.names <- names(indices)
+      spectra <- spectra[, !colnames(spectra) %in% sample.names, drop = FALSE]
+      exposure <- exposure[, !colnames(exposure) %in% sample.names, drop = FALSE]
+      warning("\nSome samples have zero mutations in ", to.check, "; dropping: ",
+              paste(sample.names, collapse = ", "))
+    }
+  }
+  return(list(spectra = spectra, exposure = exposure))
 }
 
 #' Add contributing signature activity information for multiple spectra
@@ -193,14 +212,9 @@ AddSigActivity <-
   }
     
   # Check whether there are some samples which have zero mutations
-  indices <- which(colSums(spectra) == 0)
-  if (length(indices) > 0) {
-    sample.names <- names(indices)
-    spectra <- spectra[, !colnames(spectra) %in% sample.names, drop = FALSE]
-    exposure <- exposure[, !colnames(exposure) %in% sample.names, drop = FALSE]
-    warning("Some samples have zero mutations, dropping: ",
-            paste(sample.names, collapse = ", "))
-  }
+  retval <- RemoveZeroMutationSample(spectra = spectra, exposure = exposure)
+  spectra <- retval[["spectra"]]
+  exposure <- retval[["exposure"]]
   
   if (ncol(spectra) == 0) {
     message("All the samples have zero mutations")

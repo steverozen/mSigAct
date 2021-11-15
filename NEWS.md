@@ -1,5 +1,9 @@
+# 2.1.3.9001
+* Added a new internal function `RemoveZeroMutationSample` for `AddSigActivity`
+to remove samples which have zero counts either in spectra or exposure matrix.
+
 # 2.1.3.9000
-* Fixed a bug in parsing argument `drop.low.mut.samples` in function `MAPAssignActivity` and `SparseAssignActivity`
+* Fixed a bug in parsing argument `drop.low.mut.samples` in function `MAPAssignActivity` and `SparseAssignActivity`.
 
 # 2.1.3
 * Added new exported functions `ReadExposure`, `WriteExposure`, `SortExposure`, 
