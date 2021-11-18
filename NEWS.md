@@ -1,3 +1,6 @@
+# 2.1.3.9002
+* Added a new internal function `RemoveZeroActivitySig`.
+
 # 2.1.3.9001
 * Added a new internal function `RemoveZeroMutationSample` for `AddSigActivity`
 to remove samples which have zero counts either in spectra or exposure matrix.

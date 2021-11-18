@@ -8,3 +8,8 @@ GetListOfCombinedSpectra <- function(sample.ids, SBS.spectra, ID.spectra) {
   retval1 <- do.call("c", retval)
   return(retval1)
 }
+
+#' @keywords internal
+RemoveZeroActivitySig <- function(exposure) {
+  return(exposure[rowSums(exposure) > 0, , drop = FALSE])
+}
