@@ -18,6 +18,11 @@
 CalculateDistance <- 
   function(spectra, exposure, sigs, sigs.presence.prop, nbinom.size = 5,
            likelihood.dist = "multinom", use.sparse.assign = TRUE) {
+    # Check whether there are some samples which have zero mutations
+    retval <- RemoveZeroMutationSample(spectra = spectra, exposure = exposure)
+    spectra <- retval[["spectra"]]
+    exposure <- retval[["exposure"]]
+    
     sig.activities <- AddSigActivity(spectra = spectra,
                                      exposure = exposure,
                                      sigs = sigs,
