@@ -1,6 +1,8 @@
 context("Testing alternative solutions")
 
 test_that("Identifying ID samples with low reconstruction accuracy", {
+  skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
+  
   ID.spectra <- PCAWG7::spectra$PCAWG$ID
   ID.sigs <- PCAWG7::signature$genome$ID
   
@@ -25,6 +27,8 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
   
   alt.solutions <- panc.sparse.out$alt.solutions$`Panc-Endocrine::SP102561`
   expect_equal(nrow(alt.solutions), 398)
+  
+  unlink(output.dir, recursive = TRUE)
   # View all the alternative solutions and check the QP cosine
   # View(alt.solutions)
   # hist(alt.solutions$QP.cosine)
