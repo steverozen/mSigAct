@@ -1,4 +1,7 @@
 # 2.1.3.9002
+* Added a new internal function `CalculateDistance`.
+
+# 2.1.3.9002
 * Added a new internal function `RemoveZeroActivitySig`.
 
 # 2.1.3.9001
