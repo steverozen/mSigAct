@@ -5,12 +5,13 @@
 #' @return A data frame with row names being the sample names in \code{spectra}.
 #' The columns show various distances information between \code{spectra} and reconstructed
 #' spectra using \code{sigs} and \code{exposure}. The column names are:
-#' * log.likelihood
-#' * euclidean
-#' * manhattan
-#' * cosine
-#' * mutations
-#' * scaled.manhattan
+#' * log.likelihood: `log(likelihood(spectra | reconstructed spectra))`
+#' * euclidean: Euclidean distance
+#' * manhattan: Manhattan distance
+#' * cosine: Cosine similarity
+#' * mutations: Mutations of `spectra`
+#' * scaled.manhattan: `manhattan` / `mutations`
+#' * scaled.euclidean: `euclidean` / `mutations`
 #' 
 #' @md
 #' 
@@ -43,5 +44,7 @@ CalculateDistance <-
     distance.info <- as.data.frame(t(tmp))
     distance.info$scaled.manhattan <- 
       distance.info$manhattan / distance.info$mutations
+    distance.info$scaled.euclidean <- 
+      distance.info$euclidean / distance.info$mutations
     return(distance.info)
   }

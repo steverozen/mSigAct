@@ -47,12 +47,13 @@ A data frame with row names being the sample names in \code{spectra}.
 The columns show various distances information between \code{spectra} and reconstructed
 spectra using \code{sigs} and \code{exposure}. The column names are:
 \itemize{
-\item log.likelihood
-\item euclidean
-\item manhattan
-\item cosine
-\item mutations
-\item scaled.manhattan
+\item log.likelihood: \verb{log(likelihood(spectra | reconstructed spectra))}
+\item euclidean: Euclidean distance
+\item manhattan: Manhattan distance
+\item cosine: Cosine similarity
+\item mutations: Mutations of \code{spectra}
+\item scaled.manhattan: \code{manhattan} / \code{mutations}
+\item scaled.euclidean: \code{euclidean} / \code{mutations}
 }
 }
 \description{
