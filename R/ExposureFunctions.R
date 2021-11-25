@@ -35,5 +35,5 @@ MergeListOfExposures <- function(list.of.exposures) {
                           exposure2 = list.of.exposures[[i]])
     }
   } 
-  return(combined.exposure)
+  return(RemoveZeroActivitySig(combined.exposure))
 }
