@@ -1,3 +1,6 @@
+# 2.1.3.9004
+* Added a new internal function `MergeListOfExposures`.
+
 # 2.1.3.9003
 * Added a new internal function `CalculateDistance`.
 
