@@ -286,8 +286,14 @@ MAPAssignActivityInternal <-
     
     if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
     
+    if (use.sparse.assign) {
+      msg <- "SparseAssignActivity1: "
+    } else {
+      msg <- "MAPAssignActivity1: "
+    }
+    
     my.msg <- function(trace.level, ...)
-      if (m.opts$trace >= trace.level) message("MAPAssignActivity1: ", ...)
+      if (m.opts$trace >= trace.level) message(msg, ...)
     
     if (use.sparse.assign == FALSE) {
       sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
@@ -486,7 +492,7 @@ MAPAssignActivityInternal <-
         unlist(lapply(check.to.remove,
                       function(x) paste(x$removed.sig.names, collapse = ",")))
       if (m.opts$trace > 10) {
-        message("MAPAssignActivity1: p.to.remove = ")
+        message(msg, "p.to.remove = ")
         for (ii in 1:length(p.to.remove)) {
           message(ii, " ", names(p.to.remove)[ii], " ", p.to.remove[ii])
         }

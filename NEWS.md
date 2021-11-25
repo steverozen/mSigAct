@@ -1,3 +1,7 @@
+# 2.1.3.9005
+* Updated message information when `use.sparse.assign = TRUE` in functions
+`MAPAssignActivity1` and `MAPAssignActivity`.
+
 # 2.1.3.9004
 * Added a new internal function `MergeListOfExposures`.
 
