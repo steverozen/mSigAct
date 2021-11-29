@@ -651,7 +651,7 @@ TestAltSolutions <- function(tibble, sparse.assign = FALSE) {
   if (sparse.assign) {
     loglh.col.name <- "loglh.of.exp"
     all.tested.sorted <- 
-      dplyr::arrange(all.tested, dplyr::desc(df), dplyr::desc(loglh.col.name))
+      dplyr::arrange(all.tested, dplyr::desc(df), dplyr::desc(loglh.of.exp))
   } else {
     loglh.col.name <- "MAP"
     all.tested.sorted <- 

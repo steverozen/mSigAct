@@ -1,3 +1,7 @@
+# 2.1.3.9006
+* Fixed a bug in internal function `TestAltSolutions` when sorting the all
+tested solutions using sparse assignment.
+
 # 2.1.3.9005
 * Updated message information when `use.sparse.assign = TRUE` in functions
 `MAPAssignActivity1` and `MAPAssignActivity`.
