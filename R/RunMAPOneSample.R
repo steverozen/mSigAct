@@ -118,7 +118,11 @@ RunMAPOnOneSample <-
              ", cosine similarity = ", 
              round(distance.info$proposed.assignment["cosine"], 5), ")")
     colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
-    list.of.catalogs <- list(spect, reconstructed.spectrum, sigs1)
+    
+    subtracted.spect <- spect - reconstructed.spectrum
+    
+    list.of.catalogs <- list(spect, reconstructed.spectrum, subtracted.spect,
+                             sigs1)
     PlotListOfCatalogsToPdf(list.of.catalogs,
                             file = file.path(output.path,
                                              paste0(spect.name, ".", mut.type,
