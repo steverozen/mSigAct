@@ -3,7 +3,6 @@
 export(CancerTypes)
 export(DefaultManyOpts)
 export(ExposureProportions)
-export(LLHSpectrumDM)
 export(LLHSpectrumMultinom)
 export(MAPAssignActivity)
 export(PlotExposure)
