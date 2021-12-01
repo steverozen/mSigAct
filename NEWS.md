@@ -1,3 +1,10 @@
+# 2.1.3.9008
+* Created new internal function `LLHSpectrumDM` to calculate log likelihood from
+Dirichlet-multinomial distribution.
+
+# 2.1.3.9007
+* Added subtracted spectrum plot in the reconstruction PDF.
+
 # 2.1.3.9006
 * Fixed a bug in internal function `TestAltSolutions` when sorting the all
 tested solutions using sparse assignment.
