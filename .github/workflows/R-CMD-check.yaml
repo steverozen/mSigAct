@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - master
-      - test-sparse-assign
+      - dirichlet-multinom
   pull_request:
     branches:
       - main
       - master
-      - test-sparse-assign
+      - dirichlet-multinom
 
 name: R-CMD-check
 
