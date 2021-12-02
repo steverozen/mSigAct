@@ -1,3 +1,6 @@
+# 2.1.3.9009
+* Enabled using "Dirichlet-multinomial distribution" for the assignment in mSigAct
+
 # 2.1.3.9008
 * Created new internal function `LLHSpectrumDM` to calculate log likelihood from
 Dirichlet-multinomial distribution.

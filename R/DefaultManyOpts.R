@@ -16,8 +16,9 @@ DefaultLocalOpts <- function() {
 #' Set default options for many functions, especially \code{\link[nloptr]{nloptr}}
 #' 
 #' @param likelihood.dist The probability distribution used to calculate the
-#'   likelihood, can be either "multinom" (multinomial distribution) or
-#'   "neg.binom" (negative binomial distribution).
+#'   likelihood, can be either "multinom" (multinomial distribution),
+#'   "neg.binom" (negative binomial distribution) or 
+#'   "dirichlet.multinom" (Dirichlet-multinomial distribution).
 #'   
 #' @export
 #'
@@ -51,8 +52,9 @@ DefaultLocalOpts <- function() {
 #' my.opts$trace <- 10
 
 DefaultManyOpts <- function(likelihood.dist = "multinom") {
-  if (!likelihood.dist %in% c("multinom", "neg.binom")) {
-    stop("The value for argument likelihood.dist should be either multinom or neg.binom")
+  if (!likelihood.dist %in% c("multinom", "neg.binom", "dirichlet.multinom")) {
+    stop("The value for argument likelihood.dist should be either ",
+         "multinom, neg.binom, or dirichlet.multinom")
   }
   
   if (likelihood.dist == "multinom") {
@@ -73,6 +75,15 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
       global_eval_f     = ObjFnBinomMaxLHRound,
       local_eval_f      = ObjFnBinomMaxLHRound,
       local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2,
+      likelihood.dist   = likelihood.dist))
+  } else if (likelihood.dist == "dirichlet.multinom") {
+    return(list(
+      global.opts       = DefaultGlobalOpts(),
+      local.opts        = DefaultLocalOpts(),
+      trace             = 0,
+      global_eval_f     = ObjFnDMMaxLH,
+      local_eval_f      = ObjFnDMMaxLH,
+      local_eval_g_ineq = g_ineq_for_ObjFnDMMaxLH,
       likelihood.dist   = likelihood.dist))
   }
 }

@@ -8,8 +8,9 @@ DefaultManyOpts(likelihood.dist = "multinom")
 }
 \arguments{
 \item{likelihood.dist}{The probability distribution used to calculate the
-likelihood, can be either "multinom" (multinomial distribution) or
-"neg.binom" (negative binomial distribution).}
+likelihood, can be either "multinom" (multinomial distribution),
+"neg.binom" (negative binomial distribution) or 
+"dirichlet.multinom" (Dirichlet-multinomial distribution).}
 }
 \value{
 A list with the following elements
