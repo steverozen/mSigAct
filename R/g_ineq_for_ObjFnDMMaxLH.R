@@ -11,10 +11,14 @@
 #'
 #' @param sigs The signatures with which we are trying to reconstruct
 #'  the spectrum. (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)
+#'  
+#' @param num.replicates Number of bootstrap replicates for reconstructed spectrum. 
+#' (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)
 #'
 g_ineq_for_ObjFnDMMaxLH <- function(exp, # Parameters to optimize
                                     spectrum,
-                                    sigs
+                                    sigs,
+                                    num.replicates
 ) {
   
   retval <- abs(sum(exp) - sum(spectrum))

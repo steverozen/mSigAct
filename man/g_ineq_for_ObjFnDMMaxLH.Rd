@@ -5,7 +5,7 @@
 \title{Function to constrain the sum of estimated exposures to the number of
 mutations in the spectrum.}
 \usage{
-g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs)
+g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs, num.replicates)
 }
 \arguments{
 \item{exp}{A numeric vector of exposures.}
@@ -14,6 +14,9 @@ g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs)
 
 \item{sigs}{The signatures with which we are trying to reconstruct
 the spectrum. (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)}
+
+\item{num.replicates}{Number of bootstrap replicates for reconstructed spectrum. 
+(Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)}
 }
 \description{
 See \code{\link[nloptr]{nloptr}} to understand how this function is used.
