@@ -52,6 +52,10 @@ LLHSpectrumMAP <-
                                           expected.counts = expected.counts,
                                           nbinom.size = nbinom.size,
                                           verbose = verbose)
+    } else if (likelihood.dist == "dirichlet.multinom") {
+      loglh.of.exp <- LLHSpectrumDM(spectrum = spectrum,
+                                    expected.counts = expected.counts,
+                                    verbose = verbose)
     }
     
     prob.of.model <- P.of.M(model = model,

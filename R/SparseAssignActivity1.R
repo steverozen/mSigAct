@@ -256,6 +256,8 @@ DistanceMeasuresSparse <-
     } else if (likelihood.dist == "neg.binom") {
       log.likelihood <- 
         LLHSpectrumNegBinom(as.vector(spect), as.vector(recon), nbinom.size = nbinom.size)
+    } else if (likelihood.dist == "dirichlet.multinom") {
+      log.likelihood <- LLHSpectrumDM(as.vector(spect), as.vector(recon))
     }
     
     vv <- c(log.likelihood = log.likelihood, vv)
@@ -274,6 +276,8 @@ DistanceMeasuresSparse <-
       } else if (likelihood.dist == "neg.binom") {
         log.likelihood <- 
           LLHSpectrumNegBinom(as.vector(spect), as.vector(QP.recon), nbinom.size = nbinom.size)
+      } else if (likelihood.dist == "dirichlet.multinom") {
+        log.likelihood <- LLHSpectrumDM(as.vector(spect), as.vector(QP.recon))
       }
       
       

@@ -27,7 +27,6 @@
 #' lower the objective function, the better.
 #'
 ObjFnDMMaxLH <- function(exp, spectrum, sigs, num.replicates = 1000) {
-  
   if (any(is.na(exp))) return(Inf)
   
   reconstruction <-  sigs %*% exp

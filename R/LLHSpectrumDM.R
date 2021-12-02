@@ -22,49 +22,10 @@
 #'   
 LLHSpectrumDM <-
   function(spectrum, expected.counts, num.replicates = 1000, verbose = FALSE) {
-    
     stopifnot(length(spectrum) == length(expected.counts))
     
-    # First bootstrap from expected.counts to get reconstructed spectrum
-    # replicates This is needed for later fitting Dirichlet distribution to get
-    # the maximum likelihood estimates of alpha 
-    # (If we do not do bootstrapping, we only have one sample and the MLE
-    # estimates of alpha in Dirichlet distribution will not be accurate)
-    replicates <- stats::rmultinom(n = num.replicates, 
-                                   size = sum(expected.counts), 
-                                   prob = expected.counts)
-    
-    # Transpose replicates so that the columns represent mutation types
-    replicates.t <- t(replicates)
-    
-    # Fit Dirichlet distribution to the reconstructed spectrum replicates to
-    # get MLE estimates of alpha in Dirichlet distribution
-    fit.dirichlet <- compositions::fitDirichlet(replicates.t)
-    
-    # Get the MLE estimates of alpha for each mutation type
-    fit.dirichlet <- tryCatch(expr = {
-      compositions::fitDirichlet(replicates.t)
-    },
-    error = function(errors) {
-      # Error can occur when some of the cell values in the replicates.t matrix
-      # are zero
-      if (grep("system is computationally singular", errors$message)) {
-        return(NA)
-      }
-    })
-    
-    if (is.na(fit.dirichlet)) {
-      # Replace zeros in replicates.t matrix with the smallest positive number
-      replicates.t[replicates.t == 0] <- .Machine$double.xmin
-      
-      # Refit Dirichlet distribution to replicates.t
-      fit.dirichlet <- compositions::fitDirichlet(replicates.t)
-    }
-    
-    alpha.mle <- fit.dirichlet$alpha
-    
     # Calculate the Dirichlet-multinomial likelihood 
-    loglh0 <- MGLM::ddirmn(Y = spectrum, alpha = alpha.mle)
+    loglh0 <- sum(MGLM::ddirmn(Y = spectrum, alpha = expected.counts))
     
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")
