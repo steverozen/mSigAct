@@ -32,16 +32,23 @@ OptimizeExposure <- function(spectrum,
 
   stopifnot(mode(spectrum) == "numeric")
   
-  if (is.null(m.opts$nbinom.size)) {
+  if (!is.null(m.opts$nbinom.size)) {
     r <- Nloptr1Tumor(spectrum    = spectrum,
                       sigs        = sigs,
                       m.opts      = m.opts,
+                      nbinom.size = m.opts$nbinom.size,
+                      ...)
+    
+  } else if (!is.null(m.opts$num.replicates)) {
+    r <- Nloptr1Tumor(spectrum    = spectrum,
+                      sigs        = sigs,
+                      m.opts      = m.opts,
+                      num.replicates = m.opts$num.replicates,
                       ...)
   } else {
     r <- Nloptr1Tumor(spectrum    = spectrum,
                       sigs        = sigs,
                       m.opts      = m.opts,
-                      nbinom.size = m.opts$nbinom.size,
                       ...)
   }
 

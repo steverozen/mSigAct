@@ -34,6 +34,10 @@ DefaultLocalOpts <- function() {
 #'   \item{nbinom.size}{Only appearing if \code{likelihood.dist = "neg.binom"}.
 #'   The dispersion parameter for the negative binomial distribution; smaller is
 #'   more dispersed. See \code{\link[stats]{NegBinomial}}.}
+#'   
+#'   \item{num.replicates}{Only appearing if \code{likelihood.dist =
+#'   "dirichlet.multinom"}. Number of bootstrap replicates for reconstructed
+#'   spectrum in order to fit the Dirichlet distribution. 
 #'
 #'   \item{trace}{If > 0 print progress messages.}
 #'   
@@ -80,6 +84,7 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
     return(list(
       global.opts       = DefaultGlobalOpts(),
       local.opts        = DefaultLocalOpts(),
+      num.replicates    = 1000,
       trace             = 0,
       global_eval_f     = ObjFnDMMaxLH,
       local_eval_f      = ObjFnDMMaxLH,
