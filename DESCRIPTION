@@ -23,6 +23,7 @@ RoxygenNote: 7.1.2
 biocViews:
 Imports:
     compositions,
+    cosmicsig,
     dplyr,
     ICAMS (>= 2.3.5.9002),
     lsa,
@@ -35,7 +36,8 @@ Imports:
     sets,
     tibble,
     utils
-Remotes: github::steverozen/ICAMS@master,
+Remotes: github::Rozen-Lab/cosmicsig@master,
+    github::steverozen/ICAMS@master,
     github::steverozen/PCAWG7@master
 Suggests: 
     BSgenome.Hsapiens.1000genomes.hs37d5,

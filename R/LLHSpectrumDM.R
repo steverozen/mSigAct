@@ -37,34 +37,12 @@ LLHSpectrumDM <-
     # Transpose replicates so that the columns represent mutation types
     replicates.t <- t(replicates)
     
-    # Fit Dirichlet distribution to the reconstructed spectrum replicates to
-    # get MLE estimates of alpha in Dirichlet distribution
-    fit.dirichlet <- compositions::fitDirichlet(replicates.t)
+    fit <- dirichlet::fit.dirichlet(X = replicates.t)
     
-    # Get the MLE estimates of alpha for each mutation type
-    fit.dirichlet <- tryCatch(expr = {
-      compositions::fitDirichlet(replicates.t)
-    },
-    error = function(errors) {
-      # Error can occur when some of the cell values in the replicates.t matrix
-      # are zero
-      if (grep("system is computationally singular", errors$message)) {
-        return(NA)
-      }
-    })
-    
-    if (is.na(fit.dirichlet)) {
-      # Replace zeros in replicates.t matrix with the smallest positive number
-      replicates.t[replicates.t == 0] <- .Machine$double.xmin
-      
-      # Refit Dirichlet distribution to replicates.t
-      fit.dirichlet <- compositions::fitDirichlet(replicates.t)
-    }
-    
-    alpha.mle <- fit.dirichlet$alpha
+    alpha.mle <- fit$most.likely.k * fit$p
     
     # Calculate the Dirichlet-multinomial likelihood 
-    loglh0 <- MGLM::ddirmn(Y = spectrum, alpha = alpha.mle)
+    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = alpha.mle)
     
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")
