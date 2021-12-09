@@ -24,8 +24,13 @@ LLHSpectrumDM <-
   function(spectrum, expected.counts, num.replicates = 1000, verbose = FALSE) {
     stopifnot(length(spectrum) == length(expected.counts))
     
+    prob <- expected.counts[, 1] / sum(expected.counts[, 1])
+    
     # Calculate the Dirichlet-multinomial likelihood 
-    loglh0 <- sum(MGLM::ddirmn(Y = spectrum, alpha = expected.counts))
+    # Need to transpose spectrum first so that it has the correct format to 
+    # be used in MGLM: the columns represent number of categories
+    # while rows represent number of observations
+    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = prob * 100000)
     
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")

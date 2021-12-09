@@ -48,7 +48,7 @@ test_that("Use Dirichlet-multinomial distribution to calculate likelihood", {
   # Use Dirichlet-multinomial distribution to calculate log likelihood
   # sigs.to.use <- sigs.to.use[, 1:6]
   sparse.out3 <- 
-    SparseAssignActivity(spectra = skin.spectra,
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
                          sigs = sigs.to.use,
                          max.level = ncol(sigs.to.use) - 1,
                          m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
@@ -61,6 +61,60 @@ test_that("Use Dirichlet-multinomial distribution to calculate likelihood", {
   expect_equal(sparse.out3$reconstruction.distances$sparse.assign.distances$cosine,
                0.9083022, tolerance = 1e-2)
   
+  sparse.out4 <- 
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
+                         sigs = sigs.to.use,
+                         max.level = ncol(sigs.to.use) - 1,
+                         m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
+                         num.parallel.samples = 1,
+                         mc.cores.per.sample = 60,
+                         max.subsets = 1e15,
+                         seed = 8386,
+                         output.dir = file.path(tempdir(), "skin.sparse.DM.factor.100"))
+  
+  sparse.out5 <- 
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
+                         sigs = sigs.to.use,
+                         max.level = ncol(sigs.to.use) - 1,
+                         m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
+                         num.parallel.samples = 1,
+                         mc.cores.per.sample = 60,
+                         max.subsets = 1e15,
+                         seed = 8386,
+                         output.dir = file.path(tempdir(), "skin.sparse.DM.factor.500"))
+  
+  sparse.out6 <- 
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
+                         sigs = sigs.to.use,
+                         max.level = ncol(sigs.to.use) - 1,
+                         m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
+                         num.parallel.samples = 1,
+                         mc.cores.per.sample = 60,
+                         max.subsets = 1e15,
+                         seed = 8386,
+                         output.dir = file.path(tempdir(), "skin.sparse.DM.factor.1000"))
+  
+  sparse.out7 <- 
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
+                         sigs = sigs.to.use,
+                         max.level = ncol(sigs.to.use) - 1,
+                         m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
+                         num.parallel.samples = 1,
+                         mc.cores.per.sample = 60,
+                         max.subsets = 1e15,
+                         seed = 8386,
+                         output.dir = file.path(tempdir(), "skin.sparse.DM.factor.10000"))
+  
+  sparse.out8 <- 
+    SparseAssignActivity(spectra = skin.spectra[, 1, drop = FALSE],
+                         sigs = sigs.to.use,
+                         max.level = ncol(sigs.to.use) - 1,
+                         m.opts = DefaultManyOpts(likelihood.dist = "dirichlet.multinom"),
+                         num.parallel.samples = 1,
+                         mc.cores.per.sample = 60,
+                         max.subsets = 1e15,
+                         seed = 8386,
+                         output.dir = file.path(tempdir(), "skin.sparse.DM.factor.100000"))
   unlink(file.path(tempdir(), "skin.sparse.neg.binom"), recursive = TRUE)
   unlink(file.path(tempdir(), "skin.sparse.multinom"), recursive = TRUE)
 })

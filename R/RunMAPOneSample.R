@@ -120,6 +120,8 @@ RunMAPOnOneSample <-
     colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
     
     subtracted.spect <- spect - reconstructed.spectrum
+    colnames(subtracted.spect) <- 
+      paste0(colnames(spect), " (substracted spectrum)")
     
     list.of.catalogs <- list(spect, reconstructed.spectrum, subtracted.spect,
                              sigs1)
