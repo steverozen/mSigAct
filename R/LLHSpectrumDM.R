@@ -24,13 +24,22 @@ LLHSpectrumDM <-
   function(spectrum, expected.counts, num.replicates = 1000, verbose = FALSE) {
     stopifnot(length(spectrum) == length(expected.counts))
     
+    # We need to convert spectrum to a matrix so that we can transpose later
+    if (!inherits(spectrum, "matrix")) {
+      spectrum <- as.matrix(spectrum)
+    }
+    
+    if (!inherits(expected.counts, "matrix")) {
+      expected.counts <- as.matrix(expected.counts)
+    }
+    
     prob <- expected.counts[, 1] / sum(expected.counts[, 1])
     
     # Calculate the Dirichlet-multinomial likelihood 
     # Need to transpose spectrum first so that it has the correct format to 
     # be used in MGLM: the columns represent number of categories
     # while rows represent number of observations
-    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = prob * 100000)
+    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = prob * 1500)
     
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")
