@@ -1,3 +1,7 @@
+# 2.1.3.9007
+* Fixed a bug in internal function `NumFromId` when there are no numerical parts from
+the signature ids.
+
 # 2.1.3.9006
 * Fixed a bug in internal function `TestAltSolutions` when sorting the all
 tested solutions using sparse assignment.
