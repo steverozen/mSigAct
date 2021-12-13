@@ -20,6 +20,12 @@ DefaultLocalOpts <- function() {
 #'   "neg.binom" (negative binomial distribution) or 
 #'   "dirichlet.multinom" (Dirichlet-multinomial distribution).
 #'   
+#' @param cp.factor \strong{Only} needed if \code{likelihood.dist =
+#'   "dirichlet.multinom"}. Concentration parameter factor. When calculating the
+#'   Dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+#'   is calculated as follows: 
+#'   \code{cp.factor} * \code{reconstruction} / \code{sum(reconstruction)}  
+#'   
 #' @export
 #'
 #' @return A list with the following elements
@@ -35,9 +41,10 @@ DefaultLocalOpts <- function() {
 #'   The dispersion parameter for the negative binomial distribution; smaller is
 #'   more dispersed. See \code{\link[stats]{NegBinomial}}.}
 #'   
-#'   \item{num.replicates}{Only appearing if \code{likelihood.dist =
-#'   "dirichlet.multinom"}. Number of bootstrap replicates for reconstructed
-#'   spectrum in order to fit the Dirichlet distribution. 
+#'   \item{cp.factor}{Only appearing if \code{likelihood.dist =
+#'   "dirichlet.multinom"}. Concentration parameter factor used to calculate the
+#'   concentration parameters \code{alpha} when calculating Dirichlet multinomial
+#'   likelihood.}
 #'
 #'   \item{trace}{If > 0 print progress messages.}
 #'   
@@ -55,7 +62,7 @@ DefaultLocalOpts <- function() {
 #' my.opts <- DefaultManyOpts()
 #' my.opts$trace <- 10
 
-DefaultManyOpts <- function(likelihood.dist = "multinom") {
+DefaultManyOpts <- function(likelihood.dist = "multinom", cp.factor = 1000) {
   if (!likelihood.dist %in% c("multinom", "neg.binom", "dirichlet.multinom")) {
     stop("The value for argument likelihood.dist should be either ",
          "multinom, neg.binom, or dirichlet.multinom")
@@ -84,7 +91,7 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
     return(list(
       global.opts       = DefaultGlobalOpts(),
       local.opts        = DefaultLocalOpts(),
-      num.replicates    = 1000,
+      cp.factor         = cp.factor,
       trace             = 0,
       global_eval_f     = ObjFnDMMaxLH,
       local_eval_f      = ObjFnDMMaxLH,

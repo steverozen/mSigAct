@@ -39,11 +39,11 @@ OptimizeExposure <- function(spectrum,
                       nbinom.size = m.opts$nbinom.size,
                       ...)
     
-  } else if (!is.null(m.opts$num.replicates)) {
+  } else if (!is.null(m.opts$cp.factor)) {
     r <- Nloptr1Tumor(spectrum    = spectrum,
                       sigs        = sigs,
                       m.opts      = m.opts,
-                      num.replicates = m.opts$num.replicates,
+                      cp.factor = m.opts$cp.factor,
                       ...)
   } else {
     r <- Nloptr1Tumor(spectrum    = spectrum,

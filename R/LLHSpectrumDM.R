@@ -10,7 +10,10 @@
 #'   given \code{expected.counts} (argument \code{alpha} to
 #'   \code{\link[MGLM]{rdirmn}}).
 #'   
-#' @param num.replicates Number of bootstrap replicates for \code{expected.counts}.   
+#' @param cp.factor Concentration parameter factor. When calculating the
+#'   dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+#'   is calculated as follows: 
+#'   \code{cp.factor} * \code{expected.counts} / \code{sum(expected.counts)}
 #'
 #' @param verbose If \code{TRUE} print messages under some circumstances.
 #'
@@ -21,7 +24,7 @@
 #'   Dirichlet-multinomial distribution.
 #'   
 LLHSpectrumDM <-
-  function(spectrum, expected.counts, num.replicates = 1000, verbose = FALSE) {
+  function(spectrum, expected.counts, cp.factor = 1000, verbose = FALSE) {
     stopifnot(length(spectrum) == length(expected.counts))
     
     # We need to convert spectrum to a matrix so that we can transpose later
@@ -39,7 +42,7 @@ LLHSpectrumDM <-
     # Need to transpose spectrum first so that it has the correct format to 
     # be used in MGLM: the columns represent number of categories
     # while rows represent number of observations
-    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = prob * 1500)
+    loglh0 <- MGLM::ddirmn(Y = t(spectrum), alpha = prob * cp.factor)
     
     if (is.nan(loglh0)) {
       warning("logl9 is Nan, changing to -Inf")

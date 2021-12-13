@@ -4,7 +4,7 @@
 \alias{ObjFnDMMaxLH}
 \title{The Dirichlet-multinomial likelihood objective function}
 \usage{
-ObjFnDMMaxLH(exp, spectrum, sigs, num.replicates = 1000)
+ObjFnDMMaxLH(exp, spectrum, sigs, cp.factor = 1000)
 }
 \arguments{
 \item{exp}{The matrix of exposures ("activities").}
@@ -13,7 +13,10 @@ ObjFnDMMaxLH(exp, spectrum, sigs, num.replicates = 1000)
 
 \item{sigs}{The matrix of signatures.}
 
-\item{num.replicates}{Number of bootstrap replicates for reconstructed spectrum.}
+\item{cp.factor}{Concentration parameter factor. When calculating the
+Dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+is calculated as follows: 
+\code{cp.factor} * \code{reconstruction} / \code{sum(reconstruction)}}
 }
 \value{
 -1 * log(likelihood(spectrum | reconstruction))

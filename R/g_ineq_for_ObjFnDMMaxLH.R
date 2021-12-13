@@ -12,13 +12,16 @@
 #' @param sigs The signatures with which we are trying to reconstruct
 #'  the spectrum. (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)
 #'  
-#' @param num.replicates Number of bootstrap replicates for reconstructed spectrum. 
+#' @param cp.factor Concentration parameter factor. When calculating the
+#'   Dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+#'   is calculated as follows: 
+#'   \code{cp.factor} * \code{reconstruction} / \code{sum(reconstruction)}  
 #' (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)
 #'
 g_ineq_for_ObjFnDMMaxLH <- function(exp, # Parameters to optimize
                                     spectrum,
                                     sigs,
-                                    num.replicates
+                                    cp.factor
 ) {
   
   retval <- abs(sum(exp) - sum(spectrum))

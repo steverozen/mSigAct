@@ -5,12 +5,7 @@
 \title{Likelihood that 1 observed spectrum was generated from a vector of expected
 mutation counts using Dirichlet-multinomial distribution}
 \usage{
-LLHSpectrumDM(
-  spectrum,
-  expected.counts,
-  num.replicates = 1000,
-  verbose = FALSE
-)
+LLHSpectrumDM(spectrum, expected.counts, cp.factor = 1000, verbose = FALSE)
 }
 \arguments{
 \item{spectrum}{An observed spectrum (a numeric vector)}
@@ -22,7 +17,10 @@ generates counts according to a Dirichlet-multinomial distribution with the
 given \code{expected.counts} (argument \code{alpha} to
 \code{\link[MGLM]{rdirmn}}).}
 
-\item{num.replicates}{Number of bootstrap replicates for \code{expected.counts}.}
+\item{cp.factor}{Concentration parameter factor. When calculating the
+dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+is calculated as follows: 
+\code{cp.factor} * \code{expected.counts} / \code{sum(expected.counts)}}
 
 \item{verbose}{If \code{TRUE} print messages under some circumstances.}
 }

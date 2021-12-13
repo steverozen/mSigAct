@@ -5,7 +5,7 @@
 \title{Function to constrain the sum of estimated exposures to the number of
 mutations in the spectrum.}
 \usage{
-g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs, num.replicates)
+g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs, cp.factor)
 }
 \arguments{
 \item{exp}{A numeric vector of exposures.}
@@ -15,7 +15,10 @@ g_ineq_for_ObjFnDMMaxLH(exp, spectrum, sigs, num.replicates)
 \item{sigs}{The signatures with which we are trying to reconstruct
 the spectrum. (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)}
 
-\item{num.replicates}{Number of bootstrap replicates for reconstructed spectrum. 
+\item{cp.factor}{Concentration parameter factor. When calculating the
+  Dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+  is calculated as follows: 
+  \code{cp.factor} * \code{reconstruction} / \code{sum(reconstruction)}  
 (Ignored in this function but used by \code{\link[nloptr]{nloptr}}.)}
 }
 \description{

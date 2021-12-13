@@ -15,7 +15,10 @@
 #' 
 #' @param sigs The matrix of signatures.
 #' 
-#' @param num.replicates Number of bootstrap replicates for reconstructed spectrum.  
+#' @param cp.factor Concentration parameter factor. When calculating the
+#'   Dirichlet multinomial likelihood, the concentration parameters \code{alpha}
+#'   is calculated as follows: 
+#'   \code{cp.factor} * \code{reconstruction} / \code{sum(reconstruction)}  
 #'
 #' @keywords internal
 #' 
@@ -26,7 +29,7 @@
 #' \code{\link[nloptr]{nloptr}} minimizes the objective function, so the
 #' lower the objective function, the better.
 #'
-ObjFnDMMaxLH <- function(exp, spectrum, sigs, num.replicates = 1000) {
+ObjFnDMMaxLH <- function(exp, spectrum, sigs, cp.factor = 1000) {
   if (any(is.na(exp))) return(Inf)
   
   reconstruction <-  sigs %*% exp
@@ -41,7 +44,7 @@ ObjFnDMMaxLH <- function(exp, spectrum, sigs, num.replicates = 1000) {
   
   loglh <- LLHSpectrumDM(spectrum = spectrum,
                          expected.counts = reconstruction,
-                         num.replicates = num.replicates)
+                         cp.factor = cp.factor)
   
   return(-loglh)
 }
