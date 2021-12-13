@@ -24,16 +24,14 @@ MergeListOfExposures <- function(list.of.exposures) {
     stop("Only one exposure, no need to merge")
   }
   
-  combined.exposure <- 
-    MergeTwoExposures(exposure1 = list.of.exposures[[1]],
-                      exposure2 = list.of.exposures[[2]])
+  tmp <- lapply(list.of.exposures, FUN = function(one.exposure) {
+    return(as.data.frame(t(one.exposure)))
+  })
   
-  if (num.of.exposure > 2) {
-    for (i in 3:num.of.exposure) {
-      combined.exposure <- 
-        MergeTwoExposures(exposure1 = combined.exposure,
-                          exposure2 = list.of.exposures[[i]])
-    }
-  } 
+  combined.exposure <- t(dplyr::bind_rows(tmp))
+  combined.exposure[is.na(combined.exposure)] <- 0
+  combined.exposure <- 
+    combined.exposure[SortSigId(rownames(combined.exposure)), , drop = FALSE]
+  
   return(RemoveZeroActivitySig(combined.exposure))
 }
