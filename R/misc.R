@@ -99,8 +99,6 @@ is.superset.of.any <- function(probe, background) {
 
 #' Cosine similarity with useful argument types
 #'
-#' Calls \code{\link[lsa]{cosine}}.
-#'
 #' @param v1 A vector or single-column matrix
 #' @param v2 A vector or single-column matrix
 #'
@@ -114,16 +112,11 @@ is.superset.of.any <- function(probe, background) {
 #'                                               use.sig.names = TRUE)
 #' cosine <- cossim(spectrum, reconstructed.spectrum)
 cossim <- function(v1, v2) {
-  if (!is.null(ncol(v1)))  {
-    stopifnot(ncol(v1) == 1)
-    v1 <- v1[ , 1]
-  }
-  if (!is.null(ncol(v2)))  {
-    stopifnot(ncol(v2) == 1)
-    v2 <- v2[ , 1]
-  }
-  lsa::cosine(v1, v2)
-
+  df <- rbind(as.vector(v1),
+              as.vector(v2))
+  return(suppressMessages(philentropy::distance(x = df, 
+                                                method = "cosine", 
+                                                test.na = FALSE)))
 }
 
 ClosestCosSig <- function(spectrum) {
@@ -132,7 +125,7 @@ ClosestCosSig <- function(spectrum) {
           MARGIN = 2,
           FUN =
             function(sig) {
-              lsa::cosine(as.vector(sig), as.vector(spectrum))})
+              cossim(as.vector(sig), as.vector(spectrum))})
   max.cos <- which(cos == max(cos))
   return(cos[max.cos])
 
@@ -155,7 +148,7 @@ ClosestCosSigDensity <- function(spectrum) {
           MARGIN = 2,
           FUN =
             function(sig) {
-              lsa::cosine(as.vector(sig), as.vector(spec))})
+              cossim(as.vector(sig), as.vector(spec))})
   max.cos <- which(cos == max(cos))
   return(cos[max.cos])
 

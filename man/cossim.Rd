@@ -12,7 +12,7 @@ cossim(v1, v2)
 \item{v2}{A vector or single-column matrix}
 }
 \description{
-Calls \code{\link[lsa]{cosine}}.
+Cosine similarity with useful argument types
 }
 \examples{
 spectrum <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]

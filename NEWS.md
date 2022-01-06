@@ -1,3 +1,8 @@
+# 2.2.0
+* Removed the exported functions `CancerTypes`, `PossibleArtifacts` and `RareSignatures` as they are available in other packages.
+
+* Removed package `lsa` from the `Imports` field in DESCRIPTION.
+
 # 2.1.3.9007
 * Fixed a bug in internal function `NumFromId` when there are no numerical parts from
 the signature ids.

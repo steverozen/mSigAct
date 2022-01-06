@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - master
-      - test-sparse-assign
+      - v2.2.0-branch
   pull_request:
     branches:
       - main
       - master
-      - test-sparse-assign
+      - v2.2.0-branch
 
 name: R-CMD-check
 
