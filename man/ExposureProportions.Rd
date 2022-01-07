@@ -18,7 +18,7 @@ ExposureProportions(
 "DBS78".}
 
 \item{cancer.type}{A character string. For some common cancer types, see
-\code{\link{CancerTypes}} for more details.}
+\link[PCAWG7]{CancerTypes} for more details.}
 
 \item{all.sigs}{An optional matrix of known signatures, 
 with column names being signatures ids. Only used to drop 
@@ -46,7 +46,7 @@ A numerical vector of the proportion of
 Return the proportions of tumors of a given cancer type that have a particular signature
 }
 \examples{
-cancer.types <- CancerTypes()
+cancer.types <- PCAWG7::CancerTypes()
 cancer.types
 sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
                                  cancer.type = "Lung-AdenoCA")

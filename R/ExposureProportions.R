@@ -4,7 +4,7 @@
 #'    "DBS78".
 #'
 #' @param cancer.type A character string. For some common cancer types, see
-#'   \code{\link{CancerTypes}} for more details.
+#'   \link[PCAWG7]{CancerTypes} for more details.
 #'
 #' @param all.sigs An optional matrix of known signatures, 
 #'    with column names being signatures ids. Only used to drop 
@@ -30,7 +30,7 @@
 #'   The names are the signature ids.
 #'   
 #' @examples 
-#' cancer.types <- CancerTypes()
+#' cancer.types <- PCAWG7::CancerTypes()
 #' cancer.types
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
 #'                                  cancer.type = "Lung-AdenoCA")
