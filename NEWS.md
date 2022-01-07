@@ -1,5 +1,8 @@
+# 2.1.3.9010
+* Added new argument `cp.factor` to internal function `DistanceMeasuresSparse`.
+
 # 2.1.3.9009
-* Enabled using "Dirichlet-multinomial distribution" for the assignment in mSigAct
+* Enabled using "Dirichlet-multinomial distribution" for the assignment in mSigAct.
 
 # 2.1.3.9008
 * Created new internal function `LLHSpectrumDM` to calculate log likelihood from

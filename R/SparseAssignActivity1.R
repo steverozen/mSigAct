@@ -240,7 +240,8 @@ SparseAssignActivity1 <- function(spect,
 #' @keywords internal
 
 DistanceMeasuresSparse <- 
-  function(spect, recon, nbinom.size, likelihood.dist = "multinom", signatures = NULL) {
+  function(spect, recon, nbinom.size, likelihood.dist = "multinom", signatures = NULL,
+           cp.factor = NULL) {
     my.fn <- function(method, spect, recon) {
       df <- rbind(as.vector(spect),
                   as.vector(recon))
@@ -257,7 +258,12 @@ DistanceMeasuresSparse <-
       log.likelihood <- 
         LLHSpectrumNegBinom(as.vector(spect), as.vector(recon), nbinom.size = nbinom.size)
     } else if (likelihood.dist == "dirichlet.multinom") {
-      log.likelihood <- LLHSpectrumDM(as.vector(spect), as.vector(recon))
+      if (is.null(cp.factor)) {
+        stop("cp.factor should not be NULL when likelihood.dist is 'dirichlet.multinom'")
+      }
+      log.likelihood <- LLHSpectrumDM(spectrum = as.vector(spect), 
+                                      expected.counts = as.vector(recon),
+                                      cp.factor = cp.factor)
     }
     
     vv <- c(log.likelihood = log.likelihood, vv)

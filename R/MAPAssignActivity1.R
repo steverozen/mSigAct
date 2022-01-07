@@ -144,7 +144,8 @@ MAPAssignActivity1 <-
           DistanceMeasuresSparse(spect = spect, recon = MAP.recon, 
                                  nbinom.size = m.opts$nbinom.size,
                                  likelihood.dist = m.opts$likelihood.dist,
-                                 signatures = sigs[, names(best.exp), drop = FALSE])
+                                 signatures = sigs[, names(best.exp), drop = FALSE],
+                                 cp.factor = m.opts$cp.factor)
       }
       
       # Round the exposure and reconstruction
