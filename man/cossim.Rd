@@ -16,7 +16,7 @@ Cosine similarity with useful argument types
 }
 \examples{
 spectrum <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]
-SBS96.sigs <- PCAWG7::signature$genome$SBS96
+SBS96.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
 exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1, drop = FALSE]
 reconstructed.spectrum <- ReconstructSpectrum(sigs = SBS96.sigs,
                                               exp = exposure,

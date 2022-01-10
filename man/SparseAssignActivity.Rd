@@ -106,7 +106,7 @@ Find known signatures that can most sparsely reconstruct each spectrum in a cata
 # This is a long running example unless parallel computing is supported on your machine
 indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
-sigs <- PCAWG7::signature$genome$SBS96
+SBS96.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
 sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                  cancer.type = "Lung-AdenoCA")
 sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
