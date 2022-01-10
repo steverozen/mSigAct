@@ -76,7 +76,7 @@ PCAWGMAPTest <- function(cancer.type,
     message("out.dir is now ", out.dir)
   }
 
-  sigs <- PCAWG7::signature$genome[[mutation.type]]
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37[[mutation.type]]
 
   if (is.null(sigs.prop)) {
     sigs.prop <- ExposureProportions(mutation.type = mutation.type,
@@ -93,7 +93,7 @@ PCAWGMAPTest <- function(cancer.type,
         conf.int = 0.75)
     some.sigs.prop <- sigs.prop[rownames(qp.assign)]
   } else {
-    some.sigs.prop <- sigs.prop[setdiff(names(sigs.prop), PossibleArtifacts())]
+    some.sigs.prop <- sigs.prop[setdiff(names(sigs.prop), cosmicsig::possible_artifacts())]
   }
 
   one.assign <- function(my.sigs.prop, subdir) {

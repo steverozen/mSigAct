@@ -2,7 +2,7 @@ context("Calculating distances between spectra and reconstructed spectra")
 
 test_that("Identifying ID samples with low reconstruction accuracy", {
   ID.spectra <- PCAWG7::spectra$PCAWG$ID
-  ID.sigs <- PCAWG7::signature$genome$ID
+  ID.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$ID
   ID.exposure <- PCAWG7::exposure$PCAWG$ID
   
   indices <- 1:3

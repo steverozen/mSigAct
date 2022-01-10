@@ -169,7 +169,7 @@ OneMAPAssignTest <- function(spect,
   }
 
   if (is.null(sigs)) {
-    sigs <- PCAWG7::signature$genome[[mutation.type]]
+    sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37[[mutation.type]]
   }
 
   if (is.null(sigs.prop)) {

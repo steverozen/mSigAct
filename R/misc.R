@@ -121,7 +121,7 @@ cossim <- function(v1, v2) {
 
 ClosestCosSig <- function(spectrum) {
   cos <-
-    apply(PCAWG7::signature$genome$SBS96,
+    apply(cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
           MARGIN = 2,
           FUN =
             function(sig) {
@@ -140,7 +140,7 @@ ClosestCosSigDensity <- function(spectrum) {
 
   sigs <-
     ICAMS::TransformCatalog(
-      PCAWG7::signature$genome$SBS96,
+      cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
       target.catalog.type = "density.signature")
 
   cos <-
@@ -195,7 +195,7 @@ check.mclapply.result <- function(ss, where, names = NULL) {
 EDist2SpectRounded <- function(exp, sig.names, spect) {
   reconstruction <-
     prop.reconstruct(
-      sigs = PCAWG7::signature$genome$SBS96[ , sig.names],
+      sigs = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96[ , sig.names],
       exp = round(exp))
   reconstruction <- round(reconstruction)
   class(spect) <- "matrix"
@@ -211,7 +211,7 @@ EDist2Spect <- function(exp, sig.names, spect) {
   reconstruction <-
     prop.reconstruct(
       sigs =
-        PCAWG7::signature$genome$SBS96[ , sig.names], exp = exp)
+        cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96[ , sig.names], exp = exp)
   class(spect) <- "matrix"
   err <- stats::dist(t(cbind(reconstruction, spect)), method = "euclidean")
   return(err)

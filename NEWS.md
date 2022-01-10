@@ -10,6 +10,8 @@
 
 * Updated examples using signatures from `cosmicsig`.
 
+* Updated automated tests using signatures from `cosmicsig`.
+
 # 2.1.3.9007
 * Fixed a bug in internal function `NumFromId` when there are no numerical parts from
 the signature ids.

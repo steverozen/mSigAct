@@ -1,10 +1,10 @@
 test_that("OptimizeExposureQPBootstrap", {
   rr <- OptimizeExposureQP(spectrum = PCAWG7::spectra$PCAWG$SBS96[ , 1],
-                            signatures = PCAWG7::COSMIC.v3.0$signature$genome$SBS96[ , 1:5])
+                            signatures = cosmicsig::COSMIC_v3.0$signature$GRCh37$SBS96[ , 1:5])
   expect_equal(rr,
-               c(SBS1 = 1384.08972804323, SBS2 = 1684.34516525904,
-                 SBS3 = 6960.32503149651,  SBS4 = 1196.35199280255,
-                 SBS5 = 3674.88808239867))
+               c(SBS1 = 1383.896, SBS2 = 1684.294,
+                 SBS3 = 6958.131,  SBS4 = 1196.792,
+                 SBS5 = 3676.888), tolerance = 1e-5)
 
 })
 

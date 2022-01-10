@@ -80,7 +80,7 @@ RunSparseAssignOneSample <-
     
     
     if (!is.null(mut.type)) {
-      ets <- PCAWG7::GetEtiology(mut.type, colnames(sigs1))
+      ets <- cosmicsig::get_etiology(mut.type, colnames(sigs1))
       colnames(sigs1) <-
         paste0(colnames(sigs1), " (exposure = ", round(inferred.exposure[, 1]),
                ", contribution = ",

@@ -5,7 +5,7 @@ test_that("SparseAssignActivity for SBS Catalog", {
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$SBS96
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Lung-AdenoCA")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
@@ -40,7 +40,7 @@ test_that("SparseAssignActivity for DBS Catalog", {
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$DBS78))
   spectra <- PCAWG7::spectra$PCAWG$DBS78[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$DBS78
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$DBS78
   sigs.prop <- ExposureProportions(mutation.type = "DBS78",
                                    cancer.type = "Lung-AdenoCA")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
@@ -75,7 +75,7 @@ test_that("SparseAssignActivity for ID Catalog", {
   
   indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$ID))
   spectra <- PCAWG7::spectra$PCAWG$ID[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$ID
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$ID
   sigs.prop <- ExposureProportions(mutation.type = "ID",
                                    cancer.type = "Lung-AdenoCA")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]

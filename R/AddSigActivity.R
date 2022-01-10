@@ -90,7 +90,7 @@ AddSigActivity1 <- function(spect, exposure, sigs,
   mut.type <- GetMutationType(spect)
 
   if (!is.null(mut.type)) {
-    ets <- PCAWG7::GetEtiology(mut.type, colnames(sigs1))
+    ets <- cosmicsig::get_etiology(mut.type, colnames(sigs1))
 
     colnames(sigs1) <-
       paste0(colnames(sigs1), " (exposure = ", round(exposure[, 1]),
@@ -195,7 +195,7 @@ RemoveZeroMutationSample <- function(spectra, exposure) {
 #' \dontrun{
 #' spectra <- PCAWG7::spectra$PCAWG$SBS96[, 1:2, drop = FALSE]
 #' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1:2, drop = FALSE]
-#' sigs <- PCAWG7::signature$genome$SBS96
+#' sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96",
 #'                                  cancer.type = "Biliary-AdenoCA")
 #' retval <- AddSigActivity(spectra, exposure, sigs, sigs.prop)

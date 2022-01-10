@@ -5,7 +5,7 @@ test_that("Test tracing messages for MAPAssignActivity", {
   
   indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$SBS96
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Liver-HCC")
   my.opts <- DefaultManyOpts()
@@ -39,7 +39,7 @@ test_that("Test tracing messages for SparseAssignActivity", {
   
   indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$SBS96
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Liver-HCC")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]

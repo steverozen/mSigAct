@@ -9,7 +9,7 @@ SparseAssignTest1 <- function(sig.counts,
   sig.names <- names(sig.counts)
 
   some.sigs  <-
-    PCAWG7::COSMIC.v3.0$signature$genome$SBS96[ , sig.names, drop = FALSE]
+    cosmicsig::COSMIC_v3.0$signature$GRCh37$SBS96[ , sig.names, drop = FALSE]
   ref.genome <- attr(some.sigs, "ref.genome", exact = TRUE)
   region     <- attr(some.sigs, "region", exact = TRUE)
   if (is.null(region)) {
@@ -68,7 +68,7 @@ test_that("SparseAssignActivity1 (one spectrum) Test 1", {
                          tolerance = 1e-2)
 
   testthat::expect_equal(as.numeric(retval$edist1),
-                         14.88182,
+                         14.38372,
                          tolerance = 1e-2)
 
 })

@@ -79,7 +79,7 @@ test_that("ExposureProportions 5", {
 test_that("ExposureProportions 6", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Liver-HCC",
-                            all.sigs      = PCAWG7::signature$genome$SBS192)
+                            all.sigs      = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS192)
   expect_equal(rr,
                c(SBS1 = 0.653374233128834, SBS4 = 0.269938650306748, SBS5 = 1,
                  SBS6 = 0.00920245398773006, 
@@ -100,14 +100,14 @@ test_that("ExposureProportions 6", {
 test_that("ExposureProportions 7", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Unknown",
-                            all.sigs      = PCAWG7::signature$genome$SBS192)
+                            all.sigs      = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS192)
   expect_equal(rr, numeric(0))
 })
 
 test_that("ExposureProportions 8", {
     rr <- ExposureProportions(mutation.type = "SBS192", 
                               cancer.type   = "Unknown",
-                              all.sigs      = PCAWG7::signature$genome$SBS192,
+                              all.sigs      = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS192,
                               must.include  = "FOO")
   expect_equal(rr, numeric(0), check.attributes = FALSE)
 })
@@ -115,7 +115,7 @@ test_that("ExposureProportions 8", {
 test_that("ExposureProportions 9", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Unknown",
-                            all.sigs      = PCAWG7::signature$genome$SBS192,
+                            all.sigs      = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS192,
                             must.include  = "SBS9")
   expect_equal(rr, c(SBS9 = 0.1))
 })
@@ -123,7 +123,7 @@ test_that("ExposureProportions 9", {
 test_that("ExposureProportions 10", {
   rr <- ExposureProportions(mutation.type = "SBS192", 
                             cancer.type   = "Lung-SCC",
-                            all.sigs      = PCAWG7::signature$genome$SBS192[, 2:40])
+                            all.sigs      = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS192[, 2:40])
   expect_equal(rr, c(SBS2 = 0.833333333333333, SBS4 = 0.916666666666667, SBS5 = 1, 
                      SBS8 = 0.0416666666666667, SBS13 = 0.833333333333333))
 })

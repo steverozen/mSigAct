@@ -82,7 +82,7 @@ SignaturePresenceTest1 <- function(
 #'
 TestSignaturePresenceTest1 <-
   function(sig.counts,
-           input.sigs = PCAWG7::signature$genome$SBS96,
+           input.sigs = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
            trace      = 0,
            m.opts     = NULL) {
 

@@ -4,7 +4,7 @@ test_that("Use signature id in SignaturePresenceTest1", {
   
   indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-  sigs <- PCAWG7::signature$genome$SBS96
+  sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Liver-HCC")
   sigs.to.test <- sigs[, names(sigs.prop), drop = FALSE]

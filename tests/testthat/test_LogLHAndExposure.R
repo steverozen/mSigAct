@@ -30,7 +30,7 @@ PrepOneSynSpectrum <- function(sig.counts,
 
 TestOneLLHetc <- function(sig.counts,
                           # input.sigs   = PCAWG7::signature$genome$SBS96,
-                          input.sigs = PCAWG7::COSMIC.v3.0$signature$genome$SBS96,
+                          input.sigs = cosmicsig::COSMIC_v3.0$signature$GRCh37$SBS96,
                           trace = 0) {
 
   test.data <- PrepOneSynSpectrum(sig.counts = sig.counts,
@@ -58,9 +58,9 @@ test_that("test-LogLHAndExposure.R LogLHAndExposure 1", {
   input <- c(SBS1 = 1000, SBS22 = 2000)
   set.seed(101010, kind = "L'Ecuyer-CMRG")
   retval <- TestOneLLHetc(sig.counts = input)
-  testthat::expect_equal(retval$loglh, -225.148790563202, tolerance = 1e-5)
+  testthat::expect_equal(retval$loglh, -225.1579, tolerance = 1e-5)
   testthat::expect_equal(retval$exposure,
-                         c(SBS1 = 974.390342198754, SBS22 = 2023.60965780125))
+                         c(SBS1 = 974.8783, SBS22 = 2024.1217))
   testthat::expect_equal(retval$m.opts$nbinom.size, 5)
   testthat::expect_equal(retval$m.opts$global.opts$algorithm,
                          "NLOPT_GN_DIRECT")

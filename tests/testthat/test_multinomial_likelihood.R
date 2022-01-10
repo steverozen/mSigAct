@@ -4,7 +4,8 @@ test_that("Use multinomial distribution to calculate likelihood", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
   prior.prop <- ExposureProportions("SBS96", cancer.type = "Skin-Melanoma")
-  prior.prop1 <- prior.prop[!names(prior.prop) %in% PossibleArtifacts()]
+  prior.prop1 <- 
+    prior.prop[!names(prior.prop) %in% cosmicsig::possible_artifacts()]
   
   skin.spectra <- 
     PCAWG7::spectra$other.genome$SBS96[, "Skin-Melanoma::ML_31_T_01", drop = FALSE]
@@ -12,7 +13,7 @@ test_that("Use multinomial distribution to calculate likelihood", {
   # Use negative binomial distribution to calculate log likelihood
   MAP.out1 <- 
     MAPAssignActivity(spectra = skin.spectra,
-                      sigs = PCAWG7::signature$genome$SBS96,
+                      sigs = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
                       sigs.presence.prop = prior.prop1,
                       max.level = length(prior.prop1) - 1,
                       m.opts = DefaultManyOpts(likelihood.dist = "neg.binom"),
@@ -27,7 +28,7 @@ test_that("Use multinomial distribution to calculate likelihood", {
   # Use multinomial distribution to calculate log likelihood (the default)
   MAP.out2 <- 
     MAPAssignActivity(spectra = skin.spectra,
-                      sigs = PCAWG7::signature$genome$SBS96,
+                      sigs = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
                       sigs.presence.prop = prior.prop1,
                       max.level = length(prior.prop1) - 1,
                       mc.cores.per.sample = 30,

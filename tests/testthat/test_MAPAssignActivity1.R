@@ -21,7 +21,7 @@ test.fn <- function(spect, sig.mutation.type, cancer.type = "Bladder-TCC",
   # mm$local.opts$print_level <- 2
   mm$local.opts$tol_constraints_ineq <- 10
 
-  sigs <-PCAWG7::signature$genome[[sig.mutation.type]]
+  sigs <-cosmicsig::COSMIC_v3.2$signature$GRCh37[[sig.mutation.type]]
   if (!is.null(sig.ids.to.use)) {
     sigs <- sigs[ , sig.ids.to.use, drop = FALSE]
   }
@@ -104,7 +104,7 @@ test_that("MAPAssignActivity1 for ID Catalog", {
   
   sample.index <- 1
   catalog <- biliary.catalogs[, sample.index, drop = FALSE]
-  SBS.sigs <- PCAWG7::signature$genome$SBS96
+  SBS.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   mutation.type <- "SBS96"
   cancer.type <- "Biliary-AdenoCA"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,

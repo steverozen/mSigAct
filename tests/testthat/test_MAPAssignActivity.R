@@ -64,7 +64,7 @@ test_that("Use sparse assignment for MAPAssignActivity", {
   
   sample.index <- 1
   catalog <- biliary.catalogs[, sample.index, drop = FALSE]
-  SBS.sigs <- PCAWG7::signature$genome$SBS96
+  SBS.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   mutation.type <- "SBS96"
   cancer.type <- "Biliary-AdenoCA"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,

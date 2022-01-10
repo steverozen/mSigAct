@@ -21,7 +21,7 @@ TestEsoSigs <- function(extra.sigs = NULL) {
   if (!is.null(extra.sigs)) {
     sigs <- c(extra.sigs, sigs)
   }
-  return(PCAWG7::COSMIC.v3.0$signature$genome$SBS96[ , sigs])
+  return(cosmicsig::COSMIC_v3.0$signature$GRCh37$SBS96[ , sigs])
 }
 
 TestSignaturePresenceTestDouble <- function(extra.sig, eso.indices) {
@@ -76,9 +76,9 @@ TestAny1 <- function(extra.sig, eso.index) {
 test_that("TestAny1 and TestSignaturePresenceTest on SBS17a in esophageal sample 1", {
   any.retval <- TestAny1("SBS17a", 1)
   expected <-0.0944294265780503
-  expect_equal(any.retval$all.Ha.info[[1, "p"]], expected)
+  expect_equal(any.retval$all.Ha.info[[1, "p"]], expected, tolerance = 1e-3)
   spt.retval <- TestSignaturePresenceTestDouble("SBS17a", 1)
-  expect_equal(spt.retval$test1$chisq.p, expected)
+  expect_equal(spt.retval$test1$chisq.p, expected, tolerance = 1e-3)
 })
 
 
@@ -89,7 +89,7 @@ test_that("TestAny1 on SBS17a and SBS17b in esophageal sample 1", {
   expect_equal(any.retval2$all.Ha.info[[1, "sigs.added"]],
                "SBS17a")
   expect_equal(any.retval2$all.Ha.info[[1, "p"]],
-               0.0944294265780503)
+               0.0944294265780503, tolerance = 1e-3)
   expect_equal(any.retval2$all.Ha.info[[2, "p"]],
                0.000910631136606777, tolerance = 1e-5)
   expect_equal(any.retval2$all.Ha.info[[3, "p"]],

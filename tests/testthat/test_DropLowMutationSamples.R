@@ -7,7 +7,7 @@ test_that("DropLowMutationSamples for ID spectra", {
   
   sample.index <- 6
   catalog <- lung.catalogs[, sample.index, drop = FALSE]
-  ID.sigs <- PCAWG7::signature$genome$ID
+  ID.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$ID
   mutation.type <- "ID"
   cancer.type <- "Lung-AdenoCA"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,

@@ -108,7 +108,7 @@ This function also can do sparse assignment by specifying \code{use.sparse.assig
 # This is a long running example unless parallel computing is supported on your machine
 indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
 spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
-sigs <- PCAWG7::signature$genome$SBS96
+sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
 sigs.prop <- ExposureProportions(mutation.type = "SBS96", 
                                  cancer.type = "Lung-AdenoCA")
 MAP.out <- MAPAssignActivity1(spect = spect, 
