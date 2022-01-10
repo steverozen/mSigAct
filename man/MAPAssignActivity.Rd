@@ -115,21 +115,4 @@ find the optimal reconstruction or there are errors coming out for
 \description{
 This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
 }
-\examples{
-\dontrun{
-# This is a long running example unless parallel computing is supported on your machine
-indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
-spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
-sigs <- PCAWG7::signature$genome$SBS96
-sigs.prop <- ExposureProportions(mutation.type = "SBS96",
-                                 cancer.type = "Lung-AdenoCA")
-MAP.out <- MAPAssignActivity(spectra = spectra,
-                             sigs = sigs,
-                             sigs.presence.prop = sigs.prop,
-                             output.dir = file.path(tempdir(), "Lung-AdenoCA"),
-                             max.level = length(sigs.prop) - 1,
-                             p.thresh = 0.05 / ncol(spectra),
-                             num.parallel.samples = 2,
-                             mc.cores.per.sample = 10)
-}
-}
+\keyword{internal}

@@ -29,3 +29,4 @@ generates counts according to a multinomial distribution with the given
 Likelihood that 1 observed spectrum was generated from a vector of expected
 mutation counts using multinomial distribution
 }
+\keyword{internal}

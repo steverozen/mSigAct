@@ -19,7 +19,7 @@
 #'   
 #' @importFrom stats dmultinom
 #'
-#' @export
+#' @keywords internal
 LLHSpectrumMultinom <-
   function(spectrum, expected.counts, verbose = FALSE) {
     
