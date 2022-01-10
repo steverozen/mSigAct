@@ -22,6 +22,7 @@ Depends: R (>= 4.0),
 RoxygenNote: 7.1.2
 biocViews:
 Imports:
+    cosmicsig,
     dplyr,
     ICAMS (>= 2.3.5.9002),
     nloptr,
@@ -33,7 +34,7 @@ Imports:
     tibble,
     utils
 Remotes: github::steverozen/ICAMS@master,
-    github::steverozen/PCAWG7@master
+    github::steverozen/PCAWG7@v1.0.3-branch
 Suggests: 
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
