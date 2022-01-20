@@ -1,3 +1,7 @@
+# 2.1.3.9008
+* Fixed a bug in internal function `MAPAssignActivityInternal` when there are 
+more signatures in argument `sigs.presence.prop` than that in `sigs`.
+
 # 2.1.3.9007
 * Fixed a bug in internal function `NumFromId` when there are no numerical parts from
 the signature ids.
