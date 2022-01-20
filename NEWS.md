@@ -1,3 +1,7 @@
+# 2.1.3.9011
+* Fixed a bug in internal function `MAPAssignActivityInternal` when there are 
+more signatures in argument `sigs.presence.prop` than that in `sigs`.
+
 # 2.1.3.9010
 * Added new argument `cp.factor` to internal function `DistanceMeasuresSparse`.
 
