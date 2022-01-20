@@ -10,7 +10,8 @@ DistanceMeasuresSparse(
   recon,
   nbinom.size,
   likelihood.dist = "multinom",
-  signatures = NULL
+  signatures = NULL,
+  cp.factor = NULL
 )
 }
 \arguments{
