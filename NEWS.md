@@ -12,6 +12,8 @@
 
 * Updated automated tests using signatures from `cosmicsig`.
 
+* Fixed a bug in internal function `GetAltSolutions`.
+
 # 2.1.3.9007
 * Fixed a bug in internal function `NumFromId` when there are no numerical parts from
 the signature ids.

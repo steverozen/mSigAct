@@ -771,7 +771,7 @@ GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1,
     QP.retval <- OptimizeExposureQP(spectrum = spectrum, signatures = sig.to.use)
     reconstuction <- ReconstructSpectrum(sigs = sig.to.use, exp = QP.retval)
     cosine <- cossim(v1 = spectrum, v2 = reconstuction)
-    return(tibble::tibble(QP.exp = list(QP.retval), QP.cosine = cosine[, 1]))
+    return(tibble::tibble(QP.exp = list(QP.retval), QP.cosine = cosine))
   }, mc.cores = Adj.mc.cores(mc.cores))
   
   retval2 <- do.call("rbind", retval)
