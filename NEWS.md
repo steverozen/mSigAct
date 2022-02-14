@@ -1,3 +1,8 @@
+# 2.1.3.9012
+* Added new dependency package `gtools`.
+
+* Updated internal function `SortSigId` to use function `gtools::mixedsort`.
+
 # 2.1.3.9011
 * Fixed a bug in internal function `MAPAssignActivityInternal` when there are 
 more signatures in argument `sigs.presence.prop` than that in `sigs`.

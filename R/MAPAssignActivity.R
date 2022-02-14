@@ -351,9 +351,7 @@ GetTimeForMAPAssign <- function(list.of.MAP.out) {
 
 #' @keywords internal
 SortSigId <- function(sig.id) {
-  num <- NumFromId(sig.id)
-  sig.id2 <- sig.id[order(num)]
-  return(sig.id2)
+  return(gtools::mixedsort(x = sig.id))
 }
 
 #' @keywords internal
