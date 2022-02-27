@@ -44,12 +44,12 @@
 #' SBS96.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96",
 #'                                  cancer.type = "Lung-AdenoCA")
-#' sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
+#' sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
 #' sparse.out <- SparseAssignActivity(spectra = spectra,
 #'                                    sigs = sigs.to.use,
 #'                                    output.dir = file.path(tempdir(), "Lung-AdenoCA"),
 #'                                    max.level = ncol(sigs.to.use) - 1,
-#'                                    p.thresh = 0.05 / ncol(spectra),
+#'                                    p.thresh = 0.05 / ncol(sigs.to.use),
 #'                                    num.parallel.samples = 2,
 #'                                    mc.cores.per.sample = 30,
 #'                                    seed = 2561)

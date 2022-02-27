@@ -56,7 +56,26 @@
 #' @md
 #'
 #' @export
-#'
+#' 
+#' @examples
+#' \dontrun{
+#' # This is a long running example unless parallel computing is supported on your machine
+#' indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+#' spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1:2], drop = FALSE]
+#' SBS96.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
+#' sigs.prop <- ExposureProportions(mutation.type = "SBS96",
+#'                                  cancer.type = "Lung-AdenoCA")
+#' sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
+#' MAP.out <- MAPAssignActivity(spectra = spectra,
+#'                              sigs = sigs.to.use,
+#'                              sigs.presence.prop = sigs.prop,
+#'                              output.dir = file.path(tempdir(), "Lung-AdenoCA"),
+#'                              max.level = ncol(sigs.to.use) - 1,
+#'                              p.thresh = 0.05 / ncol(sigs.to.use),
+#'                              num.parallel.samples = 2,
+#'                              mc.cores.per.sample = 30,
+#'                              seed = 2561)
+#'}
 MAPAssignActivity <-
   function(spectra,
            sigs,
