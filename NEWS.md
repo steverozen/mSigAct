@@ -1,6 +1,10 @@
 # 2.2.1
 * Made function `MAPAssignActivity` export.
 
+* Added new dependency package `gtools`.
+
+* Updated internal function `SortSigId` to use function `gtools::mixedsort`.
+
 # 2.2.0
 * Removed the exported functions `CancerTypes`, `PossibleArtifacts` and
 `RareSignatures` as they are available in other packages.

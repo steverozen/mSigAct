@@ -24,6 +24,7 @@ biocViews:
 Imports:
     cosmicsig,
     dplyr,
+    gtools,
     ICAMS (>= 2.3.5.9002),
     nloptr,
     PCAWG7 (>= 0.1.0.9003),

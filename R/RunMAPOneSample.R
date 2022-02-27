@@ -117,9 +117,11 @@ RunMAPOnOneSample <-
       paste0("Reconstructed spectrum (count = ", round(colSums(reconstructed.spectrum)),
              ", cosine similarity = ", 
              round(distance.info$proposed.assignment["cosine"], 5), ")")
-    colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
-    
     subtracted.spect <- spect - reconstructed.spectrum
+    colnames(subtracted.spect) <- 
+      paste0(colnames(spect), " (substracted spectrum)")
+    
+    colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
     
     list.of.catalogs <- list(spect, reconstructed.spectrum, subtracted.spect,
                              sigs1)
