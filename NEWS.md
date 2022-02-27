@@ -1,3 +1,6 @@
+# 2.2.1
+* Made function `MAPAssignActivity` export.
+
 # 2.2.0
 * Removed the exported functions `CancerTypes`, `PossibleArtifacts` and
 `RareSignatures` as they are available in other packages.

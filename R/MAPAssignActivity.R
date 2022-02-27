@@ -55,7 +55,7 @@
 #' 
 #' @md
 #'
-#' @keywords internal
+#' @export
 #'
 MAPAssignActivity <-
   function(spectra,

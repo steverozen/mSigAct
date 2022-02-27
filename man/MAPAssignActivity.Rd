@@ -115,4 +115,3 @@ find the optimal reconstruction or there are errors coming out for
 \description{
 This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
 }
-\keyword{internal}

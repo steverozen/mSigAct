@@ -6,11 +6,13 @@ on:
       - main
       - master
       - v2.2.0-branch
+      - v2.2.1-branch
   pull_request:
     branches:
       - main
       - master
       - v2.2.0-branch
+      - v2.2.1-branch
 
 name: R-CMD-check
 
