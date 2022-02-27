@@ -63,8 +63,15 @@ RunMAPOnOneSample <-
     
     output.path <- file.path(output.dir, spect.name)
     dir.create(path = output.path, showWarnings = FALSE)
+    
+    if (use.sparse.assign) {
+      algorithm <- "sparse"
+    } else {
+      algorithm <- "MAP"
+    }
+    
     save(retval, file = file.path(output.path,
-                                  paste0(spect.name, ".", mut.type, ".MAP.Rdata")))
+                                  paste0(spect.name, ".", mut.type, ".", algorithm, ".Rdata")))
     
     distance.info <- retval$reconstruction.distances
     
