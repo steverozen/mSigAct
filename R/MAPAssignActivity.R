@@ -91,7 +91,8 @@ MAPAssignActivity <-
            max.subsets             = 1000,
            use.sparse.assign       = FALSE,
            drop.low.mut.samples    = TRUE,
-           use.sig.presence.test   = FALSE) {
+           use.sig.presence.test   = FALSE,
+           q.thresh                = 0.05) {
     if (drop.low.mut.samples) {
       spectra <- DropLowMutationSamples(spectra)
     } else {
@@ -117,7 +118,8 @@ MAPAssignActivity <-
         max.subsets             = max.subsets,
         use.sparse.assign       = use.sparse.assign,
         drop.low.mut.samples    = drop.low.mut.samples, 
-        use.sig.presence.test   = use.sig.presence.test)
+        use.sig.presence.test   = use.sig.presence.test,
+        q.thresh                = q.thresh)
 
       return(retval1)
     }

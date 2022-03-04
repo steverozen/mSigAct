@@ -68,7 +68,8 @@ MAPAssignActivity1 <-
            max.subsets             = 1000,
            use.sparse.assign       = FALSE,
            drop.low.mut.samples    = TRUE,
-           use.sig.presence.test   = FALSE) {
+           use.sig.presence.test   = FALSE,
+           q.thresh                = 0.05) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -108,7 +109,8 @@ MAPAssignActivity1 <-
           progress.monitor        = progress.monitor,
           seed                    = seed,
           use.sparse.assign       = use.sparse.assign,
-          use.sig.presence.test   = use.sig.presence.test))
+          use.sig.presence.test   = use.sig.presence.test,
+          q.thresh                = q.thresh))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -280,7 +282,8 @@ MAPAssignActivityInternal <-
            progress.monitor        = NULL,
            seed                    = NULL,
            use.sparse.assign       = FALSE,
-           use.sig.presence.test   = FALSE) {
+           use.sig.presence.test   = FALSE,
+           q.thresh                = 0.05) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -348,8 +351,18 @@ MAPAssignActivityInternal <-
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
       q.values <- stats::p.adjust(p = p.values, method = "BH")
-      # Those signatures with q.values < 0.05 are needed in the reconstruction
-      needed.sigs <- names(q.values[q.values < 0.05])
+      # Those signatures with q.values < q.thresh are needed in the reconstruction
+      needed.sigs <- names(q.values[q.values < q.thresh])
+      
+      print(q.values)
+      
+      two.sigs <- c("SBS18", "SBS24")
+      if (all(two.sigs %in% needed.sigs)) {
+        if (!"SBS29" %in% needed.sigs) {
+          needed.sigs <- c(needed.sigs, "SBS29")
+        }
+      }
+      my.msg(10, "Remained signatures after signature presence test ", paste(needed.sigs, collapse = " "))
       sigs <- sigs[, needed.sigs, drop = FALSE]
     }
     
