@@ -1,3 +1,7 @@
+# 2.2.1.9000
+* Added new argument `use.sig.presence.test` in exported function `MAPAssignActivity`
+and `SparseAssignActivity`.
+
 # 2.2.1
 * Made function `MAPAssignActivity` export.
 

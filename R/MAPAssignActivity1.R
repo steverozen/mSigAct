@@ -67,7 +67,8 @@ MAPAssignActivity1 <-
            seed                    = NULL,
            max.subsets             = 1000,
            use.sparse.assign       = FALSE,
-           drop.low.mut.samples    = TRUE) {
+           drop.low.mut.samples    = TRUE,
+           use.sig.presence.test   = FALSE) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -106,7 +107,8 @@ MAPAssignActivity1 <-
           max.presence.proportion = 0.99,
           progress.monitor        = progress.monitor,
           seed                    = seed,
-          use.sparse.assign       = use.sparse.assign))
+          use.sparse.assign       = use.sparse.assign,
+          use.sig.presence.test   = use.sig.presence.test))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -260,6 +262,10 @@ NullReturnForMAPAssignActivity1 <- function(msg, all.tested,
 #' @param use.sparse.assign Whether to use sparse assignment. If \code{TRUE},
 #'   arguments designed for Maximum A Posteriori assignment such as
 #'   \code{sigs.presence.prop} will be ignored.
+#'   
+#' @param use.sig.presence.test Whether to use signature presence test first to
+#'   filter out those signatures that are not needed in the reconstruction of
+#'   the spectrum.
 
 MAPAssignActivityInternal <-
   function(spect,
@@ -273,7 +279,8 @@ MAPAssignActivityInternal <-
            max.presence.proportion = 0.99,
            progress.monitor        = NULL,
            seed                    = NULL,
-           use.sparse.assign       = FALSE) {
+           use.sparse.assign       = FALSE,
+           use.sig.presence.test   = FALSE) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -326,6 +333,26 @@ MAPAssignActivityInternal <-
            paste(rownames(sigs)[cannot.generate], collapse = ", ")) 
     
     message("Analyzing sample ", colnames(spect))
+    
+    if (use.sig.presence.test) {
+      sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
+        retval <- SignaturePresenceTest1(spectrum = spect, 
+                                         sigs = sigs, 
+                                         target.sig.index = sig.name, 
+                                         m.opts = m.opts, 
+                                         seed = seed)
+        return(retval)
+      }, mc.cores = max.mc.cores)
+      
+      names(sigs.presence.tests) <- colnames(sigs)
+      
+      p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
+      q.values <- stats::p.adjust(p = p.values, method = "BH")
+      # Those signatures with q.values < 0.05 are needed in the reconstruction
+      needed.sigs <- names(q.values[q.values < 0.05])
+      sigs <- sigs[, needed.sigs, drop = FALSE]
+    }
+    
     start <- OptimizeExposure(spect, sigs, m.opts  = m.opts)
     
     lh.w.all <- start$loglh  # The likelihood with all signatures

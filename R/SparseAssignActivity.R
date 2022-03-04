@@ -66,7 +66,8 @@ SparseAssignActivity <-
            progress.monitor        = NULL,
            seed                    = NULL,
            max.subsets             = 1000,
-           drop.low.mut.samples    = TRUE) {
+           drop.low.mut.samples    = TRUE,
+           use.sig.presence.test   = FALSE) {
     
     retval <- MAPAssignActivity(spectra                 = spectra,
                                 sigs                    = sigs,
@@ -80,7 +81,8 @@ SparseAssignActivity <-
                                 progress.monitor        = progress.monitor,
                                 seed                    = seed,
                                 max.subsets             = max.subsets,
-                                drop.low.mut.samples    = drop.low.mut.samples)
+                                drop.low.mut.samples    = drop.low.mut.samples,
+                                use.sig.presence.test   = use.sig.presence.test)
     return(retval)
   }
 
