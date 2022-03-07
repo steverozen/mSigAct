@@ -1,3 +1,6 @@
+# 2.2.1.9002
+* Added new internal function `TestAllSigs`.
+
 # 2.2.1.9001
 * Added new argument `q.thresh` in exported function `MAPAssignActivity`
 and `SparseAssignActivity`.

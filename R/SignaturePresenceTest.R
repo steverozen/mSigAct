@@ -94,3 +94,21 @@ SignaturePresenceTest <- function(
 
   return(out.res)
 }
+
+#' @keywords internal
+TestAllSigs <- function(
+  spectrum, sigs, m.opts = DefaultManyOpts(), seed = NULL, mc.cores = 2) {
+  sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
+    retval <- SignaturePresenceTest1(spectrum = spectrum, 
+                                     sigs = sigs, 
+                                     target.sig.index = sig.name, 
+                                     m.opts = m.opts, 
+                                     seed = seed)
+    return(retval)
+  }, mc.cores = mc.cores)
+    
+    names(sigs.presence.tests) <- colnames(sigs)
+    
+    p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
+    return(p.values)
+}
