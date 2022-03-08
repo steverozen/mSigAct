@@ -1,3 +1,6 @@
+# 2.2.1.9004
+* Fixed a bug in `AddSigActivity1`.
+
 # 2.2.1.9003
 * Added new argument `nbinom.size` in exported function `MAPAssignActivity`
 and `SparseAssignActivity`.
