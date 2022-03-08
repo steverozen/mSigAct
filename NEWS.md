@@ -1,3 +1,7 @@
+# 2.2.1.9003
+* Added new argument `nbinom.size` in exported function `MAPAssignActivity`
+and `SparseAssignActivity`.
+
 # 2.2.1.9002
 * Added new internal function `TestAllSigs`.
 

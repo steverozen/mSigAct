@@ -69,7 +69,8 @@ MAPAssignActivity1 <-
            use.sparse.assign       = FALSE,
            drop.low.mut.samples    = TRUE,
            use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05) {
+           q.thresh                = 0.05,
+           nbinom.size             = 11) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -110,7 +111,8 @@ MAPAssignActivity1 <-
           seed                    = seed,
           use.sparse.assign       = use.sparse.assign,
           use.sig.presence.test   = use.sig.presence.test,
-          q.thresh                = q.thresh))
+          q.thresh                = q.thresh,
+          nbinom.size             = nbinom.size))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -283,7 +285,8 @@ MAPAssignActivityInternal <-
            seed                    = NULL,
            use.sparse.assign       = FALSE,
            use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05) {
+           q.thresh                = 0.05,
+           nbinom.size             = 11) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -339,7 +342,7 @@ MAPAssignActivityInternal <-
     
     if (use.sig.presence.test) {
       my_opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
-      my_opts$nbinom.size <- 11
+      my_opts$nbinom.size <- nbinom.size
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 
                                          sigs = sigs, 

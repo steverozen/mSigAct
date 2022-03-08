@@ -68,7 +68,8 @@ SparseAssignActivity <-
            max.subsets             = 1000,
            drop.low.mut.samples    = TRUE,
            use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05) {
+           q.thresh                = 0.05,
+           nbinom.size             = 11) {
     
     retval <- MAPAssignActivity(spectra                 = spectra,
                                 sigs                    = sigs,
@@ -84,7 +85,8 @@ SparseAssignActivity <-
                                 max.subsets             = max.subsets,
                                 drop.low.mut.samples    = drop.low.mut.samples,
                                 use.sig.presence.test   = use.sig.presence.test,
-                                q.thresh                = q.thresh)
+                                q.thresh                = q.thresh,
+                                nbinom.size             = nbinom.size)
     return(retval)
   }
 

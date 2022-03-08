@@ -16,7 +16,10 @@ MAPAssignActivity1(
   seed = NULL,
   max.subsets = 1000,
   use.sparse.assign = FALSE,
-  drop.low.mut.samples = TRUE
+  drop.low.mut.samples = TRUE,
+  use.sig.presence.test = FALSE,
+  q.thresh = 0.05,
+  nbinom.size = 11
 )
 }
 \arguments{
@@ -73,6 +76,10 @@ arguments designed for Maximum A Posteriori assignment such as
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
 the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
+
+\item{use.sig.presence.test}{Whether to use signature presence test first to
+filter out those signatures that are not needed in the reconstruction of
+the spectrum.}
 }
 \value{
 A list with the elements:

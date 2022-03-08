@@ -16,7 +16,10 @@ MAPAssignActivityInternal(
   max.presence.proportion = 0.99,
   progress.monitor = NULL,
   seed = NULL,
-  use.sparse.assign = FALSE
+  use.sparse.assign = FALSE,
+  use.sig.presence.test = FALSE,
+  q.thresh = 0.05,
+  nbinom.size = 11
 )
 }
 \arguments{
@@ -72,6 +75,10 @@ seed.)}
 \item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
 arguments designed for Maximum A Posteriori assignment such as
 \code{sigs.presence.prop} will be ignored.}
+
+\item{use.sig.presence.test}{Whether to use signature presence test first to
+filter out those signatures that are not needed in the reconstruction of
+the spectrum.}
 }
 \description{
 This function also can do sparse assignment by specifying \code{use.sparse.assign = TRUE}.
