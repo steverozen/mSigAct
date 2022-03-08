@@ -338,11 +338,13 @@ MAPAssignActivityInternal <-
     message("Analyzing sample ", colnames(spect))
     
     if (use.sig.presence.test) {
+      my_opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+      my_opts$nbinom.size <- 11
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 
                                          sigs = sigs, 
                                          target.sig.index = sig.name, 
-                                         m.opts = m.opts, 
+                                         m.opts = my_opts, 
                                          seed = seed)
         return(retval)
       }, mc.cores = max.mc.cores)
@@ -355,13 +357,17 @@ MAPAssignActivityInternal <-
       
       print(p.values)
       
-      two.sigs <- c("SBS18", "SBS24")
-      if (all(two.sigs %in% needed.sigs)) {
-        if (!"SBS29" %in% needed.sigs) {
-          needed.sigs <- c(needed.sigs, "SBS29")
+      if (FALSE) {
+        two.sigs <- c("SBS18", "SBS24")
+        if (all(two.sigs %in% needed.sigs)) {
+          if (!"SBS29" %in% needed.sigs) {
+            needed.sigs <- c(needed.sigs, "SBS29")
+          }
         }
       }
-      my.msg(10, "Remained signatures after signature presence test ", paste(needed.sigs, collapse = " "))
+      
+      my.msg(10, "Remained signatures after signature presence test ", 
+             paste(needed.sigs, collapse = " "))
       sigs <- sigs[, needed.sigs, drop = FALSE]
     }
     
