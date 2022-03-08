@@ -352,10 +352,11 @@ MAPAssignActivityInternal <-
       names(sigs.presence.tests) <- colnames(sigs)
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
+      q.values <- stats::p.adjust(p = p.values, method = "BH")
       # Those signatures with q.values < q.thresh are needed in the reconstruction
-      needed.sigs <- names(p.values[p.values < q.thresh])
+      needed.sigs <- names(q.values[q.values < q.thresh])
       
-      print(p.values)
+      print(q.values)
       
       if (FALSE) {
         two.sigs <- c("SBS18", "SBS24")
