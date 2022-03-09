@@ -29,11 +29,11 @@ LLHSpectrumMultinom <-
                                prob = expected.counts,
                                log = TRUE)
     if (is.nan(loglh0)) {
-      warning("logl9 is Nan, changing to -Inf")
+      warning("loglh0 is Nan, changing to -Inf")
       loglh0 = -Inf
     }
     if (loglh0 == -Inf && verbose) {
-      message("logh0== -Inf for spectrum = ")
+      message("loglh0== -Inf for spectrum = ")
       message(paste0(spectrum, collapse = " "))
       message("expected.counts = ")
       message(paste(expected.counts, collapse = " "))
