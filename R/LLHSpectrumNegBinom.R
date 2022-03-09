@@ -52,4 +52,27 @@ LLHSpectrumNegBinom <-
     return(loglh0)
   }
 
+LLHSpectrumNegBinomRound <-
+  function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {
+    
+    stopifnot(length(spectrum) == length(expected.counts))
+    
+    loglh0 <- sum(stats::dnbinom(
+      x = spectrum, mu = round(expected.counts), size = nbinom.size, log =TRUE))
+    
+    if (is.nan(loglh0)) {
+      warning("loglh0 is Nan, changing to -Inf")
+      loglh0 = -Inf
+    }
+    if (loglh0 == -Inf && verbose) {
+      message("loglh0== -Inf for spectrum = ")
+      message(paste0(spectrum, collapse = " "))
+      message("expected.counts = ")
+      message(paste(expected.counts, collapse = " "))
+    }
+    
+    stopifnot(mode(loglh0) == 'numeric' )
+    return(loglh0)
+  }
+
 # https://cran.r-project.org/web/packages/DirichletReg/DirichletReg.pdf
