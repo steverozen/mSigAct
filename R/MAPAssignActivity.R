@@ -81,19 +81,18 @@ MAPAssignActivity <-
            sigs,
            sigs.presence.prop,
            output.dir,
-           max.level               = 5,
-           p.thresh                = 0.05,
-           m.opts                  = DefaultManyOpts(),
-           num.parallel.samples    = 5,
-           mc.cores.per.sample     = min(20, 2^max.level),
-           progress.monitor        = NULL,
-           seed                    = NULL,
-           max.subsets             = 1000,
-           use.sparse.assign       = FALSE,
-           drop.low.mut.samples    = TRUE,
-           use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05,
-           nbinom.size             = 11) {
+           max.level                  = 5,
+           p.thresh                   = 0.05,
+           m.opts                     = DefaultManyOpts(),
+           num.parallel.samples       = 5,
+           mc.cores.per.sample        = min(20, 2^max.level),
+           progress.monitor           = NULL,
+           seed                       = NULL,
+           max.subsets                = 1000,
+           use.sparse.assign          = FALSE,
+           drop.low.mut.samples       = TRUE,
+           use.sig.presence.test      = FALSE,
+           sig.pres.test.nbinom.size  = 69) {
     if (drop.low.mut.samples) {
       spectra <- DropLowMutationSamples(spectra)
     } else {
@@ -106,22 +105,21 @@ MAPAssignActivity <-
     
     f1 <- function(i) {
       retval1 <- RunMAPOnOneSample(
-        spect                   = spectra[ , i, drop = FALSE],
-        sigs                    = sigs,
-        sigs.presence.prop      = sigs.presence.prop,
-        output.dir              = output.dir,
-        max.level               = max.level,
-        p.thresh                = p.thresh,
-        m.opts                  = m.opts,
-        max.mc.cores            = mc.cores.per.sample,
-        progress.monitor        = progress.monitor,
-        seed                    = seed,
-        max.subsets             = max.subsets,
-        use.sparse.assign       = use.sparse.assign,
-        drop.low.mut.samples    = drop.low.mut.samples, 
-        use.sig.presence.test   = use.sig.presence.test,
-        q.thresh                = q.thresh,
-        nbinom.size             = nbinom.size)
+        spect                       = spectra[ , i, drop = FALSE],
+        sigs                        = sigs,
+        sigs.presence.prop          = sigs.presence.prop,
+        output.dir                  = output.dir,
+        max.level                   = max.level,
+        p.thresh                    = p.thresh,
+        m.opts                      = m.opts,
+        max.mc.cores                = mc.cores.per.sample,
+        progress.monitor            = progress.monitor,
+        seed                        = seed,
+        max.subsets                 = max.subsets,
+        use.sparse.assign           = use.sparse.assign,
+        drop.low.mut.samples        = drop.low.mut.samples, 
+        use.sig.presence.test       = use.sig.presence.test,
+        sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size)
 
       return(retval1)
     }

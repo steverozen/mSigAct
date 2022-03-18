@@ -1,3 +1,6 @@
+# 2.3.0
+* Added new exported function `SigPresenceAssignActivity` and automated test.
+
 # 2.2.1.9004
 * Fixed a bug in `AddSigActivity1`.
 

@@ -59,18 +59,17 @@ MAPAssignActivity1 <-
   function(spect,
            sigs,
            sigs.presence.prop,
-           max.level               = 5,
-           p.thresh                = 0.05,
-           m.opts                  = DefaultManyOpts(),
-           max.mc.cores            = min(20, 2^max.level),
-           progress.monitor        = NULL,
-           seed                    = NULL,
-           max.subsets             = 1000,
-           use.sparse.assign       = FALSE,
-           drop.low.mut.samples    = TRUE,
-           use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05,
-           nbinom.size             = 11) {
+           max.level                  = 5,
+           p.thresh                   = 0.05,
+           m.opts                     = DefaultManyOpts(),
+           max.mc.cores               = min(20, 2^max.level),
+           progress.monitor           = NULL,
+           seed                       = NULL,
+           max.subsets                = 1000,
+           use.sparse.assign          = FALSE,
+           drop.low.mut.samples       = TRUE,
+           use.sig.presence.test      = FALSE,
+           sig.pres.test.nbinom.size  = 69) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -98,21 +97,20 @@ MAPAssignActivity1 <-
 
       time.for.MAP.assign <- system.time(
         MAPout <- MAPAssignActivityInternal(
-          spect                   = spect,
-          sigs                    = sigs,
-          sigs.presence.prop      = sigs.presence.prop,
-          max.level               = max.level,
-          p.thresh                = p.thresh,
-          m.opts                  = m.opts,
-          max.mc.cores            = max.mc.cores,
-          max.subsets             = max.subsets,
-          max.presence.proportion = 0.99,
-          progress.monitor        = progress.monitor,
-          seed                    = seed,
-          use.sparse.assign       = use.sparse.assign,
-          use.sig.presence.test   = use.sig.presence.test,
-          q.thresh                = q.thresh,
-          nbinom.size             = nbinom.size))
+          spect                       = spect,
+          sigs                        = sigs,
+          sigs.presence.prop          = sigs.presence.prop,
+          max.level                   = max.level,
+          p.thresh                    = p.thresh,
+          m.opts                      = m.opts,
+          max.mc.cores                = max.mc.cores,
+          max.subsets                 = max.subsets,
+          max.presence.proportion     = 0.99,
+          progress.monitor            = progress.monitor,
+          seed                        = seed,
+          use.sparse.assign           = use.sparse.assign,
+          use.sig.presence.test       = use.sig.presence.test,
+          sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -270,23 +268,27 @@ NullReturnForMAPAssignActivity1 <- function(msg, all.tested,
 #' @param use.sig.presence.test Whether to use signature presence test first to
 #'   filter out those signatures that are not needed in the reconstruction of
 #'   the spectrum.
+#'   
+#' @param sig.pres.test.nbinom.size Only needed when \code{use.sig.presence.test
+#'   = TRUE}. The dispersion parameter for the negative binomial distribution
+#'   used when conducting signature presence test; smaller is more dispersed.
+#'   See \code{\link[stats]{NegBinomial}}.
 
 MAPAssignActivityInternal <-
   function(spect,
            sigs,
            sigs.presence.prop,
-           max.level               = 5,
-           p.thresh                = 0.05,
-           m.opts                  = DefaultManyOpts(),
-           max.mc.cores            = min(20, 2^max.level),
-           max.subsets             = 1000,
-           max.presence.proportion = 0.99,
-           progress.monitor        = NULL,
-           seed                    = NULL,
-           use.sparse.assign       = FALSE,
-           use.sig.presence.test   = FALSE,
-           q.thresh                = 0.05,
-           nbinom.size             = 11) {
+           max.level                  = 5,
+           p.thresh                   = 0.05,
+           m.opts                     = DefaultManyOpts(),
+           max.mc.cores               = min(20, 2^max.level),
+           max.subsets                = 1000,
+           max.presence.proportion    = 0.99,
+           progress.monitor           = NULL,
+           seed                       = NULL,
+           use.sparse.assign          = FALSE,
+           use.sig.presence.test      = FALSE,
+           sig.pres.test.nbinom.size  = 69) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -341,13 +343,13 @@ MAPAssignActivityInternal <-
     message("Analyzing sample ", colnames(spect))
     
     if (use.sig.presence.test) {
-      my_opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
-      my_opts$nbinom.size <- nbinom.size
+      my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+      my.opts$nbinom.size <- sig.pres.test.nbinom.size
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 
                                          sigs = sigs, 
                                          target.sig.index = sig.name, 
-                                         m.opts = my_opts, 
+                                         m.opts = my.opts, 
                                          seed = seed)
         return(retval)
       }, mc.cores = max.mc.cores)
@@ -355,19 +357,10 @@ MAPAssignActivityInternal <-
       names(sigs.presence.tests) <- colnames(sigs)
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
-      # q.values <- stats::p.adjust(p = p.values, method = "BH")
-      # Those signatures with q.values < q.thresh are needed in the reconstruction
-      needed.sigs <- names(p.values[p.values < q.thresh])
+      needed.sigs <- names(p.values[p.values < 0.05])
       
-      print(p.values)
-      
-      if (FALSE) {
-        two.sigs <- c("SBS18", "SBS24")
-        if (all(two.sigs %in% needed.sigs)) {
-          if (!"SBS29" %in% needed.sigs) {
-            needed.sigs <- c(needed.sigs, "SBS29")
-          }
-        }
+      if (m.opts$trace >= 10) {
+        print(p.values)
       }
       
       my.msg(10, "Remained signatures after signature presence test ", 

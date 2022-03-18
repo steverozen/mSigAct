@@ -19,8 +19,7 @@ RunMAPOnOneSample(
   use.sparse.assign = FALSE,
   drop.low.mut.samples = TRUE,
   use.sig.presence.test = FALSE,
-  q.thresh = 0.05,
-  nbinom.size = 11
+  sig.pres.test.nbinom.size = 69
 )
 }
 \arguments{
@@ -83,6 +82,11 @@ than 100, DBS or ID total mutations less than 25 will be dropped.}
 \item{use.sig.presence.test}{Whether to use signature presence test first to
 filter out those signatures that are not needed in the reconstruction of
 the spectrum.}
+
+\item{sig.pres.test.nbinom.size}{Only needed when \code{use.sig.presence.test
+= TRUE}. The dispersion parameter for the negative binomial distribution
+used when conducting signature presence test; smaller is more dispersed.
+See \code{\link[stats]{NegBinomial}}.}
 }
 \description{
 Run \code{MAPAssignActivity1} on one sample and save and plot the results
