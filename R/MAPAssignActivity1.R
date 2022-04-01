@@ -341,8 +341,13 @@ MAPAssignActivityInternal <-
     message("Analyzing sample ", colnames(spect))
     
     if (use.sig.presence.test) {
-      my_opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
-      my_opts$nbinom.size <- nbinom.size
+      if (is.null(nbinom.size)) {
+        my_opts <- DefaultManyOpts(likelihood.dist = "multinom")
+      } else {
+        my_opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+        my_opts$nbinom.size <- nbinom.size
+      }
+
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 
                                          sigs = sigs, 
