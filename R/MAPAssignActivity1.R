@@ -272,7 +272,8 @@ NullReturnForMAPAssignActivity1 <- function(msg, all.tested,
 #' @param sig.pres.test.nbinom.size Only needed when \code{use.sig.presence.test
 #'   = TRUE}. The dispersion parameter for the negative binomial distribution
 #'   used when conducting signature presence test; smaller is more dispersed.
-#'   See \code{\link[stats]{NegBinomial}}.
+#'   See \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
+#'   likelihood when conducting signature presence test.
 
 MAPAssignActivityInternal <-
   function(spect,
@@ -302,7 +303,11 @@ MAPAssignActivityInternal <-
     if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
     
     if (use.sparse.assign) {
-      msg <- "SparseAssignActivity1: "
+      if (use.sig.presence.test) {
+        msg <- "SigPresenceAssignActivity1: "
+      } else {
+        msg <- "SparseAssignActivity1: "
+      }
     } else {
       msg <- "MAPAssignActivity1: "
     }
@@ -343,8 +348,14 @@ MAPAssignActivityInternal <-
     message("Analyzing sample ", colnames(spect))
     
     if (use.sig.presence.test) {
-      my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
-      my.opts$nbinom.size <- sig.pres.test.nbinom.size
+      
+      if (is.null(sig.pres.test.nbinom.size)) {
+        my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
+      } else {
+        my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+        my.opts$nbinom.size <- sig.pres.test.nbinom.size
+      }
+      
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 
                                          sigs = sigs, 

@@ -86,7 +86,8 @@ the spectrum.}
 \item{sig.pres.test.nbinom.size}{Only needed when \code{use.sig.presence.test
 = TRUE}. The dispersion parameter for the negative binomial distribution
 used when conducting signature presence test; smaller is more dispersed.
-See \code{\link[stats]{NegBinomial}}.}
+See \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
+likelihood when conducting signature presence test.}
 }
 \description{
 Run \code{MAPAssignActivity1} on one sample and save and plot the results

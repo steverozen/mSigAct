@@ -1,6 +1,11 @@
 # 2.3.0
 * Added new exported function `SigPresenceAssignActivity` and automated test.
 
+* Enabled argument `sig.pres.test.nbinom.size` to be NULL so as to use multinomial
+likelihood when conducting signature presence test in `SigPresenceAssignActivity`.
+
+* Made the tracing message more informative for function `SigPresenceAssignActivity`.
+
 # 2.2.1.9004
 * Fixed a bug in `AddSigActivity1`.
 
