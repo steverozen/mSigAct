@@ -431,11 +431,11 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
     opar <- graphics::par(mfrow = c(8, 1), mar = c(2, 4, 2, 2), oma = c(3, 3, 2, 2))
   } else if (nrow(list.of.catalogs[[1]]) == 83) {
     opar <- graphics::par(mfrow = c(8, 1), mar = c(3, 4, 2.5, 2), oma = c(3, 3, 2, 2))
-  } else {
-    opar <- par()
-  }
+  } 
 
-  on.exit(graphics::par(opar))
+  if (exists("opar")) {
+    on.exit(graphics::par(opar))
+  }
 
   for (i in 1:num.of.catalogs) {
     catalog <- list.of.catalogs[[i]]
