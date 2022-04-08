@@ -9,6 +9,8 @@ likelihood when conducting signature presence test in `SigPresenceAssignActivity
 * Fixed a bug in function `DropLowMutationSamples` when the input spectra is not
 SBS96, SBS192, DBS78 or ID.
 
+* Fixed a bug in function `PlotListOfCatalogsToPdf`.
+
 # 2.2.1.9004
 * Fixed a bug in `AddSigActivity1`.
 
