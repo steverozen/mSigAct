@@ -380,7 +380,10 @@ GetMutationType <- function(spect) {
 DropLowMutationSamples <- function(spectra) {
   spectra <- as.matrix(spectra)
   mut.type <- GetMutationType(spectra)
-  if (mut.type %in% c("SBS96", "SBS192")) {
+  
+  if (is.null(mut.type)) {
+    thresh.value <- -1
+  } else if (mut.type %in% c("SBS96", "SBS192")) {
     thresh.value <- 100
   } else if (mut.type %in% c("DBS78", "ID")) {
     thresh.value <- 25
