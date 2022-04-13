@@ -207,12 +207,12 @@ AddSigActivity <-
     stop("The number of samples in spectrum is not equal to the number of ",
          "samples in exposure")
   }
-
-  if (!all(colnames(spectra) == colnames(exposure))) {
-    stop("The sample name in spectrum ", paste(colnames(spectra), collapse = " "),
-         " is not the same as the sample name in exposure ",
-         paste(colnames(exposure), collapse = ""))
+   
+  if (!setequal(colnames(spectra), colnames(exposure))) {
+    stop("The sample names in spectra are not the same as that in exposure")
   }
+    
+  exposure <- exposure[, colnames(spectra), drop = FALSE]    
     
   # Check whether there are some samples which have zero mutations
   retval <- RemoveZeroMutationSample(spectra = spectra, exposure = exposure)

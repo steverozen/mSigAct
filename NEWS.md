@@ -1,3 +1,6 @@
+# 2.1.3.9019
+* Fixed a bug in function `AddSigActivity`.
+
 # 2.1.3.9009
 * Added new dependency package `gtools`.
 
