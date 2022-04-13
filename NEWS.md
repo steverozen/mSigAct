@@ -11,6 +11,8 @@ SBS96, SBS192, DBS78 or ID.
 
 * Fixed a bug in function `PlotListOfCatalogsToPdf`.
 
+* Fixed a bug in function `AddSigActivity`.
+
 # 2.2.1.9004
 * Fixed a bug in `AddSigActivity1`.
 
@@ -32,10 +34,6 @@ and `SparseAssignActivity`.
 # 2.2.1
 * Made function `MAPAssignActivity` export.
 
-* Added new dependency package `gtools`.
-
-* Updated internal function `SortSigId` to use function `gtools::mixedsort`.
-
 # 2.2.0
 * Removed the exported functions `CancerTypes`, `PossibleArtifacts` and
 `RareSignatures` as they are available in other packages.
@@ -51,6 +49,15 @@ and `SparseAssignActivity`.
 * Updated automated tests using signatures from `cosmicsig`.
 
 * Fixed a bug in internal function `GetAltSolutions`.
+
+# 2.1.3.9009
+* Added new dependency package `gtools`.
+
+* Updated internal function `SortSigId` to use function `gtools::mixedsort`.
+
+# 2.1.3.9008
+* Fixed a bug in internal function `MAPAssignActivityInternal` when there are 
+more signatures in argument `sigs.presence.prop` than that in `sigs`.
 
 # 2.1.3.9007
 * Fixed a bug in internal function `NumFromId` when there are no numerical parts from
