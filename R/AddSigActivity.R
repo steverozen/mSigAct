@@ -213,7 +213,8 @@ AddSigActivity <-
   }
     
   exposure <- exposure[, colnames(spectra), drop = FALSE]    
-    
+  exposure[is.na(exposure)] <- 0  
+  
   # Check whether there are some samples which have zero mutations
   retval <- RemoveZeroMutationSample(spectra = spectra, exposure = exposure)
   spectra <- retval[["spectra"]]
