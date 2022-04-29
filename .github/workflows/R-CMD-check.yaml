@@ -8,6 +8,7 @@ on:
       - v2.2.0-branch
       - v2.2.1-branch
       - v2.3.0-branch
+      - v2.3.1-branch
   pull_request:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
       - v2.2.0-branch
       - v2.2.1-branch
       - v2.3.0-branch
+      - v2.3.1-branch
 
 name: R-CMD-check
 
