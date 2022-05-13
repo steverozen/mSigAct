@@ -69,7 +69,7 @@ MAPAssignActivity1 <-
            use.sparse.assign          = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = 69) {
+           sig.pres.test.nbinom.size  = NULL) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -289,7 +289,7 @@ MAPAssignActivityInternal <-
            seed                       = NULL,
            use.sparse.assign          = FALSE,
            use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = 69) {
+           sig.pres.test.nbinom.size  = NULL) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")

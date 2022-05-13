@@ -17,7 +17,7 @@ SigPresenceAssignActivity(
   progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
-  sig.pres.test.nbinom.size = 69
+  sig.pres.test.nbinom.size = NULL
 )
 }
 \arguments{
@@ -61,8 +61,11 @@ the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
 
 \item{sig.pres.test.nbinom.size}{The dispersion parameter for the negative
-binomial distribution used when conducting signature presence test first;
-smaller is more dispersed. See \code{\link[stats]{NegBinomial}}.}
+binomial distribution used when conducting signature presence test first to
+filter out those signatures that are not needed in the reconstruction of
+the spectrum; smaller is more dispersed. See
+\code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
+likelihood when conducting signature presence test.}
 }
 \value{
 A list with the elements:

@@ -18,7 +18,7 @@ MAPAssignActivity1(
   use.sparse.assign = FALSE,
   drop.low.mut.samples = TRUE,
   use.sig.presence.test = FALSE,
-  sig.pres.test.nbinom.size = 69
+  sig.pres.test.nbinom.size = NULL
 )
 }
 \arguments{
