@@ -227,3 +227,27 @@ Adj.mc.cores <- function(mc.cores) {
 }
 
 
+ReassignmentQP <- function(spectra, exposure, sigs, mc.cores = 1) {
+  sample.names1 <- colnames(spectra)
+  sample.names2 <- colnames(exposure)
+  sample.names.diff <- setdiff(sample.names1, sample.names2)
+  if (length(sample.names.diff) > 0) {
+    stop("Some samples in spectra do not have corresponding exposure ",
+         paste(sample.names.diff, collapse = " "))
+  }
+  spectra2 <- spectra[, sample.names2, drop = FALSE]
+  
+  exp.list <- parallel::mclapply(X = seq_len(ncol(exposure)), FUN = function(x) {
+    one.exp <- exposure[, x]
+    one.exp.non.zero <- one.exp[one.exp > 0]
+    sig.names <- names(one.exp.non.zero)
+    qp.exp <- OptimizeExposureQP(spectrum = spectra2[, x, drop = FALSE], 
+                                 signatures = sigs[, sig.names, drop = FALSE])
+    qp.exp.mat <- as.matrix(round(qp.exp))
+    colnames(qp.exp.mat) <- sample.names2[x]
+    return(qp.exp.mat)
+  }, mc.cores = mc.cores)
+  
+  exp.all <- MergeListOfExposures(exp.list)
+  return(exp.all)
+}
