@@ -1,6 +1,8 @@
 # 2.3.2
 * Added new internal function `ReassignmentQP`.
 
+* Added new internal function `GetSigActivity`.
+
 # 2.3.1
 * Made the default value for argument `sig.pres.test.nbinom.size` to be NULL in
 various internal and exported functions.
