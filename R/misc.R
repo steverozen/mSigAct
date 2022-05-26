@@ -294,7 +294,7 @@ GetSampleSigActivity <-
     }
     
     
-    sample.names.diff2 <- setdiff(colnames(spectra), sample.names)
+    sample.names.diff2 <- setdiff(sample.names, colnames(spectra))
     if (length(sample.names.diff2) > 0) {
       stop("Some sample names specified do not have corresponding spectra information",
            paste(sample.names.diff2, collapse = " "))
