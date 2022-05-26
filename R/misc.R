@@ -270,16 +270,27 @@ GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir,
   
   exposure.one.sig <- exposure[sig.id, ]
   non.zero.exposure.samples <- names(exposure.one.sig[exposure.one.sig > 0])
-  spectra.to.use <- spectra[, non.zero.exposure.samples, drop = FALSE]
-  exposure.to.use <- exposure[, non.zero.exposure.samples, drop = FALSE]
   
-  sig.activity <- AddSigActivity(spectra = spectra.to.use, 
-                                 exposure = exposure.to.use, 
-                                 sigs = sigs, 
-                                 use.sparse.assign = TRUE)
-  ShowSigActivity(list.of.sig.activity = sig.activity, 
-                  output.dir = output.dir)
-  return(RemoveZeroActivitySig(exposure.to.use))
+  if (length(non.zero.exposure.samples) > 0) {
+    spectra.to.use <- spectra[, non.zero.exposure.samples, drop = FALSE]
+    exposure.to.use <- exposure[, non.zero.exposure.samples, drop = FALSE]
+    
+    sig.activity <- AddSigActivity(spectra = spectra.to.use, 
+                                   exposure = exposure.to.use, 
+                                   sigs = sigs, 
+                                   use.sparse.assign = TRUE)
+    ShowSigActivity(list.of.sig.activity = sig.activity, 
+                    output.dir = output.dir)
+    return(RemoveZeroActivitySig(exposure.to.use))
+  } else {
+    msg <- paste0("There are no non-zero exposure for ", sig.id)
+    if (is.null(cancer.type)) {
+      warning(msg)
+    } else {
+      warning(msg, " in cancer type ", cancer.type)
+    }
+    invisible(NULL)
+  }
 }
 
 GetSampleSigActivity <- 
