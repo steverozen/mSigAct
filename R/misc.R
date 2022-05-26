@@ -281,3 +281,39 @@ GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir,
                   output.dir = output.dir)
   return(RemoveZeroActivitySig(exposure.to.use))
 }
+
+GetSampleSigActivity <- 
+  function(spectra, exposure, sigs, sample.names, output.dir, 
+           cancer.type = NULL) {
+    sample.names1 <- colnames(spectra)
+    sample.names2 <- colnames(exposure)
+    sample.names.diff <- setdiff(sample.names1, sample.names2)
+    if (length(sample.names.diff) > 0) {
+      stop("Some samples in spectra do not have corresponding exposure ",
+           paste(sample.names.diff, collapse = " "))
+    }
+    
+    
+    sample.names.diff2 <- setdiff(colnames(spectra), sample.names)
+    if (length(sample.names.diff2) > 0) {
+      stop("Some sample names specified do not have corresponding spectra information",
+           paste(sample.names.diff2, collapse = " "))
+    }
+    
+    if (!is.null(cancer.type)) {
+      indices <- grep(pattern = cancer.type, x = colnames(exposure))
+      exposure <- exposure[, indices, drop = FALSE]
+      spectra <- spectra[, colnames(exposure), drop = FALSE]
+    }
+    
+    spectra2 <- spectra[, sample.names, drop = FALSE]
+    exposure2 <- exposure[, sample.names, drop = FALSE]
+    
+    sig.activity <- AddSigActivity(spectra = spectra2, 
+                                   exposure = exposure2, 
+                                   sigs = sigs, 
+                                   use.sparse.assign = TRUE)
+    ShowSigActivity(list.of.sig.activity = sig.activity, 
+                    output.dir = output.dir)
+    return(RemoveZeroActivitySig(exposure2))
+  }
