@@ -252,7 +252,22 @@ ReassignmentQP <- function(spectra, exposure, sigs, mc.cores = 1) {
   return(exp.all)
 }
 
-GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir) {
+GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir, 
+                           cancer.type = NULL) {
+  sample.names1 <- colnames(spectra)
+  sample.names2 <- colnames(exposure)
+  sample.names.diff <- setdiff(sample.names1, sample.names2)
+  if (length(sample.names.diff) > 0) {
+    stop("Some samples in spectra do not have corresponding exposure ",
+         paste(sample.names.diff, collapse = " "))
+  }
+  
+  if (!is.null(cancer.type)) {
+    indices <- grep(pattern = cancer.type, x = colnames(exposure))
+    exposure <- exposure[, indices, drop = FALSE]
+    spectra <- spectra[, colnames(exposure), drop = FALSE]
+  }
+  
   exposure.one.sig <- exposure[sig.id, ]
   non.zero.exposure.samples <- names(exposure.one.sig[exposure.one.sig > 0])
   spectra.to.use <- spectra[, non.zero.exposure.samples, drop = FALSE]
