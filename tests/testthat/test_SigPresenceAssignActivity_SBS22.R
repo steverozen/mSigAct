@@ -150,6 +150,41 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor Liver-HCC::SP97685", {
                          seed = 2561, 
                          max.subsets = .Machine$double.xmax)
   
+  
+  two.sigs <- sigs.to.use[, c("SBS22", "SBS_H8")]
+  catalogs.to.plot <- list(spectra, two.sigs)
+  PlotListOfCatalogsToPdf(list.of.catalogs = catalogs.to.plot, 
+                          file = "./tests/testthat/output/Liver-HCC.SP97685/spectra.with.two.sigs.pdf")
+  
+  # First do not include SBS_H8 in the signature universe
+  pcawg.assign.rename <- pcawg.assign
+  colnames(pcawg.assign.rename) <- "PCAWG_assign"
+  spaa.sbs22.rename <- spaa.sbs22$proposed.assignment
+  colnames(spaa.sbs22.rename) <- "SPAA_assign_SBS22_in_universe"
+  sparse.sbs22.rename <- sparse.sbs22$proposed.assignment
+  colnames(sparse.sbs22.rename) <- "sparse_assign_SBS22_in_universe"
+  
+  spaa.no.sbs22.rename <- spaa.no.sbs22$proposed.assignment
+  colnames(spaa.no.sbs22.rename) <- "SPAA_assign_SBS22_not_in_universe"
+  sparse.no.sbs22.rename <- sparse.no.sbs22$proposed.assignment
+  colnames(sparse.no.sbs22.rename) <- "sparse_assign_SBS22_not_in_universe"
+  
+  list.of.exposures <- list(pcawg.assign.rename,
+                            spaa.sbs22.rename,
+                            sparse.sbs22.rename,
+                            spaa.no.sbs22.rename,
+                            sparse.no.sbs22.rename)
+  exp_all <- MergeListOfExposures(list.of.exposures = list.of.exposures)
+  WriteExposure(exposure = exp_all,
+                file = "./tests/testthat/output/Liver-HCC.SP97685/without.sbsh8/exp_all.csv")
+  spectra_all <- replicate(n = 5, expr = spectra, simplify = TRUE)
+  colnames(spectra_all) <- colnames(exp_all)
+  distances <- CalculateDistance(spectra = spectra_all, 
+                                 exposure = exp_all, 
+                                 sigs = sigs.to.use)
+  write.csv(distances,
+            file = "./tests/testthat/output/Liver-HCC.SP97685/without.sbsh8/distance_all.csv")
+  
 })
 
 test_that("SigPresenceAssignActivity for SBS Liver tumor Liver-HCC::SP107101", {
