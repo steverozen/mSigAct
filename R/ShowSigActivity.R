@@ -15,6 +15,16 @@
 #' 
 #' @param plot.exposure.proportion Whether to plot exposure proportions rather
 #'   than counts.
+#'   
+#' @param mfrow A vector of the form \code{c(nr, nc)}. Subsequent figures will
+#'   be drawn in an \code{nr}-by-\code{nc} array on the device by rows.
+#'   
+#' @param mar A numerical vector of the form \code{c(bottom, left, top, right)}
+#'   which gives the number of lines of margin to be specified on the four sides
+#'   of the plot.
+#'
+#' @param oma A vector of the form \code{c(bottom, left, top, right)} giving the
+#'   size of the outer margins in lines of text.
 #' 
 #' @param ... Other arguments passed to \code{\link[ICAMS]{PlotCatalogToPdf}}.
 #' 
@@ -36,6 +46,9 @@ ShowSigActivity <- function(list.of.sig.activity,
                             base.filename = NULL,
                             plot.all.samples.in.one.pdf = TRUE, 
                             plot.exposure.proportion = FALSE,
+                            mfrow = c(2, 1),
+                            mar  = c(6, 4, 3, 2),
+                            oma  = c(3, 2, 0, 2),
                             ...) {
   if (!dir.exists(output.dir)) {
     dir.create(output.dir, recursive = TRUE)
@@ -57,7 +70,10 @@ ShowSigActivity <- function(list.of.sig.activity,
                output.dir = output.dir,
                base.filename = base.filename,
                mutation.type = mut.type,
-               plot.exposure.proportion = plot.exposure.proportion)
+               plot.exposure.proportion = plot.exposure.proportion,
+               mfrow = mfrow,
+               mar = mar,
+               oma = oma)
   
 }
 
@@ -70,7 +86,10 @@ ShowSigActivity <- function(list.of.sig.activity,
 #' @keywords internal
 ShowExposure <- function(list.of.sig.activity, output.dir, base.filename,
                          mutation.type,
-                         plot.exposure.proportion = FALSE) {
+                         plot.exposure.proportion = FALSE,
+                         mfrow = c(2, 1),
+                         mar  = c(6, 4, 3, 2),
+                         oma  = c(3, 2, 0, 2)) {
   # Retrieve the exposure information
   exposure.info <- lapply(list.of.sig.activity, FUN = function(x) {
     spect <- x$original.spect
@@ -103,7 +122,10 @@ ShowExposure <- function(list.of.sig.activity, output.dir, base.filename,
   }
   
   PlotExposureToPdf(exposure = exposure, file = output.file,
-                               plot.proportion = plot.exposure.proportion)
+                    plot.proportion = plot.exposure.proportion,
+                    mfrow = mfrow,
+                    mar = mar,
+                    oma = oma)
   
 }
 

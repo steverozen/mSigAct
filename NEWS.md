@@ -1,3 +1,8 @@
+# 2.3.3
+* Updated subtracted spectrum plot to show the counts to be sum of absolute value of each peak.
+
+* Added new arguments `mfrow`, `mar` and `oma` in internal function `ShowSigActivity`.
+
 # 2.3.2
 * Added new internal function `ReassignmentQP`.
 

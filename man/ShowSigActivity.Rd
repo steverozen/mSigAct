@@ -10,6 +10,9 @@ ShowSigActivity(
   base.filename = NULL,
   plot.all.samples.in.one.pdf = TRUE,
   plot.exposure.proportion = FALSE,
+  mfrow = c(2, 1),
+  mar = c(6, 4, 3, 2),
+  oma = c(3, 2, 0, 2),
   ...
 )
 }
@@ -29,6 +32,16 @@ within one PDF. Default is TRUE. If FALSE, then plot one PDF for each sample.}
 
 \item{plot.exposure.proportion}{Whether to plot exposure proportions rather
 than counts.}
+
+\item{mfrow}{A vector of the form \code{c(nr, nc)}. Subsequent figures will
+be drawn in an \code{nr}-by-\code{nc} array on the device by rows.}
+
+\item{mar}{A numerical vector of the form \code{c(bottom, left, top, right)}
+which gives the number of lines of margin to be specified on the four sides
+of the plot.}
+
+\item{oma}{A vector of the form \code{c(bottom, left, top, right)} giving the
+size of the outer margins in lines of text.}
 
 \item{...}{Other arguments passed to \code{\link[ICAMS]{PlotCatalogToPdf}}.}
 }
