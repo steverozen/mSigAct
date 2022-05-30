@@ -156,6 +156,10 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor Liver-HCC::SP97685", {
   PlotListOfCatalogsToPdf(list.of.catalogs = catalogs.to.plot, 
                           file = "./tests/testthat/output/Liver-HCC.SP97685/spectra.with.two.sigs.pdf")
   
+  another.two.sigs <- sigs.to.use[, c("SBS22", "SBS35")]
+  ICAMS::PlotCatalogToPdf(catalog = another.two.sigs, 
+                          file = "./tests/testthat/output/Liver-HCC.SP97685/another.two.sigs.pdf")
+  
   # First do not include SBS_H8 in the signature universe
   pcawg.assign.rename <- pcawg.assign
   colnames(pcawg.assign.rename) <- "PCAWG_assign"
@@ -184,6 +188,36 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor Liver-HCC::SP97685", {
                                  sigs = sigs.to.use)
   write.csv(distances,
             file = "./tests/testthat/output/Liver-HCC.SP97685/without.sbsh8/distance_all.csv")
+  
+  # Second, include SBS_H8 in the signature universe
+  # First do not include SBS_H8 in the signature universe
+  pcawg.assign.rename <- pcawg.assign
+  colnames(pcawg.assign.rename) <- "PCAWG_assign"
+  spaa.sbs22.sbsh8.rename <- spaa.sbs22.sbsh8$proposed.assignment
+  colnames(spaa.sbs22.sbsh8.rename) <- "SPAA_assign_SBS22_in_universe"
+  sparse.sbs22.sbsh8.rename <- sparse.sbs22.sbsh8$proposed.assignment
+  colnames(sparse.sbs22.sbsh8.rename) <- "sparse_assign_SBS22_in_universe"
+  
+  spaa.no.sbs22.sbsh8.rename <- spaa.no.sbs22.sbsh8$proposed.assignment
+  colnames(spaa.no.sbs22.sbsh8.rename) <- "SPAA_assign_SBS22_not_in_universe"
+  sparse.no.sbs22.sbsh8.rename <- sparse.no.sbs22.sbsh8$proposed.assignment
+  colnames(sparse.no.sbs22.sbsh8.rename) <- "sparse_assign_SBS22_not_in_universe"
+  
+  list.of.exposures <- list(pcawg.assign.rename,
+                            spaa.sbs22.sbsh8.rename,
+                            sparse.sbs22.sbsh8.rename,
+                            spaa.no.sbs22.sbsh8.rename,
+                            sparse.no.sbs22.sbsh8.rename)
+  exp_all <- MergeListOfExposures(list.of.exposures = list.of.exposures)
+  WriteExposure(exposure = exp_all,
+                file = "./tests/testthat/output/Liver-HCC.SP97685/with.sbsh8/exp_all.csv")
+  spectra_all <- replicate(n = 5, expr = spectra, simplify = TRUE)
+  colnames(spectra_all) <- colnames(exp_all)
+  distances <- CalculateDistance(spectra = spectra_all, 
+                                 exposure = exp_all, 
+                                 sigs = sigs.to.use)
+  write.csv(distances,
+            file = "./tests/testthat/output/Liver-HCC.SP97685/with.sbsh8/distance_all.csv")
   
 })
 
