@@ -74,7 +74,8 @@ SigPresenceAssignActivity <-
            progress.monitor          = NULL,
            seed                      = NULL,
            drop.low.mut.samples      = TRUE,
-           sig.pres.test.nbinom.size = NULL) {
+           sig.pres.test.nbinom.size = NULL,
+           sig.pres.test.p.thresh    = 0.05) {
     
     retval <- 
       SparseAssignActivity(spectra                   = spectra,
@@ -90,6 +91,7 @@ SigPresenceAssignActivity <-
                            max.subsets               = .Machine$double.xmax,
                            drop.low.mut.samples      = drop.low.mut.samples,
                            use.sig.presence.test     = TRUE,
-                           sig.pres.test.nbinom.size = sig.pres.test.nbinom.size)
+                           sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
+                           sig.pres.test.p.thresh    = sig.pres.test.p.thresh)
     return(retval)
   }

@@ -3,6 +3,9 @@
 
 * Added new arguments `mfrow`, `mar` and `oma` in internal function `ShowSigActivity`.
 
+* Added new argument `sig.pres.test.p.thresh` in various internal and exported
+functions.
+
 # 2.3.2
 * Added new internal function `ReassignmentQP`.
 

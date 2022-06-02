@@ -17,7 +17,8 @@ SigPresenceAssignActivity(
   progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
-  sig.pres.test.nbinom.size = NULL
+  sig.pres.test.nbinom.size = NULL,
+  sig.pres.test.p.thresh = 0.05
 )
 }
 \arguments{
@@ -66,6 +67,11 @@ filter out those signatures that are not needed in the reconstruction of
 the spectrum; smaller is more dispersed. See
 \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
 likelihood when conducting signature presence test.}
+
+\item{sig.pres.test.p.thresh}{Only needed when \code{use.sig.presence.test
+= TRUE}. If the p-value of signature presence test for one signature is
+>= \code{sig.pres.test.p.thresh}, then this signature will not be used for
+assignment later.}
 }
 \value{
 A list with the elements:

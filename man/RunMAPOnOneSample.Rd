@@ -19,7 +19,8 @@ RunMAPOnOneSample(
   use.sparse.assign = FALSE,
   drop.low.mut.samples = TRUE,
   use.sig.presence.test = FALSE,
-  sig.pres.test.nbinom.size = 69
+  sig.pres.test.nbinom.size = NULL,
+  sig.pres.test.p.thresh = 0.05
 )
 }
 \arguments{
@@ -88,6 +89,11 @@ the spectrum.}
 used when conducting signature presence test; smaller is more dispersed.
 See \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
 likelihood when conducting signature presence test.}
+
+\item{sig.pres.test.p.thresh}{Only needed when \code{use.sig.presence.test
+= TRUE}. If the p-value of signature presence test for one signature is
+>= \code{sig.pres.test.p.thresh}, then this signature will not be used for
+assignment later.}
 }
 \description{
 Run \code{MAPAssignActivity1} on one sample and save and plot the results

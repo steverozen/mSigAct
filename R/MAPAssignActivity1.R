@@ -69,7 +69,8 @@ MAPAssignActivity1 <-
            use.sparse.assign          = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = NULL) {
+           sig.pres.test.nbinom.size  = NULL,
+           sig.pres.test.p.thresh     = 0.05) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -110,7 +111,8 @@ MAPAssignActivity1 <-
           seed                        = seed,
           use.sparse.assign           = use.sparse.assign,
           use.sig.presence.test       = use.sig.presence.test,
-          sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size))
+          sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
+          sig.pres.test.p.thresh      = sig.pres.test.p.thresh))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -274,6 +276,11 @@ NullReturnForMAPAssignActivity1 <- function(msg, all.tested,
 #'   used when conducting signature presence test; smaller is more dispersed.
 #'   See \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
 #'   likelihood when conducting signature presence test.
+#'   
+#' @param sig.pres.test.p.thresh Only needed when \code{use.sig.presence.test
+#'   = TRUE}. If the p-value of signature presence test for one signature is
+#'   >= \code{sig.pres.test.p.thresh}, then this signature will not be used for
+#'   assignment later.
 
 MAPAssignActivityInternal <-
   function(spect,
@@ -289,7 +296,8 @@ MAPAssignActivityInternal <-
            seed                       = NULL,
            use.sparse.assign          = FALSE,
            use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = NULL) {
+           sig.pres.test.nbinom.size  = NULL,
+           sig.pres.test.p.thresh     = 0.05) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -380,7 +388,7 @@ MAPAssignActivityInternal <-
       names(sigs.presence.tests) <- colnames(sigs)
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
-      needed.sigs <- names(p.values[p.values < 0.05])
+      needed.sigs <- names(p.values[p.values < sig.pres.test.p.thresh])
       
       if (m.opts$trace >= 10) {
         print(p.values)
