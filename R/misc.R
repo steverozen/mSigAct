@@ -294,27 +294,20 @@ GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir,
 }
 
 GetSampleSigActivity <- 
-  function(spectra, exposure, sigs, sample.names, output.dir, 
-           cancer.type = NULL) {
-    sample.names1 <- colnames(spectra)
-    sample.names2 <- colnames(exposure)
-    sample.names.diff <- setdiff(sample.names1, sample.names2)
+  function(spectra, exposure, sigs, sample.names, output.dir) {
+    spectra.names <- colnames(spectra)
+    exposure.names <- colnames(exposure)
+    sample.names.diff <- setdiff(sample.names, spectra.names)
     if (length(sample.names.diff) > 0) {
-      stop("Some samples in spectra do not have corresponding exposure ",
+      stop("Some samples do not have corresponding spectra information ",
            paste(sample.names.diff, collapse = " "))
     }
     
     
-    sample.names.diff2 <- setdiff(sample.names, colnames(spectra))
+    sample.names.diff2 <- setdiff(sample.names, exposure.names)
     if (length(sample.names.diff2) > 0) {
-      stop("Some sample names specified do not have corresponding spectra information",
+      stop("Some samples do not have corresponding exposure information ",,
            paste(sample.names.diff2, collapse = " "))
-    }
-    
-    if (!is.null(cancer.type)) {
-      indices <- grep(pattern = cancer.type, x = colnames(exposure))
-      exposure <- exposure[, indices, drop = FALSE]
-      spectra <- spectra[, colnames(exposure), drop = FALSE]
     }
     
     spectra2 <- spectra[, sample.names, drop = FALSE]
