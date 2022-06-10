@@ -6,6 +6,9 @@
 * Added new argument `sig.pres.test.p.thresh` in various internal and exported
 functions.
 
+* Added new argument `sig.pres.test.q.thresh` in various internal and exported
+functions.
+
 # 2.3.2
 * Added new internal function `ReassignmentQP`.
 

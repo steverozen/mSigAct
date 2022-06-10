@@ -70,7 +70,8 @@ MAPAssignActivity1 <-
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05) {
+           sig.pres.test.p.thresh     = 0.05,
+           sig.pres.test.q.thresh     = NULL) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -112,7 +113,8 @@ MAPAssignActivity1 <-
           use.sparse.assign           = use.sparse.assign,
           use.sig.presence.test       = use.sig.presence.test,
           sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
-          sig.pres.test.p.thresh      = sig.pres.test.p.thresh))
+          sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
+          sig.pres.test.q.thresh      = sig.pres.test.q.thresh))
       
       xx <- ListOfList2Tibble(MAPout)
       
@@ -297,7 +299,8 @@ MAPAssignActivityInternal <-
            use.sparse.assign          = FALSE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05) {
+           sig.pres.test.p.thresh     = 0.05,
+           sig.pres.test.q.thresh     = NULL) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -388,10 +391,21 @@ MAPAssignActivityInternal <-
       names(sigs.presence.tests) <- colnames(sigs)
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
-      needed.sigs <- names(p.values[p.values < sig.pres.test.p.thresh])
+      
+      if (is.null(sig.pres.test.q.thresh)) {
+        needed.sigs <- names(p.values[p.values < sig.pres.test.p.thresh])
+      } else {
+        q.values <- stats::p.adjust(p = p.values, method = "BH")
+        needed.sigs <- names(q.values[q.values < sig.pres.test.q.thresh])
+      }
       
       if (m.opts$trace >= 10) {
-        print(p.values)
+        if (is.null(sig.pres.test.q.thresh)) {
+          print(p.values)
+        } else {
+          print(q.values)
+        }
+        
       }
       
       my.msg(10, "Remained signatures after signature presence test ", 
