@@ -68,10 +68,9 @@ the spectrum; smaller is more dispersed. See
 \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
 likelihood when conducting signature presence test.}
 
-\item{sig.pres.test.p.thresh}{Only needed when \code{use.sig.presence.test
-= TRUE}. If the p-value of signature presence test for one signature is
->= \code{sig.pres.test.p.thresh}, then this signature will not be used for
-assignment later.}
+\item{sig.pres.test.p.thresh}{If the p-value of signature presence test for
+one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
+not be used for assignment later.}
 }
 \value{
 A list with the elements:
