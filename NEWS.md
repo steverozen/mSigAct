@@ -1,4 +1,7 @@
-# 2.1.3.9019
+# 2.1.4.9000
+* Removed exposure related functions to new package `mSigTools`.
+
+# 2.1.3.9010
 * Fixed a bug in function `AddSigActivity`.
 
 # 2.1.3.9009
