@@ -1,3 +1,5 @@
+# 2.2.2
+* Made function `MAPAssignActivity` internal.
 
 # 2.2.1
 * Made function `MAPAssignActivity` export.

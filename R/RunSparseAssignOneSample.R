@@ -66,14 +66,14 @@ RunSparseAssignOneSample <-
                         drop = FALSE]
     colnames(inferred.exposure) <- colnames(spect)
     
-    WriteExposure(exposure = inferred.exposure,
+    mSigTools::write_exposure(exposure = inferred.exposure,
                              file = file.path(output.path,
                                               paste0(spect.name, ".", mut.type,
                                                      ".inferred.exposure.csv")))
-    PlotExposureToPdf(inferred.exposure,
-                                 file = file.path(output.path,
-                                                  paste0(spect.name , ".", mut.type,
-                                                         ".inferred.exposure.pdf")))
+    mSigTools::plot_exposure_to_pdf(inferred.exposure,
+                                    file = file.path(output.path,
+                                                     paste0(spect.name , ".", mut.type,
+                                                            ".inferred.exposure.pdf")))
     
     sigs.names <- rownames(inferred.exposure)
     sigs1 <- sigs[, sigs.names, drop = FALSE]

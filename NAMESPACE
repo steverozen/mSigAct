@@ -2,9 +2,6 @@
 
 export(DefaultManyOpts)
 export(ExposureProportions)
-export(MAPAssignActivity)
-export(PossibleArtifacts)
-export(RareSignatures)
 export(ReconstructSpectrum)
 export(SignaturePresenceTest)
 export(SparseAssignActivity)
