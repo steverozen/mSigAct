@@ -298,7 +298,19 @@ MAPAssignActivityInternal <-
     if (use.sparse.assign == FALSE) {
       sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
         max.presence.proportion
-      sigs <- sigs[ , names(sigs.presence.prop), drop = FALSE]
+      
+      # Checks to make sure the signatures in sigs.presence.prop and
+      # sigs are exactly the same
+      check1 <- setdiff(names(sigs.presence.prop), colnames(sigs))
+      check2 <- setdiff(colnames(sigs), names(sigs.presence.prop))
+      
+      if (length(check1) == 0) {
+        # If the signatures in sigs.presence.prop is a subset of that in sigs
+        sigs <- sigs[ , names(sigs.presence.prop), drop = FALSE]
+      } else if (length(check2) == 0) {
+        # If the signatures in sigs is a subset of that in sigs.presence.prop
+        sigs.presence.prop <- sigs.presence.prop[colnames(sigs)]
+      }
     }
     
     max.sig.index <- ncol(sigs)

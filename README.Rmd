@@ -53,6 +53,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 remotes::install_github(repo = "steverozen/mSigAct")
+
 ```
 
 The alpha version used in Ng et al., 2017, "Aristolochic acids and their derivatives are widely 
@@ -76,3 +77,4 @@ remotes::install_github(repo = "steverozen/mSigAct", ref = "master")
 ## Reference manual
 
 https://github.com/steverozen/mSigAct/blob/v2.2.1-branch/data-raw/mSigAct_2.2.1.pdf
+
