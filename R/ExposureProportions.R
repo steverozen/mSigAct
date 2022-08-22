@@ -60,7 +60,7 @@ ExposureProportions <- function(
     sig.names <- rownames(sigs.prop)
     sigs.prop <- unlist(sigs.prop[ , 2])
     if (mutation.type == "SBS192") {
-      sig.names <- PCAWG7::SBS96_ID_to_SBS192_ID(sig.names)
+      sig.names <- cosmicsig::SBS96_ID_to_SBS192_ID(sig.names)
     }
     names(sigs.prop) <- sig.names
   }
