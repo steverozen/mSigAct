@@ -1,3 +1,6 @@
+# 2.1.3 (This branch is for mSigAct webserver)
+* Added back internal function `OptimizeExposureQPBootstrap` for mSigAct webserver.
+
 # 2.1.2
 * Enabled argument `target.sig.index` to also take the signature id as input in
 function `SignaturePresenceTest1`. Changed argument `m.opts` to use return value

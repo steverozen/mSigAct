@@ -26,23 +26,23 @@ C>A, C>G, C>T, T>A, T>C, T>G each on transcribed and untranscribed strands,
 rather than SBS in trinucleotide context, e.g.
 ACA > AAA, ACA > AGA, ..., TCT > TAT, ... There are 12 bars in the graph.}
 
-\item{cex}{Has the usual meaning. A default value has been used by the
-program internally. Only implemented for SBS96Catalog, SBS192Catalog and
-DBS144Catalog.}
+\item{cex}{Has the usual meaning. Taken from \code{par("cex")} by default.
+Only implemented for SBS96Catalog, SBS192Catalog and DBS144Catalog.}
 
 \item{grid}{A logical value indicating whether to draw grid lines. Only
-implemented for SBS96Catalog, DBS78Catalog, IndelCatalog.}
+implemented for SBS96Catalog, DBS78Catalog, IndelCatalog, ID166Catalog.}
 
 \item{upper}{A logical value indicating whether to draw horizontal lines and
 the names of major mutation class on top of graph. Only implemented for
-SBS96Catalog, DBS78Catalog, IndelCatalog.}
+SBS96Catalog, DBS78Catalog, IndelCatalog, ID166Catalog.}
 
 \item{xlabels}{A logical value indicating whether to draw x axis labels. Only
-implemented for SBS96Catalog, DBS78Catalog, IndelCatalog. If \code{FALSE} then plot x
-axis tick marks for SBS96Catalog; set \code{par(tck = 0)} to suppress.}
+implemented for SBS96Catalog, DBS78Catalog, IndelCatalog, ID166Catalog. 
+If \code{FALSE} then plot x axis tick marks for SBS96Catalog; set
+\code{par(tck = 0)} to suppress.}
 
-\item{ylim}{Has the usual meaning. Only implemented for SBS96Catalog and
-IndelCatalog.}
+\item{ylim}{Has the usual meaning. Only implemented for SBS96Catalog,
+IndelCatalog, ID166Catalog.}
 }
 \description{
 Plot List of catalogs to Pdf
