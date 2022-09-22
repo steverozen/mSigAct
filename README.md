@@ -44,7 +44,7 @@ cancers in Taiwan and throughout Asia”, Science Translational Medicine
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.2.2-branch")
+remotes::install_github(repo = "steverozen/mSigAct", ref = "v2.2.3-branch")
 ```
 
 The alpha version used in Ng et al., 2017, “Aristolochic acids and their
@@ -68,4 +68,4 @@ remotes::install_github(repo = "steverozen/mSigAct", ref = "master")
 
 ## Reference manual
 
-<https://github.com/steverozen/mSigAct/blob/v2.2.2-branch/data-raw/mSigAct_2.2.2.pdf>
+<https://github.com/steverozen/mSigAct/blob/v2.2.3-branch/data-raw/mSigAct_2.2.3.pdf>

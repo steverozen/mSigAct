@@ -1,3 +1,6 @@
+# 2.2.3
+* Updated subtracted spectrum plot to show the counts to be sum of absolute value of each peak.
+
 # 2.2.2
 * Made function `MAPAssignActivity` internal.
 

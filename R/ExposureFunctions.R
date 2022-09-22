@@ -21,7 +21,7 @@ MergeListOfExposures <- function(list.of.exposures) {
   num.of.exposure <- length(list.of.exposures)
   
   if (num.of.exposure < 2) {
-    stop("Only one exposure, no need to merge")
+    return(RemoveZeroActivitySig(list.of.exposures[[1]]))
   }
   
   tmp <- lapply(list.of.exposures, FUN = function(one.exposure) {
