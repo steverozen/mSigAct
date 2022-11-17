@@ -125,7 +125,7 @@ AddSigActivity1 <- function(spect, exposure, sigs,
            round(distances$proposed.assignment["cosine"], 5), ")")
   subtracted.spect <- spect - reconstructed.spectrum
   colnames(subtracted.spect) <- 
-    paste0(colnames(spect), " (substracted spectrum, absolute counts)")
+    paste0(colnames(spect), " (subtracted spectrum, absolute counts)")
   colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
   sig.activity <- list(original.spect = spect,
                        reconstructed.spect = reconstructed.spectrum,
