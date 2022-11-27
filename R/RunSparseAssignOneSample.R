@@ -15,7 +15,8 @@ RunSparseAssignOneSample <-
            p.thresh                = 0.05,
            m.opts                  = DefaultManyOpts(),
            max.mc.cores            = min(20, 2^max.level),
-           seed                    = NULL) {
+           seed                    = NULL,
+           save.files) {
     
     if (!dir.exists(output.dir)) {
       dir.create(output.dir, recursive = TRUE)
@@ -34,6 +35,10 @@ RunSparseAssignOneSample <-
     #if (!is.null(retval$error.messages)) {
     #  return(retval)
     #}
+    
+    if (!save.files) {
+      return(retval)
+    }
     
     # Get the mutation type of the spectrum
     mut.type <- GetMutationType(spect)

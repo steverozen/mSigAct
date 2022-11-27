@@ -13,6 +13,8 @@
 #' @param sig.pres.test.p.thresh If the p-value of signature presence test for
 #'   one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
 #'   not be used for assignment later.
+#'   
+#' @param sig.pres.test.q.thresh 
 #'
 #' @return A list with the elements:
 #'

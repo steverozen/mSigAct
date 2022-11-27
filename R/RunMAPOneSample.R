@@ -28,7 +28,8 @@ RunMAPOnOneSample <-
            use.sig.presence.test       = FALSE,
            sig.pres.test.nbinom.size   = NULL,
            sig.pres.test.p.thresh      = 0.05,
-           sig.pres.test.q.thresh      = NULL) {
+           sig.pres.test.q.thresh      = NULL,
+           save.files) {
     
     if (drop.low.mut.samples) {
       spect <- DropLowMutationSamples(spect)
@@ -60,6 +61,10 @@ RunMAPOnOneSample <-
       sig.pres.test.q.thresh     = sig.pres.test.q.thresh)
     
     if (!is.null(retval$error.messages)) {
+      return(retval)
+    }
+    
+    if (!save.files) {
       return(retval)
     }
     

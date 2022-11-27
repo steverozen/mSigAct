@@ -1,3 +1,6 @@
+# 2.3.2.0001
+* Adding ability to turn of creating files (not fully connected yet - will generate error)
+
 # 2.3.3
 * Updated subtracted spectrum plot to show the counts to be sum of absolute value of each peak.
 
