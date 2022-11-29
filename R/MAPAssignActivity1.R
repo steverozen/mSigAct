@@ -76,7 +76,7 @@ MAPAssignActivity1 <-
     
     null.assignment <- matrix(rep(0, ncol(sigs)))
     
-    mut.type <- GetMutationType(spectra)
+    mut.type <- GetMutationType(spect)
     
     if (drop.low.mut.samples) {
       thresh.value <- LowMutationCountThresh(mut.type)
@@ -86,8 +86,10 @@ MAPAssignActivity1 <-
     
     if (sum(spect) < thresh.value) {
       return(
-        NullReturnForMAPAssignActivity1(null.assignment,
-                                        "Number of mutations < ", thresh.value))
+        NullReturnForMAPAssignActivity1(
+          null.assignment,
+          paste0("Number of mutations < ", thresh.value),
+          0))
     }
     
     time.for.MAP.assign <- system.time(3)
@@ -199,11 +201,12 @@ MAPAssignActivity1 <-
     error = function(err.info) {
       if (!is.null(err.info$message)) err.info <- err.info$message
       message(err.info)
-      return(NullReturnForMAPAssignActivity1(null.assignment, err.info))
+      return(NullReturnForMAPAssignActivity1(null.assignment, err.info, time.for.MAP.assign))
     })
   }
 
-NullReturnForMAPAssignActivity1 <- function(null.assigment, msg) {
+NullReturnForMAPAssignActivity1 <- 
+  function(null.assigment, msg, time.for.MAP.assign) {
   return(
     list(proposed.assignment           = NULL,
          proposed.reconstruction       = NULL,

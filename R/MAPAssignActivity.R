@@ -143,6 +143,9 @@ MAPAssignActivity <-
     
     names(retval) <- colnames(spectra) # A list with each element a value returned from RunMAPOnOneSample. Each element is a list with a proposed.assignment and a proposed.solution, in additon to other slots.
     browser()
+    
+    
+    if (FALSE) {
     error.messages <- lapply(retval, FUN = function(x) {
       return(x$error.messages)
     })
@@ -153,12 +156,12 @@ MAPAssignActivity <-
     null.assignment <- sapply(retval, FUN = function(x) {
       return(is.null(x$proposed.assignment))
     })
-    retval.non.null <- retval[!null.assignment]; retval[null.assignment]["proposed.assignment"] <- rep(0, ncol(sigs))
+    retval.non.null <- retval[!null.assignment]
     
     if (length(retval.non.null) == 0) {
       # The case when all samples have NULL assignment
       return(NullReturnForMAPAssignActivity1(msg = error.messages))
-    }
+    }}
 
     proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval.non.null)
     # Replace NA to 0 in proposed.assignment
