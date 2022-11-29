@@ -21,7 +21,7 @@
 #' the analysis. If \code{TRUE}, samples with SBS total mutations less
 #' than 100, DBS or ID total mutations less than 25 will be dropped.
 #' 
-#' @param sig.pres.test.q.thresh Test parameter
+#' @param sig.pres.test.q.thresh Test parameter.
 #' 
 #' @param save.files If \code{TRUE} save several files for each input sample
 #'   in a directory named after the sample. 
@@ -101,11 +101,11 @@ MAPAssignActivity <-
            sig.pres.test.p.thresh     = 0.05,
            sig.pres.test.q.thresh     = NULL,
            save.files                 = TRUE) {
-    if (drop.low.mut.samples) {
-      spectra <- DropLowMutationSamples(spectra)
-    } else {
-      spectra <- spectra
-    }
+    # if (drop.low.mut.samples) {
+    #   spectra <- DropLowMutationSamples(spectra)
+    # } else {
+    #  spectra <- spectra
+    # }
     
     if (ncol(spectra) == 0) {
       return(NullReturnForMAPAssignActivity1(msg = "No sample to analyse"))
@@ -141,8 +141,8 @@ MAPAssignActivity <-
                                  f1,
                                  mc.cores = num.parallel.samples)
     
-    names(retval) <- colnames(spectra)
-    
+    names(retval) <- colnames(spectra) # A list with each element a value returned from RunMAPOnOneSample. Each element is a list with a proposed.assignment and a proposed.solution, in additon to other slots.
+    browser()
     error.messages <- lapply(retval, FUN = function(x) {
       return(x$error.messages)
     })
@@ -153,13 +153,13 @@ MAPAssignActivity <-
     null.assignment <- sapply(retval, FUN = function(x) {
       return(is.null(x$proposed.assignment))
     })
-    retval.non.null <- retval[!null.assignment]
+    retval.non.null <- retval[!null.assignment]; retval[null.assignment]["proposed.assignment"] <- rep(0, ncol(sigs))
     
     if (length(retval.non.null) == 0) {
       # The case when all samples have NULL assignment
       return(NullReturnForMAPAssignActivity1(msg = error.messages))
     }
-    
+
     proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval.non.null)
     # Replace NA to 0 in proposed.assignment
     proposed.assignment[is.na(proposed.assignment)] <- 0
@@ -387,19 +387,28 @@ GetMutationType <- function(spect) {
   }
 }
 
+
+#' @keywords internal
+LowMutationCountThresh <- function(mut.type) {
+  if (is.null(mut.type)) {
+    return(-1)
+  } else if (mut.type %in% c("SBS96", "SBS192")) {
+    return(100)
+  } else if (mut.type %in% c("DBS78", "ID")) {
+    return(25)
+  } else {
+    warning("Returning -1 because of unknown mut.type in LowMutationCountThresh: ", mut.type)
+    return(-1)
+  }
+}
+
 #' @keywords internal
 DropLowMutationSamples <- function(spectra) {
   spectra <- as.matrix(spectra)
   mut.type <- GetMutationType(spectra)
   
-  if (is.null(mut.type)) {
-    thresh.value <- -1
-  } else if (mut.type %in% c("SBS96", "SBS192")) {
-    thresh.value <- 100
-  } else if (mut.type %in% c("DBS78", "ID")) {
-    thresh.value <- 25
-  }
-  
+  thresh.value <- LowMutationCountThresh(mut.type)
+
   indices <- which(colSums(spectra) < thresh.value)
   
   if (length(indices) == 0) {

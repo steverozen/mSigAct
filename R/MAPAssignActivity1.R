@@ -73,14 +73,21 @@ MAPAssignActivity1 <-
            sig.pres.test.p.thresh     = 0.05,
            sig.pres.test.q.thresh     = NULL) {
     
+    
+    null.assignment <- matrix(rep(0, ncol(sigs)))
+    
+    mut.type <- GetMutationType(spectra)
+    
     if (drop.low.mut.samples) {
-      spect <- DropLowMutationSamples(spect)
+      thresh.value <- LowMutationCountThresh(mut.type)
     } else {
-      spect <- spect
+      thresh.value = 1
     }
     
-    if (ncol(spect) == 0) {
-      return(NullReturnForMAPAssignActivity1(msg = "No sample to analyse"))
+    if (sum(spect) < thresh.value) {
+      return(
+        NullReturnForMAPAssignActivity1(null.assignment,
+                                        "Number of mutations < ", thresh.value))
     }
     
     time.for.MAP.assign <- system.time(3)
@@ -192,12 +199,11 @@ MAPAssignActivity1 <-
     error = function(err.info) {
       if (!is.null(err.info$message)) err.info <- err.info$message
       message(err.info)
-      return(NullReturnForMAPAssignActivity1(err.info, time.for.MAP.assign))
+      return(NullReturnForMAPAssignActivity1(null.assignment, err.info))
     })
   }
 
-NullReturnForMAPAssignActivity1 <- function(msg, all.tested, 
-                                            time.for.MAP.assign = NULL) {
+NullReturnForMAPAssignActivity1 <- function(null.assigment, msg) {
   return(
     list(proposed.assignment           = NULL,
          proposed.reconstruction       = NULL,

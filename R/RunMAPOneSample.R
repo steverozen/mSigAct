@@ -31,11 +31,12 @@ RunMAPOnOneSample <-
            sig.pres.test.q.thresh      = NULL,
            save.files) {
     
-    if (drop.low.mut.samples) {
-      spect <- DropLowMutationSamples(spect)
-    } else {
-      spect <- spect
-    }
+    # if (drop.low.mut.samples) {
+    #  browser()
+    #  spect <- DropLowMutationSamples(spect)
+    #} else {
+    #  spect <- spect
+    #}
     
     if (!dir.exists(output.dir)) {
       dir.create(output.dir, recursive = TRUE)
