@@ -12,7 +12,8 @@ RunSparseAssignOneSample(
   p.thresh = 0.05,
   m.opts = DefaultManyOpts(),
   max.mc.cores = min(20, 2^max.level),
-  seed = NULL
+  seed = NULL,
+  save.files
 )
 }
 \arguments{

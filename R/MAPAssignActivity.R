@@ -18,8 +18,13 @@
 #'   sample. On Microsoft Windows machines it is silently changed to 1.
 #'   
 #' @param drop.low.mut.samples Whether to exclude low mutation samples from
-#' the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+#' the analysis. If \code{TRUE}, samples with SBS total mutations less
 #' than 100, DBS or ID total mutations less than 25 will be dropped.
+#' 
+#' @param sig.pres.test.q.thresh Test parameter
+#' 
+#' @param save.files If \code{TRUE} save several files for each input sample
+#'   in a directory named after the sample. 
 #'
 #' @return A list with the elements:
 #'
@@ -94,7 +99,8 @@ MAPAssignActivity <-
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
            sig.pres.test.p.thresh     = 0.05,
-           sig.pres.test.q.thresh     = NULL) {
+           sig.pres.test.q.thresh     = NULL,
+           save.files                 = TRUE) {
     if (drop.low.mut.samples) {
       spectra <- DropLowMutationSamples(spectra)
     } else {
@@ -123,7 +129,8 @@ MAPAssignActivity <-
         use.sig.presence.test       = use.sig.presence.test,
         sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
         sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
-        sig.pres.test.q.thresh      = sig.pres.test.q.thresh)
+        sig.pres.test.q.thresh      = sig.pres.test.q.thresh,
+        save.files                  = save.files)
 
       return(retval1)
     }

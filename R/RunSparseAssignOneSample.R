@@ -29,16 +29,11 @@ RunSparseAssignOneSample <-
       max.level               = max.level,
       p.thresh                = p.thresh,
       m.opts                  = m.opts,
-      max.mc.cores            = max.mc.cores,
-      seed                    = seed)
+      max.mc.cores            = max.mc.cores)
     
     #if (!is.null(retval$error.messages)) {
     #  return(retval)
     #}
-    
-    if (!save.files) {
-      return(retval)
-    }
     
     # Get the mutation type of the spectrum
     mut.type <- GetMutationType(spect)

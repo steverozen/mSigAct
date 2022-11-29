@@ -23,7 +23,8 @@ MAPAssignActivity(
   use.sig.presence.test = FALSE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
-  sig.pres.test.q.thresh = NULL
+  sig.pres.test.q.thresh = NULL,
+  save.files = TRUE
 )
 }
 \arguments{
@@ -85,7 +86,7 @@ arguments designed for Maximum A Posteriori assignment such as
 \code{sigs.presence.prop} will be ignored.}
 
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
-the analysis. If \code{TRUE(default)}, samples with SBS total mutations less
+the analysis. If \code{TRUE}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
 
 \item{use.sig.presence.test}{Whether to use signature presence test first to
@@ -102,6 +103,11 @@ likelihood when conducting signature presence test.}
 = TRUE}. If the p-value of signature presence test for one signature is
 >= \code{sig.pres.test.p.thresh}, then this signature will not be used for
 assignment later.}
+
+\item{sig.pres.test.q.thresh}{Test parameter}
+
+\item{save.files}{If \code{TRUE} save several files for each input sample
+in a directory named after the sample.}
 }
 \value{
 A list with the elements:
