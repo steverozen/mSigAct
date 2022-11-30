@@ -107,8 +107,16 @@ MAPAssignActivity <-
     #  spectra <- spectra
     # }
     
+    null.assignment1 <- matrix(rep(0, ncol(sigs)))
+    colnames(null.assignment1) <- "No samples"
+    rownames(null.assignment1) <- colnames(sigs)
+    null.spect1       <- matrix(rep(0, nrow(sigs)))
+    colnames(null.spect1) <- "No samples"
+    
     if (ncol(spectra) == 0) {
-      return(NullReturnForMAPAssignActivity1(msg = "No sample to analyse"))
+      return(NullReturnForMAPAssignActivity(null.assignment, 
+                                            msg = "No samples to analyse",
+                                            reconstruction = null.spect1))
     }
     
     f1 <- function(i) {
@@ -144,13 +152,48 @@ MAPAssignActivity <-
     names(retval) <- colnames(spectra) # A list with each element a value returned from RunMAPOnOneSample. Each element is a list with a proposed.assignment and a proposed.solution, in additon to other slots.
     browser()
     
+    clean_retval <- function(nn) {
+      null.assignment <- matrix(rep(0, ncol(sigs)))
+      colnames(null.assignment1) <- nn # Not sure we need these
+      null.spect       <- matrix(rep(0, nrow(sigs)))
+      colnames(null.spect) <- nn
+      rr <- retval[[nn]]
+      if (is.null(rr)) {
+        return(NullReturnForMAPAssignActivity(
+          null.assignment = null.assignment, 
+          msg = "R in child process possibly crashed",
+          null.spect = null.spect))
+      }
+      if (is.null(rr$proposed.assignment)) {
+        if (inherits(rr, "try-error")) {
+          return(NullReturnForMAPAssignActivity(
+            null.assignment = null.assignment, 
+            msg = rr[1],
+            null.spect = null.spect))
+        } else {
+          return(NullReturnForMAPAssignActivity(
+            null.assignment = null.assignment,
+            msg = paste("Unexpected return value from child, class is :",
+                  class(rr)),
+            null.spect = null.spect
+            ))
+        }
+      }
+      return(rr)
+    }
     
+    
+      
+    retval.non.null <- lapply(names(retval), clean_retval)
+      
+
     if (FALSE) {
     error.messages <- lapply(retval, FUN = function(x) {
       return(x$error.messages)
     })
     # Remove NULL elements from error.messages
     error.messages <- Filter(Negate(is.null), error.messages)
+
     
     # Check for samples which have NULL return for proposed.assignment
     null.assignment <- sapply(retval, FUN = function(x) {
@@ -162,6 +205,8 @@ MAPAssignActivity <-
       # The case when all samples have NULL assignment
       return(NullReturnForMAPAssignActivity1(msg = error.messages))
     }}
+    
+    
 
     proposed.assignment <- GetExposureInfo(list.of.MAP.out = retval.non.null)
     # Replace NA to 0 in proposed.assignment
@@ -171,7 +216,7 @@ MAPAssignActivity <-
     # Add attributes to proposed.reconstruction to be same as spectra
     proposed.reconstruction <- AddAttributes(proposed.reconstruction, spectra)
     
-    if (use.sparse.assign == FALSE) {
+    if (use.sparse.assign == FALSE) { # FIX THIS
       reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null)
     } else if (use.sparse.assign == TRUE) {
       reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval.non.null,
@@ -218,14 +263,14 @@ AddAttributes <- function(proposed.reconstruction, spectra) {
 #' @keywords internal
 GetExposureInfo <- function(list.of.MAP.out) {
   tmp <- lapply(list.of.MAP.out, FUN = function(x) {
-    if (is.null(x$error.messages)) {
+    # if (is.null(x$error.messages)) {
       exposures <- x$proposed.assignment
       count <- matrix(exposures[, 1], ncol = nrow(exposures))
       colnames(count) <- rownames(exposures)
       return(as.data.frame(count))
-    } else {
-      return(NULL)
-    }
+    # } else {
+    #  return(NULL)
+    # }
   })
   index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
   tmp1 <- tmp[index.of.non.null]
@@ -243,12 +288,12 @@ GetExposureInfo <- function(list.of.MAP.out) {
 #' @keywords internal
 GetReconstructionInfo <- function(list.of.MAP.out) {
   tmp <- lapply(list.of.MAP.out, FUN = function(x) {
-    if (is.null(x$error.messages)) {
+    # if (is.null(x$error.messages)) {
       reconstruction <- x$proposed.reconstruction
       return(reconstruction)
-    } else {
-      return(NULL)
-    }
+    # } else {
+    #  return(NULL)
+    # }
   })
   index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
   tmp1 <- tmp[index.of.non.null]
@@ -333,12 +378,12 @@ GetAllTestedTables <- function(list.of.MAP.out) {
 #' @keywords internal
 GetAltSolutionsTables <- function(list.of.MAP.out) {
   tmp <- lapply(list.of.MAP.out, FUN = function(x) {
-    if (is.null(x$error.messages)) {
+    # if (is.null(x$error.messages)) {
       all.tested <- x$alt.solutions
       return(all.tested)
-    } else {
-      return(NULL)
-    }
+    # } else {
+    #  return(NULL)
+    # }
   })
   index.of.non.null <- sapply(tmp, FUN = Negate(is.null))
   tmp1 <- tmp[index.of.non.null]

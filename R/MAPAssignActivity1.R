@@ -73,8 +73,13 @@ MAPAssignActivity1 <-
            sig.pres.test.p.thresh     = 0.05,
            sig.pres.test.q.thresh     = NULL) {
     
-    
-    null.assignment <- matrix(rep(0, ncol(sigs)))
+    # If there are non integers in spect, round it first. Otherwise, there
+    # will be a lot of warnings later calculating likelihood using
+    # stats::dnbinom() and this will cause the program to run very slowly
+    if (any(spect != round(spect))) {
+      warning("Round non integers in spectrum to integers")
+      spect <- round(spect)
+    }
     
     mut.type <- GetMutationType(spect)
     
@@ -84,28 +89,30 @@ MAPAssignActivity1 <-
       thresh.value = 1
     }
     
+    sample.name <- colnames(spect)
+    if (is.null(sample.name)) {
+      sample.name <- "Unnamed sample"
+    }
+    null.assignment <- matrix(rep(0, ncol(sigs)))
+    colnames(null.assignment) <- sample.name
+    null.spect       <- matrix(rep(0, nrow(sigs)))
+    colnames(null.spect) <- sample.name
+    
     if (sum(spect) < thresh.value) {
       return(
-        NullReturnForMAPAssignActivity1(
-          null.assignment,
-          paste0("Number of mutations < ", thresh.value),
-          0))
+        NullReturnForMAPAssignActivity(
+          null.assignment = null.assignment,
+          null.spect      = null.spect,
+          msg = paste0("Number of mutations < ", thresh.value)))
     }
     
+    # This next assignment initializes time.for.MAP.assign to a very small
+    # value, which is used if the call to MAPAssignActivitingInternal
+    # generates an error.
     time.for.MAP.assign <- system.time(3)
     
     tryCatch({
       
-      if (sum(spect) < 1) stop("< 1 mutation in spectrum ", colnames(spect))
-      
-      # If there are non integers in spect, round it first. Otherwise, there
-      # will be a lot of warnings later calculating likelihood using
-      # stats::dnbinom() and this will cause the program run very slowly
-      if (any(spect != round(spect))) {
-        warning("Round non integers in spectrum to integers")
-        spect <- round(spect)
-      }
-
       time.for.MAP.assign <- system.time(
         MAPout <- MAPAssignActivityInternal(
           spect                       = spect,
@@ -201,22 +208,14 @@ MAPAssignActivity1 <-
     error = function(err.info) {
       if (!is.null(err.info$message)) err.info <- err.info$message
       message(err.info)
-      return(NullReturnForMAPAssignActivity1(null.assignment, err.info, time.for.MAP.assign))
+      return(NullReturnForMAPAssignActivity(
+        null.assignment = null.assignment,
+        null.spect      = null.spect,
+        msg             = err.info, 
+        time.used       = time.for.MAP.assign))
     })
   }
 
-NullReturnForMAPAssignActivity1 <- 
-  function(null.assigment, msg, time.for.MAP.assign) {
-  return(
-    list(proposed.assignment           = NULL,
-         proposed.reconstruction       = NULL,
-         reconstruction.distances      = NULL,
-         all.tested                    = NULL,
-         alt.solutions                 = NULL,
-         time.for.MAP.assign           = time.for.MAP.assign,
-         error.messages                = msg
-         ))
-}
 
 #' Find a Maximum A Posteriori assignment of signature exposures for one spectrum.
 #' 
