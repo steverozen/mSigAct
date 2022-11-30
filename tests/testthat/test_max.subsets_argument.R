@@ -23,7 +23,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     mc.cores.per.sample     = 30,
     seed                    = 8787,
     max.subsets             = 1)
-  expect_null(retval$proposed.assignment)
+  expect_equal(sum(retval$proposed.assignment), 0)
   expect_equal(length(retval$error.messages), 2)
   
   # One sample will have NULL return for proposed.assignment
@@ -40,8 +40,8 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     seed                    = 8787,
     max.subsets             = 10)
   
-  expect_true(!is.null(retval2$proposed.assignment))
-  expect_equal(length(retval2$error.messages), 1)
+  expect_equal(colSums(retval2$proposed.assignment), c(0, 40159), check.attributes = FALSE)
+  expect_equal(nchar(retval2$error.messages), c(231, 0), check.attributes = FALSE)
   
 })
 
@@ -64,5 +64,6 @@ test_that("Testing max.subsets argument for MAPAssignActivity1", {
     seed                    = 8787,
     max.subsets             = 10)
    
-  expect_null(retval$proposed.assignment)
+  expect_equal(sum(retval$proposed.assignment), 0)
+  expect_equal(nchar(retval$error.messages), 231)
 })

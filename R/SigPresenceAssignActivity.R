@@ -14,7 +14,7 @@
 #'   one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
 #'   not be used for assignment later.
 #'   
-#' @param sig.pres.test.q.thresh 
+#' @param sig.pres.test.q.thresh A test parameter
 #'
 #' @return A list with the elements:
 #'

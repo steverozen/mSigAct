@@ -74,7 +74,7 @@ MAPAssignActivity1 <-
            sig.pres.test.q.thresh     = NULL) {
     
     # If there are non integers in spect, round it first. Otherwise, there
-    # will be a lot of warnings later calculating likelihood using
+    # will be a lot of warnings later when calculating likelihood using
     # stats::dnbinom() and this will cause the program to run very slowly
     if (any(spect != round(spect))) {
       warning("Round non integers in spectrum to integers")
@@ -93,17 +93,14 @@ MAPAssignActivity1 <-
     if (is.null(sample.name)) {
       sample.name <- "Unnamed sample"
     }
-    null.assignment <- matrix(rep(0, ncol(sigs)))
-    colnames(null.assignment) <- sample.name
-    null.spect       <- matrix(rep(0, nrow(sigs)))
-    colnames(null.spect) <- sample.name
+    null.retval <- NullReturnForMAPAssignActivity(
+      signature.universe = sigs,
+      target.spectrum    = spect)
     
     if (sum(spect) < thresh.value) {
-      return(
-        NullReturnForMAPAssignActivity(
-          null.assignment = null.assignment,
-          null.spect      = null.spect,
-          msg = paste0("Number of mutations < ", thresh.value)))
+      null.retval$error.messages <- 
+        paste0("Number of mutations < ", thresh.value)
+      return(null.retval)
     }
     
     # This next assignment initializes time.for.MAP.assign to a very small
@@ -134,7 +131,7 @@ MAPAssignActivity1 <-
       
       xx <- ListOfList2Tibble(MAPout)
       
-      if (use.sparse.assign == FALSE) {
+      if (use.sparse.assign == FALSE) { # FIX ME TODO TO DO
         best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
       } else if (use.sparse.assign == TRUE) {
         best <- dplyr::arrange(xx, .data$df, .data$loglh.of.exp)[nrow(xx), ]
@@ -149,7 +146,9 @@ MAPAssignActivity1 <-
       
       MAP.recon <-
         ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
+      MAP.recon <- CopyAttributes(from = spect, to = MAP.recon)
       
+      # FIX THIS TODO TO DO
       if (use.sparse.assign == FALSE) {
         # Internally set max.presence.proportion to be 0.99 in case there will be -Inf
         # for MAP distances
@@ -171,12 +170,20 @@ MAPAssignActivity1 <-
                                  signatures = sigs[, names(best.exp), drop = FALSE])
       }
       
+      # MAP.distances are distances from (1)
+      # the proposed.assignment-based reconstruction to the spectrum
+      # and from an "QP.assignment" "polished" assignment to the
+      # spectrum. This is a tibble with columns method
+      # proposed.assignment and QP.assignment
+      # and rows for log.likelihood, euclidean, manhattan, and cosine
+      # distances/similarities.
+      
       # Round the exposure and reconstruction
       exposure <- matrix(round(MAP$count), nrow = nrow(MAP))
       rownames(exposure) <- MAP$sig.id
       colnames(exposure) <- colnames(spect)
       
-      # If there are signatures get assigned zero mutation counts after rounding,
+      # If there are signatures with 0 mutations after rounding,
       # remove these signatures from the exposure matrix
       non.zero.indices <- rowSums(exposure) > 0
       exposure <- exposure[non.zero.indices, , drop = FALSE]
@@ -185,10 +192,20 @@ MAPAssignActivity1 <-
       colnames(MAP.recon) <- colnames(spect)
       
       # Add attributes to MAP.recon to be same as spect
-      MAP.recon <- AddAttributes(MAP.recon, spect)
+      MAP.recon <- CopyAttributes(to = MAP.recon, from = spect)
       
       all.tested <- TestAltSolutions(tibble = xx, 
                                      sparse.assign = use.sparse.assign)
+      # all.tested is a data.frame with columns
+      # "sig.names"
+      # "p.for.sig.subset"
+      # "exp"
+      # "loglh.of.exp"
+      # "df"
+      # "akaike.weights"  
+      # "LRT.p.value"
+      # "LRT.q.value"
+      
       alt.solutions <- GetAltSolutions(tibble = all.tested,
                                        spectrum = spect,
                                        sigs = sigs, 
@@ -201,18 +218,17 @@ MAPAssignActivity1 <-
                   reconstruction.distances     = MAP.distances,
                   all.tested                   = all.tested,
                   alt.solutions                = alt.solutions,
-                  time.for.MAP.assign          = time.for.MAP.assign
+                  time.for.MAP.assign          = time.for.MAP.assign,
+                  error.messages               = ""
       ))
       
     },
     error = function(err.info) {
       if (!is.null(err.info$message)) err.info <- err.info$message
       message(err.info)
-      return(NullReturnForMAPAssignActivity(
-        null.assignment = null.assignment,
-        null.spect      = null.spect,
-        msg             = err.info, 
-        time.used       = time.for.MAP.assign))
+      null.retval$error.messages <- err.info
+      null.retval$time.for.MAP.assign <- time.for.MAP.assign
+      return(null.retval)
     })
   }
 

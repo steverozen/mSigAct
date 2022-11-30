@@ -196,7 +196,7 @@ SparseAssignActivity1 <- function(spect,
   exposure <- exposure[non.zero.indices, , drop = FALSE]
   
   # Add attributes to recon to be same as spect
-  recon <- AddAttributes(recon, spect)
+  recon <- CopyAttributes(to = recon, from = spect)
   
   return(list(proposed.assignment          = exposure,
               proposed.reconstruction      = recon,

@@ -91,7 +91,7 @@ likelihood when conducting signature presence test.}
 >= \code{sig.pres.test.p.thresh}, then this signature will not be used for
 assignment later.}
 
-\item{sig.pres.test.q.thresh}{Test parameter}
+\item{sig.pres.test.q.thresh}{Test parameter.}
 }
 \value{
 A list with the elements:

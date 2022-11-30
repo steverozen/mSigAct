@@ -16,7 +16,7 @@ test_that("DropLowMutationSamples for ID spectra", {
   my.opts <- DefaultManyOpts()
   
   output.dir <- file.path(tempdir(), paste0("test", 1:3))
-  retval1 <- expect_message(
+  retval1 <- 
     MAPAssignActivity(
     spectra                 = catalog,
     sigs                    = sigs,
@@ -27,10 +27,13 @@ test_that("DropLowMutationSamples for ID spectra", {
     m.opts                  = my.opts,
     num.parallel.samples    = 1,
     mc.cores.per.sample     = 30,
-    seed                    = 2351),
-    "Samples with total mutations less than 25 were excluded in the analysis for ID")
+    seed                    = 2351)
   
-  retval2 <- expect_message(
+  expect_equal(retval1$error.messages,
+               "Number of mutations < 25", 
+               check.attributes = FALSE)
+  
+  retval2 <- 
     MAPAssignActivity1(
     spect                   = catalog,
     sigs                    = sigs,
@@ -39,9 +42,11 @@ test_that("DropLowMutationSamples for ID spectra", {
     m.opts                  = my.opts,
     max.mc.cores            = 30,
     seed                    = 2351,
-    use.sparse.assign       = TRUE),
-    "Samples with total mutations less than 25 were excluded in the analysis for ID")
+    use.sparse.assign       = TRUE)
   
+  # FIX ME discuss w/ Nanhai
+  
+  expect_equal(retval2$error.messages, "Number of mutations < 25")
   
   retval3 <- MAPAssignActivity(
     spectra                 = catalog,

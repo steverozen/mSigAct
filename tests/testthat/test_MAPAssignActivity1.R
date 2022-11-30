@@ -92,7 +92,9 @@ test_that("MAPAssignActivity DBS78", {
 test_that("MAPAssignActivity error1", {
   retval <- test.fn(spect = sbs192, "SBS192",
                     sig.ids.to.use = c("SBS1", "SBS2"))
-  testthat::expect_null(retval$proposed.assignment)
+  testthat::expect_equal(retval$proposed.assignment,
+                         matrix(c(0, 0)),
+                         check.attributes = FALSE)
 })
 
 test_that("MAPAssignActivity1 for ID Catalog", {

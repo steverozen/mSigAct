@@ -1,5 +1,3 @@
-context("SigPresenceAssignActivity")
-
 test_that("SigPresenceAssignActivity for SBS Liver tumor", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
