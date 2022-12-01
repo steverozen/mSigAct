@@ -97,28 +97,6 @@ is.superset.of.any <- function(probe, background) {
 }
 
 
-#' Cosine similarity with useful argument types
-#'
-#' @param v1 A vector or single-column matrix
-#' @param v2 A vector or single-column matrix
-#'
-#' @export
-#' @examples 
-#' spectrum <- PCAWG7::spectra$PCAWG$SBS96[, 1, drop = FALSE]
-#' SBS96.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
-#' exposure <- PCAWG7::exposure$PCAWG$SBS96[, 1, drop = FALSE]
-#' reconstructed.spectrum <- ReconstructSpectrum(sigs = SBS96.sigs,
-#'                                               exp = exposure,
-#'                                               use.sig.names = TRUE)
-#' cosine <- cossim(spectrum, reconstructed.spectrum)
-cossim <- function(v1, v2) {
-  df <- rbind(as.vector(v1),
-              as.vector(v2))
-  return(suppressMessages(philentropy::distance(x = df, 
-                                                method = "cosine", 
-                                                test.na = FALSE)))
-}
-
 ClosestCosSig <- function(spectrum) {
   cos <-
     apply(cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
@@ -154,38 +132,16 @@ ClosestCosSigDensity <- function(spectrum) {
 
 }
 
-
+# Used from the console line during testing / debugging
 LoadToEnvironment <- function(RData, env = new.env()){
   load(RData, env)
   return(env)
 }
 
 
+# Used from the console line during testing / debugging
 ClearWarnings <- function() {
   assign("last.warning", NULL, envir = baseenv())
-}
-
-
-check.mclapply.result <- function(ss, where, names = NULL) {
-  ok <- TRUE
-  for (i in 1:length(ss)) {
-
-    if (is.null(names)) {
-      name <- paste("item", i)
-    } else {
-      name = names[i]
-    }
-    if (is.null(ss[[i]])) {
-      message(where, ": got NULL return for ", name)
-      ok <- FALSE
-    }
-    if ("try-error" %in% class(ss[[i]])) {
-      message(where, ": got try-error return for ", name)
-      print(ss[i])
-      ok <- FALSE
-    }
-  }
-  stopifnot(ok)
 }
 
 
@@ -206,7 +162,7 @@ EDist2SpectRounded <- function(exp, sig.names, spect) {
 
 #' Euclidean reconstruction error.
 #'
-#' @keywords internal
+#' @keywords internal # NOT USED?
 EDist2Spect <- function(exp, sig.names, spect) {
   reconstruction <-
     prop.reconstruct(
@@ -252,47 +208,8 @@ ReassignmentQP <- function(spectra, exposure, sigs, mc.cores = 1) {
   return(exp.all)
 }
 
-GetSigActivity <- function(spectra, exposure, sigs, sig.id, output.dir, 
-                           cancer.type = NULL) {
-  sample.names1 <- colnames(spectra)
-  sample.names2 <- colnames(exposure)
-  sample.names.diff <- setdiff(sample.names1, sample.names2)
-  if (length(sample.names.diff) > 0) {
-    stop("Some samples in spectra do not have corresponding exposure ",
-         paste(sample.names.diff, collapse = " "))
-  }
-  
-  if (!is.null(cancer.type)) {
-    indices <- grep(pattern = cancer.type, x = colnames(exposure))
-    exposure <- exposure[, indices, drop = FALSE]
-    spectra <- spectra[, colnames(exposure), drop = FALSE]
-  }
-  
-  exposure.one.sig <- exposure[sig.id, ]
-  non.zero.exposure.samples <- names(exposure.one.sig[exposure.one.sig > 0])
-  
-  if (length(non.zero.exposure.samples) > 0) {
-    spectra.to.use <- spectra[, non.zero.exposure.samples, drop = FALSE]
-    exposure.to.use <- exposure[, non.zero.exposure.samples, drop = FALSE]
-    
-    sig.activity <- AddSigActivity(spectra = spectra.to.use, 
-                                   exposure = exposure.to.use, 
-                                   sigs = sigs, 
-                                   use.sparse.assign = TRUE)
-    ShowSigActivity(list.of.sig.activity = sig.activity, 
-                    output.dir = output.dir)
-    return(RemoveZeroActivitySig(exposure.to.use))
-  } else {
-    msg <- paste0("There are no non-zero exposure for ", sig.id)
-    if (is.null(cancer.type)) {
-      warning(msg)
-    } else {
-      warning(msg, " in cancer type ", cancer.type)
-    }
-    invisible(NULL)
-  }
-}
 
+if (FALSE) { # not used? 
 GetSampleSigActivity <- 
   function(spectra, exposure, sigs, sample.names, output.dir) {
     spectra.names <- colnames(spectra)
@@ -306,7 +223,7 @@ GetSampleSigActivity <-
     
     sample.names.diff2 <- setdiff(sample.names, exposure.names)
     if (length(sample.names.diff2) > 0) {
-      stop("Some samples do not have corresponding exposure information ",,
+      stop("Some samples do not have corresponding exposure information ",
            paste(sample.names.diff2, collapse = " "))
     }
     
@@ -321,3 +238,4 @@ GetSampleSigActivity <-
                     output.dir = output.dir)
     return(RemoveZeroActivitySig(exposure2))
   }
+}

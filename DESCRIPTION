@@ -27,6 +27,7 @@ Imports:
     gtools,
     ICAMS (>= 3.0.6),
     nloptr,
+    mSigTools,
     PCAWG7 (>= 0.1.0.9003),
     philentropy,
     quadprog,

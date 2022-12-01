@@ -9,4 +9,7 @@ EDist2Spect(exp, sig.names, spect)
 \description{
 Euclidean reconstruction error.
 }
+\keyword{#}
+\keyword{NOT}
+\keyword{USED?}
 \keyword{internal}
