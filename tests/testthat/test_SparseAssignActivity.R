@@ -67,7 +67,7 @@ test_that("SparseAssignActivity for SBS Liver tumor", {
                                      max.subsets = 1e15, 
                                      drop.low.mut.samples = FALSE, 
                                      use.sig.presence.test = FALSE)
-  expect_equal(nrow(sparse.out1$proposed.assignment), 8)
+  expect_equal(nrow(sparse.out1$proposed.assignment), 10)
   expect_equal(nrow(sparse.out2$proposed.assignment), 10)
   unlink(file.path(tempdir(), "Liver-HCC-1"), recursive = TRUE)
   unlink(file.path(tempdir(), "Liver-HCC-2"), recursive = TRUE)
