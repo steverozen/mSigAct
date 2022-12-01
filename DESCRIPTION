@@ -19,7 +19,7 @@ BugReports: https://github.com/steverozen/mSigAct/issues
 Encoding: UTF-8
 Language: en-US
 Depends: R (>= 4.0),
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
 biocViews:
 Imports:
     dplyr,

@@ -13,7 +13,7 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
   output.dir <- file.path(tempdir(), "ID")
   
   panc.sparse.out <- 
-    MAPAssignActivity(spectra = ID.three.spectra[, 1, drop = FALSE],
+    MAPAssignActivity(spectra = ID.three.spectra[, 2, drop = FALSE],
                       sigs = ID.sigs, 
                       output.dir = output.dir, 
                       max.level = ncol(ID.sigs) - 1,
@@ -25,8 +25,8 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
                       use.sparse.assign = TRUE
     )
   
-  alt.solutions <- panc.sparse.out$alt.solutions$`Panc-Endocrine::SP102561`
-  expect_equal(nrow(alt.solutions), 398)
+  alt.solutions <- panc.sparse.out$alt.solutions[[1]]
+  expect_equal(nrow(alt.solutions), 5)
   
   unlink(output.dir, recursive = TRUE)
   # View all the alternative solutions and check the QP cosine
