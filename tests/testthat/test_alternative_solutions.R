@@ -1,5 +1,3 @@
-context("Testing alternative solutions")
-
 test_that("Identifying ID samples with low reconstruction accuracy", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
@@ -13,8 +11,9 @@ test_that("Identifying ID samples with low reconstruction accuracy", {
   output.dir <- file.path(tempdir(), "ID")
   
   panc.sparse.out <- 
-    SparseAssignActivity(spectra = ID.three.spectra[, 1, drop = FALSE],
+    MAPAssignActivity(spectra = ID.three.spectra[, 1, drop = FALSE],
                          sigs = ID.sigs, 
+                      use.sparse.assign         = TRUE,
                          output.dir = output.dir, 
                          max.level = ncol(ID.sigs) - 1,
                          p.thresh = 0.05 / ncol(ID.sigs), 

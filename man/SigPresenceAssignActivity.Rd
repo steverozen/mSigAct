@@ -19,49 +19,11 @@ SigPresenceAssignActivity(
   drop.low.mut.samples = TRUE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
-  sig.pres.test.q.thresh = NULL
+  sig.pres.test.q.thresh = NULL,
+  save.files = TRUE
 )
 }
 \arguments{
-\item{spectra}{The spectra (multiple spectra) to be reconstructed.}
-
-\item{sigs}{A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.}
-
-\item{output.dir}{Directory path to save the output file.}
-
-\item{max.level}{The maximum number of signatures to try removing.}
-
-\item{p.thresh}{If
-the p value for a better reconstruction with a
-set of signatures (as opposed to
-without that set of signatures)
-is > than this argument, then we can use exposures without this set.}
-
-\item{m.opts}{See \code{\link{DefaultManyOpts}}.}
-
-\item{num.parallel.samples}{The (maximum) number of samples to run in
-parallel. On Microsoft Windows machines it is silently changed to 1. Each
-sample in turn can require multiple cores, as governed by
-\code{mc.cores.per.sample}.}
-
-\item{mc.cores.per.sample}{The maximum number of cores to use for each
-sample. On Microsoft Windows machines it is silently changed to 1.}
-
-\item{progress.monitor}{Function called at the start of each
-new level (number of signatures to try excluding). Must
-take named arguments \code{value} and \code{detail}, and
-no others. Designed for a \code{\link[ipc]{AsyncProgress}}
-progress bar function.}
-
-\item{seed}{Random seed; set this to get reproducible results. (The
-numerical optimization is in two phases; the first, global phase
-might rarely find different optima depending on the random
-seed.)}
-
-\item{drop.low.mut.samples}{Whether to exclude low mutation samples from
-the analysis. If \code{TRUE}, samples with SBS total mutations less
-than 100, DBS or ID total mutations less than 25 will be dropped.}
-
 \item{sig.pres.test.nbinom.size}{The dispersion parameter for the negative
 binomial distribution used when conducting signature presence test first to
 filter out those signatures that are not needed in the reconstruction of

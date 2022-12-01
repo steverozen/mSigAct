@@ -1,5 +1,3 @@
-context("MAPAssignActivity")
-
 test_that("MAPAssignActivity for ID Catalog", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
@@ -98,7 +96,8 @@ test_that("Use sparse assignment for MAPAssignActivity", {
     seed                    = 2351,
     use.sparse.assign       = TRUE)
   
-  retval3 <- SparseAssignActivity(spectra = catalog,
+  retval3 <- MAPAssignActivity(spectra = catalog,
+                               use.sparse.assign         = TRUE,
                                   sigs = sigs,
                                   output.dir = output.dir[3],
                                   max.level = ncol(sigs) - 1,

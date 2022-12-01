@@ -1,5 +1,3 @@
-context("Test tracing messages")
-
 test_that("Test tracing messages for MAPAssignActivity", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
@@ -44,8 +42,9 @@ test_that("Test tracing messages for SparseAssignActivity", {
                                    cancer.type = "Liver-HCC")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
   my.opts <- DefaultManyOpts()
-  sparse.out <- SparseAssignActivity(spectra = spectra,
+  sparse.out <- MAPAssignActivity(spectra = spectra,
                                   sigs = sigs.to.use,
+                                  use.sparse.assign         = TRUE,
                                   output.dir = file.path(tempdir(), "test1"),
                                   max.level = ncol(sigs.to.use) - 1,
                                   p.thresh = 0.05 / ncol(spectra),
@@ -54,8 +53,9 @@ test_that("Test tracing messages for SparseAssignActivity", {
                                   mc.cores.per.sample = 30)
   
   my.opts$trace <- 1
-  sparse.out2 <- SparseAssignActivity(spectra = spectra,
+  sparse.out2 <- MAPAssignActivity(spectra = spectra,
                                      sigs = sigs.to.use,
+                                   use.sparse.assign         = TRUE,
                                      output.dir = file.path(tempdir(), "test2"),
                                      max.level = ncol(sigs.to.use) - 1,
                                      p.thresh = 0.05 / ncol(spectra),
@@ -64,8 +64,9 @@ test_that("Test tracing messages for SparseAssignActivity", {
                                      mc.cores.per.sample = 30)
   
   my.opts$trace <- -1
-  sparse.out3 <- SparseAssignActivity(spectra = spectra,
+  sparse.out3 <- MAPAssignActivity(spectra = spectra,
                                       sigs = sigs.to.use,
+                                   use.sparse.assign         = TRUE,
                                       output.dir = file.path(tempdir(), "test3"),
                                       max.level = ncol(sigs.to.use) - 1,
                                       p.thresh = 0.05 / ncol(spectra),

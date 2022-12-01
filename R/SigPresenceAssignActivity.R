@@ -1,7 +1,7 @@
 #' Find minimal set of signatures that can explain multiple spectra by first using
 #' signature presence test
 #'
-#' @inheritParams SparseAssignActivity
+#' @inheritParams MAPAssignActivity
 #' 
 #' @param sig.pres.test.nbinom.size The dispersion parameter for the negative
 #'   binomial distribution used when conducting signature presence test first to
@@ -82,24 +82,27 @@ SigPresenceAssignActivity <-
            drop.low.mut.samples      = TRUE,
            sig.pres.test.nbinom.size = NULL,
            sig.pres.test.p.thresh    = 0.05,
-           sig.pres.test.q.thresh    = NULL) {
+           sig.pres.test.q.thresh    = NULL,
+           save.files                = TRUE) {
     
     retval <- 
-      SparseAssignActivity(spectra                   = spectra,
-                           sigs                      = sigs,
-                           output.dir                = output.dir,
-                           max.level                 = max.level,
-                           p.thresh                  = p.thresh,
-                           m.opts                    = m.opts,
-                           num.parallel.samples      = num.parallel.samples,
-                           mc.cores.per.sample       = mc.cores.per.sample,
-                           progress.monitor          = progress.monitor,
-                           seed                      = seed,
-                           max.subsets               = .Machine$double.xmax,
-                           drop.low.mut.samples      = drop.low.mut.samples,
-                           use.sig.presence.test     = TRUE,
-                           sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
-                           sig.pres.test.p.thresh    = sig.pres.test.p.thresh,
-                           sig.pres.test.q.thresh    = sig.pres.test.q.thresh)
+      MAPAssignActivity(spectra                   = spectra,
+                        sigs                      = sigs,
+                        use.sparse.assign         = TRUE,
+                        output.dir                = output.dir,
+                        max.level                 = max.level,
+                        p.thresh                  = p.thresh,
+                        m.opts                    = m.opts,
+                        num.parallel.samples      = num.parallel.samples,
+                        mc.cores.per.sample       = mc.cores.per.sample,
+                        progress.monitor          = progress.monitor,
+                        seed                      = seed,
+                        max.subsets               = .Machine$double.xmax,
+                        drop.low.mut.samples      = drop.low.mut.samples,
+                        use.sig.presence.test     = TRUE,
+                        sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
+                        sig.pres.test.p.thresh    = sig.pres.test.p.thresh,
+                        sig.pres.test.q.thresh    = sig.pres.test.q.thresh,
+                        save.files                = TRUE)
     return(retval)
   }

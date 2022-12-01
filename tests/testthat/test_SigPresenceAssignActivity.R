@@ -18,8 +18,9 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor", {
                               seed = 2561)
   
   retval2 <- 
-    SparseAssignActivity(spectra = spectra,
+    MAPAssignActivity(spectra = spectra,
                          sigs = sigs.to.use,
+                      use.sparse.assign         = TRUE,
                          output.dir = file.path(tempdir(), "Liver-HCC-2"),
                          max.level = ncol(sigs.to.use) - 1,
                          p.thresh = 0.05 / ncol(sigs.to.use),
