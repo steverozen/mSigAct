@@ -1,12 +1,16 @@
+if (FALSE) {
+  
 #' Run \code{SparseAssignActivity1} on one sample and save and plot the results
 #'
-#' @inheritParams SparseAssignActivity1
+# @inheritParams SparseAssignActivity1
 #'
 #' @param output.dir Directory path to save the output file.
 #'
 #' @importFrom utils write.csv
 #'
 #' @keywords internal
+#' @name tryingtoremove
+
 RunSparseAssignOneSample <-
   function(spect,
            sigs,
@@ -112,3 +116,4 @@ RunSparseAssignOneSample <-
                                                     ".proposed.reconstruction.pdf")))
     return(retval)
   }
+}

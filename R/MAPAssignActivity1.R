@@ -148,8 +148,7 @@ MAPAssignActivity1 <-
         ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
       MAP.recon <- CopyAttributes(from = spect, to = MAP.recon)
       
-      # FIX THIS TODO TO DO
-      if (use.sparse.assign == FALSE) {
+      if (!use.sparse.assign) {
         # Internally set max.presence.proportion to be 0.99 in case there will be -Inf
         # for MAP distances
         max.presence.proportion <- 0.99
@@ -162,7 +161,7 @@ MAPAssignActivity1 <-
                            sigs.presence.prop = sigs.presence.prop,
                            likelihood.dist = m.opts$likelihood.dist,
                            signatures = sigs[, names(best.exp), drop = FALSE])
-      } else if (use.sparse.assign == TRUE) {
+      } else if (use.sparse.assign) {
         MAP.distances <-
           DistanceMeasuresSparse(spect = spect, recon = MAP.recon, 
                                  nbinom.size = m.opts$nbinom.size,

@@ -1,3 +1,4 @@
+if (FALSE) {
 #' Component of \code{\link{SparseAssignActivity}} for one spectrum.
 #' @keywords internal
 #'
@@ -19,6 +20,7 @@
 #'   numerical optimization is in two phases; the first, global phase
 #'   might rarely find different optima depending on the random
 #'   seed.)
+#' @name tryingtoremove
 SparseAssignActivity1 <- function(spect,
                                   sigs,
                                   max.level    = 5,
@@ -201,6 +203,7 @@ SparseAssignActivity1 <- function(spect,
   return(list(proposed.assignment          = exposure,
               proposed.reconstruction      = recon,
               reconstruction.distances     = distances))
+}
 }
 
 #' Calculate several distance measures between a spectrum and its reconstruction using
