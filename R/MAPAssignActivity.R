@@ -351,9 +351,7 @@ GetTimeForMAPAssign <- function(list.of.MAP.out) {
 
 #' @keywords internal
 SortSigId <- function(sig.id) {
-  num <- NumFromId(sig.id)
-  sig.id2 <- sig.id[order(num)]
-  return(sig.id2)
+  return(gtools::mixedsort(x = sig.id))
 }
 
 #' @keywords internal
@@ -463,6 +461,11 @@ PlotListOfCatalogsToPdf <- function(list.of.catalogs,
 #' }
 NumFromId<- function(s) {
   return(
-    as.numeric(
+    # If there are no numerical parts from s, then there will
+    # be warning message: NAs introduced by coercion
+    # This warning message can cause the wrapper function 
+    # calling NumFromId() very slow
+    suppressWarnings(as.numeric(
       sub("[^0123456789]*(\\d+).*", "\\1", s, perl = TRUE)))
+    )
 }
