@@ -1,4 +1,4 @@
-test_that("SigPresenceAssignActivity for SBS Liver tumor", {
+test_that("PresenceAssignActivity for SBS Liver tumor", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
   indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
@@ -8,7 +8,7 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor", {
                                    cancer.type = "Liver-HCC")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
   retval1 <- 
-    SigPresenceAssignActivity(spectra = spectra,
+    PresenceAssignActivity(spectra = spectra,
                               sigs = sigs.to.use,
                               output.dir = file.path(tempdir(), "Liver-HCC-1"),
                               max.level = ncol(sigs.to.use) - 1,
@@ -18,9 +18,8 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor", {
                               seed = 2561)
   
   retval2 <- 
-    MAPAssignActivity(spectra = spectra,
+    SparseAssignActivity(spectra = spectra,
                          sigs = sigs.to.use,
-                      use.sparse.assign         = TRUE,
                          output.dir = file.path(tempdir(), "Liver-HCC-2"),
                          max.level = ncol(sigs.to.use) - 1,
                          p.thresh = 0.05 / ncol(sigs.to.use),

@@ -338,7 +338,7 @@ MAPAssignActivityInternal <-
     
     if (use.sparse.assign) {
       if (use.sig.presence.test) {
-        msg <- "SigPresenceAssignActivity1: "
+        msg <- "PresenceAssignActivity1: "
       } else {
         msg <- "SparseAssignActivity1: "
       }

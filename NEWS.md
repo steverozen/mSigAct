@@ -1,6 +1,8 @@
 # 2.3.4
 * Adding ability to turn of creating files.
 
+* Renamed exported function `SigPresenceAssignActivity` to `PresenceAssignActivity`.
+
 # 2.3.3
 * Updated subtracted spectrum plot to show the counts to be sum of absolute value of each peak.
 

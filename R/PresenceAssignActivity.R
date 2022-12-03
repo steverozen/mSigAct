@@ -35,10 +35,10 @@
 #' plausibly reconstruct \code{spectra}.
 #' 
 #' * \code{time.for.assignment}: Value from \code{system.time} for running
-#'  \code{SigPresenceAssignActivity} for each sample in \code{spectra}.
+#'  \code{PresenceAssignActivity} for each sample in \code{spectra}.
 #' 
 #' * \code{error.messages}: Only appearing if there are errors running
-#' \code{SigPresenceAssignActivity}.
+#' \code{PresenceAssignActivity}.
 #'
 #' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
 #' \code{reconstruction.distances}, \code{all.tested},
@@ -59,16 +59,16 @@
 #' sigs.prop <- ExposureProportions(mutation.type = "SBS96",
 #'                                  cancer.type = "Lung-AdenoCA")
 #' sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
-#' retval <- SigPresenceAssignActivity(spectra = spectra,
-#'                                     sigs = sigs.to.use,
-#'                                     output.dir = file.path(tempdir(), "Lung-AdenoCA"),
-#'                                     max.level = ncol(sigs.to.use) - 1,
-#'                                     p.thresh = 0.05 / ncol(sigs.to.use),
-#'                                     num.parallel.samples = 2,
-#'                                     mc.cores.per.sample = 30,
-#'                                     seed = 2561)
+#' retval <- PresenceAssignActivity(spectra = spectra,
+#'                                  sigs = sigs.to.use,
+#'                                  output.dir = file.path(tempdir(), "Lung-AdenoCA"),
+#'                                  max.level = ncol(sigs.to.use) - 1,
+#'                                  p.thresh = 0.05 / ncol(sigs.to.use),
+#'                                  num.parallel.samples = 2,
+#'                                  mc.cores.per.sample = 30,
+#'                                  seed = 2561)
 #'}
-SigPresenceAssignActivity <- 
+PresenceAssignActivity <- 
   function(spectra,
            sigs,
            output.dir,
