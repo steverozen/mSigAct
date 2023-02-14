@@ -16,6 +16,8 @@ calculate_p_thresh <- function(p_thresh_level, sig) {
   return(p_thresh)
 }
 
+my_opts$trace <- 1e10
+
 test <-
   mSigAct::PresenceAssignActivity(spectra = liver_sample_to_test, 
                                   sigs = liver_sig_non_msi, 

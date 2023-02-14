@@ -131,7 +131,7 @@ MAPAssignActivity1 <-
       
       xx <- ListOfList2Tibble(MAPout)
       
-      if (!use.sparse.assign) { # FIX ME TODO TO DO
+      if (!use.sparse.assign) { 
         best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
       } else if (use.sparse.assign) {
         best <- dplyr::arrange(xx, .data$df, .data$loglh.of.exp)[nrow(xx), ]
