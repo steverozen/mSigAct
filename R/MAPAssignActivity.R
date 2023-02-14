@@ -249,7 +249,7 @@ GetDistanceInfo <- function(list.of.MAP.out, sparse.assign = FALSE) {
   QP.retval <- do.call(dplyr::bind_rows, QP.tmp)
   rownames(QP.retval) <- names(list.of.MAP.out)
   
-  if (sparse.assign == FALSE) {
+  if (!sparse.assign) {
     return(list(MAP.distances = MAP.retval, QP.distances = QP.retval))
   } else {
     return(list(sparse.assign.distances = MAP.retval, QP.distances = QP.retval))
