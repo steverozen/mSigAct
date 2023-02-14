@@ -470,7 +470,7 @@ MAPAssignActivityInternal <-
       df0 <- c(ss, list(prob.of.model        = df0.prob.of.model,
                         MAP                  = lh.w.all + df0.prob.of.model,
                         df                   = 0))
-    } else if (use.sparse.assign == TRUE) {
+    } else if (use.sparse.assign) {
       df0 <- c(ss, list(df = 0))
     }
     
@@ -543,7 +543,7 @@ MAPAssignActivityInternal <-
               prob.of.model        = prob.of.model,
               MAP                  = try.exp[["loglh"]] + prob.of.model,
               df                   = df)))
-      } else if (use.sparse.assign == TRUE) {
+      } else if (use.sparse.assign) {
         return(c(rr, list(df = df)))
       }
       
