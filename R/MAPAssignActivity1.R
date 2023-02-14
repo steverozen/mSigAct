@@ -328,7 +328,7 @@ MAPAssignActivityInternal <-
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
     
-    if (use.sparse.assign == FALSE) {
+    if (!use.sparse.assign) {
       if (missing(sigs.presence.prop)) {
         stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
       }
@@ -349,7 +349,7 @@ MAPAssignActivityInternal <-
     my.msg <- function(trace.level, ...)
       if (m.opts$trace >= trace.level) message(msg, ...)
     
-    if (use.sparse.assign == FALSE) {
+    if (!use.sparse.assign) {
       sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
         max.presence.proportion
       
@@ -371,7 +371,7 @@ MAPAssignActivityInternal <-
     my.msg(10, "number of signatures = ", max.sig.index)
     mode(spect) <-  'numeric'
     
-    if (use.sparse.assign == FALSE) {
+    if (!use.sparse.assign) {
       if (!isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop)))) {
         msg <- paste("class sigs =", 
                      class(sigs), 
@@ -464,7 +464,7 @@ MAPAssignActivityInternal <-
                exp                  = start.exp[non.0.exp.index],
                loglh.of.exp         = lh.w.all)
     
-    if (use.sparse.assign == FALSE) {
+    if (!use.sparse.assign) {
       df0.prob.of.model <- P.of.M(df0.sig.names, sigs.presence.prop)
       
       df0 <- c(ss, list(prob.of.model        = df0.prob.of.model,
