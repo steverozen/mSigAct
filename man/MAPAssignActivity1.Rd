@@ -108,7 +108,7 @@ between \code{spect} and \code{proposed.reconstruction}.
 \item \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
 that are statistically as good as the \code{proposed.assignment} that can
 plausibly reconstruct \code{spect}.
-\item \code{time.for.MAP.assign}: Value from \code{system.time} for running
+\item \code{time.for.assignment}: Value from \code{system.time} for running
 \code{MAPAssignActivity1}.
 \item \code{error.messages}: Only present if there were errors running
 \code{MAPAssignActivity1}.
@@ -116,7 +116,7 @@ plausibly reconstruct \code{spect}.
 
 The elements \code{proposed.assignment}, \code{proposed.reconstruction},
 \code{reconstruction.distances}, \code{all.tested},
-\code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+\code{time.for.assignment} will be \code{NULL} if the algorithm could not
 find the optimal reconstruction or there are errors coming out.
 }
 \description{

@@ -103,6 +103,6 @@ PresenceAssignActivity <-
                         sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
                         sig.pres.test.p.thresh    = sig.pres.test.p.thresh,
                         sig.pres.test.q.thresh    = sig.pres.test.q.thresh,
-                        save.files                = TRUE)
+                        save.files                = save.files)
     return(retval)
   }

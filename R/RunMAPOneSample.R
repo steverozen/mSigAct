@@ -31,13 +31,6 @@ RunMAPOnOneSample <-
            sig.pres.test.q.thresh      = NULL,
            save.files) {
     
-    # if (drop.low.mut.samples) {
-    #  browser()
-    #  spect <- DropLowMutationSamples(spect)
-    #} else {
-    #  spect <- spect
-    #}
-    
     if (!dir.exists(output.dir)) {
       dir.create(output.dir, recursive = TRUE)
     }
@@ -61,7 +54,7 @@ RunMAPOnOneSample <-
       sig.pres.test.p.thresh     = sig.pres.test.p.thresh,
       sig.pres.test.q.thresh     = sig.pres.test.q.thresh)
     
-    if (!is.null(retval$error.messages)) {
+    if (retval$error.messages != "") {
       return(retval)
     }
     

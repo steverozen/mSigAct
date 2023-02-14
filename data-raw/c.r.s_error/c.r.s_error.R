@@ -1,4 +1,5 @@
 
+load("data-raw/c.r.s_error/liver_sample_test.Rdata")
 
 calculate_p_thresh <- function(p_thresh_level, sig) {
   if (p_thresh_level == "mid") {
@@ -23,5 +24,6 @@ test <-
                                   p.thresh = calculate_p_thresh(p_thresh_level = "vlow", sig = liver_sig_non_msi), 
                                   m.opts = my_opts, 
                                   num.parallel.samples = 1, 
-                                  mc.cores.per.sample = 100, 
-                                  seed = 145879)
+                                  mc.cores.per.sample = 50, 
+                                  seed = 145879,
+                                  save.files = TRUE)

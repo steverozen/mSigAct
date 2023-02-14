@@ -3,6 +3,8 @@
 
 * Renamed exported function `SigPresenceAssignActivity` to `PresenceAssignActivity`.
 
+* Standardized name of the variable storing execution time to `time.for.assignment`.
+
 # 2.3.3
 * Updated subtracted spectrum plot to show the counts to be sum of absolute value of each peak.
 

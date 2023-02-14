@@ -29,7 +29,7 @@
 #' that are statistically as good as the \code{proposed.assignment} that can
 #' plausibly reconstruct \code{spect}.
 #' 
-#' * \code{time.for.MAP.assign}: Value from \code{system.time} for running
+#' * \code{time.for.assignment}: Value from \code{system.time} for running
 #'  \code{MAPAssignActivity1}.
 #'
 #' * \code{error.messages}: Only present if there were errors running
@@ -37,7 +37,7 @@
 #'
 #' The elements \code{proposed.assignment}, \code{proposed.reconstruction},
 #' \code{reconstruction.distances}, \code{all.tested},
-#' \code{time.for.MAP.assign} will be \code{NULL} if the algorithm could not
+#' \code{time.for.assignment} will be \code{NULL} if the algorithm could not
 #' find the optimal reconstruction or there are errors coming out.
 #' 
 #' @md
@@ -103,14 +103,14 @@ MAPAssignActivity1 <-
       return(null.retval)
     }
     
-    # This next assignment initializes time.for.MAP.assign to a very small
+    # This next assignment initializes time.for.assignment to a very small
     # value, which is used if the call to MAPAssignActivitingInternal
     # generates an error.
-    time.for.MAP.assign <- system.time(3)
+    time.for.assignment <- system.time(3)
     
     tryCatch({
       
-      time.for.MAP.assign <- system.time(
+      time.for.assignment <- system.time(
         MAPout <- MAPAssignActivityInternal(
           spect                       = spect,
           sigs                        = sigs,
@@ -131,9 +131,9 @@ MAPAssignActivity1 <-
       
       xx <- ListOfList2Tibble(MAPout)
       
-      if (use.sparse.assign == FALSE) { # FIX ME TODO TO DO
+      if (!use.sparse.assign) { # FIX ME TODO TO DO
         best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
-      } else if (use.sparse.assign == TRUE) {
+      } else if (use.sparse.assign) {
         best <- dplyr::arrange(xx, .data$df, .data$loglh.of.exp)[nrow(xx), ]
       }
       
@@ -217,7 +217,7 @@ MAPAssignActivity1 <-
                   reconstruction.distances     = MAP.distances,
                   all.tested                   = all.tested,
                   alt.solutions                = alt.solutions,
-                  time.for.MAP.assign          = time.for.MAP.assign,
+                  time.for.assignment          = time.for.assignment,
                   error.messages               = ""
       ))
       
@@ -226,7 +226,7 @@ MAPAssignActivity1 <-
       if (!is.null(err.info$message)) err.info <- err.info$message
       message(err.info)
       null.retval$error.messages <- err.info
-      null.retval$time.for.MAP.assign <- time.for.MAP.assign
+      null.retval$time.for.assignment <- time.for.assignment
       return(null.retval)
     })
   }
@@ -908,7 +908,7 @@ GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1,
 #'
 #' \item{success}{\code{TRUE} is search was successful, \code{FALSE} otherwise.}
 #'
-#' \item{time.for.MAP.assign}{Value from \code{system.time} for
+#' \item{time.for.assignment}{Value from \code{system.time} for
 #'  \code{\link{MAPAssignActivityInternal}}}.
 #'
 #' \item{MAP.recon}{Reconstruction based on \code{MAP}}.
