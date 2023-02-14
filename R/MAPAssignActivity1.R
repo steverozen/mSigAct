@@ -453,6 +453,8 @@ MAPAssignActivityInternal <-
              paste(removed.sig.names, collapse = ", "))
     }
     
+    remained.sigs <- sigs[, non.0.exp.index, drop = FALSE]
+    browser()
     df0.sig.names <- colnames(sigs)[non.0.exp.index]
     my.msg(1, "Starting with ",
            paste(df0.sig.names, collapse = ","),
