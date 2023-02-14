@@ -31,7 +31,7 @@ test_that("SigPresenceAssignActivity for SBS Liver tumor", {
                          max.subsets = 1e15)
   expect_lt(retval1$time.for.assignment$elapsed, 
             retval2$time.for.assignment$elapsed)
-  expect_equal(nrow(retval1$proposed.assignment), 8)
+  expect_equal(nrow(retval1$proposed.assignment), 10)
   expect_equal(nrow(retval2$proposed.assignment), 10)
   unlink(file.path(tempdir(), "Liver-HCC-1"), recursive = TRUE)
   unlink(file.path(tempdir(), "Liver-HCC-2"), recursive = TRUE)

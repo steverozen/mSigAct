@@ -1,3 +1,6 @@
+# 2.3.2
+* Minor text update for the subtracted spectrum in reconstruction plot.
+
 # 2.3.1
 * Made the default value for argument `sig.pres.test.nbinom.size` to be NULL in
 various internal and exported functions.
