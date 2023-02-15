@@ -14,7 +14,8 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
 
   sigs.to.choose <- sigs
   optimal.sigs <- sigs[, 0, drop = FALSE]
-
+  optimal.exposure <- start$exposure
+  
   for (step in seq_len(ncol(sigs))) {
     if (m.opts$trace >= 0) {
       message(
@@ -93,4 +94,6 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
 
     sigs.to.choose <- sigs.to.choose[, -index, drop = FALSE]
   }
+  
+  return(optimal.exposure = optimal.exposure)
 }
