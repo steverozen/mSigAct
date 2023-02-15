@@ -67,6 +67,7 @@ MAPAssignActivity1 <-
            seed                       = NULL,
            max.subsets                = 1000,
            use.sparse.assign          = FALSE,
+           use.forward.search         = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
@@ -124,24 +125,30 @@ MAPAssignActivity1 <-
           progress.monitor            = progress.monitor,
           seed                        = seed,
           use.sparse.assign           = use.sparse.assign,
+          use.forward.search          = use.forward.search,
           use.sig.presence.test       = use.sig.presence.test,
           sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
           sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
           sig.pres.test.q.thresh      = sig.pres.test.q.thresh))
       
-      xx <- ListOfList2Tibble(MAPout)
-      
-      if (!use.sparse.assign) { 
-        best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
-      } else if (use.sparse.assign) {
-        best <- dplyr::arrange(xx, .data$df, .data$loglh.of.exp)[nrow(xx), ]
+      if (use.forward.search) {
+        best.exp <- MAPout 
+      } else {
+        xx <- ListOfList2Tibble(MAPout)
+        
+        if (!use.sparse.assign) { 
+          best <- dplyr::arrange(xx, .data$MAP)[nrow(xx),  ]
+        } else if (use.sparse.assign) {
+          best <- dplyr::arrange(xx, .data$df, .data$loglh.of.exp)[nrow(xx), ]
+        }
+        
+        names.best <- names(best[["exp"]])
+        best.exp <- best[["exp"]][[1]]
+        if (is.null(names(best.exp))) {
+          names(best.exp) <- names.best
+        }
       }
       
-      names.best <- names(best[["exp"]])
-      best.exp <- best[["exp"]][[1]]
-      if (is.null(names(best.exp))) {
-        names(best.exp) <- names.best
-      }
       MAP <- tibble::tibble(sig.id = names(best.exp), count = best.exp)
       
       MAP.recon <-
@@ -186,6 +193,7 @@ MAPAssignActivity1 <-
       # remove these signatures from the exposure matrix
       non.zero.indices <- rowSums(exposure) > 0
       exposure <- exposure[non.zero.indices, , drop = FALSE]
+      exposure <- exposure[SortSigId(rownames(exposure)), , drop = FALSE]
       
       MAP.recon <- round(MAP.recon)
       colnames(MAP.recon) <- colnames(spect)
@@ -193,25 +201,31 @@ MAPAssignActivity1 <-
       # Add attributes to MAP.recon to be same as spect
       MAP.recon <- CopyAttributes(to = MAP.recon, from = spect)
       
-      all.tested <- TestAltSolutions(tibble = xx, 
-                                     sparse.assign = use.sparse.assign)
-      # all.tested is a data.frame with columns
-      # "sig.names"
-      # "p.for.sig.subset"
-      # "exp"
-      # "loglh.of.exp"
-      # "df"
-      # "akaike.weights"  
-      # "LRT.p.value"
-      # "LRT.q.value"
+      if (use.forward.search) {
+        all.tested <- NULL
+        alt.solutions <- NULL
+      } else {
+        all.tested <- TestAltSolutions(tibble = xx, 
+                                       sparse.assign = use.sparse.assign)
+        # all.tested is a data.frame with columns
+        # "sig.names"
+        # "p.for.sig.subset"
+        # "exp"
+        # "loglh.of.exp"
+        # "df"
+        # "akaike.weights"  
+        # "LRT.p.value"
+        # "LRT.q.value"
+        
+        alt.solutions <- GetAltSolutions(tibble = all.tested,
+                                         spectrum = spect,
+                                         sigs = sigs, 
+                                         mc.cores = max.mc.cores,
+                                         sparse.assign = use.sparse.assign,
+                                         wt.thresh = 0.95,
+                                         q.thresh = 0.05)
+      }
       
-      alt.solutions <- GetAltSolutions(tibble = all.tested,
-                                       spectrum = spect,
-                                       sigs = sigs, 
-                                       mc.cores = max.mc.cores,
-                                       sparse.assign = use.sparse.assign,
-                                       wt.thresh = 0.95,
-                                       q.thresh = 0.05)
       return(list(proposed.assignment          = exposure,
                   proposed.reconstruction      = MAP.recon,
                   reconstruction.distances     = MAP.distances,
@@ -292,6 +306,9 @@ MAPAssignActivity1 <-
 #'   arguments designed for Maximum A Posteriori assignment such as
 #'   \code{sigs.presence.prop} will be ignored.
 #'   
+#' @param use.forward.search Whether to use forward search to find the minimal
+#'   number of signatures to optimally reconstruct the spectrum.
+#'   
 #' @param use.sig.presence.test Whether to use signature presence test first to
 #'   filter out those signatures that are not needed in the reconstruction of
 #'   the spectrum.
@@ -320,6 +337,7 @@ MAPAssignActivityInternal <-
            progress.monitor           = NULL,
            seed                       = NULL,
            use.sparse.assign          = FALSE,
+           use.forward.search         = FALSE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
            sig.pres.test.p.thresh     = 0.05,
@@ -454,7 +472,16 @@ MAPAssignActivityInternal <-
     }
     
     remained.sigs <- sigs[, non.0.exp.index, drop = FALSE]
-    browser()
+    
+    if (use.forward.search) {
+      optimal.exposure <-
+        ForwardSearch(spect = spect, sigs = remained.sigs,
+                      m.opts = m.opts, max.mc.cores = max.mc.cores,
+                      p.thresh = p.thresh)
+      
+      return(optimal.exposure)
+    }
+    
     df0.sig.names <- colnames(sigs)[non.0.exp.index]
     my.msg(1, "Starting with ",
            paste(df0.sig.names, collapse = ","),

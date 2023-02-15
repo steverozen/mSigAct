@@ -24,6 +24,7 @@ RunMAPOnOneSample <-
            seed                        = NULL,
            max.subsets                 = 1000,
            use.sparse.assign           = FALSE,
+           use.forward.search          = FALSE,
            drop.low.mut.samples        = TRUE,
            use.sig.presence.test       = FALSE,
            sig.pres.test.nbinom.size   = NULL,
@@ -48,6 +49,7 @@ RunMAPOnOneSample <-
       seed                       = seed,
       max.subsets                = max.subsets,
       use.sparse.assign          = use.sparse.assign,
+      use.forward.search         = use.forward.search,
       drop.low.mut.samples       = drop.low.mut.samples, 
       use.sig.presence.test      = use.sig.presence.test,
       sig.pres.test.nbinom.size  = sig.pres.test.nbinom.size,
@@ -71,7 +73,9 @@ RunMAPOnOneSample <-
     output.path <- file.path(output.dir, spect.name)
     dir.create(path = output.path, showWarnings = FALSE)
     
-    if (use.sparse.assign) {
+    if (use.forward.search) {
+      algorithm <- "forward.search" 
+    } else if (use.sparse.assign) {
       algorithm <- "sparse"
     } else {
       algorithm <- "MAP"

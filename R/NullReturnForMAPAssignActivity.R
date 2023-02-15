@@ -69,7 +69,7 @@ NullReturnForMAPAssignActivity <-
            reconstruction.distances      = default.distances,
            all.tested                    = all.tested,
            alt.solutions                 = alt.solutions,
-           time.for.MAP.assign           = time.used,
+           time.for.assignment           = time.used,
            error.messages                = msg
       ))
   }

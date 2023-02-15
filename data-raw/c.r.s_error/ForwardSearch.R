@@ -1,3 +1,18 @@
+if (FALSE) {
+  spect <<- spect
+  sigs <<- remained.sigs
+  m.opts <<- m.opts
+  max.mc.cores <<- max.mc.cores
+  p.thresh <<- p.thresh
+
+  save(spect, sigs, m.opts, max.mc.cores, p.thresh,
+    file = "data-raw/c.r.s_error/forward_search_test.Rdata"
+  )
+}
+
+load("data-raw/c.r.s_error/forward_search_test.Rdata")
+
+
 ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
   start <- OptimizeExposure(spectrum = spect, sigs = sigs, m.opts = m.opts)
   lh.w.all <- start$loglh # The likelihood with all signatures
@@ -94,3 +109,9 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
     sigs.to.choose <- sigs.to.choose[, -index, drop = FALSE]
   }
 }
+
+optimal.exposure <-
+  ForwardSearch(
+    spect = spect, sigs = sigs, m.opts = m.opts,
+    max.mc.cores = max.mc.cores, p.thresh = p.thresh
+  )

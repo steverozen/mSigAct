@@ -119,10 +119,11 @@ test_that("MAPAssignActivity1 for ID Catalog", {
     sigs                    = sigs,
     sigs.presence.prop      = sigs.prop,
     max.level               = ncol(sigs) - 1,
-    p.thresh                = 0.01,
+    p.thresh                = 0.05 / ncol(sigs) ,
     m.opts                  = my.opts,
     max.mc.cores            = 60,
-    seed                    = 2351)
+    seed                    = 2351, 
+    use.forward.search      = T)
   
   expect_equal(nrow(retval1$proposed.assignment), 14)
 })

@@ -17,6 +17,7 @@ MAPAssignActivityInternal(
   progress.monitor = NULL,
   seed = NULL,
   use.sparse.assign = FALSE,
+  use.forward.search = FALSE,
   use.sig.presence.test = FALSE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
@@ -76,6 +77,9 @@ seed.)}
 \item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
 arguments designed for Maximum A Posteriori assignment such as
 \code{sigs.presence.prop} will be ignored.}
+
+\item{use.forward.search}{Whether to use forward search to find the minimal
+number of signatures to optimally reconstruct the spectrum.}
 
 \item{use.sig.presence.test}{Whether to use signature presence test first to
 filter out those signatures that are not needed in the reconstruction of

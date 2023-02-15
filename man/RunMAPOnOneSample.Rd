@@ -17,6 +17,7 @@ RunMAPOnOneSample(
   seed = NULL,
   max.subsets = 1000,
   use.sparse.assign = FALSE,
+  use.forward.search = FALSE,
   drop.low.mut.samples = TRUE,
   use.sig.presence.test = FALSE,
   sig.pres.test.nbinom.size = NULL,
@@ -77,6 +78,9 @@ not proceed.}
 \item{use.sparse.assign}{Whether to use sparse assignment. If \code{TRUE},
 arguments designed for Maximum A Posteriori assignment such as
 \code{sigs.presence.prop} will be ignored.}
+
+\item{use.forward.search}{Whether to use forward search to find the minimal
+number of signatures to optimally reconstruct the spectrum.}
 
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
 the analysis. If \code{TRUE(default)}, samples with SBS total mutations less

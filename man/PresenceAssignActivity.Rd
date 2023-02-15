@@ -17,6 +17,7 @@ PresenceAssignActivity(
   progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
+  use.forward.search = FALSE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
   sig.pres.test.q.thresh = NULL,
@@ -62,6 +63,9 @@ seed.)}
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
 the analysis. If \code{TRUE}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
+
+\item{use.forward.search}{Whether to use forward search to find the minimal
+number of signatures to optimally reconstruct the spectrum.}
 
 \item{sig.pres.test.nbinom.size}{The dispersion parameter for the negative
 binomial distribution used when conducting signature presence test first to

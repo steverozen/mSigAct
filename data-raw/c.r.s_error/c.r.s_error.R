@@ -1,4 +1,3 @@
-
 load("data-raw/c.r.s_error/liver_sample_test.Rdata")
 
 calculate_p_thresh <- function(p_thresh_level, sig) {
@@ -16,16 +15,32 @@ calculate_p_thresh <- function(p_thresh_level, sig) {
   return(p_thresh)
 }
 
-#my_opts$trace <- 1e10
-
 test <-
-  mSigAct::PresenceAssignActivity(spectra = liver_sample_to_test, 
-                                  sigs = liver_sig_non_msi, 
-                                  output.dir = "data-raw/c.r.s_error/test", 
-                                  max.level = ncol(liver_sig_non_msi) - 1, 
-                                  p.thresh = calculate_p_thresh(p_thresh_level = "vlow", sig = liver_sig_non_msi), 
-                                  m.opts = my_opts, 
-                                  num.parallel.samples = 1, 
-                                  mc.cores.per.sample = 50, 
-                                  seed = 145879,
-                                  save.files = TRUE)
+  mSigAct::PresenceAssignActivity(
+    spectra = liver_sample_to_test,
+    sigs = liver_sig_non_msi,
+    output.dir = "data-raw/c.r.s_error/test",
+    max.level = ncol(liver_sig_non_msi) - 1,
+    p.thresh = calculate_p_thresh(p_thresh_level = "vlow", sig = liver_sig_non_msi),
+    m.opts = my_opts,
+    num.parallel.samples = 1,
+    mc.cores.per.sample = 50,
+    seed = 145879,
+    save.files = TRUE
+  )
+
+
+test2 <-
+  mSigAct::PresenceAssignActivity(
+    spectra = liver_sample_to_test,
+    sigs = liver_sig_non_msi,
+    output.dir = "data-raw/c.r.s_error/forward_search_test",
+    max.level = ncol(liver_sig_non_msi) - 1,
+    p.thresh = calculate_p_thresh(p_thresh_level = "vlow", sig = liver_sig_non_msi),
+    m.opts = my_opts,
+    num.parallel.samples = 1,
+    mc.cores.per.sample = 50,
+    seed = 145879,
+    save.files = TRUE,
+    use.forward.search = TRUE
+  )

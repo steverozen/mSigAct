@@ -95,6 +95,7 @@ MAPAssignActivity <-
            seed                       = NULL,
            max.subsets                = 1000,
            use.sparse.assign          = FALSE,
+           use.forward.search         = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
@@ -127,6 +128,7 @@ MAPAssignActivity <-
         seed                        = seed,
         max.subsets                 = max.subsets,
         use.sparse.assign           = use.sparse.assign,
+        use.forward.search          = use.forward.search,
         drop.low.mut.samples        = drop.low.mut.samples, 
         use.sig.presence.test       = use.sig.presence.test,
         sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
@@ -186,8 +188,10 @@ MAPAssignActivity <-
     # proposed.reconstruction <- GetReconstructionInfo(list.of.MAP.out = retval1)
     proposed.reconstruction <- do.call(cbind, lapply(retval1, '[[', "proposed.reconstruction", drop = FALSE))
     
-    reconstruction.distances <- GetDistanceInfo(list.of.MAP.out = retval1,
-                                                  sparse.assign = use.sparse.assign)
+    reconstruction.distances <- 
+      GetDistanceInfo(list.of.MAP.out = retval1,
+                      sparse.assign = use.sparse.assign, 
+                      use.forward.search = use.forward.search)
 
     # browser()
     # all.tested <- GetAllTestedTables(list.of.MAP.out = retval1)
@@ -229,7 +233,8 @@ GetExposureInfo <- function(list.of.MAP.out) {
 #' \code{MAPAssignActivity1} or \code{SparseAssignActivity1} on multiple samples
 #'
 #' @keywords internal
-GetDistanceInfo <- function(list.of.MAP.out, sparse.assign = FALSE) {
+GetDistanceInfo <- function(list.of.MAP.out, sparse.assign = FALSE,
+                            use.forward.search = FALSE) {
   MAP.tmp <- lapply(list.of.MAP.out, FUN = function(x) {
     distances <- x$reconstruction.distances
     values <- matrix(distances$proposed.assignment, ncol = nrow(distances))
@@ -249,10 +254,12 @@ GetDistanceInfo <- function(list.of.MAP.out, sparse.assign = FALSE) {
   QP.retval <- do.call(dplyr::bind_rows, QP.tmp)
   rownames(QP.retval) <- names(list.of.MAP.out)
   
-  if (!sparse.assign) {
-    return(list(MAP.distances = MAP.retval, QP.distances = QP.retval))
-  } else {
+  if (use.forward.search) {
+    return(list(forward.search.distances = MAP.retval, QP.distances = QP.retval))
+  } else if (sparse.assign) {
     return(list(sparse.assign.distances = MAP.retval, QP.distances = QP.retval))
+  } else {
+    return(list(MAP.distances = MAP.retval, QP.distances = QP.retval))
   }
   
 }
