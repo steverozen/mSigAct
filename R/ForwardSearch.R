@@ -14,8 +14,11 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
 
   sigs.to.choose <- sigs
   optimal.sigs <- sigs[, 0, drop = FALSE]
-  optimal.exposure <- start$exposure
-  
+
+  if (ncol(sigs) == 1) {
+    return(optimal.exposure = start$exposure)
+  }
+
   for (step in seq_len(ncol(sigs) - 1)) {
     if (m.opts$trace >= 0) {
       message(
@@ -66,6 +69,7 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
     if (m.opts$trace >= 10) {
       message("p-values for each signature tested: ")
       print(p.values)
+      message("p.thresh: ", p.thresh)
     }
 
     # Find out the largest p-value
@@ -82,18 +86,24 @@ ForwardSearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
       )
     }
 
-    optimal.exposure <- retval[[index]][["exposure"]]
-
     if (largest.p.value > p.thresh) {
       if (m.opts$trace >= 0) {
         message("\nFinished forward search for ", colnames(spect))
       }
 
-      return(optimal.exposure = optimal.exposure)
+      return(optimal.exposure = retval[[index]][["exposure"]])
     }
 
     sigs.to.choose <- sigs.to.choose[, -index, drop = FALSE]
+
+    # At the last step, if the largest.p.value is still <= p.thresh,
+    # then we will use all signatures
+    if (step == ncol(sigs) - 1) {
+      if (m.opts$trace >= 0) {
+        message("\nNeed to use all signatures to reconstruct the spectrum: ", 
+                paste(colnames(sigs), collapse = " "))
+      }
+      return(optimal.exposure = start$exposure)
+    }
   }
-  
-  return(optimal.exposure = optimal.exposure)
 }
