@@ -1,3 +1,9 @@
+# 2.3.5
+* Added new internal function `TwoWaySearch`.
+
+* Added new argument `use.two.way.search` in various exported and internal functions.
+
+
 # 2.3.4.9000
 * Added new internal function `ForwardSearch`.
 

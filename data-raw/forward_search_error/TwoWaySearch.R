@@ -1,3 +1,9 @@
+save(spect, sigs, m.opts, max.mc.cores, p.thresh, optimal.exposure,
+  file = "data-raw/forward_search_error/two_way_search_testdata.Rdata"
+)
+
+load("data-raw/forward_search_error/two_way_search_testdata.Rdata")
+
 BackwardSearch <-
   function(spect, sigs, m.opts, max.mc.cores, p.thresh, optimal.exposure) {
     optimal.sigs <- sigs[, names(optimal.exposure), drop = FALSE]
@@ -118,13 +124,21 @@ TwoWaySearch <- function(spect, sigs, m.opts, max.mc.cores, p.thresh) {
       m.opts = m.opts, max.mc.cores = max.mc.cores,
       p.thresh = p.thresh
     )
-
+  
   optimal.exposure <-
     BackwardSearch(
       spect = spect, sigs = sigs,
       m.opts = m.opts, max.mc.cores = max.mc.cores,
       p.thresh = p.thresh, optimal.exposure = optimal.exposure
     )
-
+  
   return(optimal.exposure = optimal.exposure)
+    
 }
+
+retval <-
+  TwoWaySearch(
+    spect = spect, sigs = sigs,
+    m.opts = m.opts, max.mc.cores = max.mc.cores,
+    p.thresh = p.thresh
+  )

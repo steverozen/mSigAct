@@ -67,6 +67,7 @@ MAPAssignActivity1 <-
            seed                       = NULL,
            max.subsets                = 1000,
            use.sparse.assign          = FALSE,
+           use.two.way.search         = FALSE,
            use.forward.search         = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
@@ -125,13 +126,16 @@ MAPAssignActivity1 <-
           progress.monitor            = progress.monitor,
           seed                        = seed,
           use.sparse.assign           = use.sparse.assign,
+          use.two.way.search          = use.two.way.search,
           use.forward.search          = use.forward.search,
           use.sig.presence.test       = use.sig.presence.test,
           sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
           sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
           sig.pres.test.q.thresh      = sig.pres.test.q.thresh))
       
-      if (use.forward.search) {
+      if (use.two.way.search) {
+        best.exp <- MAPout 
+      } else if (use.forward.search) {
         best.exp <- MAPout 
       } else {
         xx <- ListOfList2Tibble(MAPout)
@@ -201,7 +205,7 @@ MAPAssignActivity1 <-
       # Add attributes to MAP.recon to be same as spect
       MAP.recon <- CopyAttributes(to = MAP.recon, from = spect)
       
-      if (use.forward.search) {
+      if (use.two.way.search || use.forward.search) {
         all.tested <- NULL
         alt.solutions <- NULL
       } else {
@@ -305,6 +309,10 @@ MAPAssignActivity1 <-
 #' @param use.sparse.assign Whether to use sparse assignment. If \code{TRUE},
 #'   arguments designed for Maximum A Posteriori assignment such as
 #'   \code{sigs.presence.prop} will be ignored.
+#'
+#' @param use.two.way.search Whether to use forward and backward (two way)
+#'   search to find the minimal number of signatures to optimally reconstruct
+#'   the spectrum.
 #'   
 #' @param use.forward.search Whether to use forward search to find the minimal
 #'   number of signatures to optimally reconstruct the spectrum.
@@ -337,6 +345,7 @@ MAPAssignActivityInternal <-
            progress.monitor           = NULL,
            seed                       = NULL,
            use.sparse.assign          = FALSE,
+           use.two.way.search         = FALSE,
            use.forward.search         = FALSE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
@@ -472,6 +481,15 @@ MAPAssignActivityInternal <-
     }
     
     remained.sigs <- sigs[, non.0.exp.index, drop = FALSE]
+    
+    if (use.two.way.search) {
+      optimal.exposure <-
+        TwoWaySearch(spect = spect, sigs = remained.sigs,
+                      m.opts = m.opts, max.mc.cores = max.mc.cores,
+                      p.thresh = p.thresh)
+      
+      return(optimal.exposure)
+    }
     
     if (use.forward.search) {
       optimal.exposure <-

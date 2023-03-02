@@ -17,6 +17,7 @@ PresenceAssignActivity(
   progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
+  use.two.way.search = FALSE,
   use.forward.search = FALSE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
@@ -63,6 +64,10 @@ seed.)}
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
 the analysis. If \code{TRUE}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
+
+\item{use.two.way.search}{Whether to use forward and backward (two way)
+search to find the minimal number of signatures to optimally reconstruct
+the spectrum.}
 
 \item{use.forward.search}{Whether to use forward search to find the minimal
 number of signatures to optimally reconstruct the spectrum.}
