@@ -99,8 +99,14 @@ MAPAssignActivity1 <-
       target.spectrum    = spect)
     
     if (sum(spect) < thresh.value) {
-      null.retval$error.messages <- 
-        paste0("Number of mutations < ", thresh.value)
+      if (thresh.value == 1) {
+        # When the original spectrum has 0 mutation, null.retval will 
+        # have all 0 exposure, so do not generate error msg for this
+        null.retval$error.messages <- ""
+      } else {
+        null.retval$error.messages <- 
+          paste0("Number of mutations < ", thresh.value)
+      }
       return(null.retval)
     }
     
@@ -446,7 +452,15 @@ MAPAssignActivityInternal <-
         } else {
           print(q.values)
         }
-        
+      }
+      
+      if (length(needed.sigs) == 0) {
+        # In some edge case when the spectrum has very low mutation (e.g. 2), no
+        # signature will pass the presence test above. We will use the original
+        # sigs as the needed.sigs for downstream analysis. Otherwise, there will
+        # be error in function OptimizeExposure later "probabilities must be
+        # finite, non-negative and not all 0"
+        needed.sigs <- colnames(sigs)
       }
       
       my.msg(10, "Remained signatures after signature presence test ", 

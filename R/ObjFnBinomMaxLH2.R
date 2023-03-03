@@ -23,7 +23,6 @@
 ObjFnBinomMaxLH2 <-
   function(exp, spectrum, sigs, nbinom.size, no.round.ok = FALSE,
            show.warning = FALSE, round.ok = FALSE) {
-
   if (any(is.na(exp))) return(Inf)
    
   reconstruction <-  sigs %*% exp
