@@ -3,9 +3,7 @@ CompareAndPlotLoglh <-
   function(spectrum, exposure, sigs, sig.to.test, neg.binom.size, file) {
     if (!is.matrix(exposure) && is.numeric(exposure) && !is.null(names(exposure))) {
       exposure <- as.matrix(exposure)
-    } else {
-      stop("exposure should be a matrix with rownames or a numeric vector with names")
-    }
+    } 
 
     my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
     my.opts$nbinom.size <- neg.binom.size
