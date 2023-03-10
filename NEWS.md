@@ -1,10 +1,12 @@
 # 2.3.6
-* Updated code for edge case when the input spectrum has very low mutation.
+* Added new internal function `CompareAndPlotLoglh`.
 
 # 2.3.5
 * Added new internal function `ForwardSearch`.
 
 * Added new argument `use.forward.search` in various exported and internal functions.
+
+* Updated code for edge case when the input spectrum has very low mutation.
 
 # 2.3.4
 * Adding ability to turn of creating files.
