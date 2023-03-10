@@ -68,4 +68,4 @@ remotes::install_github(repo = "steverozen/mSigAct", ref = "master")
 
 ## Reference manual
 
-<https://github.com/steverozen/mSigAct/blob/v2.3.4-branch/data-raw/mSigAct_2.3.4.pdf>
+<https://github.com/steverozen/mSigAct/blob/v2.3.6-branch/data-raw/mSigAct_2.3.6.pdf>
