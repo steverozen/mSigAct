@@ -39,8 +39,12 @@ LLHSpectrumNegBinom <-
     } else {
       thresh_value <- as.numeric(Sys.getenv("NB_LOGLH_THRESH"))
     }
-    
     indices <- which(spectrum >= thresh_value)
+    
+    if (length(indices) == 0) {
+      indices <- seq_len(length(spectrum))
+    }
+    
     loglh0 <- sum(stats::dnbinom(
       x = spectrum[indices], mu = expected.counts[indices], 
       size = nbinom.size, log =TRUE))

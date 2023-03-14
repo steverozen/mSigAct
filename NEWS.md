@@ -1,3 +1,7 @@
+# 2.3.7
+* Updated internal function `LLHSpectrumNegBinom` to enable using two models
+to calculate log likelihood.
+
 # 2.3.6
 * Added new internal function `CompareAndPlotLoglh`.
 
