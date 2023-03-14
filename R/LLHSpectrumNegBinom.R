@@ -33,9 +33,17 @@ LLHSpectrumNegBinom <-
   function(spectrum, expected.counts, nbinom.size, verbose = FALSE) {
 
     stopifnot(length(spectrum) == length(expected.counts))
-
+    
+    if (Sys.getenv("NB_LOGLH_THRESH") == "") {
+      thresh_value <- -1
+    } else {
+      thresh_value <- as.numeric(Sys.getenv("NB_LOGLH_THRESH"))
+    }
+    
+    indices <- which(spectrum >= thresh_value)
     loglh0 <- sum(stats::dnbinom(
-      x = spectrum, mu = expected.counts, size = nbinom.size, log =TRUE))
+      x = spectrum[indices], mu = expected.counts[indices], 
+      size = nbinom.size, log =TRUE))
     
     if (is.nan(loglh0)) {
       warning("loglh0 is Nan, changing to -Inf")
