@@ -24,11 +24,11 @@ test <- SignaturePresenceTest1(spectrum = spectrum,
 skin_samples <- 
   readRDS("data-raw/loglh_two_model/dbs2_skin_samples_paa_only_size_8.Rds")
 dbs_spectra <- PCAWG7::spectra$PCAWG$DBS78
-skin_spectra <- dbs_spectra[, skin_samples]
+indices <- grep(pattern = "Skin", x = colnames(dbs_spectra))
+skin_spectra <- dbs_spectra[, indices]
 
 View(skin_spectra)
 peak_counts <- skin_spectra["CCAA", ]
-
 
 load("data-raw/loglh_two_model/test_loglh_two_model.Rdata")
 library(ICAMS)
@@ -94,9 +94,11 @@ paa_retval <-
     num.parallel.samples = 30,
     mc.cores.per.sample = 5,
     seed = 145879,
-    save.files = TRUE,
+    save.files = FALSE,
+    drop.low.mut.samples = FALSE,
     use.forward.search = TRUE
   )
+saveRDS(paa_retval, file = "data-raw/loglh_two_model/paa/nb_loglh_thresh_11.Rds")
 paa_exp <- paa_retval$proposed.assignment
 dbs2_exp <- paa_exp["DBS2", ]
 dbs2_exp_non_zero <- dbs2_exp[dbs2_exp > 0]
@@ -122,7 +124,7 @@ paa_retval_20 <-
     num.parallel.samples = 30,
     mc.cores.per.sample = 5,
     seed = 145879,
-    save.files = TRUE,
+    save.files = FALSE,
     use.forward.search = TRUE
   )
 paa_exp_20 <- paa_retval_20$proposed.assignment
@@ -151,7 +153,7 @@ paa_retval_30 <-
     num.parallel.samples = 30,
     mc.cores.per.sample = 5,
     seed = 145879,
-    save.files = TRUE,
+    save.files = FALSE,
     use.forward.search = TRUE
   )
 paa_exp_30 <- paa_retval_30$proposed.assignment
@@ -177,7 +179,7 @@ test1 <-
     num.parallel.samples = 1,
     mc.cores.per.sample = 10,
     seed = 145879,
-    save.files = TRUE,
+    save.files = FALSE,
     use.forward.search = TRUE
   )
 
