@@ -1,5 +1,8 @@
 # 2.3.7
-* Updated internal function `LLHSpectrumNegBinom` to enable using two models
+* Updated internal function `LLHSpectrumMultinom` to enable getting rid of some peaks
+to calculate log likelihood.
+
+* Updated internal function `LLHSpectrumNegBinom` to enable getting rid of some peaks
 to calculate log likelihood.
 
 # 2.3.6
