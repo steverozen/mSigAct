@@ -1,3 +1,6 @@
+# 2.3.8
+* Added new internal function `CustomizeManyOpts` and tests for it.
+
 # 2.3.6
 * Added new internal function `CompareAndPlotLoglh`.
 

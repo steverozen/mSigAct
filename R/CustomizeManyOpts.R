@@ -16,6 +16,7 @@ CustomizeManyOpts <- function(loglh.fn) {
     trace             = 0,
     global_eval_f     = object.fn,
     local_eval_f      = object.fn,
-    local_eval_g_ineq = g_ineq_for_object.fn
+    local_eval_g_ineq = g_ineq_for_object.fn,
+    loglh.fn          = loglh.fn
   ))
 }

@@ -179,7 +179,8 @@ MAPAssignActivity1 <-
           DistanceMeasuresSparse(spect = spect, recon = MAP.recon, 
                                  nbinom.size = m.opts$nbinom.size,
                                  likelihood.dist = m.opts$likelihood.dist,
-                                 signatures = sigs[, names(best.exp), drop = FALSE])
+                                 signatures = sigs[, names(best.exp), drop = FALSE],
+                                 m.opts = m.opts)
       }
       
       # MAP.distances are distances from (1)

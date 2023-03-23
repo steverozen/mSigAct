@@ -243,7 +243,8 @@ SparseAssignActivity1 <- function(spect,
 #' @keywords internal
 
 DistanceMeasuresSparse <- 
-  function(spect, recon, nbinom.size, likelihood.dist = "multinom", signatures = NULL) {
+  function(spect, recon, nbinom.size, likelihood.dist = "multinom", 
+           signatures = NULL, m.opts = NULL) {
     my.fn <- function(method, spect, recon) {
       df <- rbind(as.vector(spect),
                   as.vector(recon))
@@ -254,7 +255,10 @@ DistanceMeasuresSparse <-
     
     vv <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
                         spect = spect, recon = recon))
-    if (likelihood.dist == "multinom") {
+    
+    if (is.null(likelihood.dist)) {
+      log.likelihood <- m.opts$loglh.fn(as.vector(spect), as.vector(recon))
+    } else if (likelihood.dist == "multinom") {
       log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(recon))
     } else if (likelihood.dist == "neg.binom") {
       log.likelihood <- 
@@ -272,13 +276,14 @@ DistanceMeasuresSparse <-
       QP.distances <- unlist(lapply(c("euclidean", "manhattan","cosine"), my.fn,
                                     spect = spect, recon = QP.recon))
       
-      if (likelihood.dist == "multinom") {
+      if (is.null(likelihood.dist)) {
+        log.likelihood <- m.opts$loglh.fn(as.vector(spect), as.vector(QP.recon))
+      } else if (likelihood.dist == "multinom") {
         log.likelihood <- LLHSpectrumMultinom(as.vector(spect), as.vector(QP.recon))
       } else if (likelihood.dist == "neg.binom") {
         log.likelihood <- 
           LLHSpectrumNegBinom(as.vector(spect), as.vector(QP.recon), nbinom.size = nbinom.size)
-      }
-      
+      } 
       
       QP.distances <- c(log.likelihood = log.likelihood, QP.distances)
       
