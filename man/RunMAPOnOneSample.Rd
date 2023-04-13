@@ -23,7 +23,7 @@ RunMAPOnOneSample(
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
   sig.pres.test.q.thresh = NULL,
-  save.files
+  save.files = TRUE
 )
 }
 \arguments{

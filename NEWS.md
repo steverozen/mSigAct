@@ -1,6 +1,10 @@
 # 2.3.9
 * Updated internal function `LLHSpectrumNegBinom` to automatically getting rid of some peaks to calculate log likelihood for DBS78 data.
 
+* Removed documentation for sparse assign functions.
+
+* Changed code not to create output directories when argument `save.files = FALSE` .
+
 # 2.3.8
 * Added new internal function `CustomizeManyOpts` and tests for it.
 

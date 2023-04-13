@@ -27,7 +27,6 @@ lower the objective function, the better.
 Can be used as the
 objective function for \code{\link{MAPAssignActivity}},
 \code{\link{MAPAssignActivity1}},
-\code{\link{SparseAssignActivity}},
 \code{\link{SignaturePresenceTest}}
 and \code{\link{SignaturePresenceTest1}}.
 (Internally used by by \code{\link[nloptr]{nloptr}}.)

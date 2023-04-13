@@ -1,26 +1,4 @@
 if (FALSE) {
-#' Component of \code{\link{SparseAssignActivity}} for one spectrum.
-#' @keywords internal
-#'
-#' @param spect A single spectrum.
-#'
-#' @param sigs A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.
-#'
-#' @param max.level The maximum number of signatures to try removing.
-#'
-#' @param p.thresh The p value threshold for deciding if a set of signatures is necessary.
-#'
-#' @param m.opts See \code{\link{DefaultManyOpts}}.
-#'
-#' @param max.mc.cores
-#'   The maximum number of cores to use.
-#'   On Microsoft Windows machines it is silently changed to 1.)
-#'   
-#' @param seed Random seed; set this to get reproducible results. (The
-#'   numerical optimization is in two phases; the first, global phase
-#'   might rarely find different optima depending on the random
-#'   seed.)
-#' @name tryingtoremove
 SparseAssignActivity1 <- function(spect,
                                   sigs,
                                   max.level    = 5,

@@ -30,9 +30,9 @@ RunMAPOnOneSample <-
            sig.pres.test.nbinom.size   = NULL,
            sig.pres.test.p.thresh      = 0.05,
            sig.pres.test.q.thresh      = NULL,
-           save.files) {
+           save.files                  = TRUE) {
     
-    if (!dir.exists(output.dir)) {
+    if (save.files && !dir.exists(output.dir)) {
       dir.create(output.dir, recursive = TRUE)
     }
     
