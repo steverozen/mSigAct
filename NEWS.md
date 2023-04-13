@@ -1,3 +1,6 @@
+# 2.3.9
+* Updated internal function `LLHSpectrumNegBinom` to automatically getting rid of some peaks to calculate log likelihood for DBS78 data.
+
 # 2.3.8
 * Added new internal function `CustomizeManyOpts` and tests for it.
 
