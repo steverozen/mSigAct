@@ -4,6 +4,8 @@
 * Removed redundant arguments `sig.pres.test.nbinom.size`, `sig.pres.test.p.thresh`, `sig.pres.test.q.thresh`,  in various internal and exported
 functions.
 
+* Changed default value for argument `drop.low.mut.samples` to be `FALSE` in exported function `PresenceAssignActivity`.
+
 # 2.3.9
 * Removed documentation for sparse assign functions.
 

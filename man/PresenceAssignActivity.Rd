@@ -14,7 +14,7 @@ PresenceAssignActivity(
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level),
   seed = NULL,
-  drop.low.mut.samples = TRUE,
+  drop.low.mut.samples = FALSE,
   save.files = TRUE
 )
 }
