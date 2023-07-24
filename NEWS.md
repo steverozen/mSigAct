@@ -1,19 +1,14 @@
-# 2.3.9
-* Updated internal function `LLHSpectrumNegBinom` to automatically getting rid of some peaks to calculate log likelihood for DBS78 data.
+# 3.0.0
+* Removed argument `sig.pres.test.q.thresh` in various internal and exported
+functions.
 
+# 2.3.9
 * Removed documentation for sparse assign functions.
 
 * Changed code not to create output directories when argument `save.files = FALSE` .
 
 # 2.3.8
 * Added new internal function `CustomizeManyOpts` and tests for it.
-
-# 2.3.7
-* Updated internal function `LLHSpectrumMultinom` to enable getting rid of some peaks
-to calculate log likelihood.
-
-* Updated internal function `LLHSpectrumNegBinom` to enable getting rid of some peaks
-to calculate log likelihood.
 
 # 2.3.6
 * Added new internal function `CompareAndPlotLoglh`.

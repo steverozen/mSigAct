@@ -25,19 +25,8 @@ LLHSpectrumMultinom <-
     
     stopifnot(length(spectrum) == length(expected.counts))
     
-    if (Sys.getenv("MN_LOGLH_THRESH") == "") {
-      thresh_value <- -1
-    } else {
-      thresh_value <- as.numeric(Sys.getenv("MN_LOGLH_THRESH"))
-    }
-    indices <- which(spectrum >= thresh_value)
-    
-    if (length(indices) == 0) {
-      indices <- seq_len(length(spectrum))
-    }
-    
-    loglh0 <- stats::dmultinom(x = spectrum[indices],
-                               prob = expected.counts[indices],
+    loglh0 <- stats::dmultinom(x = spectrum,
+                               prob = expected.counts,
                                log = TRUE)
     if (is.nan(loglh0)) {
       warning("loglh0 is Nan, changing to -Inf")

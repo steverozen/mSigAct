@@ -14,8 +14,6 @@
 #'   one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
 #'   not be used for assignment later.
 #'   
-#' @param sig.pres.test.q.thresh A test parameter
-#'
 #' @return A list with the elements:
 #'
 #' * \code{proposed.assignment}: The proposed set of signatures that can
@@ -83,7 +81,6 @@ PresenceAssignActivity <-
            use.forward.search        = FALSE,
            sig.pres.test.nbinom.size = NULL,
            sig.pres.test.p.thresh    = 0.05,
-           sig.pres.test.q.thresh    = NULL,
            save.files                = TRUE) {
     
     retval <- 
@@ -104,7 +101,6 @@ PresenceAssignActivity <-
                         use.sig.presence.test     = TRUE,
                         sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
                         sig.pres.test.p.thresh    = sig.pres.test.p.thresh,
-                        sig.pres.test.q.thresh    = sig.pres.test.q.thresh,
                         save.files                = save.files)
     return(retval)
   }

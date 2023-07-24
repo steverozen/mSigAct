@@ -71,8 +71,7 @@ MAPAssignActivity1 <-
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05,
-           sig.pres.test.q.thresh     = NULL) {
+           sig.pres.test.p.thresh     = 0.05) {
     
     # If there are non integers in spect, round it first. Otherwise, there
     # will be a lot of warnings later when calculating likelihood using
@@ -134,8 +133,7 @@ MAPAssignActivity1 <-
           use.forward.search          = use.forward.search,
           use.sig.presence.test       = use.sig.presence.test,
           sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
-          sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
-          sig.pres.test.q.thresh      = sig.pres.test.q.thresh))
+          sig.pres.test.p.thresh      = sig.pres.test.p.thresh))
       
       if (use.forward.search) {
         best.exp <- MAPout 
@@ -347,8 +345,7 @@ MAPAssignActivityInternal <-
            use.forward.search         = FALSE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05,
-           sig.pres.test.q.thresh     = NULL) {
+           sig.pres.test.p.thresh     = 0.05) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
@@ -440,20 +437,11 @@ MAPAssignActivityInternal <-
       
       p.values <- sapply(sigs.presence.tests, FUN = "[[", 4)
       
-      if (is.null(sig.pres.test.q.thresh)) {
-        needed.sigs <- names(p.values[p.values < sig.pres.test.p.thresh])
-      } else {
-        q.values <- stats::p.adjust(p = p.values, method = "BH")
-        needed.sigs <- names(q.values[q.values < sig.pres.test.q.thresh])
-      }
+      needed.sigs <- names(p.values[p.values < sig.pres.test.p.thresh])
       
       if (m.opts$trace >= 10) {
-        if (is.null(sig.pres.test.q.thresh)) {
-          print(p.values)
-        } else {
-          print(q.values)
-        }
-      }
+        print(p.values)
+      } 
       
       if (length(needed.sigs) == 0) {
         # In some edge case when the spectrum has very low mutation (e.g. 2), no

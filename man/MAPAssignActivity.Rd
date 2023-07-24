@@ -24,7 +24,6 @@ MAPAssignActivity(
   use.sig.presence.test = FALSE,
   sig.pres.test.nbinom.size = NULL,
   sig.pres.test.p.thresh = 0.05,
-  sig.pres.test.q.thresh = NULL,
   save.files = TRUE
 )
 }
@@ -107,8 +106,6 @@ likelihood when conducting signature presence test.}
 = TRUE}. If the p-value of signature presence test for one signature is
 >= \code{sig.pres.test.p.thresh}, then this signature will not be used for
 assignment later.}
-
-\item{sig.pres.test.q.thresh}{Test parameter.}
 
 \item{save.files}{If \code{TRUE} save several files for each input sample
 in a directory named after the sample.}

@@ -34,21 +34,9 @@ LLHSpectrumNegBinom <-
 
     stopifnot(length(spectrum) == length(expected.counts))
     
-    if (length(spectrum) == 78) {
-      indices <- which(spectrum >= 5)
-      
-      if (length(indices) == 0) {
-        indices <- seq_len(length(spectrum))
-      }
-      
-      loglh0 <- sum(stats::dnbinom(
-        x = spectrum[indices], mu = expected.counts[indices], 
-        size = nbinom.size, log = TRUE))
-    } else {
-      loglh0 <- sum(stats::dnbinom(
-        x = spectrum, mu = expected.counts, 
-        size = nbinom.size, log = TRUE))
-    }
+    loglh0 <- sum(stats::dnbinom(
+      x = spectrum, mu = expected.counts, 
+      size = nbinom.size, log = TRUE))
     
     if (is.nan(loglh0)) {
       warning("loglh0 is Nan, changing to -Inf")

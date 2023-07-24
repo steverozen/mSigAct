@@ -20,8 +20,7 @@ MAPAssignActivity1(
   drop.low.mut.samples = TRUE,
   use.sig.presence.test = FALSE,
   sig.pres.test.nbinom.size = NULL,
-  sig.pres.test.p.thresh = 0.05,
-  sig.pres.test.q.thresh = NULL
+  sig.pres.test.p.thresh = 0.05
 )
 }
 \arguments{

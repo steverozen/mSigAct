@@ -81,9 +81,10 @@ test_that("MAPAssignActivity DBS78", {
                     sig.mutation.type = "DBS78")
   testthat::expect_equal(
     retval$proposed.assignment[, 1],
-    c(DBS2 = 21,
-      DBS4 = 12,
-      DBS11 = 39),
+    c(DBS2 = 28,
+      DBS4 = 10,
+      DBS6 = 12,
+      DBS11 = 23),
     tolerance = 1e-1
     )
 })

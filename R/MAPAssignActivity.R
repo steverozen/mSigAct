@@ -21,8 +21,6 @@
 #' the analysis. If \code{TRUE}, samples with SBS total mutations less
 #' than 100, DBS or ID total mutations less than 25 will be dropped.
 #' 
-#' @param sig.pres.test.q.thresh Test parameter.
-#' 
 #' @param save.files If \code{TRUE} save several files for each input sample
 #'   in a directory named after the sample. 
 #'
@@ -100,7 +98,6 @@ MAPAssignActivity <-
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
            sig.pres.test.p.thresh     = 0.05,
-           sig.pres.test.q.thresh     = NULL,
            save.files                 = TRUE) {
     
     null.assignment1 <- matrix(rep(0, ncol(sigs)))
@@ -133,7 +130,6 @@ MAPAssignActivity <-
         use.sig.presence.test       = use.sig.presence.test,
         sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
         sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
-        sig.pres.test.q.thresh      = sig.pres.test.q.thresh,
         save.files                  = save.files)
 
       return(retval1)
