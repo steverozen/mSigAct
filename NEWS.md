@@ -1,5 +1,5 @@
 # 3.0.0
-* Removed arguments `max.level`, `use.forward.search` in exported function `PresenceAssignActivity`.
+* Removed arguments `max.level`, `use.forward.search`, `progress.monitor` in exported function `PresenceAssignActivity`.
 
 * Removed redundant arguments `sig.pres.test.nbinom.size`, `sig.pres.test.p.thresh`, `sig.pres.test.q.thresh`,  in various internal and exported
 functions.

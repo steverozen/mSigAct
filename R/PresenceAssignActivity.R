@@ -3,17 +3,6 @@
 #'
 #' @inheritParams MAPAssignActivity
 #' 
-#' @param sig.pres.test.nbinom.size The dispersion parameter for the negative
-#'   binomial distribution used when conducting signature presence test first to
-#'   filter out those signatures that are not needed in the reconstruction of
-#'   the spectrum; smaller is more dispersed. See
-#'   \code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
-#'   likelihood when conducting signature presence test.
-#'   
-#' @param sig.pres.test.p.thresh If the p-value of signature presence test for
-#'   one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
-#'   not be used for assignment later.
-#'   
 #' @return A list with the elements:
 #'
 #' * \code{proposed.assignment}: The proposed set of signatures that can
@@ -74,7 +63,6 @@ PresenceAssignActivity <-
            m.opts                    = DefaultManyOpts(),
            num.parallel.samples      = 5,
            mc.cores.per.sample       = min(20, 2^max.level),
-           progress.monitor          = NULL,
            seed                      = NULL,
            drop.low.mut.samples      = TRUE,
            save.files                = TRUE) {
@@ -88,7 +76,6 @@ PresenceAssignActivity <-
                         m.opts                    = m.opts,
                         num.parallel.samples      = num.parallel.samples,
                         mc.cores.per.sample       = mc.cores.per.sample,
-                        progress.monitor          = progress.monitor,
                         seed                      = seed,
                         drop.low.mut.samples      = drop.low.mut.samples,
                         use.sig.presence.test     = TRUE,

@@ -13,7 +13,6 @@ PresenceAssignActivity(
   m.opts = DefaultManyOpts(),
   num.parallel.samples = 5,
   mc.cores.per.sample = min(20, 2^max.level),
-  progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
   save.files = TRUE
@@ -42,12 +41,6 @@ sample in turn can require multiple cores, as governed by
 \item{mc.cores.per.sample}{The maximum number of cores to use for each
 sample. On Microsoft Windows machines it is silently changed to 1.}
 
-\item{progress.monitor}{Function called at the start of each
-new level (number of signatures to try excluding). Must
-take named arguments \code{value} and \code{detail}, and
-no others. Designed for a \code{\link[ipc]{AsyncProgress}}
-progress bar function.}
-
 \item{seed}{Random seed; set this to get reproducible results. (The
 numerical optimization is in two phases; the first, global phase
 might rarely find different optima depending on the random
@@ -59,17 +52,6 @@ than 100, DBS or ID total mutations less than 25 will be dropped.}
 
 \item{save.files}{If \code{TRUE} save several files for each input sample
 in a directory named after the sample.}
-
-\item{sig.pres.test.nbinom.size}{The dispersion parameter for the negative
-binomial distribution used when conducting signature presence test first to
-filter out those signatures that are not needed in the reconstruction of
-the spectrum; smaller is more dispersed. See
-\code{\link[stats]{NegBinomial}}. If \code{NULL}, then use multinomial
-likelihood when conducting signature presence test.}
-
-\item{sig.pres.test.p.thresh}{If the p-value of signature presence test for
-one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
-not be used for assignment later.}
 }
 \value{
 A list with the elements:
