@@ -69,9 +69,7 @@ MAPAssignActivity1 <-
            use.sparse.assign          = FALSE,
            use.forward.search         = FALSE,
            drop.low.mut.samples       = TRUE,
-           use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05) {
+           use.sig.presence.test      = FALSE) {
     
     # If there are non integers in spect, round it first. Otherwise, there
     # will be a lot of warnings later when calculating likelihood using
@@ -131,9 +129,7 @@ MAPAssignActivity1 <-
           seed                        = seed,
           use.sparse.assign           = use.sparse.assign,
           use.forward.search          = use.forward.search,
-          use.sig.presence.test       = use.sig.presence.test,
-          sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
-          sig.pres.test.p.thresh      = sig.pres.test.p.thresh))
+          use.sig.presence.test       = use.sig.presence.test))
       
       if (use.forward.search) {
         best.exp <- MAPout 

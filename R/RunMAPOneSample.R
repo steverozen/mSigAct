@@ -27,8 +27,6 @@ RunMAPOnOneSample <-
            use.forward.search          = FALSE,
            drop.low.mut.samples        = TRUE,
            use.sig.presence.test       = FALSE,
-           sig.pres.test.nbinom.size   = NULL,
-           sig.pres.test.p.thresh      = 0.05,
            save.files                  = TRUE) {
     
     if (save.files && !dir.exists(output.dir)) {
@@ -50,9 +48,7 @@ RunMAPOnOneSample <-
       use.sparse.assign          = use.sparse.assign,
       use.forward.search         = use.forward.search,
       drop.low.mut.samples       = drop.low.mut.samples, 
-      use.sig.presence.test      = use.sig.presence.test,
-      sig.pres.test.nbinom.size  = sig.pres.test.nbinom.size,
-      sig.pres.test.p.thresh     = sig.pres.test.p.thresh)
+      use.sig.presence.test      = use.sig.presence.test)
     
     if (retval$error.messages != "") {
       return(retval)

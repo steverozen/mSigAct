@@ -5,12 +5,12 @@ on:
     branches:
       - main
       - master
-      - v2.3.4-branch
+      - v3.0.0-branch
   pull_request:
     branches:
       - main
       - master
-      - v2.3.4-branch
+      - v3.0.0-branch
 
 name: R-CMD-check
 

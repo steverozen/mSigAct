@@ -18,8 +18,6 @@ PresenceAssignActivity(
   seed = NULL,
   drop.low.mut.samples = TRUE,
   use.forward.search = FALSE,
-  sig.pres.test.nbinom.size = NULL,
-  sig.pres.test.p.thresh = 0.05,
   save.files = TRUE
 )
 }
@@ -66,6 +64,9 @@ than 100, DBS or ID total mutations less than 25 will be dropped.}
 \item{use.forward.search}{Whether to use forward search to find the minimal
 number of signatures to optimally reconstruct the spectrum.}
 
+\item{save.files}{If \code{TRUE} save several files for each input sample
+in a directory named after the sample.}
+
 \item{sig.pres.test.nbinom.size}{The dispersion parameter for the negative
 binomial distribution used when conducting signature presence test first to
 filter out those signatures that are not needed in the reconstruction of
@@ -76,9 +77,6 @@ likelihood when conducting signature presence test.}
 \item{sig.pres.test.p.thresh}{If the p-value of signature presence test for
 one signature is >= \code{sig.pres.test.p.thresh}, then this signature will
 not be used for assignment later.}
-
-\item{save.files}{If \code{TRUE} save several files for each input sample
-in a directory named after the sample.}
 }
 \value{
 A list with the elements:

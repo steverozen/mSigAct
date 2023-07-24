@@ -1,5 +1,5 @@
 # 3.0.0
-* Removed argument `sig.pres.test.q.thresh` in various internal and exported
+* Removed redundant arguments `sig.pres.test.nbinom.size`, `sig.pres.test.p.thresh`, `sig.pres.test.q.thresh`,  in various internal and exported
 functions.
 
 # 2.3.9

@@ -96,8 +96,6 @@ MAPAssignActivity <-
            use.forward.search         = FALSE,
            drop.low.mut.samples       = TRUE,
            use.sig.presence.test      = FALSE,
-           sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05,
            save.files                 = TRUE) {
     
     null.assignment1 <- matrix(rep(0, ncol(sigs)))
@@ -128,8 +126,6 @@ MAPAssignActivity <-
         use.forward.search          = use.forward.search,
         drop.low.mut.samples        = drop.low.mut.samples, 
         use.sig.presence.test       = use.sig.presence.test,
-        sig.pres.test.nbinom.size   = sig.pres.test.nbinom.size,
-        sig.pres.test.p.thresh      = sig.pres.test.p.thresh,
         save.files                  = save.files)
 
       return(retval1)
