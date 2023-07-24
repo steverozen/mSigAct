@@ -14,8 +14,8 @@
 RunMAPOnOneSample <-
   function(spect,
            sigs,
-           sigs.presence.prop,
            output.dir,
+           sigs.presence.prop          = NULL,
            max.level                   = 5,
            p.thresh                    = 0.05,
            m.opts                      = DefaultManyOpts(),
@@ -68,7 +68,7 @@ RunMAPOnOneSample <-
     dir.create(path = output.path, showWarnings = FALSE)
     
     if (use.forward.search) {
-      algorithm <- "forward.search" 
+      algorithm <- "presence.assign" 
     } else if (use.sparse.assign) {
       algorithm <- "sparse"
     } else {

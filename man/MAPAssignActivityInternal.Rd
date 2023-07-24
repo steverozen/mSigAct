@@ -7,7 +7,7 @@
 MAPAssignActivityInternal(
   spect,
   sigs,
-  sigs.presence.prop,
+  sigs.presence.prop = NULL,
   max.level = 5,
   p.thresh = 0.05,
   m.opts = DefaultManyOpts(),

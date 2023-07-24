@@ -3,7 +3,8 @@ NullReturnForMAPAssignActivity <-
   function(signature.universe,
            target.spectrum = NULL,
            msg         = "Message not set", 
-           time.used   = system.time(3)) {
+           time.used   = system.time(3),
+           use.forward.search = FALSE) {
     
     if (is.null(target.spectrum)) {
       sample.name <- "No sample"
@@ -63,13 +64,19 @@ NullReturnForMAPAssignActivity <-
         class = c("tbl_df",  "tbl", "data.frame"), 
         row.names = c(NA, -4L))
     
-    return(
+    xx <- 
       list(proposed.assignment           = null.assignment, # Not sure if this should be a 0-row matrix but that is a scalar 0
            proposed.reconstruction       = null.spect,
            reconstruction.distances      = default.distances,
-           all.tested                    = all.tested,
-           alt.solutions                 = alt.solutions,
            time.for.assignment           = time.used,
            error.messages                = msg
-      ))
+      )
+    
+    if (use.forward.search) {
+      return(xx)
+    } else {
+      return(c(xx, 
+               list(all.tested      = all.tested,
+                    alt.solutions   = alt.solutions)))
+    }
   }

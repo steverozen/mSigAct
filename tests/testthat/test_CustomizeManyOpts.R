@@ -23,8 +23,7 @@ test_that("Testing CustomizeManyOpts function for SBS", {
       num.parallel.samples    = 1,
       mc.cores.per.sample     = 10,
       seed                    = 8257,
-      save.files              = FALSE,
-      use.forward.search      = TRUE
+      save.files              = FALSE
     )
 
     return(retval)

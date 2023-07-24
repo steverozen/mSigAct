@@ -82,8 +82,8 @@
 MAPAssignActivity <-
   function(spectra,
            sigs,
-           sigs.presence.prop,
            output.dir,
+           sigs.presence.prop         = NULL,
            max.level                  = 5,
            p.thresh                   = 0.05,
            m.opts                     = DefaultManyOpts(),
@@ -106,7 +106,8 @@ MAPAssignActivity <-
     
     if (ncol(spectra) == 0) {
       return(NullReturnForMAPAssignActivity(signature.universe = sigs, 
-                                            msg = "No samples to analyse"))
+                                            msg = "No samples to analyse",
+                                            use.forward.search = use.forward.search))
     }
     
     f1 <- function(i) {
@@ -146,7 +147,8 @@ MAPAssignActivity <-
 
       null.retval <- NullReturnForMAPAssignActivity(
         signature.universe = sigs, 
-        target.spectrum    = spectra[ , nn, drop = FALSE]) # Careful, it must be that names(retval) == colnames(spectra)
+        target.spectrum    = spectra[ , nn, drop = FALSE], # Careful, it must be that names(retval) == colnames(spectra)
+        use.forward.search = use.forward.search) 
       
       rr <- retval[[nn]]
       
@@ -191,14 +193,19 @@ MAPAssignActivity <-
     
     alt.solutions <- lapply(retval1, `[[`, "alt.solutions") # delete getaltsolutions
     time.for.assignment <- GetTimeForMAPAssign(retval1)
-
-    return(list(proposed.assignment          = proposed.assignment,
-                proposed.reconstruction      = proposed.reconstruction,
-                reconstruction.distances     = reconstruction.distances,
-                all.tested                   = all.tested,
-                alt.solutions                = alt.solutions,
-                time.for.assignment          = time.for.assignment,
-                error.messages               = error.messages))
+    
+    xx <- list(proposed.assignment          = proposed.assignment,
+               proposed.reconstruction      = proposed.reconstruction,
+               reconstruction.distances     = reconstruction.distances,
+               time.for.assignment          = time.for.assignment,
+               error.messages               = error.messages)
+    
+    if (use.forward.search) {
+      return(xx)
+    } else {
+      return(c(xx, list(all.tested                   = all.tested,
+                        alt.solutions                = alt.solutions)))
+    }
   }
 
 
@@ -246,13 +253,7 @@ GetDistanceInfo <- function(list.of.MAP.out, sparse.assign = FALSE,
   QP.retval <- do.call(dplyr::bind_rows, QP.tmp)
   rownames(QP.retval) <- names(list.of.MAP.out)
   
-  if (use.forward.search) {
-    return(list(forward.search.distances = MAP.retval, QP.distances = QP.retval))
-  } else if (sparse.assign) {
-    return(list(sparse.assign.distances = MAP.retval, QP.distances = QP.retval))
-  } else {
-    return(list(MAP.distances = MAP.retval, QP.distances = QP.retval))
-  }
+  return(list(proposed.assignment = MAP.retval, QP.assignment = QP.retval))
   
 }
 

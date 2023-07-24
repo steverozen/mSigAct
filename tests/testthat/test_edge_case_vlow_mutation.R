@@ -27,14 +27,12 @@ test_that("Edge case when spectrum have very low mutation counts", {
     spectra                 = catalog,
     sigs                    = sigs,
     output.dir              = tempdir(),
-    max.level               = ncol(sigs) - 1,
     p.thresh                = 0.05 / ncol(sigs),
     m.opts                  = my.opts,
     num.parallel.samples    = 8,
     mc.cores.per.sample     = 7,
     seed                    = 2351,
-    drop.low.mut.samples    = FALSE,
-    use.forward.search      = TRUE
+    drop.low.mut.samples    = FALSE
   )
 
   expect_true(all(retval1$error.messages == ""))

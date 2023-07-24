@@ -8,8 +8,8 @@ explain multiple spectra}
 MAPAssignActivity(
   spectra,
   sigs,
-  sigs.presence.prop,
   output.dir,
+  sigs.presence.prop = NULL,
   max.level = 5,
   p.thresh = 0.05,
   m.opts = DefaultManyOpts(),
@@ -30,12 +30,12 @@ MAPAssignActivity(
 
 \item{sigs}{A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.}
 
+\item{output.dir}{Directory path to save the output file.}
+
 \item{sigs.presence.prop}{The proportions of samples that contain each
 signature. A numerical vector (values between 0 and 1), with names
 being a subset of \code{colnames(sigs)}. See \code{\link{ExposureProportions}}
 for more details.}
-
-\item{output.dir}{Directory path to save the output file.}
 
 \item{max.level}{The maximum number of signatures to try removing.}
 

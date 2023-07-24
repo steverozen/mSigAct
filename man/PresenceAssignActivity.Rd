@@ -62,22 +62,11 @@ plausibly explain \code{spectra}.
 \code{proposed.assignment}.
 \item \code{reconstruction.distances}: Various distances and similarities
 between \code{spectra} and \code{proposed.reconstruction}.
-\item \code{all.tested}: All tested possible ways to reconstruct each
-sample in \code{spectra}.
-\item \code{alt.solutions}: A \code{tibble} showing all the alternative solutions
-that are statistically as good as the \code{proposed.assignment} that can
-plausibly reconstruct \code{spectra}.
 \item \code{time.for.assignment}: Value from \code{system.time} for running
 \code{PresenceAssignActivity} for each sample in \code{spectra}.
-\item \code{error.messages}: Only appearing if there are errors running
+\item \code{error.messages}: Error messages running
 \code{PresenceAssignActivity}.
 }
-
-The elements \code{proposed.assignment}, \code{proposed.reconstruction},
-\code{reconstruction.distances}, \code{all.tested},
-\code{time.for.assignment} will be \code{NULL} if the algorithm could not
-find the optimal reconstruction or there are errors coming out for
-\strong{all} samples.
 }
 \description{
 Find minimal set of signatures that can explain multiple spectra by first using
@@ -95,7 +84,6 @@ sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
 retval <- PresenceAssignActivity(spectra = spectra,
                                  sigs = sigs.to.use,
                                  output.dir = file.path(tempdir(), "Lung-AdenoCA"),
-                                 max.level = ncol(sigs.to.use) - 1,
                                  p.thresh = 0.05 / ncol(sigs.to.use),
                                  num.parallel.samples = 2,
                                  mc.cores.per.sample = 30,

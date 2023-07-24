@@ -22,7 +22,7 @@ test_that("Use multinomial distribution to calculate likelihood", {
                       seed = 8386,
                       output.dir = file.path(tempdir(), "skin.mapout1"))
   
-  expect_equal(MAP.out1$reconstruction.distances$MAP.distances$cosine,
+  expect_equal(MAP.out1$reconstruction.distances$proposed.assignment$cosine,
                0.9517956, tolerance = 1e-2)
   
   # Use multinomial distribution to calculate log likelihood (the default)
@@ -35,7 +35,7 @@ test_that("Use multinomial distribution to calculate likelihood", {
                       max.subsets = 1e10,
                       seed = 8386,
                       output.dir = file.path(tempdir(), "skin.mapout2"))
-  expect_equal(MAP.out2$reconstruction.distances$MAP.distances$cosine,
+  expect_equal(MAP.out2$reconstruction.distances$proposed.assignment$cosine,
                0.9947313, tolerance = 1e-5)
   
   unlink(file.path(tempdir(), "skin.mapout1"), recursive = TRUE)

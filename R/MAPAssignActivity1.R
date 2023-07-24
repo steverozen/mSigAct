@@ -58,7 +58,7 @@
 MAPAssignActivity1 <-
   function(spect,
            sigs,
-           sigs.presence.prop,
+           sigs.presence.prop         = NULL,
            max.level                  = 5,
            p.thresh                   = 0.05,
            m.opts                     = DefaultManyOpts(),
@@ -93,7 +93,8 @@ MAPAssignActivity1 <-
     }
     null.retval <- NullReturnForMAPAssignActivity(
       signature.universe = sigs,
-      target.spectrum    = spect)
+      target.spectrum    = spect,
+      use.forward.search = use.forward.search)
     
     if (sum(spect) < thresh.value) {
       if (thresh.value == 1) {
@@ -155,7 +156,7 @@ MAPAssignActivity1 <-
         ReconstructSpectrum(sigs, exp = best.exp, use.sig.names = TRUE)
       MAP.recon <- CopyAttributes(from = spect, to = MAP.recon)
       
-      if (!use.sparse.assign) {
+      if (!use.sparse.assign && !use.forward.search) {
         # Internally set max.presence.proportion to be 0.99 in case there will be -Inf
         # for MAP distances
         max.presence.proportion <- 0.99
@@ -168,7 +169,7 @@ MAPAssignActivity1 <-
                            sigs.presence.prop = sigs.presence.prop,
                            likelihood.dist = m.opts$likelihood.dist,
                            signatures = sigs[, names(best.exp), drop = FALSE])
-      } else if (use.sparse.assign) {
+      } else {
         MAP.distances <-
           DistanceMeasuresSparse(spect = spect, recon = MAP.recon, 
                                  nbinom.size = m.opts$nbinom.size,
@@ -328,7 +329,7 @@ MAPAssignActivity1 <-
 MAPAssignActivityInternal <-
   function(spect,
            sigs,
-           sigs.presence.prop,
+           sigs.presence.prop         = NULL,
            max.level                  = 5,
            p.thresh                   = 0.05,
            m.opts                     = DefaultManyOpts(),
@@ -346,20 +347,12 @@ MAPAssignActivityInternal <-
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
     
-    if (!use.sparse.assign) {
-      if (missing(sigs.presence.prop)) {
-        stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
-      }
-    }
-    
     if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
     
-    if (use.sparse.assign) {
-      if (use.sig.presence.test) {
-        msg <- "PresenceAssignActivity1: "
-      } else {
-        msg <- "SparseAssignActivity1: "
-      }
+    if (use.forward.search) {
+      msg <- "PresenceAssignActivity1: "
+    } else if (use.sparse.assign) {
+      msg <- "SparseAssignActivity1: "
     } else {
       msg <- "MAPAssignActivity1: "
     }
@@ -367,7 +360,11 @@ MAPAssignActivityInternal <-
     my.msg <- function(trace.level, ...)
       if (m.opts$trace >= trace.level) message(msg, ...)
     
-    if (!use.sparse.assign) {
+    if (!use.sparse.assign && !use.forward.search) {
+      if (is.null(sigs.presence.prop)) {
+        stop("MAPAssignActivityInternal: sigs.presence.prop is NULL")
+      }
+      
       sigs.presence.prop[sigs.presence.prop > max.presence.proportion] <-
         max.presence.proportion
       
@@ -389,7 +386,7 @@ MAPAssignActivityInternal <-
     my.msg(10, "number of signatures = ", max.sig.index)
     mode(spect) <-  'numeric'
     
-    if (!use.sparse.assign) {
+    if (!use.sparse.assign && !use.forward.search) {
       if (!isTRUE(all.equal(colnames(sigs), names(sigs.presence.prop)))) {
         msg <- paste("class sigs =", 
                      class(sigs), 
@@ -412,13 +409,7 @@ MAPAssignActivityInternal <-
     message("Analyzing sample ", colnames(spect))
     
     if (use.sig.presence.test) {
-      
-      if (is.null(sig.pres.test.nbinom.size)) {
-        my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
-      } else {
-        my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
-        my.opts$nbinom.size <- sig.pres.test.nbinom.size
-      }
+      my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
       
       sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
         retval <- SignaturePresenceTest1(spectrum = spect, 

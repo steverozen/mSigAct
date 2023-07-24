@@ -13,7 +13,8 @@ test_that("Use forward search for MAPAssignActivity", {
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,
                                    cancer.type = cancer.type)
   sigs <- SBS.sigs[, names(sigs.prop), drop = FALSE]
-  my.opts <- DefaultManyOpts()
+  my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+  my.opts$nbinom.size <- 8
   
   retval1 <- MAPAssignActivity1(
     spect                   = catalog,
@@ -26,10 +27,8 @@ test_that("Use forward search for MAPAssignActivity", {
     seed                    = 2351,
     use.sparse.assign       = TRUE, 
     use.sig.presence.test   = TRUE,
-    use.forward.search      = TRUE, 
-    sig.pres.test.nbinom.size = 3)
-  
-  expect_equal(nrow(retval1$proposed.assignment), 5)
+    use.forward.search      = TRUE)
+  expect_equal(nrow(retval1$proposed.assignment), 8)
   
   
   catalogs <- biliary.catalogs[, 1:3, drop = FALSE]
@@ -48,8 +47,7 @@ test_that("Use forward search for MAPAssignActivity", {
     seed                    = 2351,
     use.sparse.assign       = TRUE, 
     use.sig.presence.test   = TRUE,
-    use.forward.search      = TRUE, 
-    sig.pres.test.nbinom.size = 3)
+    use.forward.search      = TRUE)
   expect_equal(retval1$proposed.assignment,
                RemoveZeroActivitySig(retval2$proposed.assignment[, 1, drop = FALSE]))
   

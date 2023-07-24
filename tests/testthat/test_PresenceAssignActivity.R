@@ -9,13 +9,12 @@ test_that("PresenceAssignActivity for SBS Liver tumor", {
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
   retval1 <- 
     PresenceAssignActivity(spectra = spectra,
-                              sigs = sigs.to.use,
-                              output.dir = file.path(tempdir(), "Liver-HCC-1"),
-                              max.level = ncol(sigs.to.use) - 1,
-                              p.thresh = 0.05 / ncol(sigs.to.use),
-                              num.parallel.samples = 2,
-                              mc.cores.per.sample = 30,
-                              seed = 2561)
+                           sigs = sigs.to.use,
+                           output.dir = file.path(tempdir(), "Liver-HCC-1"),
+                           p.thresh = 0.05 / ncol(sigs.to.use),
+                           num.parallel.samples = 1,
+                           mc.cores.per.sample = 30,
+                           seed = 2561)
   
   retval2 <- 
     MAPAssignActivity(spectra = spectra,
