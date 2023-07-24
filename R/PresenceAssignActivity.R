@@ -70,7 +70,6 @@ PresenceAssignActivity <-
   function(spectra,
            sigs,
            output.dir,
-           max.level                 = 5,
            p.thresh                  = 0.05,
            m.opts                    = DefaultManyOpts(),
            num.parallel.samples      = 5,
@@ -78,23 +77,19 @@ PresenceAssignActivity <-
            progress.monitor          = NULL,
            seed                      = NULL,
            drop.low.mut.samples      = TRUE,
-           use.forward.search        = FALSE,
            save.files                = TRUE) {
     
     retval <- 
       MAPAssignActivity(spectra                   = spectra,
                         sigs                      = sigs,
-                        use.sparse.assign         = TRUE,
-                        use.forward.search        = use.forward.search,
+                        use.forward.search        = TRUE,
                         output.dir                = output.dir,
-                        max.level                 = max.level,
                         p.thresh                  = p.thresh,
                         m.opts                    = m.opts,
                         num.parallel.samples      = num.parallel.samples,
                         mc.cores.per.sample       = mc.cores.per.sample,
                         progress.monitor          = progress.monitor,
                         seed                      = seed,
-                        max.subsets               = .Machine$double.xmax,
                         drop.low.mut.samples      = drop.low.mut.samples,
                         use.sig.presence.test     = TRUE,
                         save.files                = save.files)

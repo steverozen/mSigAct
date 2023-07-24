@@ -9,7 +9,6 @@ PresenceAssignActivity(
   spectra,
   sigs,
   output.dir,
-  max.level = 5,
   p.thresh = 0.05,
   m.opts = DefaultManyOpts(),
   num.parallel.samples = 5,
@@ -17,7 +16,6 @@ PresenceAssignActivity(
   progress.monitor = NULL,
   seed = NULL,
   drop.low.mut.samples = TRUE,
-  use.forward.search = FALSE,
   save.files = TRUE
 )
 }
@@ -27,8 +25,6 @@ PresenceAssignActivity(
 \item{sigs}{A numerical matrix, possibly an \code{\link[ICAMS]{ICAMS}} catalog.}
 
 \item{output.dir}{Directory path to save the output file.}
-
-\item{max.level}{The maximum number of signatures to try removing.}
 
 \item{p.thresh}{If
 the p value for a better reconstruction with a
@@ -60,9 +56,6 @@ seed.)}
 \item{drop.low.mut.samples}{Whether to exclude low mutation samples from
 the analysis. If \code{TRUE}, samples with SBS total mutations less
 than 100, DBS or ID total mutations less than 25 will be dropped.}
-
-\item{use.forward.search}{Whether to use forward search to find the minimal
-number of signatures to optimally reconstruct the spectrum.}
 
 \item{save.files}{If \code{TRUE} save several files for each input sample
 in a directory named after the sample.}
