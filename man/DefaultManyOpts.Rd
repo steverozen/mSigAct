@@ -10,6 +10,9 @@ DefaultManyOpts(likelihood.dist = "neg.binom", spectra = NULL)
 \item{likelihood.dist}{The probability distribution used to calculate the
 likelihood, can be either "multinom" (multinomial distribution) or
 "neg.binom" (negative binomial distribution).}
+
+\item{spectra}{The catalog (matrix) to analyze. This could be
+an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.}
 }
 \value{
 A list with the following elements

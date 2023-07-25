@@ -18,6 +18,9 @@ DefaultLocalOpts <- function() {
 #' @param likelihood.dist The probability distribution used to calculate the
 #'   likelihood, can be either "multinom" (multinomial distribution) or
 #'   "neg.binom" (negative binomial distribution).
+#'  
+#' @param spectra The catalog (matrix) to analyze. This could be
+#'   an \code{\link[ICAMS]{ICAMS}} catalog or a numerical matrix.
 #'   
 #' @export
 #'
