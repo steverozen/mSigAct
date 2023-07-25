@@ -59,7 +59,9 @@
 #'                                                mc.cores = 2)
 
 SignaturePresenceTest <- function(
-  spectra, sigs, target.sig.index, m.opts = DefaultManyOpts(), seed = NULL, mc.cores = 2) {
+  spectra, sigs, target.sig.index, 
+  m.opts = DefaultManyOpts(likelihood.dist = "multinom"), 
+  seed = NULL, mc.cores = 2) {
 
   # check if signatures sum to 1
   all.col.sums <- colSums(sigs)
@@ -97,7 +99,8 @@ SignaturePresenceTest <- function(
 
 #' @keywords internal
 TestAllSigs <- function(
-  spectrum, sigs, m.opts = DefaultManyOpts(), seed = NULL, mc.cores = 2) {
+  spectrum, sigs, m.opts = DefaultManyOpts(likelihood.dist = "multinom"), 
+  seed = NULL, mc.cores = 2) {
   sigs.presence.tests <- parallel::mclapply(colnames(sigs), FUN = function(sig.name) {
     retval <- SignaturePresenceTest1(spectrum = spectrum, 
                                      sigs = sigs, 

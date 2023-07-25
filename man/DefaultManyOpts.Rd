@@ -4,7 +4,7 @@
 \alias{DefaultManyOpts}
 \title{Set default options for many functions, especially \code{\link[nloptr]{nloptr}}}
 \usage{
-DefaultManyOpts(likelihood.dist = "multinom")
+DefaultManyOpts(likelihood.dist = "neg.binom", spectra = NULL)
 }
 \arguments{
 \item{likelihood.dist}{The probability distribution used to calculate the

@@ -10,6 +10,8 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
                                    cancer.type = "Lung-AdenoCA")
   sigs <- sigs[, names(sigs.prop), drop = FALSE]
   output.dir <- file.path(tempdir(), "SBS96")
+  my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+  my.opts$nbinom.size <- 5
   
   retval <- MAPAssignActivity(
     spectra                 = spectra,
@@ -18,7 +20,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     output.dir              = output.dir,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
-    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
+    m.opts                  = my.opts,
     num.parallel.samples    = 2,
     mc.cores.per.sample     = 30,
     seed                    = 8787,
@@ -34,7 +36,7 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
     output.dir              = output.dir,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
-    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
+    m.opts                  = my.opts,
     num.parallel.samples    = 2,
     mc.cores.per.sample     = 10,
     seed                    = 8787,
@@ -46,12 +48,14 @@ test_that("Testing max.subsets argument for MAPAssignActivity", {
 })
 
 test_that("Testing max.subsets argument for MAPAssignActivity1", {
-  indices <- grep("Lung-AdenoCA", colnames(PCAWG7::spectra$PCAWG$SBS96))
+  indices <- grep("Lung-SCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spect <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
   sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
-                                   cancer.type = "Lung-AdenoCA")
+                                   cancer.type = "Lung-SCC")
   sigs <- sigs[, names(sigs.prop), drop = FALSE]
+  my.opts <- DefaultManyOpts(likelihood.dist = "neg.binom")
+  my.opts$nbinom.size <- 5
   
   retval <- MAPAssignActivity1(
     spect                   = spect,
@@ -59,11 +63,11 @@ test_that("Testing max.subsets argument for MAPAssignActivity1", {
     sigs.presence.prop      = sigs.prop,
     max.level               = ncol(sigs) - 1,
     p.thresh                = 0.01,
-    m.opts                  = DefaultManyOpts(likelihood.dist = "neg.binom"),
+    m.opts                  = my.opts,
     max.mc.cores            = 10,
     seed                    = 8787,
-    max.subsets             = 10)
+    max.subsets             = 2)
    
   expect_equal(sum(retval$proposed.assignment), 0)
-  expect_equal(nchar(retval$error.messages), 231)
+  expect_equal(nchar(retval$error.messages), 227)
 })

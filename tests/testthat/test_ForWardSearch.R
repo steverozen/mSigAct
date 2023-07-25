@@ -3,13 +3,13 @@ test_that("Use forward search for MAPAssignActivity", {
   
   spectra <- PCAWG7::spectra$PCAWG$SBS96
   catalog.list <- PCAWG7::SplitPCAWGMatrixByTumorType(spectra)
-  biliary.catalogs <- catalog.list$`Biliary-AdenoCA`
+  lung.catalogs <- catalog.list$`Lung-SCC`
   
   sample.index <- 1
-  catalog <- biliary.catalogs[, sample.index, drop = FALSE]
+  catalog <- lung.catalogs[, sample.index, drop = FALSE]
   SBS.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   mutation.type <- "SBS96"
-  cancer.type <- "Biliary-AdenoCA"
+  cancer.type <- "Lung-SCC"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,
                                    cancer.type = cancer.type)
   sigs <- SBS.sigs[, names(sigs.prop), drop = FALSE]
@@ -28,10 +28,10 @@ test_that("Use forward search for MAPAssignActivity", {
     use.sparse.assign       = TRUE, 
     use.sig.presence.test   = TRUE,
     use.forward.search      = TRUE)
-  expect_equal(nrow(retval1$proposed.assignment), 8)
+  expect_equal(nrow(retval1$proposed.assignment), 5)
   
   
-  catalogs <- biliary.catalogs[, 1:3, drop = FALSE]
+  catalogs <- lung.catalogs[, 1:3, drop = FALSE]
   
   output.dir <- file.path(tempdir(), "test")
   retval2 <- MAPAssignActivity(

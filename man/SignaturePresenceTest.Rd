@@ -8,7 +8,7 @@ SignaturePresenceTest(
   spectra,
   sigs,
   target.sig.index,
-  m.opts = DefaultManyOpts(),
+  m.opts = DefaultManyOpts(likelihood.dist = "multinom"),
   seed = NULL,
   mc.cores = 2
 )

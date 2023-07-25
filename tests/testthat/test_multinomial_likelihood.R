@@ -25,11 +25,13 @@ test_that("Use multinomial distribution to calculate likelihood", {
   expect_equal(MAP.out1$reconstruction.distances$proposed.assignment$cosine,
                0.9517956, tolerance = 1e-2)
   
-  # Use multinomial distribution to calculate log likelihood (the default)
+  # Use multinomial distribution to calculate log likelihood
+  my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
   MAP.out2 <- 
     MAPAssignActivity(spectra = skin.spectra,
                       sigs = cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96,
                       sigs.presence.prop = prior.prop1,
+                      m.opts = my.opts,
                       max.level = length(prior.prop1) - 1,
                       mc.cores.per.sample = 30,
                       max.subsets = 1e10,

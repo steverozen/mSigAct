@@ -102,17 +102,17 @@ test_that("MAPAssignActivity1 for ID Catalog", {
   
   spectra <- PCAWG7::spectra$PCAWG$SBS96
   catalog.list <- PCAWG7::SplitPCAWGMatrixByTumorType(spectra)
-  biliary.catalogs <- catalog.list$`Biliary-AdenoCA`
+  lung.catalogs <- catalog.list$`Lung-SCC`
   
   sample.index <- 1
-  catalog <- biliary.catalogs[, sample.index, drop = FALSE]
+  catalog <- lung.catalogs[, sample.index, drop = FALSE]
   SBS.sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   mutation.type <- "SBS96"
-  cancer.type <- "Biliary-AdenoCA"
+  cancer.type <- "Lung-SCC"
   sigs.prop <- ExposureProportions(mutation.type = mutation.type,
                                    cancer.type = cancer.type)
   sigs <- SBS.sigs[, names(sigs.prop), drop = FALSE]
-  my.opts <- DefaultManyOpts()
+  my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
   
   retval1 <- MAPAssignActivity1(
     spect                   = catalog,
@@ -123,7 +123,7 @@ test_that("MAPAssignActivity1 for ID Catalog", {
     m.opts                  = my.opts,
     max.mc.cores            = 60,
     seed                    = 2351, 
-    use.forward.search      = T)
+    use.forward.search      = TRUE)
   
-  expect_equal(nrow(retval1$proposed.assignment), 14)
+  expect_equal(nrow(retval1$proposed.assignment), 6)
 })

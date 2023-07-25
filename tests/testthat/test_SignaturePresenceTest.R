@@ -37,7 +37,9 @@ test_that("Test all signatures in one spectrum", {
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
                                    cancer.type = "Liver-HCC")
   sigs.to.test <- sigs[, names(sigs.prop), drop = FALSE]
+  my.opts <- DefaultManyOpts(likelihood.dist = "multinom")
   test.out <- TestAllSigs(spectrum = spectra, sigs = sigs.to.test, 
+                          m.opts = my.opts,
                           seed = 2892, mc.cores = 30)
   expect_equal(test.out[1], 3.313776e-05, check.attributes = FALSE)
 })

@@ -50,7 +50,7 @@ DefaultLocalOpts <- function() {
 #' my.opts <- DefaultManyOpts()
 #' my.opts$trace <- 10
 
-DefaultManyOpts <- function(likelihood.dist = "multinom") {
+DefaultManyOpts <- function(likelihood.dist = "neg.binom", spectra = NULL) {
   if (!likelihood.dist %in% c("multinom", "neg.binom")) {
     stop("The value for argument likelihood.dist should be either multinom or neg.binom")
   }
@@ -65,14 +65,25 @@ DefaultManyOpts <- function(likelihood.dist = "multinom") {
       local_eval_g_ineq = g_ineq_for_ObjFnMultinomMaxLH,
       likelihood.dist   = likelihood.dist))
   } else if (likelihood.dist == "neg.binom") {
-    return(list(
+    my.opts <- list(
       global.opts       = DefaultGlobalOpts(),
       local.opts        = DefaultLocalOpts(),
-      nbinom.size       = 5,
+      nbinom.size       = 8,
       trace             = 0,
       global_eval_f     = ObjFnBinomMaxLHRound,
       local_eval_f      = ObjFnBinomMaxLHRound,
       local_eval_g_ineq = g_ineq_for_ObjFnBinomMaxLH2,
-      likelihood.dist   = likelihood.dist))
+      likelihood.dist   = likelihood.dist)
+    
+    if (!is.null(spectra)) {
+      if (nrow(spectra) == 78) {
+        my.opts$nbinom.size <- 50
+      } else if (nrow(spectra) == 83) {
+        my.opts$nbinom.size <- 100
+      } 
+    }
+    
+    return(my.opts)
+    
   }
 }

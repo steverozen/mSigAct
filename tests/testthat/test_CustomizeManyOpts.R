@@ -3,12 +3,12 @@ context("Testing CustomizeManyOpts function")
 test_that("Testing CustomizeManyOpts function for SBS", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
 
-  indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
+  indices <- grep("Lung-SCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
   sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(
     mutation.type = "SBS96",
-    cancer.type = "Liver-HCC"
+    cancer.type = "Lung-SCC"
   )
   sigs <- sigs[, names(sigs.prop), drop = FALSE]
   output.dir <- file.path(tempdir(), "SBS96")
@@ -29,7 +29,7 @@ test_that("Testing CustomizeManyOpts function for SBS", {
     return(retval)
   }
 
-  my.opts1 <- DefaultManyOpts()
+  my.opts1 <- DefaultManyOpts(likelihood.dist = "multinom")
   retval1 <- TestFunction(my.opts1)
 
   my.loglh.fn1 <- function(spectrum, expected.counts) {

@@ -1,16 +1,16 @@
 test_that("Test tracing messages for MAPAssignActivity", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
-  indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
+  indices <- grep("Lung-SCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
   sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
-                                   cancer.type = "Liver-HCC")
+                                   cancer.type = "Lung-SCC")
   my.opts <- DefaultManyOpts()
   MAP.out <- MAPAssignActivity(spectra = spectra,
                                sigs = sigs,
                                sigs.presence.prop = sigs.prop,
-                               output.dir = file.path(tempdir(), "Liver-HCC.1"),
+                               output.dir = file.path(tempdir(), "Lung-SCC.1"),
                                max.level = length(sigs.prop) - 1,
                                p.thresh = 0.05 / ncol(spectra),
                                m.opts = my.opts,
@@ -21,25 +21,25 @@ test_that("Test tracing messages for MAPAssignActivity", {
   MAP.out <- MAPAssignActivity(spectra = spectra,
                                sigs = sigs,
                                sigs.presence.prop = sigs.prop,
-                               output.dir = file.path(tempdir(), "Liver-HCC.2"),
+                               output.dir = file.path(tempdir(), "Lung-SCC.2"),
                                max.level = length(sigs.prop) - 1,
                                p.thresh = 0.05 / ncol(spectra),
                                m.opts = my.opts,
                                num.parallel.samples = 1,
                                mc.cores.per.sample = 30)
-  expect_equal(nrow(MAP.out$proposed.assignment), 11)
-  unlink(file.path(tempdir(), "Liver-HCC.1"), recursive = TRUE)
-  unlink(file.path(tempdir(), "Liver-HCC.2"), recursive = TRUE)
+  expect_equal(nrow(MAP.out$proposed.assignment), 6)
+  unlink(file.path(tempdir(), "Lung-SCC.1"), recursive = TRUE)
+  unlink(file.path(tempdir(), "Lung-SCC.2"), recursive = TRUE)
 })
 
 test_that("Test tracing messages for SparseAssignActivity", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
   
-  indices <- grep("Liver-HCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
+  indices <- grep("Lung-SCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
   spectra <- PCAWG7::spectra$PCAWG$SBS96[, indices[1], drop = FALSE]
   sigs <- cosmicsig::COSMIC_v3.2$signature$GRCh37$SBS96
   sigs.prop <- ExposureProportions(mutation.type = "SBS96",
-                                   cancer.type = "Liver-HCC")
+                                   cancer.type = "Lung-SCC")
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
   my.opts <- DefaultManyOpts()
   sparse.out <- MAPAssignActivity(spectra = spectra,
@@ -54,27 +54,27 @@ test_that("Test tracing messages for SparseAssignActivity", {
   
   my.opts$trace <- 1
   sparse.out2 <- MAPAssignActivity(spectra = spectra,
-                                     sigs = sigs.to.use,
+                                   sigs = sigs.to.use,
                                    use.sparse.assign         = TRUE,
-                                     output.dir = file.path(tempdir(), "test2"),
-                                     max.level = ncol(sigs.to.use) - 1,
-                                     p.thresh = 0.05 / ncol(spectra),
-                                     m.opts = my.opts,
-                                     num.parallel.samples = 1,
-                                     mc.cores.per.sample = 30)
+                                   output.dir = file.path(tempdir(), "test2"),
+                                   max.level = ncol(sigs.to.use) - 1,
+                                   p.thresh = 0.05 / ncol(spectra),
+                                   m.opts = my.opts,
+                                   num.parallel.samples = 1,
+                                   mc.cores.per.sample = 30)
   
   my.opts$trace <- -1
   sparse.out3 <- MAPAssignActivity(spectra = spectra,
-                                      sigs = sigs.to.use,
+                                   sigs = sigs.to.use,
                                    use.sparse.assign         = TRUE,
-                                      output.dir = file.path(tempdir(), "test3"),
-                                      max.level = ncol(sigs.to.use) - 1,
-                                      p.thresh = 0.05 / ncol(spectra),
-                                      m.opts = my.opts,
-                                      num.parallel.samples = 1,
-                                      mc.cores.per.sample = 30)
+                                   output.dir = file.path(tempdir(), "test3"),
+                                   max.level = ncol(sigs.to.use) - 1,
+                                   p.thresh = 0.05 / ncol(spectra),
+                                   m.opts = my.opts,
+                                   num.parallel.samples = 1,
+                                   mc.cores.per.sample = 30)
   
-  expect_equal(nrow(sparse.out3$proposed.assignment), 11)
+  expect_equal(nrow(sparse.out3$proposed.assignment), 5)
   unlink(file.path(tempdir(), "test1"), recursive = TRUE)
   unlink(file.path(tempdir(), "test2"), recursive = TRUE)
   unlink(file.path(tempdir(), "test3"), recursive = TRUE)

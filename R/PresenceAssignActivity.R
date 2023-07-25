@@ -46,7 +46,7 @@ PresenceAssignActivity <-
            sigs,
            output.dir,
            p.thresh                  = 0.05,
-           m.opts                    = DefaultManyOpts(),
+           m.opts                    = DefaultManyOpts(spectra = spectra),
            num.parallel.samples      = 5,
            mc.cores.per.sample       = min(20, 2^max.level),
            seed                      = NULL,
