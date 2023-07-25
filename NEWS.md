@@ -6,6 +6,8 @@ functions.
 
 * Changed default value for argument `drop.low.mut.samples` to be `FALSE` in exported function `PresenceAssignActivity`.
 
+* Added new internal function `DefaultPThresh`.
+
 # 2.3.9
 * Removed documentation for sparse assign functions.
 
