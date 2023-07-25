@@ -11,8 +11,8 @@ PresenceAssignActivity(
   output.dir,
   p.thresh = DefaultPThresh(sigs),
   m.opts = DefaultManyOpts(spectra = spectra),
-  num.parallel.samples = 5,
-  mc.cores.per.sample = min(20, 2^max.level),
+  num.parallel.samples = 1,
+  mc.cores.per.sample = 1,
   seed = NULL,
   drop.low.mut.samples = FALSE,
   save.files = TRUE
@@ -84,7 +84,6 @@ sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
 retval <- PresenceAssignActivity(spectra = spectra,
                                  sigs = sigs.to.use,
                                  output.dir = file.path(tempdir(), "Lung-AdenoCA"),
-                                 p.thresh = 0.05 / ncol(sigs.to.use),
                                  num.parallel.samples = 2,
                                  mc.cores.per.sample = 30,
                                  seed = 2561)

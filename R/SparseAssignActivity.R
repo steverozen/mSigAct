@@ -67,9 +67,7 @@ deprecated_SparseAssignActivity <-
            seed                      = NULL,
            max.subsets               = 1000,
            drop.low.mut.samples      = TRUE,
-           use.sig.presence.test     = FALSE,
-           sig.pres.test.nbinom.size = NULL,
-           sig.pres.test.p.thresh    = 0.05) {
+           use.sig.presence.test     = FALSE) {
     
     retval <- 
       MAPAssignActivity(spectra                   = spectra,
@@ -85,9 +83,7 @@ deprecated_SparseAssignActivity <-
                         seed                      = seed,
                         max.subsets               = max.subsets,
                         drop.low.mut.samples      = drop.low.mut.samples,
-                        use.sig.presence.test     = use.sig.presence.test,
-                        sig.pres.test.nbinom.size = sig.pres.test.nbinom.size,
-                        sig.pres.test.p.thresh    = sig.pres.test.p.thresh)
+                        use.sig.presence.test     = use.sig.presence.test)
     return(retval)
   }
 

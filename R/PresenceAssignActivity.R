@@ -36,7 +36,6 @@
 #' retval <- PresenceAssignActivity(spectra = spectra,
 #'                                  sigs = sigs.to.use,
 #'                                  output.dir = file.path(tempdir(), "Lung-AdenoCA"),
-#'                                  p.thresh = 0.05 / ncol(sigs.to.use),
 #'                                  num.parallel.samples = 2,
 #'                                  mc.cores.per.sample = 30,
 #'                                  seed = 2561)
@@ -47,9 +46,9 @@ PresenceAssignActivity <-
            output.dir,
            p.thresh                  = DefaultPThresh(sigs),
            m.opts                    = DefaultManyOpts(spectra = spectra),
-           num.parallel.samples      = 5,
-           mc.cores.per.sample       = min(20, 2^max.level),
-           seed                      = NULL,
+           num.parallel.samples      = 1,
+           mc.cores.per.sample       = 1,
+           seed                      = 123,
            drop.low.mut.samples      = FALSE,
            save.files                = TRUE) {
     

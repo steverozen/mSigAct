@@ -17,9 +17,7 @@ deprecated_SparseAssignActivity(
   seed = NULL,
   max.subsets = 1000,
   drop.low.mut.samples = TRUE,
-  use.sig.presence.test = FALSE,
-  sig.pres.test.nbinom.size = NULL,
-  sig.pres.test.p.thresh = 0.05
+  use.sig.presence.test = FALSE
 )
 }
 \arguments{

@@ -1,12 +1,14 @@
 # 3.0.0
+* Added new internal function `DefaultPThresh`.
+
+* Updated default values for arguments `num.parallel.samples`, `mc.cores.per.sample` and `seed` in exported function `PresenceAssignActivity`.
+
+* Changed default value for argument `drop.low.mut.samples` to be `FALSE` in exported function `PresenceAssignActivity`.
+
 * Removed arguments `max.level`, `use.forward.search`, `progress.monitor` in exported function `PresenceAssignActivity`.
 
 * Removed redundant arguments `sig.pres.test.nbinom.size`, `sig.pres.test.p.thresh`, `sig.pres.test.q.thresh`,  in various internal and exported
 functions.
-
-* Changed default value for argument `drop.low.mut.samples` to be `FALSE` in exported function `PresenceAssignActivity`.
-
-* Added new internal function `DefaultPThresh`.
 
 # 2.3.9
 * Removed documentation for sparse assign functions.
