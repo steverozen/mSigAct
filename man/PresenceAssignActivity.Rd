@@ -13,7 +13,7 @@ PresenceAssignActivity(
   m.opts = DefaultManyOpts(spectra = spectra),
   num.parallel.samples = 1,
   mc.cores.per.sample = 1,
-  seed = NULL,
+  seed = 123,
   drop.low.mut.samples = FALSE,
   save.files = TRUE
 )
