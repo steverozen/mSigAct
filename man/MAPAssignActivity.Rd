@@ -135,4 +135,3 @@ MAP.out <- MAPAssignActivity(spectra = spectra,
                              seed = 2561)
 }
 }
-\keyword{internal}

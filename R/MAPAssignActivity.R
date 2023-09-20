@@ -55,7 +55,7 @@
 #' 
 #' @md
 #'
-#' @keywords internal
+#' @export
 #' 
 #' @examples
 #' \dontrun{
