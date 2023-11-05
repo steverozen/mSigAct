@@ -133,7 +133,7 @@ RunMAPOnOneSample <-
              round(distance.info$proposed.assignment["cosine"], 5), ")")
     subtracted.spect <- spect - reconstructed.spectrum
     colnames(subtracted.spect) <- 
-      paste0(colnames(spect), " (substracted spectrum, absolute counts)")
+      paste0(colnames(spect), " (subtracted spectrum, absolute counts)")
     
     colnames(spect) <- paste0(colnames(spect), " (count = ",colSums(spect), ")")
     

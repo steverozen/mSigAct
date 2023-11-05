@@ -40,11 +40,11 @@ CompareAndPlotLoglh <-
 
     original.neg.loglh <- original.loglh * -1
     new.neg.loglh <- new.loglh * -1
-    substracted.loglh <- new.neg.loglh - original.neg.loglh
+    subtracted.loglh <- new.neg.loglh - original.neg.loglh
 
     to.plot <- cbind(
       new.neg.loglh, original.neg.loglh,
-      substracted.loglh
+      subtracted.loglh
     )
 
     sample.name <- colnames(spectrum)
@@ -61,7 +61,7 @@ CompareAndPlotLoglh <-
         ),
         paste0(
           sample.name, " (subtracted negative loglh: ",
-          round(colSums(substracted.loglh), 2), ")"
+          round(colSums(subtracted.loglh), 2), ")"
         )
       )
 
