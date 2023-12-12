@@ -23,7 +23,7 @@ test_that("Edge case when spectrum have very low mutation counts", {
 
   my.opts <- DefaultManyOpts()
 
-  retval1 <- PresenceAssignActivity(
+  retval1 <- PresenceAssignSigActivity(
     spectra                 = catalog,
     sigs                    = sigs,
     output.dir              = tempdir(),
