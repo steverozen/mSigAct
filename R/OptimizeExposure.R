@@ -29,7 +29,8 @@ OptimizeExposure <- function(spectrum,
                              sigs,
                              m.opts,
                              ...) {
-
+  # This function uses non-linear numerical optimization to find the activities
+  # which can maximize the log likelihood
   stopifnot(mode(spectrum) == "numeric")
   
   if (is.null(m.opts$nbinom.size)) {
