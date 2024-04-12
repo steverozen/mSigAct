@@ -54,7 +54,7 @@
 #'                                    mc.cores.per.sample = 30,
 #'                                    seed = 2561)
 #'}
-deprecated_SparseAssignActivity <-
+SparseAssignActivity <-
   function(spectra,
            sigs,
            output.dir,
