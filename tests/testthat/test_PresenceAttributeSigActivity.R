@@ -1,4 +1,4 @@
-test_that("PresenceAssignSigActivity for SBS Liver tumor", {
+test_that("PresenceAttributeSigActivity for SBS Liver tumor", {
   skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
 
   indices <- grep("Lung-SCC", colnames(PCAWG7::spectra$PCAWG$SBS96))
@@ -10,7 +10,7 @@ test_that("PresenceAssignSigActivity for SBS Liver tumor", {
   )
   sigs.to.use <- sigs[, names(sigs.prop), drop = FALSE]
   retval1 <-
-    PresenceAssignSigActivity(
+    PresenceAttributeSigActivity(
       spectra = spectra,
       sigs = sigs.to.use,
       output.dir = file.path(tempdir(), "Lung-SCC-1"),

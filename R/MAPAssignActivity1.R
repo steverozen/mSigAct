@@ -350,7 +350,7 @@ MAPAssignActivityInternal <-
     if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
     
     if (use.forward.search) {
-      msg <- "PresenceAssignSigActivity1: "
+      msg <- "PresenceAttributeSigActivity1: "
     } else if (use.sparse.assign) {
       msg <- "SparseAssignActivity1: "
     } else {

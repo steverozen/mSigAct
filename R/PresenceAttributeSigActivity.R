@@ -15,10 +15,10 @@
 #' between \code{spectra} and \code{proposed.reconstruction}.
 #'
 #' * \code{time.for.assignment}: Value from \code{system.time} for running
-#'  \code{PresenceAssignSigActivity} for each sample in \code{spectra}.
+#'  \code{PresenceAttributeSigActivity} for each sample in \code{spectra}.
 #'
 #' * \code{error.messages}: Error messages running
-#' \code{PresenceAssignSigActivity}.
+#' \code{PresenceAttributeSigActivity}.
 #'
 #' @md
 #'
@@ -35,7 +35,7 @@
 #'   cancer.type = "Lung-AdenoCA"
 #' )
 #' sigs.to.use <- SBS96.sigs[, names(sigs.prop), drop = FALSE]
-#' retval <- PresenceAssignSigActivity(
+#' retval <- PresenceAttributeSigActivity(
 #'   spectra = spectra,
 #'   sigs = sigs.to.use,
 #'   output.dir = file.path(tempdir(), "Lung-AdenoCA"),
@@ -44,7 +44,7 @@
 #'   seed = 2561
 #' )
 #' }
-PresenceAssignSigActivity <-
+PresenceAttributeSigActivity <-
   function(spectra,
            sigs,
            output.dir,

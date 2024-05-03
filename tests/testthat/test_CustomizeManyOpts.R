@@ -14,7 +14,7 @@ test_that("Testing CustomizeManyOpts function for SBS", {
   output.dir <- file.path(tempdir(), "SBS96")
 
   TestFunction <- function(my.opts) {
-    retval <- PresenceAssignSigActivity(
+    retval <- PresenceAttributeSigActivity(
       spectra                 = spectra,
       sigs                    = sigs,
       output.dir              = output.dir,

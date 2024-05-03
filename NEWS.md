@@ -1,5 +1,5 @@
 # 3.0.1
-* Renamed exported function `PresenceAssignActivity` to `PresenceAssignSigActivity`.
+* Renamed exported function `PresenceAssignActivity` to `PresenceAttributeSigActivity`.
 
 # 3.0.0
 * Added new internal function `DefaultPThresh`.
