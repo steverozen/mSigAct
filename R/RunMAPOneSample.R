@@ -68,7 +68,7 @@ RunMAPOnOneSample <-
     dir.create(path = output.path, showWarnings = FALSE)
     
     if (use.forward.search) {
-      algorithm <- "presence.assign" 
+      algorithm <- "presence.attribute" 
     } else if (use.sparse.assign) {
       algorithm <- "sparse"
     } else {
