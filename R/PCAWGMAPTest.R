@@ -85,7 +85,6 @@ PCAWGMAPTest <- function(cancer.type,
   }
 
   if (FALSE) {
-    # qp.assign <- OptimizeExposureQP(spect, sigs) Not used a this point
     qp.assign <-
       OptimizeExposureQPBootstrap(
         spectrum = one.spect,

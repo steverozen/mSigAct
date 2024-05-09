@@ -217,13 +217,13 @@ OneMAPAssignTest <- function(spect,
   ref.exp <- tibble::tibble(sig.id = tmp.names, ref.nonzero)
   rm(tmp.names)
 
-  QP.exp <- OptimizeExposureQP(spect,
+  QP.exp <- mSigTools::optimize_exposure_QP(spect,
                                sigs[ , MAPout$MAP$sig.id,
                                      drop = FALSE])
   QP.best.MAP.exp <-
     tibble::tibble(sig.id = names(QP.exp), QP.best.MAP.exp = QP.exp)
 
-  qp.sparse <- OptimizeExposureQP(spect,
+  qp.sparse <- mSigTools::optimize_exposure_QP(spect,
                                   sigs[ , MAPout$best.sparse$sig.id,
                                         drop = FALSE])
   QP.sparse.MAP.exp <-

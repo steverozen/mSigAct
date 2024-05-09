@@ -1,4 +1,8 @@
 # 3.0.1
+* Removed `OptimizeExposureQP` and used   `mSigTools::optimize_exposure_QP` instead.
+
+* Removed dependency package `quadprog`.
+
 * Renamed exported function `PresenceAssignActivity` to `PresenceAttributeSigActivity`.
 
 # 3.0.0

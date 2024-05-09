@@ -197,7 +197,7 @@ ReassignmentQP <- function(spectra, exposure, sigs, mc.cores = 1) {
     one.exp <- exposure[, x]
     one.exp.non.zero <- one.exp[one.exp > 0]
     sig.names <- names(one.exp.non.zero)
-    qp.exp <- OptimizeExposureQP(spectrum = spectra2[, x, drop = FALSE], 
+    qp.exp <- mSigTools::optimize_exposure_QP(spectrum = spectra2[, x, drop = FALSE], 
                                  signatures = sigs[, sig.names, drop = FALSE])
     qp.exp.mat <- as.matrix(round(qp.exp))
     colnames(qp.exp.mat) <- sample.names2[x]

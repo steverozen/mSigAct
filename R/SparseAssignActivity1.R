@@ -247,7 +247,7 @@ DistanceMeasuresSparse <-
     
     if (!is.null(signatures)) {
       # Do signature assignment using QP
-      QP.expo <- OptimizeExposureQP(spectrum = spect, signatures = signatures)
+      QP.expo <- mSigTools::optimize_exposure_QP(spectrum = spect, signatures = signatures)
       QP.expo.non.zero <- QP.expo[QP.expo >= 0.5]
       QP.recon <- ReconstructSpectrum(sigs = signatures, exp = QP.expo.non.zero,
                                       use.sig.names = TRUE)

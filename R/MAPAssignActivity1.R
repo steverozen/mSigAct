@@ -738,7 +738,7 @@ DistanceMeasures <-
     
     if (!is.null(signatures)) {
       # Do signature assignment using QP
-      QP.expo <- OptimizeExposureQP(spectrum = spect, signatures = signatures)
+      QP.expo <- mSigTools::optimize_exposure_QP(spectrum = spect, signatures = signatures)
       QP.expo.non.zero <- QP.expo[QP.expo >= 0.5]
       QP.recon <- ReconstructSpectrum(sigs = signatures, exp = QP.expo.non.zero,
                                       use.sig.names = TRUE)
@@ -897,7 +897,7 @@ GetAltSolutions <- function(tibble, spectrum, sigs, mc.cores = 1,
     index <- x
     sig.names <- unlist(strsplit(alt.solutions1$sig.names[index], ","))
     sig.to.use <- sigs[, sig.names, drop = FALSE]
-    QP.retval <- OptimizeExposureQP(spectrum = spectrum, signatures = sig.to.use)
+    QP.retval <- mSigTools::optimize_exposure_QP(spectrum = spectrum, signatures = sig.to.use)
     reconstuction <- ReconstructSpectrum(sigs = sig.to.use, exp = QP.retval)
     cosine <- cossim(v1 = spectrum, v2 = reconstuction)
     return(tibble::tibble(QP.exp = list(QP.retval), QP.cosine = cosine))
