@@ -342,7 +342,7 @@ MAPAssignActivityInternal <-
            use.forward.search         = FALSE,
            use.sig.presence.test      = FALSE,
            sig.pres.test.nbinom.size  = NULL,
-           sig.pres.test.p.thresh     = 0.05) {
+           sig.pres.test.p.thresh     = 0.1) {
     
     # Type checking
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")

@@ -15,7 +15,7 @@
 #' @param show.warning If \code{TRUE} print warning if unrounded
 #'        reconstructions were used.
 #'
-#' @param never.round Ignore \code{no.round.ok} and never
+#' @param round.ok Ignore \code{no.round.ok} and never
 #'        round; for experimenting and may be removed in future versions.
 #'
 #' @keywords internal
