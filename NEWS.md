@@ -1,6 +1,7 @@
 # 3.0.3
 * (note, there was no 3.0.2)
 
+* Corrected minor documentation waring.
 
 # 3.0.1.1.
 
