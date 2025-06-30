@@ -1,3 +1,12 @@
+# 3.0.3
+* (note, there was no 3.0.2)
+
+
+# 3.0.1.1.
+
+* Documentation correction for ObjFnBinomMaxLH2 and changed default 
+value of sig.pres.test.p.thresh in MAPAssignActivityInternal()
+
 # 3.0.1
 * Removed `OptimizeExposureQP` and used   `mSigTools::optimize_exposure_QP` instead.
 
