@@ -16,7 +16,7 @@ PlotListOfCatalogsToPdf(
 )
 }
 \arguments{
-\item{list.of.catalogs}{List of catalogs in \code{\link{ICAMS}} format.}
+\item{list.of.catalogs}{List of catalogs in \code{\link[ICAMS]{ICAMS}} format.}
 
 \item{file}{The name of the PDF file to be produced.}
 

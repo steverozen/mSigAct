@@ -339,7 +339,7 @@ DropLowMutationSamples <- function(spectra) {
 
 #' Plot List of catalogs to Pdf
 #'
-#' @param list.of.catalogs List of catalogs in \code{\link{ICAMS}} format.
+#' @param list.of.catalogs List of catalogs in \code{\link[ICAMS]{ICAMS}} format.
 #'
 #' @inheritParams ICAMS::PlotCatalogToPdf
 #'
