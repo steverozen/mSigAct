@@ -1,5 +1,5 @@
 test_that("Edge case when spectrum have very low mutation counts", {
-  skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
+  # skip_if_not(Sys.getenv("MSIGACT_TEST_LENGTH") == "long")
 
   spectra <- PCAWG7::spectra$PCAWG$DBS78
   breast_samples <-
@@ -30,7 +30,7 @@ test_that("Edge case when spectrum have very low mutation counts", {
     p.thresh                = 0.05 / ncol(sigs),
     m.opts                  = my.opts,
     num.parallel.samples    = 8,
-    mc.cores.per.sample     = 7,
+    mc.cores.per.sample     = Adj.mc.cores(10),
     seed                    = 2351,
     drop.low.mut.samples    = FALSE
   )
