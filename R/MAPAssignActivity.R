@@ -88,7 +88,7 @@ MAPAssignActivity <-
            p.thresh                   = 0.05,
            m.opts                     = DefaultManyOpts(),
            num.parallel.samples       = 5,
-           mc.cores.per.sample        = min(20, 2^max.level),
+           mc.cores.per.sample        = Adj.mc.cores(min(20, 2^max.level)),
            progress.monitor           = NULL,
            seed                       = NULL,
            max.subsets                = 1000,
@@ -100,6 +100,7 @@ MAPAssignActivity <-
     
     null.assignment1 <- matrix(rep(0, ncol(sigs)))
     colnames(null.assignment1) <- "No samples"
+
     rownames(null.assignment1) <- colnames(sigs)
     null.spect1       <- matrix(rep(0, nrow(sigs)))
     colnames(null.spect1) <- "No samples"
