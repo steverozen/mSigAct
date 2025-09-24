@@ -79,6 +79,8 @@ MAPAssignActivity1 <-
       spect <- round(spect)
     }
     
+    max.mc.cores = Adj.mc.cores(max.mc.cores)
+    
     mut.type <- GetMutationType(spect)
     
     if (drop.low.mut.samples) {
@@ -348,6 +350,7 @@ MAPAssignActivityInternal <-
     if (missing(sigs)) stop("MAPAssignActivityInternal: sigs is NULL")
     
     if (!is.null(seed)) set.seed(seed, kind = "L'Ecuyer-CMRG")
+    max.mc.cores = Adj.mc.cores(max.mc.cores)
     
     if (use.forward.search) {
       msg <- "PresenceAttributeSigActivity1: "
